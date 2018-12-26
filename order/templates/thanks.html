@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Thanks - Perfect Cushion Store
+{% endblock %}
+{% block content %}
+    <div>
+        <div class="text-center">
+            <br>
+            <br>
+            <h1 class="text-center my_title">
+                Thanks for placing your order
+            </h1>
+            <br>
+            <br>
+            <p>El número de su orden es: <b>{{ customer_order.id }}</b></p>
+            <br>
+            <p>Hemos recibido su orden y la empezaremos a procesar. En breve le llegará un email con los detalles de los productos que compró</p>
+        </div>
+    </div>
+    <br>
+    <br>
+{% endblock %}

@@ -1,0 +1,43 @@
+/*!* === NavBar === *!*/
+
+
+.navbar-bg {
+    background-color: black;
+}
+
+
+/*.nav-item {*/
+    /*!*letter-spacing: .2em;*!*/
+    /*font-size: 14px;*/
+    /*text-transform: uppercase;*/
+/*}*/
+
+/*.my_top_navbar_div {*/
+
+
+/*}*/
+
+
+/*.my_custom_menu {*/
+
+
+/*}*/
+
+
+/*nav.navbar{padding: 0 1rem;}*/
+
+/*nav.navbar .nav-item {padding:0.2rem 0.2rem}*/
+
+/*ul li a {*/
+    /*color: white;*/
+/*}*/
+
+/*ul li a:hover {*/
+    /*color: white;*/
+/*}*/
+
+
+
+li.nav-item:hover {
+  background-color: red;
+}

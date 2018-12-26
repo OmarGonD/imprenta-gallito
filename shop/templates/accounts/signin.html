@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load crispy_forms_tags %}
+
+{% block metadescription %}
+    Ingresa con tu cuenta y mira la variedad de stickers que tenemos para ti
+{% endblock %}
+{% block title %}
+    LogIn - Gallito Stickers
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <br>
+        <h1 class="my_title text-center">
+            Login o crea una cuenta nueva
+        </h1>
+        <br>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
+                <br>
+                <h2 class="my_title">
+                    Nuevo cliente
+                </h2>
+                <br>
+                <p>Cuando creas una cuenta con nosotros, puedes ver el historial de tus compras</p>
+                <br>
+                <a href="{% url 'signup' %}" class="btn btn-secondary">Crear cuenta nueva</a>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
+                <div>
+                    <br>
+                    <h2 class="my_title">
+                        Solo usuarios registrados
+                    </h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <p>{{ form | crispy }}</p>
+                        <button type='submit' class="btn btn-secondary">Ingresar</button>
+                    </form>
+                    <br>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

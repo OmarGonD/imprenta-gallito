@@ -1,0 +1,134 @@
+.stickers-bg {
+    background-color: red;
+}
+
+
+
+
+
+.sizequantityform {
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 6px rgba(255, 0, 0, 0.5);
+    border-style: solid;
+    border-radius: 5px;
+
+}
+
+
+.semi-transparent {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px
+}
+
+.padded {
+    padding: 20px;
+    padding: .2rem;
+}
+
+.bg-white {
+    background-color: #FFFFFF;
+
+}
+
+.padded-60 {
+    padding: 60px;
+}
+
+.padded-40 {
+    padding: 40px;
+}
+
+.padded-20 {
+    padding: 20px;
+}
+
+
+.padded-10 {
+    padding: 10px;
+}
+
+
+.rounded {
+    border-radius: 3px;
+    border-radius: .25rem;
+}
+
+
+form ul {
+    padding-left: 0;
+}
+
+form ul li {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    text-align: left;
+}
+
+/* BOTONES */
+
+button.btn {
+    text-decoration: none;
+    background-color: #5ba4e6;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .09) 0%, rgba(0, 0, 0, .09) 100%);
+    font-size: 1.4rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border: none;
+}
+
+button.btn:focus {
+    outline: none;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .padded {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .bg-small {
+        background-color: #ffffff;
+    }
+}
+
+
+.text-size30 {
+    font-size: 30px;
+}
+
+
+.text-size20 {
+    font-size: 20px;
+}
+
+.text-size16 {
+    font-size: 16px;
+}
+
+
+.text-size10 {
+    font-size: 10px;
+}
+
+
+.bold-font {
+    font-weight: bold;
+}

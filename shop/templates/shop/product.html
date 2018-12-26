@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to the Cushion Store
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} - Perfect Cushion Store
+    {% else %}
+        See Our Cushion Collection - Perfect Cushion
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <br>
+    <br>
+
+
+{#    <div class="stickers-bg">#}
+{##}
+{#                <div class="jumbotron ">#}
+{#        <div class="container-fluid">#}
+{#            <div class="row mb-0">#}
+{#                <br>#}
+{##}
+{#                <div class="col-md-8 mb-4 orange-bg">#}
+{#                    <h4 class="display-4 text-white">Stickers personalizados</h4>#}
+{##}
+{#                    <a class=""><i class="fas fa-star"></i></a>#}
+{#                    <a class=""><i class="fas fa-star"></i></a>#}
+{#                    <a class=""><i class="fas fa-star"></i></a>#}
+{#                    <a class=""><i class="fas fa-star"></i></a>#}
+{#                    <a class=""><i class="fas fa-star-half-alt"></i></a>#}
+{#                </div>#}
+{##}
+{##}
+{#            </div>#}
+{##}
+{##}
+{#        </div>#}
+{#    </div>#}
+
+    <br>
+    <br>
+    <div class="row">
+
+        <div class="col-md-6">
+            <h1 class="text-center">{{ product.name }}</h1>
+            <p class="text-center">
+            <a class=""><i class="gold-star fas fa-star"></i></a>
+                    <a class=""><i class="gold-star fas fa-star"></i></a>
+                    <a class=""><i class="gold-star fas fa-star"></i></a>
+                    <a class=""><i class="gold-star fas fa-star"></i></a>
+                    <a class=""><i class="gold-star fas fa-star-half-alt"></i></a>
+            858 reviews
+            </p>
+            <div class="text-center">
+                <img src="{{ product.image.url }}">
+
+            </div>
+            <br>
+            <p class="text-center">Custom kiss cut stickers easily peel away from the backing. Print on the surrounding
+                border
+                as
+                well as the stickers. Made from durable vinyl that resists scratching, heat, water and
+                sunlight.</p>
+        </div>
+
+        <div class="col-md-1"></div>
+
+        <div class="col-md-4 col-xs-12">
+
+            <div class="semi-transparent padded rounded">
+
+                <div class="bg-white rounded padded padded-40">
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="">
+
+                            <div id="size">
+
+                                <legend class="text-size16 bold-font"> {{ form.size.label }}</legend>
+
+
+                                <ul class="form-items">
+                                    <li>
+                                                <span>
+                                                    {{ form.size.0.tag }}
+                                                    {{ form.size.0.choice_label }}
+                                                </span>
+                                    </li>
+                                    <li>
+                                                <span>
+                                                    {{ form.size.1.tag }}
+                                                    {{ form.size.1.choice_label }}
+                                                </span>
+                                    </li>
+                                    <li>
+                                                <span>
+                                                    {{ form.size.2.tag }}
+                                                    {{ form.size.2.choice_label }}
+                                                </span>
+                                    </li>
+                                    <li>
+                                                <span>
+                                                    {{ form.size.3.tag }}
+                                                    {{ form.size.3.choice_label }}
+                                                </span>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+
+                            <div id="quantity">
+
+                                <legend class="text-size16 bold-font"> {{ form.quantity.label }}</legend>
+
+                                <ul class="form-items">
+                                    <li>
+                                            <span>
+                                                {{ form.quantity.0.tag }}
+                                                {{ form.quantity.0.choice_label }}
+                                            </span>
+                                        <span>$69</span>
+                                        <span class="savings">Ahorra 39%</span
+                                    </li>
+                                    <li>
+                                            <span>
+                                                {{ form.quantity.1.tag }}
+                                                {{ form.quantity.1.choice_label }}
+                                            </span>
+                                        <span>$120</span>
+                                        <span class="savings">Ahorra 77%</span
+                                    </li>
+                                    <li>
+                                            <span>
+                                                {{ form.quantity.2.tag }}
+                                                {{ form.quantity.2.choice_label }}
+                                            </span>
+                                        <span>$509</span>
+                                        <span class="savings">Ahorra 60%</span
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+
+                        <button type="submit" class="btn btn-naranja text-white btn-block">Continuar
+                        </button>
+                        {#                                    <a  href="#" class="btn btn-naranja text-white btn-block">Continuar#}
+                        </a>
+                        <br>
+                        <br>
+                        <p class="text-size10 text-center">Siguiente: subir imagen</p>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    </div>
+
+    {#    </div>#}
+
+    <br>
+    <br>
+
+{% endblock %}

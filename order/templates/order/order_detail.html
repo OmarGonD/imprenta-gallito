@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}
+
+    Order Details - Perfect Cushion Store
+
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        <div class="text-center">
+            <br>
+            <h1 class="text-center my_title">Detalles de la Orden</h1>
+            <br>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="tex-left" colspan="2">
+                        <b>Orden: </b> {{ order.id }}<br>
+                        <b>Fecha: </b> {{ order.created }}<br>
+                        <b>Total de la orden: </b> S/. {{ order.total }}<br>
+                        <b>Estado de la orden: </b><i class="fas fa-check"></i> Completa.
+                    </td>
+                    <td class="text-left" colspan="2">
+                        <b>Dirección de facturación: </b><br>
+                        {{ order.billingName }} <br>
+                        {{ order.billingAddress1 }} <br>
+                        {{ order.billingCity }} <br>
+                        {{ order.billingPostcode }} <br>
+                        {{ order.billingCountry }} <br>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Descripción del producto: </b></td>
+                    <td><b>Cantidad: </b></td>
+                    <td><b>Precio unitario: </b></td>
+                    <td><b>Sub total:</b></td>
+                </tr>
+                {% for item in order_items %}
+
+                    <tr>
+                        <td>{{ item.product }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>{{ item.sub_total }}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td class="text-right" colspan="3"><b>Total: </b></td>
+                    <td> S/. {{ order.total }}</td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="3"><b>Total pagado: </b></td>
+                    <td> S/. {{ order.total }}</td>
+                </tr>
+                <tr>
+                    <td class="text-left" colspan="2">
+                        <b>Dirección de envío: </b><br>
+                        {{ order.shippingName }}<br>
+                        {{ order.shippingAddress1 }}<br>
+                        {{ order.shippingCity }}<br>
+                        {{ order.shippingPostcode }}<br>
+                        {{ order.shippingCountry }}<br>
+                    </td>
+                    <td class="text-left" colspan="2">
+                        <b>Detalle del pago: </b><br>
+                        La orden #{{ order.id }} ha sido cancelada exitosamente vía Stripe.
+                    </td>
+                </tr>
+            </table>
+            <button class="btn btn-secondary" onclick="window.print();"><i class="fas fa-print"></i> Imprimir orden</button>
+        </div>
+    </div>
+    <br>
+    <br>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% load staticfiles %}
+
+
+{% if category %}
+
+    <header class="orange-bg my_header_height">
+
+        <br>
+        <br>
+        <br>
+        <div class="container-fluid">
+            <p class="text-white my_title_categories ml-5">{{ category.name }}</p>
+        </div>
+    </header>
+
+{% else %}
+
+    <header class="orange-bg">
+        <br>
+        <br>
+        {#            <br>#}
+
+        <div class="row margin_right_zero">
+            {#                <div class="col-md-1"></div>#}
+            <div class="col-md-6">
+
+                <div class="my_custom_banner_left">
+
+                    <p class="my_title_banner">Stickers<br>personalizados</p>
+
+                    <p>Fáciles de ordenar por internet, diseño de conceptos gratis, envíos rápidos </p>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <a href="productos" class="btn btn-azul text-white btn-block">Comprar</a>
+                            {#                                <button type="button" class="btn btn-comprar text-white btn-block">Comprar</button>#}
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <a href="productos" class="btn btn-naranja text-white btn-block">Muestras
+                            </a>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6 ml-auto my_custom_banner_right">
+
+                <img class="my_image_banner my_image_padding" src="{% static 'img/banner-home2.png' %}">
+
+            </div>
+
+
+        </div>
+
+    </header>
+
+{% endif %}

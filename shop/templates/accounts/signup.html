@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load crispy_forms_tags %}
+
+{% block metadescription %}
+    Regístrate para que recibas las últimas novedades. Tenemos los mejores cojines de El Perú.
+{% endblock %}
+{% block title %}
+    Crear una nueva cuenta - Perfect Cushion Store
+{% endblock %}
+
+{% block content %}
+
+    <div>
+        {% if not form.is_valid %}
+
+            <div class="container">
+                <h1 class="text-center my_title">
+                    Crear una nueva cuenta
+                </h1>
+                <br>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mx-auto-bg-light">
+                    <br>
+                    <p>Ingresa la siguiente información para crear una cuenta</p>
+
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+
+                                <table>
+                                    <tr>
+                                        <th>{{ user_form.first_name.label_tag }}</th>
+                                        <td>
+                                            {{ user_form.first_name.errors }}
+                                            {{ user_form.first_name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ user_form.last_name.label_tag }}</th>
+                                        <td>
+                                            {{ user_form.last_name.errors }}
+                                            {{ user_form.last_name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ user_form.username.label_tag }}</th>
+                                        <td>
+                                            {{ user_form.username.errors }}
+                                            {{ user_form.username }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ profile_form.dni.label_tag }}</th>
+                                        <td>{{ profile_form.dni }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ profile_form.email.label_tag }}</th>
+                                        <td>{{ profile_form.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ user_form.password1.label_tag }}</th>
+                                        <td>
+                                            {{ user_form.password1.errors }}
+                                            {{ user_form.password1 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ user_form.password2.label_tag }}</th>
+                                        <td>
+                                            {{ user_form.password2.errors }}
+                                            {{ user_form.password2 }}
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <table>
+
+
+                                    <tr>
+                                        <th>{{ profile_form.cellphone.label_tag }}</th>
+                                        <td>{{ profile_form.cellphone.errors }}
+                                            {{ profile_form.cellphone }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>{{ profile_form.shipping_address1.label_tag }}</th>
+                                        <td>
+                                            {{ profile_form.shipping_address1.errors }}
+                                            {{ profile_form.shipping_address1 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ profile_form.shipping_address2.label_tag }}</th>
+                                        <td>
+                                            {{ profile_form.shipping_address2.errors }}
+                                            {{ profile_form.shipping_address2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ profile_form.shipping_district.label_tag }}</th>
+                                        <td>
+                                            {{ profile_form.shipping_district.errors }}
+                                            {{ profile_form.shipping_district }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ profile_form.shipping_province.label_tag }}</th>
+                                        <td>
+                                            {{ profile_form.shipping_province.errors }}
+                                            {{ profile_form.shipping_province }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ profile_form.shipping_department.label_tag }}</th>
+                                        <td>
+                                            {{ profile_form.shipping_department.errors }}
+                                            {{ profile_form.shipping_department }}
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                        <br>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-secondary" type="submit">Registrarse</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+        {% else %}
+            <div class="container">
+                <br>
+                <h1 class="my_title text-center">
+                    Tu cuenta ha sido creada exitosamente.
+                </h1>
+                <br>
+                <div>
+                    <p>
+                        Estimado cliente,
+                        <br>
+                        <br>
+                        Su cuenta ha sido creada y ya puede ser usada
+
+                        <br>
+                        <a href="{% url 'shop:allProdCat' %}">Seguir comprando</a> y disfruta de los mejores cojines
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <br>
+{% endblock %}
