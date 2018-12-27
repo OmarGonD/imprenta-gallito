@@ -74,9 +74,11 @@ class Profile(models.Model):
     # phone_number = models.CharField(max_length=15, blank=True)
     shipping_address1 = models.CharField(max_length=100, blank=False)
     shipping_address2 = models.CharField(max_length=100, blank=False)
-    shipping_district = models.CharField(max_length=100, blank=False)
-    shipping_province = models.CharField(max_length=100, blank=False)
     shipping_department = models.CharField(max_length=100, blank=False)
+    shipping_province = models.CharField(max_length=100, blank=False)
+    shipping_district = models.CharField(max_length=100, blank=False)
+
+
 
 
 @receiver(post_save, sender=User)
@@ -92,4 +94,4 @@ class Peru(models.Model):
     distrito = models.CharField(max_length=100, blank=False)
 
     def __str__(self):
-        return self.departamento
+        return self.departamento + " - " + self.provincia + " - " + self.distrito

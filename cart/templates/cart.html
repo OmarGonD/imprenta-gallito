@@ -8,7 +8,8 @@
 {% endblock %}
 {% block content %}
 
-
+<br>
+    <br>
 
     <script>
         Culqi.publicKey = '{{ culqi_my_public_key }}';
@@ -144,6 +145,7 @@
             {% endif %}
 
             <br>
+            <br>
             <a href="{% url 'shop:allProdCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
                 comprando</a>
         </div>
@@ -231,7 +233,7 @@
                                 last_four: Culqi.token.last_four,
                             },
                         ).done(function () {
-                            window.location.href = "{% url 'cart:thank_you' %}";
+                            window.location.href = "{% url 'order:thanks' %}";
                         })
 
                     } else {

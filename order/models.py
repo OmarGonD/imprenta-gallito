@@ -42,3 +42,21 @@ class OrderItem(models.Model):
         return self.product
 
 
+
+class Transactions(models.Model):
+    transaction_id = models.AutoField(primary_key=True)
+    charge_id = models.CharField(max_length=100, blank=True, null=True)
+    last_four = models.CharField(max_length=100, blank=True, null=True)
+    email = models.CharField(max_length=100, blank=True, null=True)
+    amount = models.IntegerField()
+    reason = models.CharField(max_length=400, blank=True, null=True, default='')
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'Transactions'
+        ordering = ['-creation_date']
+
+    def __str__(self):
+        return self.last_four
+
+

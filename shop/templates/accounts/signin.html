@@ -13,6 +13,9 @@
 
 {% block content %}
 
+    <br>
+    <br>
+
     <div class="container">
         <br>
         <h1 class="my_title text-center">
@@ -20,16 +23,7 @@
         </h1>
         <br>
         <div class="row">
-            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
-                <br>
-                <h2 class="my_title">
-                    Nuevo cliente
-                </h2>
-                <br>
-                <p>Cuando creas una cuenta con nosotros, puedes ver el historial de tus compras</p>
-                <br>
-                <a href="{% url 'signup' %}" class="btn btn-secondary">Crear cuenta nueva</a>
-            </div>
+
             <div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
                 <div>
                     <br>
@@ -45,6 +39,19 @@
                 </div>
 
             </div>
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
+                <br>
+                <h2 class="my_title">
+                    Nuevo cliente
+                </h2>
+                <br>
+                <p>Cuando creas una cuenta con nosotros, puedes ver el historial de tus compras</p>
+                <br>
+                <a href="{% url 'signup' %}" class="btn btn-secondary">Crear cuenta nueva</a>
+            </div>
         </div>
     </div>
+    <br>
+    <br>
 {% endblock %}

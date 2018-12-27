@@ -1,23 +1,24 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Transactions
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
-def thanks(request, order_id):
-    if order_id:
-        customer_order = get_object_or_404(Order, id= order_id)
-    return render(request, 'thanks.html', {'customer_order': customer_order})
+def thanks(request):
+
+    order_number = Transactions.objects.latest('transaction_id').transaction_id
+
+    return render(request, 'thanks.html', dict(order_number=order_number))
+
 
 
 @login_required()
 def orderHistory(request):
     if request.user.is_authenticated:
-        # email = str(request.user.email)
-        email = "tester2@gmail.com"
+        email = str(request.user.email)
         print(email)
-        order_details = Order.objects.filter(emailAddress=email)
+        order_details = Transactions.objects.filter(email=email)
         # order_details = get_object_or_404(Order, emailAddress=email)
         if not order_details:
             print("No hay orden")

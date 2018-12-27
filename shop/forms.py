@@ -54,16 +54,12 @@ class ProfileForm(ModelForm):
         self.fields['shipping_district'] = forms.ChoiceField(choices=tuple([(name, name) for name in district_list]))
         self.fields['shipping_province'] = forms.ChoiceField(choices=tuple([(name, name) for name in province_list]))
         self.fields['shipping_department'] = forms.ChoiceField(choices=tuple([(name, name) for name in department_list]))
-    #
-    # # birth_date = forms.DateTimeField(required=False)
+
     dni = forms.CharField(label = 'DNI', max_length=100, required=True)
     email = forms.EmailField(label = 'Correo electrónico', max_length=254, widget=forms.TextInput(attrs={'placeholder': 'micorreo@correo.com'}))
     cellphone = forms.CharField(label = 'Celular o  teléfono', max_length=15, required=True)
     shipping_address1 = forms.CharField(label = 'Dirección de envío', max_length=100, required=True)
     shipping_address2 = forms.CharField(label = 'Dirección de envío 2 (opcional)', max_length=100, required=False)
-    # shipping_district = forms.ChoiceField(label='Distrito', required=True)
-    # shipping_province = forms.ChoiceField(label = 'Provincia', required=True)
-    # shipping_department = forms.ChoiceField(label = 'Departamento', required=True)
 
     class Meta:
         model = Profile

@@ -1,5 +1,6 @@
 body {
-    font-family: 'Roboto', sans-serif;
+    /*font-family: 'Charm', cursive;*/
+    font-family: 'Bree Serif', serif;
 }
 
 header {
@@ -18,22 +19,7 @@ header {
   left:0;
 }
 
-/* === NavBar === */
-.nav-item {
-    /*letter-spacing: .2em;*/
-    font-size: 14px;
-    text-transform: uppercase;
-}
 
-.my_top_navbar_div {
-
-    color: white;
-}
-
-
-.dropdown-item {
-
-}
 
 
 /* == Footer ==== */
@@ -224,32 +210,16 @@ ul.my_products_list li {
     margin-top: 5px;
 }
 
-.navbar-bg {
-    background-color: black;
-}
 
 
 .orange-bg {
     background-color: orange;
 }
 
-/*nav.navbar{padding: 0 1rem;}*/
-
-nav.navbar .nav-item{padding:0.2rem 0.2rem}
-
-ul li a {
-    color: white;
+.gold-star {
+    color: #FFCC00;
 }
 
-ul li a:hover {
-    color: white;
-}
-
-
-
-li.nav-item:hover {
-  background-color: red;
-}
 
 
 .text-white {

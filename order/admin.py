@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Transactions
 
 # Register your models here.
 
@@ -46,3 +46,19 @@ class OrderAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+
+
+class TransactionsAdmin(admin.ModelAdmin):
+    list_display = ['transaction_id', 'last_four', 'email', 'amount', 'reason', 'creation_date']
+    list_editable = ['reason',]
+
+    readonly_fields = ('transaction_id',)
+    class Meta:
+        ordering = ('transaction_id',)
+        verbose_name = 'Transaction'
+        verbose_name_plural = 'Transactions'
+
+
+admin.site.register(Transactions, TransactionsAdmin)
