@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, render_to_response
 from django.http import HttpResponse
 from .models import Category, Product, Peru
@@ -7,9 +8,11 @@ from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic.edit import CreateView, FormView
-from cart.models import Cart
+from cart.models import Cart, SizeQuantity
 from cart.views import _cart_id
 from django.db import transaction
+from django.urls import reverse
+import secrets
 
 
 # Create your views here.
@@ -53,15 +56,16 @@ class StepOneView(FormView):
     template_name = 'shop/product.html'
     success_url = 'subir-arte'
 
-    def get_initials(self):
+    def get_initial(self):
          # pre-populate form if someone goes back and forth between forms
-         initial = super(StepOneView, self).get_initials()
+         initial = super(StepOneView, self).get_initial()
          initial['size'] = self.request.session.get('size', None)
          initial['quantity'] = self.request.session.get('quantity', None)
          initial['product'] = Product.objects.get(
                 category__slug=self.kwargs['c_slug'],
                 slug=self.kwargs['product_slug']
             )
+
          return initial
 
          # pre-populate form if someone goes back and forth between forms
@@ -88,6 +92,8 @@ class StepOneView(FormView):
         self.request.session['product'] = form.cleaned_data.get('product')
         self.request.session['size'] = form.cleaned_data.get('size')
         self.request.session['quantity'] = form.cleaned_data.get('quantity')
+
+
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -97,6 +103,8 @@ class StepTwoView(CreateView):
     form_class = StepTwoForm
     template_name = 'shop/subir-arte.html'
     success_url = '/cart/'
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -111,6 +119,9 @@ class StepTwoView(CreateView):
 
 
     def form_valid(self, form):
+
+        self.request.session['cart_id'] = secrets.token_urlsafe(22)
+
 
         try:
             cart = Cart.objects.get(cart_id=_cart_id(self.request))
@@ -173,6 +184,8 @@ def signinView(request):
                                 password = password)
             if user is not None:
                 login(request, user)
+                cart_id =_cart_id(request)
+                request.session['cart_id'] = cart_id
                 return redirect('shop:allProdCat')
             else:
                 return redirect('signup')
@@ -183,6 +196,8 @@ def signinView(request):
 
 
 def signoutView(request):
+    del request.session['cart_id']
+    request.session.modified = True
     logout(request)
     return redirect('signin')
 
@@ -192,9 +207,11 @@ def signoutView(request):
 
 ### New SignUp Extended
 
+from django.shortcuts import render
+
+
+
 @transaction.atomic
-
-
 def signupView(request):
     peru = Peru.objects.all()
     print(peru)
@@ -220,8 +237,10 @@ def signupView(request):
             profile_form = ProfileForm(district_list, province_list, department_list, request.POST, instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
             profile_form.save()  # Gracefully save the form
+
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+
             return redirect('cart:cart_detail')
     else:
         user_form = SignUpForm()

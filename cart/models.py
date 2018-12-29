@@ -74,7 +74,7 @@ class SizeQuantity(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.size + " por " + self.quantity
+        return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
 
     @property
     def image_filename(self):

@@ -12,21 +12,23 @@ from .models import Profile
 
 # Variables
 
-TAMANIOS = (('variante_50', '50 mm x 50 mm',), ('variante_75', '75 mm x 75 mm',),
-            ('variante_100', '100 mm x 100 mm',), ('variante_125', '125 mm x 125 mm',))
 
-CANTIDADES = (('cantidad_50', '50',), ('cantidad_100', '100',),
-              ('cantidad_200', '200',), ('cantidad_300', '300',),
-              ('cantidad_500', '500',), ('cantidad_1000', '1000',),
-              ('cantidad_2000', '2000',), ('cantidad_3000', '3000',),
-              ('cantidad_4000', '4000',), ('cantidad_5000', '5000',),
-              ('cantidad_1000', '1000',))
+TAMANIOS = (('50mm x 50mm', '50 mm x 50 mm',), ('75mm x 75mm', '75 mm x 75 mm',),
+            ('100mm x 100mm', '100 mm x 100 mm',), ('125mm x 125mm', '125 mm x 125 mm',))
+
+CANTIDADES = (('50', '50',), ('100', '100',),
+              ('200', '200',), ('300', '300',),
+              ('500', '500',), ('1000', '1000',),
+              ('2000', '2000',), ('3000', '3000',),
+              ('4000', '4000',), ('5000', '5000',),
+              ('10000', '10000',))
 
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(label= "Nombre", max_length=100, required=True)
     last_name = forms.CharField(label = 'Apellido', max_length=100, required=True)
     username = forms.CharField(label='Nombre de usuario', max_length=100, required=True)
+    email = forms.EmailField(label='Correo electrónico', max_length=60, required=True)
     password1 = forms.CharField(label = 'Contraseña', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
 
@@ -39,7 +41,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'password1',
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1',
                  'password2')
         # help_texts = {
         #     'username': '',
@@ -56,14 +58,14 @@ class ProfileForm(ModelForm):
         self.fields['shipping_department'] = forms.ChoiceField(choices=tuple([(name, name) for name in department_list]))
 
     dni = forms.CharField(label = 'DNI', max_length=100, required=True)
-    email = forms.EmailField(label = 'Correo electrónico', max_length=254, widget=forms.TextInput(attrs={'placeholder': 'micorreo@correo.com'}))
+    # email = forms.EmailField(label = 'Correo electrónico', max_length=254, widget=forms.TextInput(attrs={'placeholder': 'micorreo@correo.com'}))
     cellphone = forms.CharField(label = 'Celular o  teléfono', max_length=15, required=True)
     shipping_address1 = forms.CharField(label = 'Dirección de envío', max_length=100, required=True)
     shipping_address2 = forms.CharField(label = 'Dirección de envío 2 (opcional)', max_length=100, required=False)
 
     class Meta:
         model = Profile
-        fields = ('dni',  'email', 'cellphone', 'shipping_address1',
+        fields = ('dni', 'cellphone', 'shipping_address1',
                   'shipping_address2', 'shipping_department', 'shipping_province', 'shipping_district')
 
 

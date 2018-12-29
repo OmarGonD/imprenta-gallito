@@ -1,20 +1,5 @@
-from .models import Cart
-
-
-from .views import _cart_id
-
-
-# def counter(request):
-#     item_count = 0
-#     if 'admin' in request.path:
-#         return {}
-#     else:
-#         try:
-#             cart = Cart.objects.get(cart_id=_cart_id(request))
-#             cart_items = CartItem.objects.all().filter(cart = cart)
-#             for cart_item in cart_items:
-#                 item_count += cart_item.quantity
-#         except Cart.DoesNotExist:
-#             item_count = 0
-#     return dict(item_count = item_count)
-
+# import datetime
+#
+# def current_time(request):
+#     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#     return dict(current_time = current_time)

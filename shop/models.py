@@ -65,7 +65,7 @@ class Product(models.Model):
 
 
 ### User Profile ###
-#
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

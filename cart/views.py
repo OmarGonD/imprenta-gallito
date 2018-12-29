@@ -5,11 +5,12 @@ from .models import Cart, SizeQuantity
 from django.core.exceptions import ObjectDoesNotExist
 import stripe
 from django.conf import settings
-from order.models import Order, OrderItem, Transactions
+from order.models import Order, OrderItem
 import uuid
 import culqipy
 from django.views.decorators.csrf import csrf_exempt
-
+import datetime
+import secrets
 
 
 
@@ -17,12 +18,15 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def _cart_id(request):
-    cart = request.session.session_key
+    if 'cart_id' in request.session:
+        cart_id = request.session['cart_id']
+    else:
+        cart_id = secrets.token_urlsafe(22)
 
-    if not cart:
-        request.session.create()  # it does not return anything. that is why `cart = request.session.create()` will not work
-        cart = request.session.session_key
-    return cart  # Ultimately return cart
+    # if not cart:
+    #     request.session.create()  # it does not return anything. that is why `cart = request.session.create()` will not work
+    #     cart = request.session.session_key
+    return cart_id  # Ultimately return cart
 
 
 
@@ -74,18 +78,71 @@ def cart_charge(request):
     print(charge['id'])
     print(charge['amount'])
 
+    print("New PRINTS")
+    print("User Email")
+    print(request.user.email)
+    print("User Department")
+    print(request.user.profile.shipping_department)
+    print("User Province")
+    print(request.user.profile.shipping_province)
+    print("User District")
+    print(request.user.profile.shipping_district)
+
     transaction_amount = int(charge['amount'])/100 #Necesario dividir entre 100 para obtener el monto real,
                                                    #Esto debido a cómo Culqi recibe los datos de los pagos
 
-    transaction = Transactions.objects.create(
-        charge_id = charge['id'],
+
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    shipping_address1 = request.user.profile.shipping_address1
+
+    shipping_address2 = request.user.profile.shipping_address2
+
+    shipping_department = request.user.profile.shipping_department
+
+    shipping_province = request.user.profile.shipping_province
+
+    shipping_district = request.user.profile.shipping_district
+
+    order_details = Order.objects.create(
+        token = charge['id'],
+        total =transaction_amount,
+        email= email, #Using email entered in Culqi module, NOT user.email. Could be diff.
         last_four = last_four,
-        email = email,
-        amount = transaction_amount,
+        created = current_time,
+        shipping_address1 = shipping_address1,
+        shipping_address2 = shipping_address2,
+        shipping_department = shipping_department,
+        shipping_province = shipping_province,
+        shipping_district = shipping_district
 
     )
 
-    transaction.save()
+    order_details.save()
+    print("La orden fue creada")
+
+    try:
+        cart = Cart.objects.get(cart_id = _cart_id(request))
+        cart_items = SizeQuantity.objects.filter(cart = cart)
+        for order_item in cart_items:
+            oi = OrderItem.objects.create(
+                product=order_item.product.name,
+                # quantity = 10,
+                quantity=order_item.quantity,
+                size=order_item.size,
+                price = order_item.product.price,
+                image=order_item.image,
+                comment = order_item.comment,
+                order = order_details
+            )
+            oi.save()
+            # order_item.delete()
+            print("Se guardó el item de la compra")
+
+    except ObjectDoesNotExist:
+        pass
+
+
 
     return HttpResponse("Hi")
 
