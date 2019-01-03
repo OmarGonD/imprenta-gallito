@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import ModelForm
 
-from cart.models import SizeQuantity
+from cart.models import CartItem
 from django.db import transaction
 from .models import Profile
 
@@ -84,7 +84,7 @@ class StepTwoForm(forms.ModelForm):
     comment = forms.CharField(widget=forms.Textarea)
 
     class Meta:
-        model = SizeQuantity
+        model = CartItem
         fields = ('image', 'comment')
 
     def __init__(self, *args, **kwargs):
@@ -104,3 +104,22 @@ class StepTwoForm(forms.ModelForm):
 
 
 
+class SamplePackForm(forms.ModelForm):
+
+
+    class Meta:
+        model = CartItem
+        fields = ()
+
+    def __init__(self, *args, **kwargs):
+        super(SamplePackForm, self).__init__(*args, **kwargs)
+        self.fields['cart'].required = False
+        self.fields['size'].required = False
+        self.fields['quantity'].required = False
+        self.fields['comment'].required = False
+        self.fields['image'].required = False
+
+    def save(self, commit=True):
+        instance = super(SamplePackForm, self).save(commit=commit)
+        # self.send_email()
+        return instance

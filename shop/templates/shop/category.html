@@ -22,7 +22,7 @@
         <div class="row my_row_class">
 
             <div class="mx-auto">
-                <p><a href="{% url 'shop:allProdCat' %}">Our Product Collection</a> | {{ category.name }}</p>
+                <p><a href="{% url 'shop:allCat' %}">Our Product Collection</a> | {{ category.name }}</p>
             </div>
 
         </div>
@@ -33,14 +33,14 @@
         {#        </div>#}
 
         <div class="row col-md-12">
-            {% for product in products %}
+            {% for category in categories %}
                 <div class="col-md-3">
                     <div class="text-center">
-                        <a href="{{ product.get_url }}"><img class="my_image_medium"#}
-                                                             src="{{ product.image.url }}"
-                                                             alt="{{ product.name }}"></a>
+                        <a href="{{ category.get_url }}"><img class="my_image_medium"#}
+                                                             src="{{ category.image.url }}"
+                                                             alt="{{ category.name }}"></a>
                     </div>
-                    <p class="text-center">{{ product.name }}</p>
+                    <p class="text-center">{{ category.name }}</p>
                 </div>
             {% endfor %}
         </div>
@@ -67,14 +67,14 @@
 
 
             <div class="row col-md-12">
-                {% for product in products|slice:":4" %}
+                {% for category in categories|slice:":4" %}
                     <div class="col-md-3">
                         <div class="text-center">
-                            <a href="{{ product.get_url }}"><img class="my_image_medium"
-                                                                 src="{{ product.image.url }}"
-                                                                 alt="{{ product.name }}"></a>
+                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"
+                                                                 src="{{ category.image.url }}"
+                                                                 alt="{{ category.name }}"></a>
                         </div>
-                        <p class="text-center">{{ product.name }}</p>
+                        <p class="text-center">{{ category.name }}</p>
                     </div>
                 {% endfor %}
             </div>

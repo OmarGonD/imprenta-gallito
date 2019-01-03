@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
 
-<br>
+    <br>
     <br>
 
     <script>
@@ -50,210 +50,220 @@
                 <br>
             </div>
         </div>
-        <div class="row">
-        <div class="col-md-6">
+
     {% endif %}
-<div class="row mx-auto">
-    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-        <table class="table my_custom_table">
-            <thead class="my_custom_thead">
-            <tr>
-                <th colspan="5">
-                    Tus items
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for cart_item in cart_items %}
-                <tr>
-                    <td>
-                        <a href="cart_item.product.get_absolute_url"><img
-                                src="{{ cart_item.image.url }}" alt=""
-                                class="float-left rounded custom_image"></a>
-                    </td>
-                    <td class="text-left">
-                        {{ cart_item.product.name }}
-                        <br>
-                        {{ cart_item.size }}
-                        <br>
-                        {{ cart_item.image_filename }}
-                        <br>
-                        SKU: {{ cart_item.product.id }}
-                        <br>
-                        Precio unitario: {{ cart_item.product.price }}
-                        <br>
-                        Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
-                    </td>
-                    <td>
-                        S/.{{ cart_item.sub_total }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row mx-auto">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+                    <table class="table my_custom_table">
+                        <thead class="my_custom_thead">
+                        <tr>
+                            <th colspan="5">
+                                Tus items
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cart_item in cart_items %}
+                            <tr>
+                                <td>
+                                    <a href="cart_item.product.get_absolute_url"><img
+                                            src="{{ cart_item.image.url }}" alt=""
+                                            class="float-left rounded custom_image"></a>
+                                </td>
+                                <td class="text-left">
+                                    {{ cart_item.product.name }}
+                                    <br>
+                                    {{ cart_item.size }}
+                                    <br>
+                                    {{ cart_item.image_filename }}
+                                    <br>
+                                    SKU: {{ cart_item.product.id }}
+                                    <br>
+                                    Precio unitario: {{ cart_item.product.price }}
+                                    <br>
+                                    Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
+                                </td>
+                                <td>
+                                    S/.{{ cart_item.sub_total }}
 
-                        <a
-                                href="{% url 'cart:full_remove' cart_item.id %}"
-                                class="custom_icon"><i
-                                class="fas fa-trash-alt custom_icon"></i></a>
-                    </td>
-                    <td></td>
+                                    <a
+                                            href="{% url 'cart:full_remove' cart_item.id %}"
+                                            class="custom_icon"><i
+                                            class="fas fa-trash-alt custom_icon"></i></a>
+                                </td>
+                                <td></td>
 
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-</div>
-<div class="col-md-6">
-    <!-- CHECK OUT TABLE -->
-    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-
-        <table class="table my_custom_table">
-
-            <thead class="my_custom_thead">
-
-            <tr>
-                <th>
-                    Checkout
-                </th>
-            </tr>
-            </thead>
-            <tboyd>
-                <tr>
-                    <td>
-                        Por favor, revise su Carrito de Compras antes de proceder con el pago de la
-                        orden
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-left">
-                        Your total is:
-                        <stron>{{ total }}</stron>
-                    </td>
-                </tr>
-            </tboyd>
-        </table>
-        <div class="mx-auto">
-
-
-            {% if user.is_authenticated %}
-
-            <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
-
-            {% else %}
-
-            <button id="CannotbuyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
-
-            {% endif %}
-
-            <br>
-            <br>
-            <a href="{% url 'shop:allProdCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
-                comprando</a>
         </div>
+        <div class="col-md-6">
+            <!-- CHECK OUT TABLE -->
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+
+                <table class="table my_custom_table">
+
+                    <thead class="my_custom_thead">
+
+                    <tr>
+                        <th>
+                            Checkout
+                        </th>
+                    </tr>
+                    </thead>
+                    <tboyd>
+                        <tr>
+                            <td>
+                                Por favor, revise su Carrito de Compras antes de proceder con el pago de la
+                                orden
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">
+                                A pagar:
+                                <stron> S/. {{ total }}</stron><br>
+                                <b><i>Incluye costos de envío</i></b>
+                            </td>
+                        </tr>
+                    </tboyd>
+                </table>
+                <div class="mx-auto">
 
 
+                    {% if user.is_authenticated and total > 0 %}
 
-        <script>
+                        <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
 
-            $('#CannotbuyButton').on('click', function (e) {
-                // Abre el formulario con la configuración en Culqi.settings
-                alert("Para comprar debe ingresar con su cuenta o registrarse");
-                e.preventDefault();
-            });
+                    {% elif user.is_authenticated and total == 0 %}
 
-            $('#buyButton').on('click', function (e) {
-                // Abre el formulario con la configuración en Culqi.settings
-                Culqi.open();
-                e.preventDefault();
-            });
+                        <button id="EmptyCartButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
 
-        </script>
+                    {% else %}
 
-        <script>
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
+                        <button id="CannotbuyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
+
+                    {% endif %}
+
+                    <br>
+                    <br>
+                    <a href="{% url 'shop:allCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
+                        comprando</a>
+                </div>
+
+
+                <script>
+
+                    $('#EmptyCartButton').on('click', function (e) {
+                        // Abre el formulario con la configuración en Culqi.settings
+                        alert("Por favor, añada un pedido a su carrito de compras.");
+                        e.preventDefault();
+                    });
+
+                    $('#CannotbuyButton').on('click', function (e) {
+                        // Abre el formulario con la configuración en Culqi.settings
+                        alert("Para comprar debe ingresar con su cuenta o registrarse.");
+                        e.preventDefault();
+                    });
+
+
+                    $('#buyButton').on('click', function (e) {
+                        // Abre el formulario con la configuración en Culqi.settings
+                        Culqi.open();
+                        e.preventDefault();
+                    });
+
+                </script>
+
+                <script>
+                    function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                            var cookies = document.cookie.split(';');
+                            for (var i = 0; i < cookies.length; i++) {
+                                var cookie = jQuery.trim(cookies[i]);
 // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                                }
+                            }
+                        }
+                        return cookieValue;
+                    }
+
+                    var csrftoken = getCookie('csrftoken');
+
+                    function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                    }
+
+                    $.ajaxSetup({
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    });
+
+
+                    function culqi() {
+                        {#alert("Aún no hay Culqi Token");#}
+                        {#if (Culqi.token) {#}
+                        {#    $.post("{% url 'cart:cart_charge' %}", {#}
+                        {#            amount: {{ culqi_total }},#}
+                        {#            currency_code: 'PEN',#}
+                        {#            email: Culqi.token.email,#}
+                        {#            source_id: Culqi.token.id,#}
+                        {#            last_four: Culqi.token.last_four,#}
+                        {#        },#}
+                        {#    ).done(function () {#}
+                        {#        // do something with scess#}
+                        {#        window.location.href = "{% url 'cart:thank_you' %}";#}
+                        {#    })#}
+                        {# } else  #}
+                        {##}
+                        {#    console.log(Culqi.error);#}
+                        {#    alert(Culqi.error.user_message);#}
+                        {# }#}
+
+                        if (Culqi.token) {
+                            var $container = $('.general-container').addClass("preloader");
+
+                            if (Culqi.token) {
+                                $.post("{% url 'cart:cart_charge' %}", {
+                                        amount: {{ culqi_total }},
+                                        currency_code: 'PEN',
+                                        email: Culqi.token.email,
+                                        source_id: Culqi.token.id,
+                                        last_four: Culqi.token.last_four,
+                                    },
+                                ).done(function () {
+                                    window.location.href = "{% url 'order:thanks' %}";
+                                })
+
+                            } else {
+
+                                console.log(Culqi.error);
+                                alert(Culqi.error.user_message);
+                            }
+                        } else {
                         }
                     }
-                }
-                return cookieValue;
-            }
-
-            var csrftoken = getCookie('csrftoken');
-
-            function csrfSafeMethod(method) {
-// these HTTP methods do not require CSRF protection
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
-
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
 
 
-            function culqi() {
-                {#alert("Aún no hay Culqi Token");#}
-                {#if (Culqi.token) {#}
-                {#    $.post("{% url 'cart:cart_charge' %}", {#}
-                {#            amount: {{ culqi_total }},#}
-                {#            currency_code: 'PEN',#}
-                {#            email: Culqi.token.email,#}
-                {#            source_id: Culqi.token.id,#}
-                {#            last_four: Culqi.token.last_four,#}
-                {#        },#}
-                {#    ).done(function () {#}
-                {#        // do something with scess#}
-                {#        window.location.href = "{% url 'cart:thank_you' %}";#}
-                {#    })#}
-                {# } else  #}
-                {##}
-                {#    console.log(Culqi.error);#}
-                {#    alert(Culqi.error.user_message);#}
-                {# }#}
+                </script>
 
-                if (Culqi.token) {
-                    var $container = $('.general-container').addClass("preloader");
-
-                    if (Culqi.token) {
-                        $.post("{% url 'cart:cart_charge' %}", {
-                                amount: {{ culqi_total }},
-                                currency_code: 'PEN',
-                                email: Culqi.token.email,
-                                source_id: Culqi.token.id,
-                                last_four: Culqi.token.last_four,
-                            },
-                        ).done(function () {
-                            window.location.href = "{% url 'order:thanks' %}";
-                        })
-
-                    } else {
-
-                        console.log(Culqi.error);
-                        alert(Culqi.error.user_message);
-                    }
-                } else {
-                }
-            }
-
-
-
-
-
-        </script>
-
+            </div>
+        </div>
     </div>
-</div>
-</div>
+    <br>
     <br>
 
 {% endblock %}

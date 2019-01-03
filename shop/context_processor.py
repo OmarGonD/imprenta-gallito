@@ -9,8 +9,8 @@ def menu_links(request):
 
 
 def has_shop(request):
-    shop_in_request = re.findall(r"/shop/$", request.path)
-
+    # shop_in_request = re.findall(r"/shop/$", request.path)
+    shop_in_request = re.findall(r"^/$", request.path)
     return {'has_shop_in_url': any([shop_in_request])}
 
 

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to the Cushion Store
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} - Perfect Cushion Store
+    {% else %}
+        See Our Cushion Collection - Perfect Cushion
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+
+
+
+    <div class="my_header_samples">
+
+        <br>
+        <br>
+        <br>
+        <div class="container">
+            <p class="my_samples_title">Paquete de muestras a S/10</p>
+            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>
+                <i class="gold-star fas fa-star-half-alt"></i>
+                <i class="gold-star fas fa-star-half-alt"></i>
+
+            </p>
+
+            <div class="row">
+
+                <div class="text-center">
+                    <a href="{% url 'shop:SamplePack' 'muestras' 'sample-pack' %}"
+                    class="btn btn-azul text-white btn-block">Agregar al carrito</a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+
+    <div class="container">
+
+    <p class="my_samples_subtitle text-center">O también puedes obtener tus muestras con tu diseño personalizado.</p>
+
+    <br>
+
+        <div class="row col-md-12">
+            {% for muestra in muestras|slice:":3" %}
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <a href="{{muestra.get_url }}"><img class="my_image_medium"
+                                                             src="{{ muestra.image.url }}"
+                                                             alt="{{ muestra.name }}"></a>
+                    </div>
+                    <p class="text-center">{{ muestra.name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    <br>
+    <br>
+
+                <div class="row col-md-12">
+
+                <p class="text-center">
+
+                    {% video categoria_muestras.video as my_video %}
+
+                    {% video my_video "medium" %}
+                    {% endvideo %}
+
+                </p>
+
+                </div>
+
+
+    </div>
+
+    <br>
+    <br>
+
+{% endblock %}

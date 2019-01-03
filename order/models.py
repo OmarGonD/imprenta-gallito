@@ -6,6 +6,8 @@ from django.db import models
 
 class Order(models.Model):
     token = models.CharField(max_length=100, blank=True, null=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     email = models.EmailField(max_length=250, blank = True, verbose_name= 'Correo electrónico')
     last_four = models.CharField(max_length=100, blank=True, null=True)
@@ -46,10 +48,10 @@ class OrderItem(models.Model):
     def sub_total(self):
         return self.quantity * self.price
 
-    #
-    # @property
-    # def image_filename(self):
-    #     return self.image.url.split('/')[-1]
+
+    @property
+    def image_filename(self):
+        return self.image.url.split('/')[-1]
 
 
     def __str__(self):

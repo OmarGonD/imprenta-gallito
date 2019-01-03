@@ -4,11 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRe
 from django.http import HttpResponse
 from .models import Category, Product, Peru
 from django.contrib.auth.models import Group, User
-from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm
+from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, SamplePackForm
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic.edit import CreateView, FormView
-from cart.models import Cart, SizeQuantity
+from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from django.db import transaction
 from django.urls import reverse
@@ -24,29 +24,80 @@ def index(request):
 # Category View
 
 
-def allProdCat(request, c_slug=None):
-    c_page = None
-    products = None
-    if c_slug != None:
-        c_page = get_object_or_404(Category, slug = c_slug)
-        products = Product.objects.filter(category=c_page, available=True)
-    else:
-        products = Product.objects.all().filter(available=True)
-
-    return render(request, 'shop/category.html', {'category':c_page, 'products': products})
+def allCat(request):
+    #Muestras todas las categorias de productos en el home, menos "Muestras"
+    categories = Category.objects.exclude(name='Muestras')
+    return render(request, 'shop/category.html', {'categories': categories})
 
 
 
 
-# def ProdCatDetail(request, c_slug, product_slug):
-#     try:
-#         product = Product.objects.get(category__slug=c_slug, slug = product_slug)
-#     except Exception as e:
-#         raise e
-#     return render(request, 'shop/product-original.html', {'product':product})
-#
+
+def SamplePackPage(request):
+
+    #La categoria es necesaria para mostrar el video de c/categoria
+
+    categoria_muestras = Category.objects.get(slug='muestras')
+
+    # Productos que pertenecen a la categoria muestras
+
+    muestras = Product.objects.filter(category__slug='muestras')
+
+    return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,'muestras': muestras})
 
 
+
+def SamplePack(request, c_slug, product_slug):
+
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+
+    except Cart.DoesNotExist:
+
+        cart = Cart.objects.create(
+            cart_id=_cart_id(request)
+        )
+
+
+
+    try:
+        product = Product.objects.get(
+            category__slug=c_slug,
+            slug = product_slug,
+        )
+
+        cart_item = CartItem.objects.create(
+            cart = cart,
+            product = product,
+            size = "",
+            quantity= "",
+            image = product.image,
+            comment = "",
+        )
+
+
+
+        return redirect('/cart/')
+
+    except Exception as e:
+        raise e
+
+    return HttpResponse("Hi")
+
+
+
+def ProdCatDetail(request, c_slug):
+
+    if c_slug is not "muestras":
+
+        category = Category.objects.get(slug=c_slug)
+
+        try:
+            products = Product.objects.filter(category__slug=c_slug)
+        except Exception as e:
+            raise e
+
+        return render(request, 'shop/products.html', {'category': category, 'products': products})
 
 
 # Tamanos y cantidades
@@ -122,7 +173,6 @@ class StepTwoView(CreateView):
 
         self.request.session['cart_id'] = secrets.token_urlsafe(22)
 
-
         try:
             cart = Cart.objects.get(cart_id=_cart_id(self.request))
         except Cart.DoesNotExist:
@@ -148,27 +198,6 @@ class StepTwoView(CreateView):
 
 
 
-### Registro y Login/Logout de usuarios
-
-
-# def signupView(request):
-#     if request.method == 'POST':
-#         form = SignUpForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data.get('username')
-#             signup_user = User.objects.get(username = username)
-#             customer_group = Group.objects.get(name = 'Clientes')
-#             customer_group.user_set.add(signup_user)
-#             raw_password = form.cleaned_data.get('password1')
-#             user = authenticate(username=username, password=raw_password)
-#             login(request, user)
-#             return redirect('cart:cart_detail')
-#     else:
-#         form = SignUpForm()
-#
-#     return render(request, 'accounts/signup.html', {'form':form})
-
 
 def signinView(request):
     if request.method == 'POST':
@@ -186,7 +215,7 @@ def signinView(request):
                 login(request, user)
                 cart_id =_cart_id(request)
                 request.session['cart_id'] = cart_id
-                return redirect('shop:allProdCat')
+                return redirect('shop:allCat')
             else:
                 return redirect('signup')
 
@@ -196,10 +225,16 @@ def signinView(request):
 
 
 def signoutView(request):
-    del request.session['cart_id']
-    request.session.modified = True
-    logout(request)
-    return redirect('signin')
+    if request.user.is_superuser:
+        request.session.modified = True
+        logout(request)
+        return redirect('signin')
+    else:
+        del request.session['cart_id']
+        request.session.modified = True
+        logout(request)
+        return redirect('signin')
+
 
 
 

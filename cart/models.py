@@ -64,7 +64,7 @@ class Cart(models.Model):
 #         return str(self.sizequantity.product)
 
 
-class SizeQuantity(models.Model):
+class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=20, choices=TAMANIOS)

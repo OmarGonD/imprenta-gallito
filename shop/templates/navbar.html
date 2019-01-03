@@ -1,71 +1,8 @@
 {% load staticfiles %}
 
-<!--- GALLITO NAVBAR --->
-
-
-{#<nav class="navbar navbar-expand-md fixed-top navbar-bg">#}
-{##}
-{#     <a class="navbar-brand" href="#"><img class="" src="{% static 'img/Llama logo.png' %}" alt="{{ product.name }}"></a>#}
-{##}
-{#    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"#}
-{#            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">#}
-{#        <span class="navbar-toggler-icon"></span>#}
-{#    </button>#}
-{##}
-{#    <div class="collapse navbar-collapse" id="navbarsExampleDefault">#}
-{##}
-{##}
-{#        <ul class="navbar-nav mr-auto">#}
-{##}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="#">Stickers <span class="sr-only">(current)</span></a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="#">Etiquetas</a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="#">Magnetos</a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="#">Pines</a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link" href="#">Pines</a>#}
-{#            </li>#}
-{##}
-{#        </ul>#}
-{##}
-{#        <ul class="navbar-nav ml-auto">#}
-{#            {% if request.user.is_authenticated %}#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link"> {{ request.user }}</a>#}
-{#                    <i class="fas fa-user-circle"></i>#}
-{#                </li>#}
-{#                 <li class="nav-item">#}
-{#                    <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>#}
-{#                </li>#}
-{#            {% else %}#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="#"><i class="fas fa-shopping-cart" style="color:white !important;"></i></a>#}
-{#                </li>#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="{% url 'signin' %}">Ingresar <i class="fas fa-sign-in-alt"></i></a>#}
-{#                </li>#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link" href="{% url 'signup' %}">Registrarse <i class="fas fa-user-plus"></i></a>#}
-{#                </li>#}
-{##}
-{##}
-{#            {% endif %}#}
-{#        </ul>#}
-{##}
-{#    </div>#}
-{##}
-{##}
-{#</nav>#}
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-bg">
-    <a class="navbar-brand" href="#">Stickers Gallito</a>
+    <a class="navbar-brand" href="/"><img src="{% static 'img/stickers_gallito_logo.png' %}" width="20px" height="30px"> stickersgallito</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -98,7 +35,7 @@
 
                 <li class="nav-item active">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="fas fa-user-circle"></i> {{ request.user }}</a>
+                       aria-expanded="false"><i class="fas fa-user-circle"></i> {{ request.username }}</a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>
                     </div>

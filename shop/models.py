@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 #Variables
+from embed_video.fields import EmbedVideoField
 
 TAMANIOS = (('variante_50', '50 mm x 50 mm',), ('variante_75', '75 mm x 75 mm',),
             ('variante_100', '100 mm x 100 mm',), ('variante_125', '125 mm x 125 mm',))
@@ -27,6 +28,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=250, unique=True)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='category', blank=True)
+    video = EmbedVideoField()
 
     class Meta:
         ordering = ('name',)
@@ -64,6 +66,19 @@ class Product(models.Model):
         return '{}'.format(self.name)
 
 
+
+### Reviews ###
+
+
+class Reviews(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    review = models.CharField(max_length=250, unique=True)
+    order_again = models.BooleanField(default=True)
+    stars = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+
+
+
 ### User Profile ###
 
 
@@ -77,6 +92,9 @@ class Profile(models.Model):
     shipping_department = models.CharField(max_length=100, blank=False)
     shipping_province = models.CharField(max_length=100, blank=False)
     shipping_district = models.CharField(max_length=100, blank=False)
+
+    def __str__(self):
+        return str(self.user.first_name) + "'s profile"
 
 
 

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to the Cushion Store
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} - Perfect Cushion Store
+    {% else %}
+        See Our Cushion Collection - Perfect Cushion
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+
+
+
+    <div class="my_header_categories">
+
+        <br>
+        <br>
+        <div class="container">
+            <p class="my_category_title">{{ category.name|title }}</p>
+            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>
+                <i class="gold-star fas fa-star-half-alt"></i>
+                <i class="gold-star fas fa-star-half-alt"></i>
+
+            </p>
+
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+
+    <div class="container">
+
+
+        <div class="row col-md-12">
+            {% for product in products|slice:":4" %}
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <a href="{{ product.get_url }}"><img class="my_image_medium"
+                                                             src="{{ product.image.url }}"
+                                                             alt="{{ product.name }}"></a>
+                    </div>
+                    <p class="text-center">{{ product.name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row col-md-12">
+
+            {% video category.video as my_video %}
+
+            {% video my_video "medium" %}
+            {% endvideo %}
+
+        </div>
+
+
+    </div>
+
+    <br>
+    <br>
+
+{% endblock %}

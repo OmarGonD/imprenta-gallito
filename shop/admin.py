@@ -4,9 +4,16 @@ from .models import Category, Product, Profile, Peru
 # Register your models here.
 
 
-admin.site.register(Profile)
+
 
 admin.site.register(Peru)
+
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'dni']
+
+
+admin.site.register(Profile, ProfileAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']

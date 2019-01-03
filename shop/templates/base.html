@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/preloader.css' %}">
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
@@ -46,12 +47,12 @@
 {#            {% include 'header.html' %}#}
 {#        {% endif %}#}
 
-        <div class="container-fluid">
+
 
             {% block content %}
             {% endblock %}
 
-        </div>
+
 
 
     {% include 'footer.html' %}
