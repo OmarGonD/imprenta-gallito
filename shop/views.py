@@ -255,8 +255,9 @@ def signupView(request):
     district_list = set()
     for p in peru:
         department_list.add(p.departamento)
-        province_list.add(p.provincia)
         district_list.add(p.distrito)
+
+    province_list = set(Peru.objects.filter(departamento=peru.first().departamento).values_list("provincia", flat=True))
 
     if request.method == 'POST':
         user_form = SignUpForm(request.POST)
@@ -287,4 +288,9 @@ def signupView(request):
 })
 
 
-
+def get_province(request):
+    d_name = request.GET.get("d_name")
+    data = Peru.objects.filter(departamento=d_name).values_list("provincia", flat=True)
+    return render(request, "accounts/province_dropdown.html", {
+        "provinces": set(list(data))
+    })

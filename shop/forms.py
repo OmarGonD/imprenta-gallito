@@ -8,6 +8,7 @@ from django.forms import ModelForm
 
 from cart.models import CartItem
 from django.db import transaction
+from shop.models import Peru
 from .models import Profile
 
 # Variables
