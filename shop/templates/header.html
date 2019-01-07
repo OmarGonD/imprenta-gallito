@@ -1,66 +1,59 @@
 {% load staticfiles %}
 
+<div class="container-fluid my_header_bg_color">
 
-{% if category %}
-
-    <header class="orange-bg my_header_height">
-
+    <header class="">
         <br>
         <br>
-        <br>
-        <div class="container-fluid">
-            <p class="text-white my_title_categories ml-5">{{ category.name }}</p>
-        </div>
-    </header>
 
-{% else %}
 
-    <header class="orange-bg">
-        <br>
-        <br>
-        {#            <br>#}
+        <div class="row">
 
-        <div class="row margin_right_zero">
-            {#                <div class="col-md-1"></div>#}
             <div class="col-md-6">
 
                 <div class="my_custom_banner_left">
 
-                    <p class="my_title_banner">Stickers<br>personalizados</p>
+                    <p class="my_title_banner">Stickers personalizados</p>
+
 
                     <p>Fáciles de ordenar por internet, diseño de conceptos gratis, envíos rápidos </p>
 
-                    <div class="row">
-
-                        <div class="col-md-6">
-
-                            <a href="stickers" class="btn btn-azul text-white btn-block">Comprar</a>
-                            {#                                <button type="button" class="btn btn-comprar text-white btn-block">Comprar</button>#}
-
-                        </div>
-
-                        <div class="col-md-6">
-
-                            <a href="{% url 'shop:SamplePackPage' %}" class="btn btn-naranja text-white btn-block">Muestras
-                            </a>
-{#                            <a href="/" class="btn btn-naranja text-white btn-block">Muestras#}
-{#                            </a>#}
-
-                        </div>
-
-                    </div>
                 </div>
 
+                <div class="row my_bottom_margin">
+
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <a href="stickers" class="btn btn-azul text-white btn-block">Comprar</a>
+
+                    </div>
+
+                    <div class="col-md-5">
+
+                        <a href="{% url 'shop:SamplePackPage' %}" class="btn btn-naranja text-white btn-block">Muestras
+                        </a>
+
+
+                    </div>
+
+
+
+                </div>
             </div>
-            <div class="col-md-6 ml-auto my_custom_banner_right">
+
+            <div class="col-md-6 ml-auto">
 
                 <img class="my_image_banner my_image_padding" src="{% static 'img/banner-home2.png' %}">
 
             </div>
 
-
         </div>
+
+
+
 
     </header>
 
-{% endif %}
+</div>

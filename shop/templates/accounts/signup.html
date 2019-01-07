@@ -131,7 +131,6 @@
                                     </tr>
 
 
-
                                 </table>
 
                             </div>
@@ -156,6 +155,36 @@
                     <br>
                 </div>
             </div>
+
+
+            <script>
+                $("document").ready(function () {
+
+                    {#$('#id_shipping_department').val("Lima")#}
+                    {#$('#id_shipping_district').val("")#}
+
+                    $("#id_shipping_department").change(function () {
+                        var val = $("#id_shipping_department").val()
+                        $.ajax({
+                            url: "/province/?d_name=" + val, success: function (result) {
+                                $("#id_shipping_province").html(result);
+                            }
+                        });
+                    });
+
+
+                    $("#id_shipping_province").change(function () {
+                        var val = $("#id_shipping_province").val()
+                        $.ajax({
+                            url: "/district/?p_name=" + val, success: function (result) {
+                                $("#id_shipping_district").html(result);
+                            }
+                        });
+                    });
+
+                });
+            </script>
+
         {% else %}
             <div class="container">
                 <br>

@@ -4,11 +4,11 @@ body {
 }
 
 header {
-  width:100%;
-  height:40%;
-  position:relative;
-  top:0;
-  left:0;
+  /*width:100%;*/
+  /*!*height:40%;*!*/
+  /*position:relative;*/
+  /*top:0;*/
+  /*left:0;*/
 }
 
 .my_header_height {
@@ -21,17 +21,6 @@ header {
 
 
 
-
-/* == Footer ==== */
-
-.my_footer {
-    background-color: #5a6268;
-}
-
-.my_footer p {
-    padding-top: 20px;
-    font-size: 14px;
-}
 
 
 /* == Category Page == */
@@ -82,12 +71,13 @@ header {
 
 .my_image_banner {
     padding-bottom: 0px;
+    margin-bottom: 0px;
     width: 100%;
     height: auto;
 }
 
 .my_title_banner {
-    font-size: 60px;
+    font-size: 40px;
     font-weight: bold;
     /*text-transform: uppercase;*/
     /*letter-spacing: .1em;*/
@@ -96,11 +86,12 @@ header {
 
 .my_custom_banner_left {
     margin-left: 50px;
-    padding-bottom: 40px;
+    padding-bottom: 0px;
 }
 
 .my_custom_banner_right {
-    padding-bottom: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
 }
 
 /*.my_custom_banner {*/
@@ -109,10 +100,11 @@ header {
 
 .my_image_padding {
     padding-top: 66px;
+    padding-bottom: 0px;
 }
 
 .my_bottom_margin {
-    margin-bottom: 10px;
+    margin-bottom: 40px;
 }
 
 .card-body h4 {
@@ -212,8 +204,9 @@ ul.my_products_list li {
 
 
 
-.orange-bg {
-    background-color: orange;
+.my_header_bg_color {
+    /*background-color: #FF6138;*/
+    background-color: #00A388;
 }
 
 .gold-star {

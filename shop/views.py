@@ -13,6 +13,7 @@ from cart.views import _cart_id
 from django.db import transaction
 from django.urls import reverse
 import secrets
+import pandas as pd
 
 
 # Create your views here.
@@ -27,7 +28,7 @@ def index(request):
 def allCat(request):
     #Muestras todas las categorias de productos en el home, menos "Muestras"
     categories = Category.objects.exclude(name='Muestras')
-    return render(request, 'shop/category.html', {'categories': categories})
+    return render(request, 'shop/index.html', {'categories': categories})
 
 
 
@@ -35,15 +36,23 @@ def allCat(request):
 
 def SamplePackPage(request):
 
-    #La categoria es necesaria para mostrar el video de c/categoria
+    # La categoria es necesaria para mostrar el video de c/categoria
 
-    categoria_muestras = Category.objects.get(slug='muestras')
+    try:
 
-    # Productos que pertenecen a la categoria muestras
+        categoria_muestras = Category.objects.get(slug='muestras')
 
-    muestras = Product.objects.filter(category__slug='muestras')
+        muestras = Product.objects.filter(category__slug='muestras')
 
-    return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,'muestras': muestras})
+        return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras, 'muestras': muestras})
+
+    except Exception as e:
+
+        #Si no existe ni la categoría ni los productos, solo muestra el html
+
+        return render(request, 'shop/muestras.html')
+
+
 
 
 
@@ -97,14 +106,14 @@ def ProdCatDetail(request, c_slug):
         except Exception as e:
             raise e
 
-        return render(request, 'shop/products.html', {'category': category, 'products': products})
+        return render(request, 'shop/categoria-products.html', {'category': category, 'products': products})
 
 
 # Tamanos y cantidades
 
 class StepOneView(FormView):
     form_class = StepOneForm
-    template_name = 'shop/product.html'
+    template_name = 'shop/medidas-cantidades.html'
     success_url = 'subir-arte'
 
     def get_initial(self):
@@ -249,14 +258,28 @@ from django.shortcuts import render
 @transaction.atomic
 def signupView(request):
     peru = Peru.objects.all()
-    print(peru)
     department_list = set()
     province_list = set()
     district_list = set()
     for p in peru:
         department_list.add(p.departamento)
-        province_list.add(p.provincia)
-        district_list.add(p.distrito)
+
+    department_list = list(department_list)
+    if len(department_list):
+        province_list = set(Peru.objects.filter(departamento=department_list[0]).values_list("provincia", flat=True))
+
+    else:
+        province_list = set()
+
+    if len(province_list):
+
+        district_list = set()
+
+        province_list = list(province_list)
+
+        district_list = set(Peru.objects.filter(provincia=province_list[0]).values_list("distrito", flat=True))
+    else:
+        district_list = set()
 
     if request.method == 'POST':
         user_form = SignUpForm(request.POST)
@@ -288,3 +311,22 @@ def signupView(request):
 
 
 
+
+
+
+
+def get_province(request):
+    d_name = request.GET.get("d_name")
+    data = Peru.objects.filter(departamento=d_name).values_list("provincia", flat=True)
+    return render(request, "accounts/province_dropdown.html", {
+        "provinces": set(list(data))
+    })
+
+
+def get_district(request):
+    p_name = request.GET.get("p_name")
+    data = Peru.objects.filter(provincia=p_name).values_list("distrito", flat=True)
+    print(data)
+    return render(request, "accounts/district_dropdown.html", {
+        "districts": set(list(data))
+    })

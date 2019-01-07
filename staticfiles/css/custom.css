@@ -87,11 +87,13 @@ header {
 }
 
 .my_title_banner {
-    font-size: 60px;
+    font-size: 40px;
     font-weight: bold;
     /*text-transform: uppercase;*/
     /*letter-spacing: .1em;*/
     color: white;
+    margin-bottom: 0px;
+
 }
 
 .my_custom_banner_left {
@@ -108,7 +110,7 @@ header {
 /*}*/
 
 .my_image_padding {
-    padding-top: 66px;
+    /*padding-top: 66px;*/
 }
 
 .my_bottom_margin {
