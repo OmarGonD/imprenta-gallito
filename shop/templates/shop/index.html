@@ -17,19 +17,16 @@
 
 {% block content %}
 
-    {% if category %}
+
 
         <div class="container-fluid">
 
-        <div class="row my_row_class col-md-12">
+        <div class="container">
 
-            <div class="mx-auto">
-                <p><a href="{% url 'shop:allCat' %}">Our Product Collection</a> | {{ category.name }}</p>
+            <div>
+                <h1 class="text-center my_title">Our Product Collection</h1>
+                <p class="text-justify">Finding the most...</p>
             </div>
-
-        </div>
-
-
 
         <div class="row col-md-12">
             {% for category in categories %}
@@ -52,31 +49,23 @@
 </div>
 
 
-
-
-    {% else %}
         <br>
         <br>
-        <div class="container">
-
-            <div>
-                <h1 class="text-center my_title">Our Product Collection</h1>
-                <p class="text-justify">Finding the most...</p>
-            </div>
 
 
-            <div class="row col-md-12">
-                {% for category in categories|slice:":4" %}
-                    <div class="col-md-3">
-                        <div class="text-center">
-                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"
-                                                                 src="{{ category.image.url }}"
-                                                                 alt="{{ category.name }}"></a>
-                        </div>
-                        <p class="text-center">{{ category.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
+
+{#            <div class="row col-md-12">#}
+{#                {% for category in categories|slice:":4" %}#}
+{#                    <div class="col-md-3">#}
+{#                        <div class="text-center">#}
+{#                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"#}
+{#                                                                 src="{{ category.image.url }}"#}
+{#                                                                 alt="{{ category.name }}"></a>#}
+{#                        </div>#}
+{#                        <p class="text-center">{{ category.name }}</p>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#            </div>#}
 
 
             <br>
@@ -105,7 +94,6 @@
 
         </div>
 
-    {% endif %}
 
         </div>
 

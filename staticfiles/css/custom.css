@@ -87,13 +87,11 @@ header {
 }
 
 .my_title_banner {
+    height:400px;
     font-size: 40px;
     font-weight: bold;
-    /*text-transform: uppercase;*/
-    /*letter-spacing: .1em;*/
     color: white;
     margin-bottom: 0px;
-
 }
 
 .my_custom_banner_left {

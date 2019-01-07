@@ -17,5 +17,5 @@ urlpatterns = [
     path('<slug:c_slug>/<slug:product_slug>/subir-arte', views.StepTwoView.as_view(), name='UploadArt'),
     # path('subir-arte', views.StepTwoView.as_view(), name='UploadArt'),
     path('province/', views.get_province, name = 'province'),
-    path('district/', views.get_district, name = 'district'),
+    # path('district/', views.get_district, name = 'district'),
 ]

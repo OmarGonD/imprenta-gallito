@@ -3,25 +3,6 @@ body {
     font-family: 'Bree Serif', serif;
 }
 
-header {
-  /*width:100%;*/
-  /*!*height:40%;*!*/
-  /*position:relative;*/
-  /*top:0;*/
-  /*left:0;*/
-}
-
-.my_header_height {
-    width:100%;
-  height:180px;
-  position:relative;
-  top:0;
-  left:0;
-}
-
-
-
-
 
 /* == Category Page == */
 
@@ -72,6 +53,7 @@ header {
 .my_image_banner {
     padding-bottom: 0px;
     margin-bottom: 0px;
+    margin-left: 0px;
     width: 100%;
     height: auto;
 }
@@ -101,6 +83,7 @@ header {
 .my_image_padding {
     padding-top: 66px;
     padding-bottom: 0px;
+    padding-right: 0px;
 }
 
 .my_bottom_margin {
