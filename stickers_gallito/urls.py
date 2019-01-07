@@ -28,7 +28,8 @@ urlpatterns = [
     path('order/', include('order.urls')),
     path('account/create/', views.signupView, name = 'signup'),
     path('account/login/', views.signinView, name = 'signin'),
-    path('account/logout/', views.signoutView, name = 'signout')
+    path('account/logout/', views.signoutView, name = 'signout'),
+    path('province/', views.get_province, name = 'province')
 ]
 
 if settings.DEBUG:
