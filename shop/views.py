@@ -249,16 +249,17 @@ from django.shortcuts import render
 @transaction.atomic
 def signupView(request):
     peru = Peru.objects.all()
-    print(peru)
     department_list = set()
     province_list = set()
     district_list = set()
     for p in peru:
         department_list.add(p.departamento)
         district_list.add(p.distrito)
-
-    province_list = set(Peru.objects.filter(departamento=peru.first().departamento).values_list("provincia", flat=True))
-
+    department_list = list(department_list)
+    if len(department_list):
+        province_list = set(Peru.objects.filter(departamento=department_list[0]).values_list("provincia", flat=True))
+    else:
+        province_list = set()
     if request.method == 'POST':
         user_form = SignUpForm(request.POST)
         profile_form = ProfileForm(district_list, province_list, department_list, request.POST)
