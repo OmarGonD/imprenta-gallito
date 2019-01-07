@@ -166,19 +166,23 @@
                     $("#id_shipping_department").change(function () {
                         var val = $("#id_shipping_department").val()
                         $.ajax({
-                            url: "/province/?d_name=" + val, success: function (result) {
-                                $("#id_shipping_province").html(result);
-                            }
+                            url: "/province/",
+                            d_name: val
+                        }).done(function (result) {
+                            $("#id_shipping_province").html(result);
                         });
                     });
 
 
                     $("#id_shipping_province").change(function () {
-                        var val = $("#id_shipping_province").val()
+                        var val_d = $("#id_shipping_department").val()
+                        var val_p = $("#id_shipping_province").val()
                         $.ajax({
-                            url: "/district/?p_name=" + val, success: function (result) {
-                                $("#id_shipping_district").html(result);
-                            }
+                            url: "/district/",
+                            d_name: val_d,
+                            p_name: val_p
+                        }).done(function (result) {
+                            $("#id_shipping_district").html(result);
                         });
                     });
 
@@ -207,15 +211,17 @@
         {% endif %}
     </div>
     <br>
-<script>
-    $("document").ready(function() {
-        $("#id_shipping_department").change(function() {
-            var val = $("#id_shipping_department").val()
-            $.ajax({url: "/province/?d_name="+val, success: function(result){
-                $("#id_shipping_province").html(result);
-              }});
+    <script>
+        $("document").ready(function () {
+            $("#id_shipping_department").change(function () {
+                var val = $("#id_shipping_department").val()
+                $.ajax({
+                    url: "/province/?d_name=" + val, success: function (result) {
+                        $("#id_shipping_province").html(result);
+                    }
+                });
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}
 
