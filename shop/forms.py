@@ -74,8 +74,6 @@ class ProfileForm(ModelForm):
 
 
 
-
-
 class StepOneForm(forms.Form):
     size = forms.ChoiceField(choices=TAMANIOS, widget=forms.RadioSelect(), label='Selecciona un tamaño')
     quantity = forms.ChoiceField(choices=CANTIDADES, widget=forms.RadioSelect(), label='Selecciona la cantidad')

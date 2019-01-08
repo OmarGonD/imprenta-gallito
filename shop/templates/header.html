@@ -1,40 +1,31 @@
 {% load staticfiles %}
 
-<header class="header" id="header1">
-
+<div class="container-fluid my_home_banner my_header_bg_color">
     <div class="row">
-
-
-        <div class="col-md-6">
-            <div class="circle">
-                <br>
-
-                <div class="caption">
-                    <h2 class="title display-3">Stickers <strong>Personalizados</strong></h2>
-                    <p>Lorem m nisi! Eum vitae ipsam veniam, ullam explicabo quaerat asperiores veritatis nam
-                        reprehenderit necessitatibus sequi.</p>
-                </div>
-                <div class="row">
-                    <div class="col-md-5">
-
-                        <a href="stickers" class="btn btn-azul text-white btn-block">Comprar</a>
-
+        <div class="col-md-7">
+            <br>
+            <br>
+            <div class="my_home_banner_left">
+                <p class="my_home_banner_title">Stickers Personalizados</p>
+                <p class="my_home_banner_subtitle">Easy online ordering, 4 day turnaround and free online proofs. Free
+                    shipping.</p>
+                <div class="row ">
+                    <div class="col-md-6">
+                        <a href="stickers" class="my_home_buttons btn btn-azul text-white btn-block">Comprar</a>
                     </div>
-
-                    <div class="col-md-5 my-home-banner-image">
-
-                        <a href="{% url 'shop:SamplePackPage' %}" class="btn btn-naranja text-white btn-block">Muestras
-                        </a>
-
+                    <br>
+                    <div class="col-md-6">
+                        <a href="{% url 'shop:SamplePackPage' %}"
+                           class="my_home_buttons btn btn-naranja text-white btn-block">Muestras</a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
             <br>
-            <img class="" src="{% static 'img/banner-home2.png' %}" width="440px" height="300px">
+            <br>
         </div>
-
+        <div class="col-md-5">
+            <img class="my_home_banner_image" src="{% static 'img/banner-home.png' %}"
+                 width="380px" height="240px">
+        </div>
     </div>
-
-</header>
+</div>

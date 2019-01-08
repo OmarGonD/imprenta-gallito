@@ -35,8 +35,8 @@ class Category(models.Model):
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
-    # def get_url(self):
-    #     return reverse('shop:allCat', args=[self.slug])
+    def get_url(self):
+        return reverse('shop:allCat', args=[self.slug])
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -60,7 +60,7 @@ class Product(models.Model):
         verbose_name_plural = 'products'
 
     def get_url(self):
-        return reverse('shop:ProdCatDetail', args=[self.category.slug, self.slug])
+        return reverse('shop:ProdDetail', args=[self.category.slug, self.slug])
 
     def __str__(self):
         return '{}'.format(self.name)

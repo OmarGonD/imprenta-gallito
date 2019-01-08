@@ -19,83 +19,66 @@
 
 
 
-        <div class="container-fluid">
+    <div class="container-fluid">
 
         <div class="container">
 
+        <br>
+        <br>
+
             <div>
-                <h1 class="text-center my_title">Our Product Collection</h1>
-                <p class="text-justify">Finding the most...</p>
+                <h1 class="text-center my_title">Nuestros productos</h1>
             </div>
 
-        <div class="row col-md-12">
-            {% for category in categories %}
-                <div class="col-md-3">
-                    <div class="text-center">
-                        <a href="{{ category.get_url }}"><img class="my_image_medium"
-                                                             src="{{ category.image.url }}"
-                                                             alt="{{ category.name }}"></a>
+            <div class="row col-md-12">
+                {% for category in categories %}
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"
+                                                                  src="{{ category.image.url }}"
+                                                                  alt="{{ category.name }}"></a>
+                        </div>
+                        <p class="text-center">{{ category.name }}</p>
                     </div>
-                    <p class="text-center">{{ category.name }}</p>
-                </div>
-            {% endfor %}
-        </div>
-
-
-
-        <br>
-
-
-</div>
-
-
-        <br>
-        <br>
-
-
-
-{#            <div class="row col-md-12">#}
-{#                {% for category in categories|slice:":4" %}#}
-{#                    <div class="col-md-3">#}
-{#                        <div class="text-center">#}
-{#                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"#}
-{#                                                                 src="{{ category.image.url }}"#}
-{#                                                                 alt="{{ category.name }}"></a>#}
-{#                        </div>#}
-{#                        <p class="text-center">{{ category.name }}</p>#}
-{#                    </div>#}
-{#                {% endfor %}#}
-{#            </div>#}
-
-
-            <br>
-            <br>
-            <br>
-
-            <div class="text-center">
-                <iframe src="http://www.youtube.com/embed/W7qWa52k-nE"
-                        width="100%" height="450px" frameborder="0" allowfullscreen></iframe>
-
-
-                <br>
-                <br>
-                <br>
-                <h1>Free shipping, free online proofs, fast turnaround.</h1>
-                <p>Sticker Mule is the fastest and easiest way to buy custom printed products. Order in 60 seconds and
-                    we'll
-                    turn your designs and illustrations into custom stickers, magnets, buttons, labels and packaging in
-                    days. We offer free online proofs, free worldwide shipping and super fast turnaround.</p>
-
+                {% endfor %}
             </div>
+
+
+            <br>
+
+
         </div>
+
 
         <br>
         <br>
 
-        </div>
+        <br>
+        <br>
+        <br>
+
+        <div class="text-center">
+            <iframe src="http://www.youtube.com/embed/W7qWa52k-nE"
+                    width="100%" height="450px" frameborder="0" allowfullscreen></iframe>
 
 
+            <br>
+            <br>
+            <br>
+            <h1>Free shipping, free online proofs, fast turnaround.</h1>
+            <p>Sticker Mule is the fastest and easiest way to buy custom printed products. Order in 60 seconds and
+                we'll
+                turn your designs and illustrations into custom stickers, magnets, buttons, labels and packaging in
+                days. We offer free online proofs, free worldwide shipping and super fast turnaround.</p>
+
         </div>
+    </div>
+
+    <br>
+    <br>
+
+
+
 
 {% endblock %}
 
