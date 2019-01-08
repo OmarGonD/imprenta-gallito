@@ -340,3 +340,8 @@ a.btn-naranja:hover {
     margin-right: 0px;
     padding-right: 0px;
 }
+
+
+.my_products_icons:hover {
+    background-color: #F2F2F2;
+}
