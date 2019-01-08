@@ -12,6 +12,7 @@ class Order(models.Model):
     email = models.EmailField(max_length=250, blank = True, verbose_name= 'Correo electrónico')
     last_four = models.CharField(max_length=100, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    shipping_address = models.CharField(max_length=100, blank=True, null=True)
     shipping_address1 = models.CharField(max_length=100, blank=True, null=True)
     shipping_address2 = models.CharField(max_length=100, blank=True, null=True)
     shipping_department = models.CharField(max_length=100, blank=True, null=True)

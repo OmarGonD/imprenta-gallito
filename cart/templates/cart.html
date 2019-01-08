@@ -127,10 +127,23 @@
                         <tr>
                             <td class="text-left">
                                 A pagar:
-                                <stron> S/. {{ total }}</stron><br>
+                                <stron> S/. {{ total }}</stron>
+                                <br>
                                 <b><i>Incluye costos de envío</i></b>
                             </td>
                         </tr>
+
+                        {% if user.is_authenticated %}
+                        <tr>
+                            <td class="text-left">
+                                Dirección de envío:
+                                <select type="text" id="ShippingAddress">
+                                    <option value="{{ request.user.profile.shipping_address1 }}" selected>{{ request.user.profile.shipping_address1 }}</option>
+                                    <option value="{{ request.user.profile.shipping_address2 }}">{{ request.user.profile.shipping_address2 }}</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tboyd>
                 </table>
                 <div class="mx-auto">
@@ -236,6 +249,8 @@
                         if (Culqi.token) {
                             var $container = $('.general-container').addClass("preloader");
 
+                            var shipping_address = $('#ShippingAddress').val()
+
                             if (Culqi.token) {
                                 $.post("{% url 'cart:cart_charge' %}", {
                                         amount: {{ culqi_total }},
@@ -243,6 +258,7 @@
                                         email: Culqi.token.email,
                                         source_id: Culqi.token.id,
                                         last_four: Culqi.token.last_four,
+                                        shipping_address: shipping_address,
                                     },
                                 ).done(function () {
                                     window.location.href = "{% url 'order:thanks' %}";

@@ -72,8 +72,8 @@ class OrderAdmin(admin.ModelAdmin):
         ('ORDER INFORMATION', {'fields': ['id','token', 'total', 'created']}),
         # ('BILLING INFORMATION', {'fields': ['billingName', 'billingAddress1', 'billingCity', 'billingPostCode',
         #                                     'billingCountry', 'emailAddress']}),
-        ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'shipping_department', 'shipping_province',
-                                             'shipping_district']}),
+        ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'shipping_address', 'shipping_department', 'shipping_province',
+                                             'shipping_district', 'shipping_address1', 'shipping_address2']}),
     ]
 
     inlines = [
