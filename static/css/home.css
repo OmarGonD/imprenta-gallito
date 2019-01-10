@@ -104,6 +104,11 @@
     z-index: 1;
 }
 
+    .my_home_banner_left {
+        margin-left: 20px;
+        /*z-index: 100;*/
+    }
+
 }
 
 
@@ -147,6 +152,7 @@
     }
 
     .my_home_banner_left {
+        margin-left: 20px;
         z-index: 100;
     }
 
@@ -168,6 +174,11 @@
         width: 60%;
     }
 
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
+    }
+
 
 }
 
@@ -185,6 +196,11 @@
 
     .my_home_banner_image {
         width: 30%;
+    }
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
     }
 
 
@@ -205,6 +221,11 @@
         width: 60%;
     }
 
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
+    }
+
 
 }
 
@@ -221,6 +242,11 @@
 
     .my_home_banner_image {
         width: 90%;
+    }
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
     }
 
 
@@ -242,6 +268,12 @@
         width: 100%;
     }
 
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
+    }
+
 }
 
 
@@ -259,6 +291,11 @@
 
 
         width: 100%;
+    }
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
     }
 
 
@@ -279,6 +316,11 @@
 
 
         width: 100%;
+    }
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
     }
 
 

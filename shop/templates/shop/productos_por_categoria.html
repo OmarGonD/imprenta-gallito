@@ -28,9 +28,9 @@
         <br>
         <div class="container">
             <p class="my_category_title">{{ category.name|title }}</p>
-{#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
-                <i class="gold-star fas fa-star-half-alt"></i>
-                <i class="gold-star fas fa-star-half-alt"></i>
+            {#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
+            <i class="gold-star fas fa-star-half-alt"></i>
+            <i class="gold-star fas fa-star-half-alt"></i>
 
             </p>
 
@@ -56,6 +56,8 @@
                 </div>
             {% endfor %}
         </div>
+        <br>
+        <br>
 
         <div class="row col-md-12">
 
@@ -63,6 +65,27 @@
 
             {% video my_video "medium" %}
             {% endvideo %}
+
+        </div>
+
+    <br>
+    <br>
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
+            </div>
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
+            </div>
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
+            </div>
+
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
+            </div>
 
         </div>
 
