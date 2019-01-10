@@ -281,12 +281,18 @@ def signupView(request):
     district_list = set()
     for p in peru:
         department_list.add(p.departamento)
-        district_list.add(p.distrito)
+        # district_list.add(p.distrito)
     department_list = list(department_list)
     if len(department_list):
         province_list = set(Peru.objects.filter(departamento=department_list[0]).values_list("provincia", flat=True))
+        province_list = list(province_list)
     else:
         province_list = set()
+    if len(province_list):
+        district_list = set(Peru.objects.filter(departamento=department_list[0], provincia = province_list[0]).values_list("distrito", flat=True))
+    else:
+        district_list = set()
+
     if request.method == 'POST':
         user_form = SignUpForm(request.POST)
         profile_form = ProfileForm(district_list, province_list, department_list, request.POST)
