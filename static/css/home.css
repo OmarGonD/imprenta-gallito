@@ -8,37 +8,329 @@
 }
 
 
+/*@media (min-width: 180px) {*/
+    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
 
-@media (min-width: 180px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+        /*width: 10%;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 200px) {*/
+    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
+    /*.btn, h2, p {*/
+        /*margin-bottom: 15px;*/
+    /*}*/
+
+    /*.my_home_banner_title {*/
+        /*color: white;*/
+        /*font-size: 35px;*/
+        /*font-weight: bold;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+        /*bottom: 0;*/
+        /*position: absolute;*/
+        /*right: -0px;*/
+        /*bottom: 0;*/
+        /*z-index: -1;*/
+    /*}*/
+
+/*}*/
+
+
+/*@media (min-width: 250px) {*/
+    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
+    /*.btn, h2, p {*/
+        /*margin-bottom: 15px;*/
+    /*}*/
+
+    /*.my_home_banner_title {*/
+        /*color: white;*/
+        /*font-size: 35px;*/
+        /*font-weight: bold;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+        /*width: 80%;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 320px) {*/
+    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_title {*/
+        /*color: white;*/
+        /*font-size: 50px;*/
+        /*font-weight: bold;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+        /*bottom: 0;*/
+        /*position: absolute;*/
+        /*right: 0px;*/
+        /*bottom: 0;*/
+        /*z-index: 0;*/
+        /*width: 60%;*/
+        /*height: auto;*/
+    /*}*/
+
+    /*.my_home_banner_left .row {*/
+        /*position: relative;*/
+        /*z-index: 1;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*!*z-index: 100;*!*/
+    /*}*/
+
+/*}*/
+
+
+/*@media (min-width: 481px) {*/
+    /*!* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+        /*margin-right: 8%;*/
+        /*z-index: -600;*/
+    /*}*/
+
+
+    /*.my_home_banner_image {*/
+
+        /*bottom: 0;*/
+        /*position: absolute;*/
+        /*right: -0px;*/
+        /*bottom: 0;*/
+        /*z-index: 0;*/
+        /*width: 40%;*/
+    /*}*/
+
+    /*!*.my_home_banner_image_left {*!*/
+    /*!*display: none;*!*/
+    /*!*}*!*/
+    /*.my_home_banner_title {*/
+        /*color: white;*/
+        /*font-size: 50px;*/
+        /*font-weight: bold;*/
+    /*}*/
+
+    /*.my_home_banner_subtitle {*/
+        /*margin-top: 0%;*/
+        /*padding-top: 0%;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+/*}*/
+
+
+/*@media (min-width: 500px) {*/
+    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+        /*width: 60%;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 600px) {*/
+    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+        /*width: 30%;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 641px) {*/
+    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+        /*width: 60%;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 700px) {*/
+    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+        /*width: 90%;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 961px) {*/
+    /*!* tablet, landscape iPad, lo-res laptops ands desktops *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 50px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+        /*width: 100%;*/
+    /*}*/
+
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+/*}*/
+
+
+/*@media (min-width: 1025px) {*/
+    /*!* big landscape tablets, laptops, and desktops *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+
+        /*width: 100%;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+
+/*}*/
+
+
+/*@media (min-width: 1281px) {*/
+    /*!* hi-res laptops and desktops *!*/
+    /*.my_home_banner {*/
+        /*bottom: 0;*/
+    /*}*/
+
+    /*.btn, h2, p {*/
+        /*margin-bottom: 10px;*/
+    /*}*/
+
+    /*.my_home_banner_image {*/
+
+
+        /*width: 100%;*/
+    /*}*/
+
+    /*.my_home_banner_left {*/
+        /*margin-left: 20px;*/
+        /*z-index: 100;*/
+    /*}*/
+
+
+/*}*/
+
+
+/* STANDAR MEDIA QUIERIES BREAKPOINTS */
+
+
+@media (min-width: 320px) {
+    /* smartphones, iPhone, portrait 480x320 phones */
     .my_home_banner {
         bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
     }
 
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-
-        width: 10%;
-    }
-
-
-}
-
-
-@media (min-width: 200px) {
-    /* smartphones, iPhone, portrait 480x320 phones */
-    .btn, h2, p {
-        margin-bottom: 15px;
-    }
-
-    .my_home_banner_title {
-        color: white;
-        font-size: 35px;
-        font-weight: bold;
-    }
 
     .my_home_banner_image {
 
@@ -46,75 +338,39 @@
         position: absolute;
         right: -0px;
         bottom: 0;
-        z-index: -1;
+        z-index: 0;
+        width: 40%;
     }
 
-}
-
-
-
-
-@media (min-width: 250px) {
-    /* smartphones, iPhone, portrait 480x320 phones */
-    .btn, h2, p {
-        margin-bottom: 15px;
-    }
-
-    .my_home_banner_title {
-        color: white;
-        font-size: 35px;
-        font-weight: bold;
-    }
-
-    .my_home_banner_image {
-
-        width: 80%;
-    }
-
-
-
-}
-
-
-
-@media (min-width: 320px) {
-    /* smartphones, iPhone, portrait 480x320 phones */
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
+    /*.my_home_banner_image_left {*/
+    /*display: none;*/
+    /*}*/
     .my_home_banner_title {
         color: white;
         font-size: 50px;
         font-weight: bold;
     }
 
-    .my_home_banner_image {
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
+    }
 
-     bottom: 0;
-     position: absolute;
-     right: 0px;
-     bottom: 0;
-     z-index: 0;
-     width: 60%;
-     height: auto;
- }
-
-    .my_home_banner_left .row{ position: relative;
-    z-index: 1;
-}
+    .btn, h2, p {
+        margin-bottom: 10px;
+    }
 
     .my_home_banner_left {
         margin-left: 20px;
-        /*z-index: 100;*/
+        z-index: 100;
     }
+
 
 }
 
-
 @media (min-width: 481px) {
     /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
-    .my_home_banner {
+     .my_home_banner {
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
@@ -158,67 +414,43 @@
 
 }
 
-
-@media (min-width: 500px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-    .my_home_banner {
-        bottom: 0;
-    }
-
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-
-        width: 60%;
-    }
-
-    .my_home_banner_left {
-        margin-left: 20px;
-        z-index: 100;
-    }
-
-
-}
-
-
-
-@media (min-width: 600px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-    .my_home_banner {
-        bottom: 0;
-    }
-
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-        width: 30%;
-    }
-
-    .my_home_banner_left {
-        margin-left: 20px;
-        z-index: 100;
-    }
-
-
-}
-
-
 @media (min-width: 641px) {
     /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-    .my_home_banner {
+     .my_home_banner {
         bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
+    }
+
+
+    .my_home_banner_image {
+
+        bottom: 0;
+        position: absolute;
+        right: -0px;
+        bottom: 0;
+        z-index: 0;
+        width: 40%;
+    }
+
+    /*.my_home_banner_image_left {*/
+        /*display: none;*/
+    /*}*/
+
+
+    .my_home_banner_title {
+        color: white;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
     }
 
     .btn, h2, p {
         margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-        width: 60%;
     }
 
     .my_home_banner_left {
@@ -226,48 +458,46 @@
         z-index: 100;
     }
 
-
 }
-
-
-@media (min-width: 700px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-    .my_home_banner {
-        bottom: 0;
-    }
-
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-        width: 90%;
-    }
-
-    .my_home_banner_left {
-        margin-left: 20px;
-        z-index: 100;
-    }
-
-
-}
-
 
 @media (min-width: 961px) {
     /* tablet, landscape iPad, lo-res laptops ands desktops */
-    .my_home_banner {
+     .my_home_banner {
         bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
     }
 
-    .btn, h2, p {
-        margin-bottom: 50px;
-    }
 
     .my_home_banner_image {
 
-        width: 100%;
+        bottom: 0;
+        position: absolute;
+        right: -0px;
+        bottom: 0;
+        z-index: 0;
+        width: 40%;
     }
 
+    /*.my_home_banner_image_left {*/
+        /*display: none;*/
+    /*}*/
+
+
+    .my_home_banner_title {
+        color: white;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
+    }
+
+    .btn, h2, p {
+        margin-bottom: 10px;
+    }
 
     .my_home_banner_left {
         margin-left: 20px;
@@ -275,22 +505,44 @@
     }
 
 }
-
 
 @media (min-width: 1025px) {
     /* big landscape tablets, laptops, and desktops */
-    .my_home_banner {
+     .my_home_banner {
         bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
+    }
+
+
+    .my_home_banner_image {
+
+        bottom: 0;
+        position: absolute;
+        right: -0px;
+        bottom: 0;
+        z-index: 0;
+        width: 40%;
+    }
+
+    /*.my_home_banner_image_left {*/
+        /*display: none;*/
+    /*}*/
+
+
+    .my_home_banner_title {
+        color: white;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
     }
 
     .btn, h2, p {
         margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-
-
-        width: 100%;
     }
 
     .my_home_banner_left {
@@ -298,24 +550,45 @@
         z-index: 100;
     }
 
-
 }
-
 
 @media (min-width: 1281px) {
     /* hi-res laptops and desktops */
-    .my_home_banner {
+     .my_home_banner {
         bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
+    }
+
+
+    .my_home_banner_image {
+
+        bottom: 0;
+        position: absolute;
+        right: -0px;
+        bottom: 0;
+        z-index: 0;
+        width: 40%;
+    }
+
+    /*.my_home_banner_image_left {*/
+        /*display: none;*/
+    /*}*/
+
+
+    .my_home_banner_title {
+        color: white;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
     }
 
     .btn, h2, p {
         margin-bottom: 10px;
-    }
-
-    .my_home_banner_image {
-
-
-        width: 100%;
     }
 
     .my_home_banner_left {
@@ -323,7 +596,4 @@
         z-index: 100;
     }
 
-
 }
-
-

@@ -1,11 +1,13 @@
 from django.urls import path
 from . import views
+from django.contrib import admin
 
 
 app_name = 'shop'
 
 urlpatterns = [
 
+    path('admin', admin.site.urls),
     path('', views.allCat, name = 'allCat'),
     path('<slug:c_slug>', views.ProdCatDetail, name = 'ProdCatDetail'),
     path('<slug:c_slug>/<slug:product_slug>', views.SamplePack, name='SamplePack'),
@@ -18,4 +20,5 @@ urlpatterns = [
     # path('subir-arte', views.StepTwoView.as_view(), name='UploadArt'),
     path('province/', views.get_province, name = 'province'),
     path('district/', views.get_district, name = 'district'),
+    path('quienes_somos/', views.quienes_somos, name = 'quienes_somos'),
 ]

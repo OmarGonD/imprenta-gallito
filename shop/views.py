@@ -45,31 +45,14 @@ def ProdCatDetail(request, c_slug):
 
     if c_slug is not "muestras":
 
-        category = Category.objects.get(slug=c_slug)
-
         try:
+            category = Category.objects.get(slug=c_slug)
             products = Product.objects.filter(category__slug=c_slug)
         except Exception as e:
             raise e
 
     return render(request, 'shop/productos_por_categoria.html', {'category': category, 'products': products})
 
-
-
-#
-# def ProdCatDetail(request, c_slug):
-#
-#     if c_slug is not "muestras":
-#
-#         category = Category.objects.get(slug=c_slug)
-#
-#         try:
-#             products = Product.objects.filter(category__slug=c_slug)
-#         except Exception as e:
-#             raise e
-#
-#         return render(request, 'shop/medidas-cantidades.html', {'category': category, 'products': products})
-#
 
 
 
@@ -338,3 +321,9 @@ def get_district(request):
     return render(request, "accounts/district_dropdown.html", {
         "districts": set(list(data))
 })
+
+
+### ¿Quiénes somos? ###
+
+def quienes_somos(request):
+    return render(request, "footer_links/quienes_somos.html")

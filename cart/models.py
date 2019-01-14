@@ -76,6 +76,10 @@ class CartItem(models.Model):
     def __str__(self):
         return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
 
+    def sub_total(self):
+        return str(self.product.price * int(self.quantity))
+
+
     @property
     def image_filename(self):
         return self.image.url.split('/')[-1]
