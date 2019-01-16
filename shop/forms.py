@@ -25,10 +25,16 @@ CANTIDADES = (('50', '50',), ('100', '100',),
               ('10000', '10000',))
 
 
+
+my_default_errors = {
+    'required': 'Este campo es obligatorio',
+    'invalid': 'Ingrese un valor válido'
+}
+
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(label= "Nombre", max_length=100, required=True)
     last_name = forms.CharField(label = 'Apellido', max_length=100, required=True)
-    username = forms.CharField(label='Nombre de usuario', max_length=100, required=True)
+    username = forms.CharField(label='Nombre de usuario', max_length=100, required=True, error_messages=my_default_errors)
     email = forms.EmailField(label='Correo electrónico', max_length=60, required=True)
     password1 = forms.CharField(label = 'Contraseña', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)

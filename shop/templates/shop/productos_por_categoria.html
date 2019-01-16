@@ -59,17 +59,23 @@
         <br>
         <br>
 
-        <div class="row col-md-12">
 
-            {% video category.video as my_video %}
+        <div class="row">
+            <div class="col-2 col-md-2"></div>
+            <div class="col-8 col-md-8">
 
-            {% video my_video "medium" %}
-            {% endvideo %}
+                {% video category.video as my_video %}
 
+                {% video my_video "medium" %}
+                {% endvideo %}
+
+            </div>
+            <div class="col-2 col-md-2"></div>
         </div>
 
-    <br>
-    <br>
+
+        <br>
+        <br>
 
         <div class="row">
 

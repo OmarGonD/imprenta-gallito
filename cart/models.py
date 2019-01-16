@@ -69,7 +69,7 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=20, choices=TAMANIOS)
     quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    image = models.ImageField(upload_to='images', blank=True, null=True)
+    image = models.ImageField(upload_to='images', blank=True)
     comment = models.CharField(max_length=100, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 

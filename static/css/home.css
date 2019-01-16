@@ -458,6 +458,11 @@
         z-index: 100;
     }
 
+    .my_home_banner_lef_text {
+        margin-left: 10px;
+        z-index: 100;
+    }
+
 }
 
 @media (min-width: 961px) {
@@ -597,3 +602,6 @@
     }
 
 }
+
+
+.center-video { margin: 0 auto; width: 400px; }
