@@ -26,25 +26,25 @@
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-{#            {% if request.user.is_authenticated %}#}
-{#                <li class="nav-item active">#}
-{#                    <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"#}
-{#                                                    style="color:white !important;"></i> ( {{ cart_items_counter }})</a>#}
-{##}
-{#                </li>#}
-{##}
-{#                <li class="nav-item active">#}
-{#                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"#}
-{#                       aria-expanded="false"><i class="fas fa-user-circle"></i> {{ request.user }}</a>#}
-{#                    <div class="dropdown-menu dropdown-menu-right">#}
-{#                        <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>#}
-{#                    </div>#}
-{##}
-{#                </li>#}
-{#                <li class="nav-item active">#}
-{#                    <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>#}
-{#                </li>#}
-{#            {% else %}#}
+            {% if request.user.is_authenticated %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"
+                                                    style="color:white !important;"></i> ( {{ cart_items_counter }})</a>
+
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false"><i class="fas fa-user-circle"></i> {{ request.user }}</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>
+                    </div>
+
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>
+                </li>
+            {% else %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"
                                                     style="color:white !important;"></i> ( {{ cart_items_counter }} )</a>
@@ -58,7 +58,7 @@
                 </li>
 
 
-{#            {% endif %}#}
+            {% endif %}
         </ul>
     </div>
 </nav>

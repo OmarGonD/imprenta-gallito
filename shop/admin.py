@@ -13,6 +13,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'dni']
 
 
+
 admin.site.register(Profile, ProfileAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):

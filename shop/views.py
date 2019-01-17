@@ -25,6 +25,7 @@ import secrets
 def allCat(request):
     #Muestras todas las categorias de productos en el home, menos "Muestras"
     categories = Category.objects.exclude(name='Muestras')
+
     # return render(request, 'shop/index.html', {'categories': categories}, context_instance=RequestContext(request))
     return render(request, 'shop/index.html', {'categories': categories})
 
@@ -181,8 +182,6 @@ class StepTwoView(CreateView):
 
     def form_valid(self, form):
 
-        self.request.session['cart_id'] = secrets.token_urlsafe(22)
-
         try:
             cart = Cart.objects.get(cart_id=_cart_id(self.request))
         except Cart.DoesNotExist:
@@ -223,8 +222,8 @@ def signinView(request):
                                 password = password)
             if user is not None:
                 login(request, user)
-                cart_id =_cart_id(request)
-                request.session['cart_id'] = cart_id
+                # cart_id =_cart_id(request)
+                # request.session['cart_id'] = cart_id
                 return redirect('cart:cart_detail')
             else:
                 return redirect('signup')
@@ -240,7 +239,7 @@ def signoutView(request):
         logout(request)
         return redirect('signin')
     else:
-        del request.session['cart_id']
+        # del request.session['cart_id']
         request.session.modified = True
         logout(request)
         return redirect('signin')
