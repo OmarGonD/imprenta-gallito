@@ -172,6 +172,7 @@ class StepTwoView(FormView):
         cart_item = CartItem.objects.get(id=item_id)
         cart_item.image = form.cleaned_data["image"]
         cart_item.comment = form.cleaned_data["comment"]
+        cart_item.step_two_complete = True
         cart_item.save()
         response = HttpResponseRedirect(self.get_success_url())
         response.delete_cookie("item_id")
