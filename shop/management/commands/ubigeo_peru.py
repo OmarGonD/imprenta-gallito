@@ -8,9 +8,6 @@ from django.core.management.base import BaseCommand
 tmp_data=pd.read_csv('static/data/ubigeo-peru-2018-12-25.csv',sep=',', encoding="utf-8")
 
 
-print(tmp_data)
-
-
 class Command(BaseCommand):
     def handle(self, **options):
         products = [

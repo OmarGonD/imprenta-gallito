@@ -212,26 +212,21 @@
 
 
                 <script>
-
                     $('#EmptyCartButton').on('click', function (e) {
                         // Abre el formulario con la configuración en Culqi.settings
                         alert("Por favor, añada un pedido a su carrito de compras.");
                         e.preventDefault();
                     });
-
                     $('#CannotbuyButton').on('click', function (e) {
                         // Abre el formulario con la configuración en Culqi.settings
                         alert("Para comprar debe ingresar con su cuenta o registrarse.");
                         e.preventDefault();
                     });
-
-
                     $('#buyButton').on('click', function (e) {
                         // Abre el formulario con la configuración en Culqi.settings
                         Culqi.open();
                         e.preventDefault();
                     });
-
                 </script>
 
                 <script>
@@ -250,14 +245,11 @@
                         }
                         return cookieValue;
                     }
-
                     var csrftoken = getCookie('csrftoken');
-
                     function csrfSafeMethod(method) {
 // these HTTP methods do not require CSRF protection
                         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
                     }
-
                     $.ajaxSetup({
                         beforeSend: function (xhr, settings) {
                             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -265,8 +257,6 @@
                             }
                         }
                     });
-
-
                     function culqi() {
                         {#alert("Aún no hay Culqi Token");#}
                         {#if (Culqi.token) {#}
@@ -286,12 +276,9 @@
                         {#    console.log(Culqi.error);#}
                         {#    alert(Culqi.error.user_message);#}
                         {# }#}
-
                         if (Culqi.token) {
                             var $container = $('.general-container').addClass("preloader");
-
                             var shipping_address = $('#ShippingAddress').val()
-
                             if (Culqi.token) {
                                 $.post("{% url 'cart:cart_charge' %}", {
                                         amount: {{ culqi_total }},
@@ -304,25 +291,18 @@
                                 ).done(function () {
                                     window.location.href = "{% url 'order:thanks' %}";
                                 })
-
                             } else {
-
                                 alert("Hubo un error con el pago");
                                 console.log(Culqi.error);
                                 alert(Culqi.error.user_message);
-
                             }
                         } else {
                         }
                     }
-
-
                 </script>
-
             </div>
         </div>
     </div>
     <br>
     <br>
-
 {% endblock %}

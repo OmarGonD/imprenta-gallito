@@ -1,14 +1,9 @@
-import datetime
-
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django import forms
 from django.forms import ModelForm
 
 from cart.models import CartItem
-from django.db import transaction
-from shop.models import Peru
 from .models import Profile
 
 # Variables
@@ -24,19 +19,19 @@ CANTIDADES = (('50', '50',), ('100', '100',),
               ('4000', '4000',), ('5000', '5000',),
               ('10000', '10000',))
 
-
-
 my_default_errors = {
     'required': 'Este campo es obligatorio',
     'unique': 'Ese nombre de usuario ya está tomado'
 }
 
+
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(label= "Nombre", max_length=100, required=True)
-    last_name = forms.CharField(label = 'Apellido', max_length=100, required=True)
-    username = forms.CharField(label='Nombre de usuario', max_length=100, required=True, error_messages={'invalid':"you custom error message"})
+    first_name = forms.CharField(label="Nombre", max_length=100, required=True)
+    last_name = forms.CharField(label='Apellido', max_length=100, required=True)
+    username = forms.CharField(label='Nombre de usuario', max_length=100, required=True,
+                               error_messages={'invalid': "you custom error message"})
     email = forms.EmailField(label='Correo electrónico', max_length=60, required=True)
-    password1 = forms.CharField(label = 'Contraseña', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
@@ -45,11 +40,10 @@ class SignUpForm(UserCreationForm):
         for fieldname in ['username', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
 
-
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password1',
-                 'password2')
+                  'password2')
         # help_texts = {
         #     'username': '',
         #     'password': '',
@@ -64,17 +58,15 @@ class ProfileForm(ModelForm):
         self.fields['shipping_province'] = forms.ChoiceField(choices=tuple([(name, name) for name in province_list]))
         self.fields['shipping_department'] = forms.ChoiceField(choices=tuple([(name, name) for name in department_list]))
 
-    dni = forms.CharField(label = 'DNI', max_length=100, required=True)
-    # email = forms.EmailField(label = 'Correo electrónico', max_length=254, widget=forms.TextInput(attrs={'placeholder': 'micorreo@correo.com'}))
-    cellphone = forms.CharField(label = 'Celular o  teléfono', max_length=15, required=True)
-    shipping_address1 = forms.CharField(label = 'Dirección de envío', max_length=100, required=True)
-    shipping_address2 = forms.CharField(label = 'Dirección de envío 2 (opcional)', max_length=100, required=False)
+
+    dni = forms.CharField(label='DNI', max_length=100, required=True)
+    shipping_address1 = forms.CharField(label='Dirección de envío', max_length=100, required=True)
+    shipping_address2 = forms.CharField(label='Dirección de envío 2 (opcional)', max_length=100, required=False)
 
     class Meta:
         model = Profile
-        fields = ('dni', 'cellphone', 'shipping_address1',
+        fields = ('dni', 'shipping_address1',
                   'shipping_address2', 'shipping_department', 'shipping_province', 'shipping_district')
-
 
 
 
@@ -90,12 +82,12 @@ class StepTwoForm(forms.ModelForm):
 
     class Meta:
         model = CartItem
-        fields = ('image', 'comment')
+        fields = ('file', 'comment')
 
     def __init__(self, *args, **kwargs):
         super(StepTwoForm, self).__init__(*args, **kwargs)
         self.fields['comment'].required = False
-        self.fields['image'].required = False
+        self.fields['file'].required = False
 
     def save(self, commit=True):
         instance = super(StepTwoForm, self).save(commit=commit)
@@ -107,11 +99,7 @@ class StepTwoForm(forms.ModelForm):
     #               ['oma.oma@gmail.com'], fail_silently=False)
 
 
-
-
 class SamplePackForm(forms.ModelForm):
-
-
     class Meta:
         model = CartItem
         fields = ()
@@ -122,7 +110,7 @@ class SamplePackForm(forms.ModelForm):
         self.fields['size'].required = False
         self.fields['quantity'].required = False
         self.fields['comment'].required = False
-        self.fields['image'].required = False
+        self.fields['file'].required = False
 
     def save(self, commit=True):
         instance = super(SamplePackForm, self).save(commit=commit)

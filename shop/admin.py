@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Profile, Peru
+from .models import Category, Product, Profile, Peru, Sample
 
 # Register your models here.
 
@@ -7,6 +7,13 @@ from .models import Category, Product, Profile, Peru
 
 
 admin.site.register(Peru)
+
+class SampleAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug':('name',)}
+
+
+admin.site.register(Sample, SampleAdmin)
 
 
 class ProfileAdmin(admin.ModelAdmin):

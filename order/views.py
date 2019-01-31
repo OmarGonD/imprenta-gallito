@@ -6,10 +6,9 @@ from django.contrib.auth.decorators import login_required
 
 
 def thanks(request):
-
     order_number = Order.objects.latest('id').id
-
-    return render(request, 'thanks.html', dict(order_number=order_number))
+    response = render(request, 'thanks.html', dict(order_number=order_number))
+    return response
 
 
 

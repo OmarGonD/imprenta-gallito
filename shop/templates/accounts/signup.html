@@ -82,17 +82,11 @@
 
                             </div>
 
+                            {{ profile_form.errors }}
+
                             <div class="col-md-6">
 
                                 <table>
-
-
-                                    <tr>
-                                        <th>{{ profile_form.cellphone.label_tag }}</th>
-                                        <td>{{ profile_form.cellphone.errors }}
-                                            {{ profile_form.cellphone }}
-                                        </td>
-                                    </tr>
 
                                     <tr>
                                         <th>{{ profile_form.shipping_address1.label_tag }}</th>
@@ -158,99 +152,99 @@
 
 
 <!-- OLD but "OK" Javascript" --- allows submit -->
-            <script>
-                function get_provinces() {
-                    var val_d = $("#id_shipping_department").val()
-                    $.ajax({
-                        url: "/province/",
-                        data: { // Pass parameters in separate object
-                            d_name: val_d
-                        },
-                    }).done(function (result) {
-                        $("#id_shipping_province").html(result);
-                    });
-                }
-
-
-                function get_districts() {
-                    var val_d = $("#id_shipping_department").val()
-                    var val_p = $("#id_shipping_province").val()
-                    $.ajax({
-                        url: "/district/",
-                        data: { // Pass parameters in separate object
-                            d_name: val_d,
-                            p_name: val_p
-                        },
-                    }).done(function (result) {
-                        $("#id_shipping_district").html(result);
-                    });
-                }
-
-                $("document").ready(function () {
-
-
-                    $("#id_shipping_department").change(function () {
-                        get_provinces();
-                        get_districts();
-
-                    });
-                });
-            </script>
+{#            <script>#}
+{#                function get_provinces() {#}
+{#                    var val_d = $("#id_shipping_department").val()#}
+{#                    $.ajax({#}
+{#                        url: "/province/",#}
+{#                        data: { // Pass parameters in separate object#}
+{#                            d_name: val_d#}
+{#                        },#}
+{#                    }).done(function (result) {#}
+{#                        $("#id_shipping_province").html(result);#}
+{#                    });#}
+{#                }#}
+{##}
+{##}
+{#                function get_districts() {#}
+{#                    var val_d = $("#id_shipping_department").val()#}
+{#                    var val_p = $("#id_shipping_province").val()#}
+{#                    $.ajax({#}
+{#                        url: "/district/",#}
+{#                        data: { // Pass parameters in separate object#}
+{#                            d_name: val_d,#}
+{#                            p_name: val_p#}
+{#                        },#}
+{#                    }).done(function (result) {#}
+{#                        $("#id_shipping_district").html(result);#}
+{#                    });#}
+{#                }#}
+{##}
+{#                $("document").ready(function () {#}
+{##}
+{##}
+{#                    $("#id_shipping_department").change(function () {#}
+{#                        get_provinces();#}
+{#                        get_districts();#}
+{##}
+{#                    });#}
+{#                });#}
+{#            </script>#}
 
 
 <!-- END OF OLD But OK Javascript -->
 
 <!-- NEW Javascript --- collects correctly Province and District but Does not Submitt correctly -->
 
-            {#            <script>#}
-            {##}
-            {#                function get_provinces() {#}
-            {#                    // notice the promise#}
-            {#                    return new Promise(function (resolve, reject) {#}
-            {#                        var val_d = $("#id_shipping_department").val()#}
-            {#                        $.ajax({#}
-            {#                            url: "/province/",#}
-            {#                            data: { // Pass parameters in separate object#}
-            {#                                d_name: val_d#}
-            {#                            },#}
-            {#                        }).done(function (result) {#}
-            {#                            $("#id_shipping_province").html(result);#}
-            {#                            resolve(result)#}
-            {#                        });#}
-            {#                    });#}
-            {#                }#}
-            {##}
-            {##}
-            {#                function get_districts() {#}
-            {#                    return new Promise(function (resolve, reject) {#}
-            {#                        var val_d = $("#id_shipping_department").val()#}
-            {#                        var val_p = $("#id_shipping_province").val()#}
-            {#                        $.ajax({#}
-            {#                            url: "/district/",#}
-            {#                            data: { // Pass parameters in separate object#}
-            {#                                d_name: val_d,#}
-            {#                                p_name: val_p#}
-            {#                            },#}
-            {#                        }).done(function (result) {#}
-            {#                            $("#id_shipping_district").html(result);#}
-            {#                            resolve(result)#}
-            {#                        });#}
-            {#                    });#}
-            {#                }#}
-            {##}
-            {#                $("document").ready(function () {#}
-            {#                    $("#id_shipping_department").change(async /* <--- */ function () {#}
-            {#                        await /* <--- */ get_provinces();#}
-            {#                        await /* <--- */ get_districts();#}
-            {##}
-            {#                    });#}
-            {##}
-            {#                    $("#id_shipping_province").change(async /* <--- */ function () {#}
-            {#                        await get_districts();#}
-            {#                    });#}
-            {##}
-            {#                });#}
-            {#            </script>#}
+                        <script>
+
+                            function get_provinces() {
+                                // notice the promise
+                                return new Promise(function (resolve, reject) {
+                                    var val_d = $("#id_shipping_department").val()
+                                    $.ajax({
+                                        url: "/province/",
+                                        data: { // Pass parameters in separate object
+                                            d_name: val_d
+                                        },
+                                    }).done(function (result) {
+                                        $("#id_shipping_province").html(result);
+                                        resolve(result)
+                                    });
+                                });
+                            }
+
+
+                            function get_districts() {
+                                return new Promise(function (resolve, reject) {
+                                    var val_d = $("#id_shipping_department").val()
+                                    var val_p = $("#id_shipping_province").val()
+                                    $.ajax({
+                                        url: "/district/",
+                                        data: { // Pass parameters in separate object
+                                            d_name: val_d,
+                                            p_name: val_p
+                                        },
+                                    }).done(function (result) {
+                                        $("#id_shipping_district").html(result);
+                                        resolve(result)
+                                    });
+                                });
+                            }
+
+                            $("document").ready(function () {
+                                $("#id_shipping_department").change(async /* <--- */ function () {
+                                    await /* <--- */ get_provinces();
+                                    await /* <--- */ get_districts();
+
+                                });
+
+                                $("#id_shipping_province").change(async /* <--- */ function () {
+                                    await get_districts();
+                                });
+
+                            });
+                        </script>
 
 
 <!-- END of new Javascript -->
@@ -259,7 +253,7 @@
             <div class="container">
                 <br>
                 <h1 class="my_title text-center">
-                    Tu cuenta ha sido creada exitosamente.
+                   Account
                 </h1>
                 <br>
                 <div>

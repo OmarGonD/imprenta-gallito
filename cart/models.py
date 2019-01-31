@@ -18,7 +18,7 @@ CANTIDADES = (('50', '50',), ('100', '100',),
 # Create your models here.
 
 class Cart(models.Model):
-    cart_id = models.CharField(max_length=250, blank=True)
+    cart_id = models.CharField(max_length=100)
     date_added = models.DateField(auto_now_add=True)
 
     class Meta:
@@ -26,42 +26,10 @@ class Cart(models.Model):
         ordering = ['date_added']
 
     def __str__(self):
-        return self.cart_id
-
-#
-# class CartItem(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-#     quantity = models.IntegerField()
-#     active = models.BooleanField(default=True)
-#     class Meta:
-#         db_table = 'CartItem'
-#
-#     def sub_total(self):
-#         return self.product.price * self.quantity
-#
-#     def __str__(self):
-#         return str(self.product)
+        return self.id
 
 
 
-
-
-# class CartItem(models.Model):
-#     sizequantity = models.ForeignKey(SizeQuantity, on_delete=models.CASCADE)
-#     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-#     # size = models.CharField(max_length=10, choices=TAMANIOS)
-#     # quantity = models.CharField(max_length=10, choices=CANTIDADES)
-#     # uploaded_at = models.DateTimeField(auto_now_add=True)
-#
-#     class Meta:
-#         db_table = 'CartItem'
-#
-#     def sub_total(self):
-#         return self.sizequantity.product.price * self.sizequantity.quantity
-#
-#     def __str__(self):
-#         return str(self.sizequantity.product)
 
 
 class CartItem(models.Model):
@@ -69,7 +37,7 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=20, choices=TAMANIOS)
     quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    image = models.ImageField(upload_to='images', blank=True, null=True)
+    file = models.FileField(upload_to='files', blank=True, null=True)
     comment = models.CharField(max_length=100, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     step_two_complete = models.BooleanField(default=False)
@@ -82,8 +50,8 @@ class CartItem(models.Model):
 
 
     @property
-    def image_filename(self):
-        return self.image.url.split('/')[-1]
+    def file_name(self):
+        return self.file.url.split('/')[-1]
 
 
 

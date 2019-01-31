@@ -40,7 +40,7 @@ body {
 
 .my_image_medium {
     width: 120px;
-    height: 120px;
+    height: 100px;
 }
 
 .my_title {
@@ -166,9 +166,19 @@ ul.my_products_list li {
 
 }
 
+.my_custom_product_name {
+
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background-color: #f8f9fa !important;
+    font-size: 12px;
+
+}
+
 .custom_image {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
 }
 
 .custom_a {

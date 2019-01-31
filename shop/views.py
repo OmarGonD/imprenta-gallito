@@ -1,20 +1,14 @@
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, render_to_response
-from django.http import HttpResponse
-from django.template import RequestContext
-
-from .models import Category, Product, Peru
-from django.contrib.auth.models import Group, User
-from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, SamplePackForm
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
-from django.views.generic.edit import CreateView, FormView
-from cart.models import Cart, CartItem
-from cart.views import _cart_id
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group, User
 from django.db import transaction
-from django.urls import reverse
-import secrets
+from django.http import HttpResponse
+from django.shortcuts import redirect, HttpResponseRedirect
+from django.views.generic.edit import FormView
+
+from cart.models import Cart, CartItem
+from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm
+from .models import Category, Product, Peru, Sample
 
 
 # Create your views here.
@@ -58,20 +52,16 @@ def SamplePackPage(request):
 
     # Productos que pertenecen a la categoria muestras
 
-    muestras = Product.objects.filter(category__slug='muestras')
+    muestras = Sample.objects.filter(category__slug='muestras')
 
     return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras, 'muestras': muestras})
 
 
 def SamplePack(request, c_slug, product_slug):
     try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
-
+        cart = Cart.objects.get(id=request.COOKIES.get('cart_id'))
     except Cart.DoesNotExist:
-
-        cart = Cart.objects.create(
-            cart_id=_cart_id(request)
-        )
+        pass
 
     try:
         product = Product.objects.get(
@@ -84,7 +74,7 @@ def SamplePack(request, c_slug, product_slug):
             product=product,
             size="",
             quantity="",
-            image=product.image,
+            file=product.image,
             comment="",
         )
 
@@ -127,7 +117,6 @@ class StepOneView(FormView):
         print('Step one: form is NOT valid')
 
     def form_valid(self, form):
-
         cart_id = self.request.COOKIES.get('cart_id')
         if not cart_id:
             cart = Cart.objects.create(cart_id="Random")
@@ -170,7 +159,7 @@ class StepTwoView(FormView):
         item_id = self.request.COOKIES.get("item_id")
 
         cart_item = CartItem.objects.get(id=item_id)
-        cart_item.image = form.cleaned_data["image"]
+        cart_item.file = form.cleaned_data["file"]
         cart_item.comment = form.cleaned_data["comment"]
         cart_item.step_two_complete = True
         cart_item.save()
@@ -225,6 +214,7 @@ def signoutView(request):
 from django.shortcuts import render
 
 
+
 @transaction.atomic
 def signupView(request):
     peru = Peru.objects.all()
@@ -234,22 +224,66 @@ def signupView(request):
     for p in peru:
         department_list.add(p.departamento)
     department_list = list(department_list)
+    # print("Department List: ", department_list)
     if len(department_list):
         province_list = set(Peru.objects.filter(departamento=department_list[0]).values_list("provincia", flat=True))
+        # print("Provice List: ", province_list)
         province_list = list(province_list)
+        # print("dfsfs", province_list)
     else:
         province_list = set()
     if len(province_list):
         district_list = set(
             Peru.objects.filter(departamento=department_list[0], provincia=province_list[0]).values_list("distrito",
                                                                                                          flat=True))
+        # print("district List: ", district_list)
     else:
         district_list = set()
 
     if request.method == 'POST':
+        print("INSIDE REQUEST.POST")
+        print("Department List: ", department_list)
+        print("Provice List: ", province_list)
+        print("district List: ", district_list)
+        print("REQUEST")
+        print(request.POST)
+
+        #####
+
+        peru = Peru.objects.all()
+        department_list = set()
+        province_list = set()
+        district_list = set()
+        for p in peru:
+            department_list.add(p.departamento)
+        department_list = list(department_list)
+        print("Department List in POST: ", department_list)
+        if len(department_list):
+            province_list = set(
+                Peru.objects.filter(departamento__in=department_list).values_list("provincia", flat=True))
+
+            province_list = list(province_list)
+            print("Province LIST in POST", province_list)
+        else:
+            province_list = set()
+        if len(province_list):
+            district_list = set(
+                Peru.objects.filter(departamento__in=department_list, provincia__in=province_list).values_list("distrito",
+                                                                                                             flat=True))
+            print("District LIST in POST", district_list)
+        else:
+            district_list = set()
+
+
+        #####
+
         user_form = SignUpForm(request.POST)
+        # profile_form = ProfileForm(request.POST) #__init__() missing 2 required positional arguments: 'province_list' and 'department_list'
         profile_form = ProfileForm(district_list, province_list, department_list, request.POST)
-        if user_form.is_valid() and profile_form.is_valid():
+        # profile_form = ProfileForm(district_list, province_list, department_list, request.POST, instance=user.profile)
+
+
+        if  user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
             username = user_form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
@@ -257,19 +291,39 @@ def signupView(request):
             customer_group.user_set.add(signup_user)
             raw_password = user_form.cleaned_data.get('password1')
             user.refresh_from_db()  # This will load the Profile created by the Signal
+            # print(user_form.cleaned_data)
+            print("Form is valid: district_list, province_list, department_list")
+            print(district_list, province_list, department_list)
             profile_form = ProfileForm(district_list, province_list, department_list, request.POST,
                                        instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
+            # print(profile_form.cleaned_data)
             profile_form.save()  # Gracefully save the form
 
             user = authenticate(username=username, password=raw_password)
             login(request, user)
 
             return redirect('cart:cart_detail')
+
+        else:
+            print("INVALID USeR_FORM")
+            print(user_form.errors)
+            print("INVALID Profile_FORM")
+            print(profile_form.errors)
+
     else:
+        print("INVALID USeR_FORM")
         user_form = SignUpForm()
 
         profile_form = ProfileForm(district_list, province_list, department_list)
+        print("GET PART!!!!!!")
+        print("Deparment_List in GET: ", department_list)
+        print("Province_List in GET: ", province_list)
+        print("District_List in GET: ", district_list)
+        # print('end of profile postdata print')
+        # print(profile_form)
+        # print("Profile Data:")
+
     return render(request, 'accounts/signup.html', {
         'user_form': user_form,
         'profile_form': profile_form

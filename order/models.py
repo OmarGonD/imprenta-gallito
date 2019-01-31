@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import mark_safe
 
 # Create your models here.
 
@@ -37,7 +38,7 @@ class OrderItem(models.Model):
     quantity = models.CharField(max_length= 200)
     size = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name= 'PEN Price')
-    image = models.ImageField(upload_to='images', blank=True, null=True)
+    file = models.FileField(upload_to='files', blank=True, null=True)
     comment = models.CharField(max_length=200, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -46,13 +47,27 @@ class OrderItem(models.Model):
     class Meta:
         db_table = "OrderItem"
 
+    def file_thumbnail(self):
+        if self.file:
+           if str(self.file).endswith('.ai'):
+               return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
+           else:
+               return mark_safe(u'<img src="%s" width="200px" height="140px" />' % (self.file.url))
+
+        else:
+            return mark_safe(u'<p> Sin imagen </p>')
+
+
+    file_thumbnail.short_description = 'File Thumbnail'
+
+
     def sub_total(self):
         return self.quantity * self.price
 
 
-    @property
-    def image_filename(self):
-        return self.image.url.split('/')[-1]
+    # @property
+    # def image_filename(self):
+    #     return self.image.url.split('/')[-1]
 
 
     def __str__(self):

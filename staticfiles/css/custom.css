@@ -70,7 +70,7 @@ header {
 
 .my_image_medium {
     width: 120px;
-    height: 120px;
+    height: 100px;
 }
 
 .my_title {
@@ -191,9 +191,19 @@ ul.my_products_list li {
 
 }
 
+.my_custom_product_name {
+
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    background-color: #f8f9fa !important;
+
+}
+
+
 .custom_image {
     width: 100px;
-    height: 100px;
+    height: 80px;
 }
 
 .custom_a {
