@@ -52,10 +52,10 @@ def SamplePackPage(request):
 
     # Productos que pertenecen a la categoria muestras
 
-    c_slug = 'Muestras'
-    muestras = Sample.objects.all()
+    c_slug = 'muestras'
+    # muestras = Sample.objects.all()
     #
-    # muestras = Sample.objects.filter(category__slug=c_slug)
+    muestras = Sample.objects.filter(category__slug=c_slug)
     #
     # muestras = Product.objects.filter(category__slug=c_slug)
 
