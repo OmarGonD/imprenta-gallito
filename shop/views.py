@@ -52,9 +52,15 @@ def SamplePackPage(request):
 
     # Productos que pertenecen a la categoria muestras
 
-    muestras = Sample.objects.filter(category__slug='muestras')
+    c_slug = 'Muestras'
+    muestras = Sample.objects.all()
+    #
+    # muestras = Sample.objects.filter(category__slug=c_slug)
+    #
+    # muestras = Product.objects.filter(category__slug=c_slug)
 
-    return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras, 'muestras': muestras})
+    return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,
+                                                  'muestras':muestras})
 
 
 def SamplePack(request, c_slug, product_slug):

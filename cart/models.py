@@ -1,4 +1,6 @@
 from django.db import models
+from django.http import HttpResponse
+
 from shop.models import Product
 
 
@@ -51,7 +53,10 @@ class CartItem(models.Model):
 
     @property
     def file_name(self):
-        return self.file.url.split('/')[-1]
+        if self.file:
+            return self.file.url.split('/')[-1]
+        else:
+            return self.product.image.url.split('/')[-1]
 
 
 
