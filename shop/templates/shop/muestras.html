@@ -38,7 +38,7 @@
             <div class="row">
 
                 <div class="text-center">
-                    <a href="{% url 'shop:SamplePack' 'muestras' 'sample-pack' %}"
+                    <a href="{% url 'shop:SamplePack' 'muestras' 'paquete-de-muestra' %}"
                     class="btn btn-azul text-white btn-block">Agregar al carrito</a>
                 </div>
 
@@ -66,9 +66,10 @@
             {% for muestra in muestras %}
                 <div class="col-md-3">
                     <div class="text-center">
-                        <a href="{{muestra.get_url }}"><img class="my_image_medium"
+                        <a href="{% url 'shop:SampleDetail' muestra.slug %}"><img class="my_image_medium"
                                                              src="{{ muestra.image.url }}"
                                                              alt="{{ muestra.name }}"></a>
+
                     </div>
                     <p class="text-center">{{ muestra.name }}</p>
                 </div>

@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-
 from cart.models import CartItem
 from .models import Profile
 
@@ -94,25 +93,33 @@ class StepTwoForm(forms.ModelForm):
         # self.send_email()
         return instance
 
-    # def send_email(self):
-    #     send_mail('Django Test', 'My message', 'oma.oma@gmail.com',
-    #               ['oma.oma@gmail.com'], fail_silently=False)
 
 
-class SamplePackForm(forms.ModelForm):
+
+### SAMPLES FORM ####
+
+
+class StepOneForm_Sample(forms.Form):
+    size = forms.ChoiceField(choices=TAMANIOS, widget=forms.RadioSelect(), label='Selecciona un tamaño')
+
+
+#Se utiliza el StepTwo que se usa para los otros productos que no son muestra
+
+class StepTwoForm_Sample(forms.ModelForm):
+    comment = forms.CharField(widget=forms.Textarea)
+
     class Meta:
         model = CartItem
-        fields = ()
+        fields = ('file', 'comment')
 
     def __init__(self, *args, **kwargs):
-        super(SamplePackForm, self).__init__(*args, **kwargs)
-        self.fields['cart'].required = False
-        self.fields['size'].required = False
-        self.fields['quantity'].required = False
+        super(StepTwoForm_Sample, self).__init__(*args, **kwargs)
         self.fields['comment'].required = False
         self.fields['file'].required = False
 
     def save(self, commit=True):
-        instance = super(SamplePackForm, self).save(commit=commit)
+        instance = super(StepTwoForm_Sample, self).save(commit=commit)
         # self.send_email()
         return instance
+
+

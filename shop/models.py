@@ -60,7 +60,7 @@ class Product(models.Model):
         verbose_name_plural = 'products'
 
     def get_url(self):
-        return reverse('shop:ProdDetail', args=[self.category.slug, self.slug])
+            return reverse('shop:ProdDetail', args=[self.category.slug, self.slug])
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -88,7 +88,8 @@ class Sample(models.Model):
         verbose_name_plural = 'samples'
 
     def get_url(self):
-        return reverse('shop:ProdDetail', args=[self.category.slug, self.slug])
+        return reverse('shop:SampleCatDetail', args=[self.category.slug, self.slug])
+        # return reverse('shop:SampleDetail', args=[self.slug])
 
     def __str__(self):
         return '{}'.format(self.name)

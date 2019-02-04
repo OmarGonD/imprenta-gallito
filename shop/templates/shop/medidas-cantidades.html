@@ -23,20 +23,20 @@
     <br>
     <div class="row">
 
-    <div class="col-md-1"></div>
+        <div class="col-md-1"></div>
 
         <div class="col-md-5">
             <h2 class="text-center">{{ product.name }}</h2>
             <p class="text-center">
-            <a class=""><i class="gold-star fas fa-star"></i></a>
-                    <a class=""><i class="gold-star fas fa-star"></i></a>
-                    <a class=""><i class="gold-star fas fa-star"></i></a>
-                    <a class=""><i class="gold-star fas fa-star"></i></a>
-                    <a class=""><i class="gold-star fas fa-star-half-alt"></i></a>
-            858 reviews
+                <a class=""><i class="gold-star fas fa-star"></i></a>
+                <a class=""><i class="gold-star fas fa-star"></i></a>
+                <a class=""><i class="gold-star fas fa-star"></i></a>
+                <a class=""><i class="gold-star fas fa-star"></i></a>
+                <a class=""><i class="gold-star fas fa-star-half-alt"></i></a>
+                858 reviews
             </p>
             <div class="text-center">
-                <img src="{{ product.image.url }}" width="200px" height="200px">
+                <img src="{{ product.image.url }}" width="200px" height="160px">
 
             </div>
             <br>
@@ -94,39 +94,46 @@
 
                             </div>
 
+                            {% if sample_form %}
 
-                            <div id="quantity">
+                                <div id="quantity">
+                                </div>
 
-                                <legend class="text-size16 bold-font"> {{ form.quantity.label }}</legend>
+                            {% else %}
+                                <div id="quantity">
 
-                                <ul class="form-items">
-                                    <li>
+                                    <legend class="text-size16 bold-font"> {{ form.quantity.label }}</legend>
+
+                                    <ul class="form-items">
+                                        <li>
                                             <span>
                                                 {{ form.quantity.0.tag }}
                                                 {{ form.quantity.0.choice_label }}
                                             </span>
-                                        <span>$69</span>
-                                        <span class="savings">Ahorra 39%</span
-                                    </li>
-                                    <li>
+                                            <span>$69</span>
+                                            <span class="savings">Ahorra 39%</span
+                                        </li>
+                                        <li>
                                             <span>
                                                 {{ form.quantity.1.tag }}
                                                 {{ form.quantity.1.choice_label }}
                                             </span>
-                                        <span>$120</span>
-                                        <span class="savings">Ahorra 77%</span
-                                    </li>
-                                    <li>
+                                            <span>$120</span>
+                                            <span class="savings">Ahorra 77%</span
+                                        </li>
+                                        <li>
                                             <span>
                                                 {{ form.quantity.2.tag }}
                                                 {{ form.quantity.2.choice_label }}
                                             </span>
-                                        <span>$509</span>
-                                        <span class="savings">Ahorra 60%</span
-                                    </li>
-                                </ul>
+                                            <span>$509</span>
+                                            <span class="savings">Ahorra 60%</span
+                                        </li>
+                                    </ul>
 
-                            </div>
+                                </div>
+
+                            {% endif %}
 
                         </div>
 

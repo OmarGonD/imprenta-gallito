@@ -27,7 +27,8 @@
 
 
 
-    {% if not cart_items %}
+    {% if not cart_items and not sample_items %}
+
         <div>
             <div class="text-center">
                 <br>
@@ -52,252 +53,299 @@
             </div>
 
 
-{#    {% endif %}#}
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row mx-auto">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-                    <table class="table my_custom_table">
-                        <thead class="my_custom_thead">
-                        <tr>
-                            <th colspan="5">
-                                Tus items
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for cart_item in cart_items %}
-                            <tr>
-                                {% if cart_item.file %}
+            {#    {% endif %}#}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row mx-auto">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+                            <table class="table my_custom_table">
+                                <thead class="my_custom_thead">
+                                <tr>
+                                    <th colspan="5">
+                                        Tus items
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
-                                    {% if cart_item.file_name|endswith:'.ai' %}
-
-                                        <td>
-                                            <a href="cart_item.product.get_absolute_url"><img
-                                                    src="/static/img/admin/adobe_illustrator_file_logo.png" alt=""
-                                                    class="float-left rounded" width="90" height="80"></a>
-                                        </td>
+                                {% for cart_item in cart_items %}
 
 
+                                    {% if cart_item.file %}
 
+
+                                        <tr>
+
+                                            {% if cart_item.file_name|endswith:'.ai' %}
+
+                                                <td>
+                                                    <a href="cart_item.product.get_absolute_url"><img
+                                                            src="/static/img/admin/adobe_illustrator_file_logo.png"
+                                                            alt=""
+                                                            class="float-left rounded" width="90" height="80"></a>
+                                                </td>
+
+
+
+                                            {% else %}
+                                                <td>
+                                                    <a href="cart_item.product.get_absolute_url"><img
+                                                            src="{{ cart_item.file.url }}" alt=""
+                                                            class="float-left rounded" width="140" height="140"></a>
+                                                </td>
+
+                                            {% endif %}
+
+                                            <td class="text-left">
+                                                <b>{{ cart_item.product.name }}</b>
+                                                <br>
+                                                {{ cart_item.size }}
+                                                <br>
+                                                <b>{{ cart_item.file_name }}</b>
+                                                <br>
+                                                Precio unitario: {{ cart_item.product.price }}
+                                                <br>
+                                                Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
+                                            </td>
+                                            <td>
+                                                S/.{{ cart_item.sub_total }}
+
+                                                <a
+                                                        href="{% url 'cart:full_remove' cart_item.id %}"
+                                                        class="custom_icon"><i
+                                                        class="fas fa-trash-alt custom_icon"></i></a>
+                                            </td>
+                                            <td></td>
+
+
+                                        </tr>
                                     {% else %}
-                                        <td>
-                                            <a href="cart_item.product.get_absolute_url"><img
-                                                    src="{{ cart_item.file.url }}" alt=""
-                                                    class="float-left rounded" width="140" height="140"></a>
-                                        </td>
+                                        <tr>
+                                            <td>
+                                                <a href="cart_item.product.get_absolute_url"><img
+                                                        src="{{ cart_item.product.image.url }}" alt=""
+                                                        class="float-left rounded" width="90" height="90"></a>
+                                            </td>
+                                            <td class="text-left">
+                                                <b>{{ cart_item.product.name }}</b>
+                                                <br>
+                                                {{ cart_item.size }}
+                                                <br>
+                                                Precio unitario: {{ cart_item.product.price }}
+                                                <br>
+                                                Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
+                                            </td>
+                                            <td>
+                                                S/.{{ cart_item.sub_total }}
+
+                                                <a
+                                                        href="{% url 'cart:full_remove' cart_item.id %}"
+                                                        class="custom_icon"><i
+                                                        class="fas fa-trash-alt custom_icon"></i></a>
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
 
                                     {% endif %}
 
-                                    <td class="text-left">
-                                            <b>{{ cart_item.product.name }}</b>
-                                            <br>
-                                            {{ cart_item.size }}
-                                            <br>
-                                            <b>{{ cart_item.file_name }}</b>
-                                            <br>
-                                            Precio unitario: {{ cart_item.product.price }}
-                                            <br>
-                                            Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
-                                        </td>
-                                        <td>
-                                            S/.{{ cart_item.sub_total }}
-
-                                            <a
-                                                    href="{% url 'cart:full_remove' cart_item.id %}"
-                                                    class="custom_icon"><i
-                                                    class="fas fa-trash-alt custom_icon"></i></a>
-                                        </td>
-                                        <td></td>
 
 
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td>
-                                            <a href="cart_item.product.get_absolute_url"><img
-                                                    src="{{ cart_item.product.image.url }}" alt=""
-                                                    class="float-left rounded" width="90" height="90"></a>
-                                        </td>
-                                        <td class="text-left">
-                                             <b>{{ cart_item.product.name }}</b>
-                                            <br>
-                                            {{ cart_item.size }}
-                                            <br>
-                                            Precio unitario: {{ cart_item.product.price }}
-                                            <br>
-                                            Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
-                                        </td>
-                                        <td>
-                                            S/.{{ cart_item.sub_total }}
-
-                                            <a
-                                                    href="{% url 'cart:full_remove' cart_item.id %}"
-                                                    class="custom_icon"><i
-                                                    class="fas fa-trash-alt custom_icon"></i></a>
-                                        </td>
-                                        <td></td>
-
-                                    </tr>
-
-                                {% endif %}
+                                {% endfor %}
 
 
+                                <!-- MOSTRAR SAMPLE_ITEMS IN CART_DETAIL -->
 
-                        {% endfor %}
-                        </tbody>
-                    </table>
+
+                                {% for sample_item in sample_items %}
+
+
+                                        <tr>
+                                            <td>
+                                                <a href="cart_item.product.get_absolute_url"><img
+                                                        src="{{ sample_item.sample.image.url }}" alt=""
+                                                        class="float-left rounded" width="90" height="90"></a>
+                                            </td>
+                                            <td class="text-left">
+                                                <b>{{ sample_item.sample.name }}</b>
+                                                <br>
+                                                Cantidad: 10 unidades
+                                                <br>
+                                                {{ sample_item.size }}
+                                                <br>
+                                                Precio unitario: {{ sample_item.sample.price }}
+                                                <br>
+                                                Costo total: {{ sample_item.sample.price }}
+                                            </td>
+                                            <td>
+                                                S/.{{ sample_item.sub_total }}
+
+                                                <a
+                                                        href="{% url 'cart:full_remove_sample' sample_item.id %}"
+                                                        class="custom_icon"><i
+                                                        class="fas fa-trash-alt custom_icon"></i></a>
+                                            </td>
+                                            <td></td>
+
+                                        </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+                <div class="col-md-6">
+                    <!-- CHECK OUT TABLE -->
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
 
-        </div>
-        <div class="col-md-6">
-            <!-- CHECK OUT TABLE -->
-            <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+                        <table class="table my_custom_table">
 
-                <table class="table my_custom_table">
+                            <thead class="my_custom_thead">
 
-                    <thead class="my_custom_thead">
-
-                    <tr>
-                        <th>
-                            Checkout
-                        </th>
-                    </tr>
-                    </thead>
-                    <tboyd>
-                        <tr>
-                            <td>
-                                Por favor, revise su Carrito de Compras antes de proceder con el pago de la
-                                orden
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">
-                                A pagar:
-                                <stron> S/. {{ total }}</stron>
-                                <br>
-                                <b><i>Incluye costos de envío</i></b>
-                            </td>
-                        </tr>
-
-                        {% if user.is_authenticated %}
                             <tr>
-                                <td class="text-left">
-                                    Dirección de envío:
-                                    <select type="text" id="ShippingAddress">
-                                        <option value="{{ request.user.profile.shipping_address1 }}"
-                                                selected>{{ request.user.profile.shipping_address1 }}</option>
-                                        <option value="{{ request.user.profile.shipping_address2 }}">{{ request.user.profile.shipping_address2 }}</option>
-                                    </select>
-                                </td>
+                                <th>
+                                    Checkout
+                                </th>
                             </tr>
-                        {% endif %}
-                    </tboyd>
-                </table>
-                <div class="mx-auto">
+                            </thead>
+                            <tboyd>
+                                <tr>
+                                    <td>
+                                        Por favor, revise su Carrito de Compras antes de proceder con el pago de la
+                                        orden
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        A pagar:
+                                        <stron> S/. {{ total }}</stron>
+                                        <br>
+                                        <b><i>Incluye costos de envío</i></b>
+                                    </td>
+                                </tr>
+
+                                {% if user.is_authenticated %}
+                                    <tr>
+                                        <td class="text-left">
+                                            Dirección de envío:
+                                            <select type="text" id="ShippingAddress">
+                                                <option value="{{ request.user.profile.shipping_address1 }}"
+                                                        selected>{{ request.user.profile.shipping_address1 }}</option>
+                                                <option value="{{ request.user.profile.shipping_address2 }}">{{ request.user.profile.shipping_address2 }}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tboyd>
+                        </table>
+                        <div class="mx-auto">
 
 
-                    {% if user.is_authenticated and total > 0 %}
+                            {% if user.is_authenticated and total > 0 %}
 
-                        <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
+                                <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
 
-                    {% elif user.is_authenticated and total == 0 %}
+                            {% elif user.is_authenticated and total == 0 %}
 
-                        <button id="EmptyCartButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
+                                <button id="EmptyCartButton" class="btn btn-secondary btn-block my_custom_btn">Pagar
+                                </button>
 
-                    {% else %}
+                            {% else %}
 
-                        <button id="CannotbuyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
+                                <button id="CannotbuyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar
+                                </button>
 
-                    {% endif %}
+                            {% endif %}
 
-                    <br>
-                    <br>
-                    <a href="{% url 'shop:allCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
-                        comprando</a>
-                </div>
-                <script>
-                    $('#EmptyCartButton').on('click', function (e) {
-                        // Abre el formulario con la configuración en Culqi.settings
-                        alert("Por favor, añada un pedido a su carrito de compras.");
-                        e.preventDefault();
-                    });
-                    $('#CannotbuyButton').on('click', function (e) {
-                        // Abre el formulario con la configuración en Culqi.settings
-                        alert("Para comprar debe ingresar con su cuenta o registrarse.");
-                        e.preventDefault();
-                    });
-                    $('#buyButton').on('click', function (e) {
-                        // Abre el formulario con la configuración en Culqi.settings
-                        Culqi.open();
-                        e.preventDefault();
-                    });
-                </script>
+                            <br>
+                            <br>
+                            <a href="{% url 'shop:allCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
+                                comprando</a>
+                        </div>
+                        <script>
+                            $('#EmptyCartButton').on('click', function (e) {
+                                // Abre el formulario con la configuración en Culqi.settings
+                                alert("Por favor, añada un pedido a su carrito de compras.");
+                                e.preventDefault();
+                            });
+                            $('#CannotbuyButton').on('click', function (e) {
+                                // Abre el formulario con la configuración en Culqi.settings
+                                alert("Para comprar debe ingresar con su cuenta o registrarse.");
+                                e.preventDefault();
+                            });
+                            $('#buyButton').on('click', function (e) {
+                                // Abre el formulario con la configuración en Culqi.settings
+                                Culqi.open();
+                                e.preventDefault();
+                            });
+                        </script>
 
-                <script>
-                    function getCookie(name) {
-                        var cookieValue = null;
-                        if (document.cookie && document.cookie !== '') {
-                            var cookies = document.cookie.split(';');
-                            for (var i = 0; i < cookies.length; i++) {
-                                var cookie = jQuery.trim(cookies[i]);
+                        <script>
+                            function getCookie(name) {
+                                var cookieValue = null;
+                                if (document.cookie && document.cookie !== '') {
+                                    var cookies = document.cookie.split(';');
+                                    for (var i = 0; i < cookies.length; i++) {
+                                        var cookie = jQuery.trim(cookies[i]);
 // Does this cookie string begin with the name we want?
-                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                    break;
+                                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
+                                        }
+                                    }
+                                }
+                                return cookieValue;
+                            }
+
+                            var csrftoken = getCookie('csrftoken');
+
+                            function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+                            }
+
+                            $.ajaxSetup({
+                                beforeSend: function (xhr, settings) {
+                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                    }
+                                }
+                            });
+
+                            function culqi() {
+
+                                if (Culqi.token) {
+                                    var $container = $('.general-container').addClass("preloader");
+                                    var shipping_address = $('#ShippingAddress').val()
+                                    if (Culqi.token) {
+                                        $.post("{% url 'cart:cart_charge' %}", {
+                                                amount: {{ culqi_total }},
+                                                currency_code: 'PEN',
+                                                email: Culqi.token.email,
+                                                source_id: Culqi.token.id,
+                                                last_four: Culqi.token.last_four,
+                                                shipping_address: shipping_address,
+                                            },
+                                        ).done(function () {
+                                            window.location.href = "{% url 'order:thanks' %}";
+                                        })
+                                    } else {
+                                        alert("Hubo un error con el pago");
+                                        console.log(Culqi.error);
+                                        alert(Culqi.error.user_message);
+                                    }
+                                } else {
                                 }
                             }
-                        }
-                        return cookieValue;
-                    }
-
-                    var csrftoken = getCookie('csrftoken');
-
-                    function csrfSafeMethod(method) {
-// these HTTP methods do not require CSRF protection
-                        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                    }
-
-                    $.ajaxSetup({
-                        beforeSend: function (xhr, settings) {
-                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                            }
-                        }
-                    });
-
-                    function culqi() {
-
-                        if (Culqi.token) {
-                            var $container = $('.general-container').addClass("preloader");
-                            var shipping_address = $('#ShippingAddress').val()
-                            if (Culqi.token) {
-                                $.post("{% url 'cart:cart_charge' %}", {
-                                        amount: {{ culqi_total }},
-                                        currency_code: 'PEN',
-                                        email: Culqi.token.email,
-                                        source_id: Culqi.token.id,
-                                        last_four: Culqi.token.last_four,
-                                        shipping_address: shipping_address,
-                                    },
-                                ).done(function () {
-                                    window.location.href = "{% url 'order:thanks' %}";
-                                })
-                            } else {
-                                alert("Hubo un error con el pago");
-                                console.log(Culqi.error);
-                                alert(Culqi.error.user_message);
-                            }
-                        } else {
-                        }
-                    }
-                </script>
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
-    <br>
-    <br>
+        <br>
+        <br>
     {% endif %}
 {% endblock %}

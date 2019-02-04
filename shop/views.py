@@ -6,8 +6,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, HttpResponseRedirect
 from django.views.generic.edit import FormView
 
-from cart.models import Cart, CartItem
-from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm
+from cart.models import Cart, CartItem, SampleItem
+from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import Category, Product, Peru, Sample
 
 
@@ -53,20 +53,24 @@ def SamplePackPage(request):
     # Productos que pertenecen a la categoria muestras
 
     c_slug = 'muestras'
-    # muestras = Sample.objects.all()
-    #
-    muestras = Sample.objects.filter(category__slug=c_slug)
-    #
+
     # muestras = Product.objects.filter(category__slug=c_slug)
+
+    muestras = Sample.objects.filter(category__slug=c_slug)
 
     return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,
                                                   'muestras':muestras})
 
 
+
+
+
 def SamplePack(request, c_slug, product_slug):
     try:
         cart = Cart.objects.get(id=request.COOKIES.get('cart_id'))
+        print("SE pudo obtener cart_id de SamplePack")
     except Cart.DoesNotExist:
+        print("No se pudo obtener cart_id de SamplePack")
         pass
 
     try:
@@ -78,10 +82,11 @@ def SamplePack(request, c_slug, product_slug):
         cart_item = CartItem.objects.create(
             cart=cart,
             product=product,
-            size="",
-            quantity="",
+            size="50 mm x 50 mm",
+            quantity="50",
             file=product.image,
             comment="",
+            step_two_complete=True,
         )
 
         return redirect('/cart/')
@@ -90,6 +95,8 @@ def SamplePack(request, c_slug, product_slug):
         raise e
 
     return HttpResponse("Hi")
+
+
 
 
 # Tamanos y cantidades
@@ -172,6 +179,104 @@ class StepTwoView(FormView):
         response = HttpResponseRedirect(self.get_success_url())
         response.delete_cookie("item_id")
         return response
+
+
+
+### STEPS ONE & TWO FOR SAMPLES
+
+
+# Tamanos y cantidades
+
+class StepOneView_Sample(FormView):
+    form_class = StepOneForm_Sample
+    template_name = 'shop/medidas-cantidades.html'
+    success_url = 'subir-arte'
+
+    def get_initial(self):
+        # pre-populate form if someone goes back and forth between forms
+        initial = super(StepOneView_Sample, self).get_initial()
+        initial['size'] = self.request.session.get('size', None)
+        initial['product'] = Sample.objects.get(
+            # category__slug=self.kwargs['muestras'],
+            slug=self.kwargs['product_slug']
+        )
+
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['product'] = Sample.objects.get(
+            # category__slug=self.kwargs['muestras'],
+            slug=self.kwargs['product_slug']
+        )
+        context['sample_form'] = context.get('form')
+        return context
+
+
+    def form_invalid(self, form):
+        print('Step one: form is NOT valid')
+
+    def form_valid(self, form):
+        cart_id = self.request.COOKIES.get('cart_id')
+        if not cart_id:
+            cart = Cart.objects.create(cart_id="Random")
+            cart_id = cart.id
+        cart = Cart.objects.get(id=cart_id)
+        item = SampleItem.objects.create(
+            size=form.cleaned_data.get('size'),
+            quantity=10,
+            sample=Sample.objects.get(
+                # category__slug=self.kwargs['muestras'],
+                slug=self.kwargs['product_slug']
+            ),
+            cart=cart
+        )
+
+        response = HttpResponseRedirect(self.get_success_url())
+        response.set_cookie("cart_id", cart_id)
+        response.set_cookie("item_id", item.id)
+        return response
+
+
+# here we are going to use CreateView to save the Third step ModelForm
+
+class StepTwoView_Sample(FormView):
+    form_class = StepTwoForm_Sample
+    template_name = 'shop/subir-arte.html'
+    success_url = '/cart/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['product'] = Sample.objects.get(
+            # category__slug=self.kwargs['c_slug'],
+            slug=self.kwargs['product_slug']
+        )
+        return context
+
+    def form_invalid(self, form):
+        print('StepTwoForm is not Valid', form.errors)
+
+    def form_valid(self, form):
+        item_id = self.request.COOKIES.get("item_id")
+
+        sample_item = SampleItem.objects.get(id=item_id)
+        sample_item.file = form.cleaned_data["file"]
+        sample_item.comment = form.cleaned_data["comment"]
+        sample_item.step_two_complete = True
+        sample_item.save()
+        response = HttpResponseRedirect(self.get_success_url())
+        response.delete_cookie("item_id")
+        return response
+
+
+
+
+
+
+###############################
+###############################
+
+
 
 
 def signinView(request):
