@@ -67,21 +67,19 @@ def SamplePackPage(request):
 
 def SamplePack(request, c_slug, product_slug):
     try:
-        cart_id = request.COOKIES.get('cart_id')
-        if not cart_id:
-            cart = Cart.objects.create(cart_id="Random")
-            cart_id = cart.id
-        cart = Cart.objects.get(id=cart_id)
-
+        cart = Cart.objects.get(id=request.COOKIES.get('cart_id'))
+        print("SE pudo obtener cart_id de SamplePack")
     except Cart.DoesNotExist:
+        print("No se pudo obtener cart_id de SamplePack")
         pass
+
     try:
         product = Product.objects.get(
             category__slug=c_slug,
             slug=product_slug,
         )
 
-        item = CartItem.objects.create(
+        cart_item = CartItem.objects.create(
             cart=cart,
             product=product,
             size="50 mm x 50 mm",
@@ -90,10 +88,8 @@ def SamplePack(request, c_slug, product_slug):
             comment="",
             step_two_complete=True,
         )
-        response = redirect('/cart/')
-        response.set_cookie("cart_id", cart_id)
-        response.set_cookie("item_id", item.id)
-        return response
+
+        return redirect('/cart/')
 
     except Exception as e:
         raise e

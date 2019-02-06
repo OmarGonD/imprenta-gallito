@@ -58,7 +58,7 @@
                 <div class="col-md-6">
                     <div class="row mx-auto">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-                            <table class="table my_custom_table" id="myTable">
+                            <table class="table my_custom_table">
                                 <thead class="my_custom_thead">
                                 <tr>
                                     <th colspan="5">
@@ -160,34 +160,34 @@
                                 {% for sample_item in sample_items %}
 
 
-                                    <tr>
-                                        <td>
-                                            <a href="cart_item.product.get_absolute_url"><img
-                                                    src="{{ sample_item.sample.image.url }}" alt=""
-                                                    class="float-left rounded" width="90" height="90"></a>
-                                        </td>
-                                        <td class="text-left">
-                                            <b>{{ sample_item.sample.name }}</b>
-                                            <br>
-                                            Cantidad: 10 unidades
-                                            <br>
-                                            {{ sample_item.size }}
-                                            <br>
-                                            Precio unitario: {{ sample_item.sample.price }}
-                                            <br>
-                                            Costo total: {{ sample_item.sample.price }}
-                                        </td>
-                                        <td>
-                                            S/.{{ sample_item.sub_total }}
+                                        <tr>
+                                            <td>
+                                                <a href="cart_item.product.get_absolute_url"><img
+                                                        src="{{ sample_item.sample.image.url }}" alt=""
+                                                        class="float-left rounded" width="90" height="90"></a>
+                                            </td>
+                                            <td class="text-left">
+                                                <b>{{ sample_item.sample.name }}</b>
+                                                <br>
+                                                Cantidad: 10 unidades
+                                                <br>
+                                                {{ sample_item.size }}
+                                                <br>
+                                                Precio unitario: {{ sample_item.sample.price }}
+                                                <br>
+                                                Costo total: {{ sample_item.sample.price }}
+                                            </td>
+                                            <td>
+                                                S/.{{ sample_item.sub_total }}
 
-                                            <a
-                                                    href="{% url 'cart:full_remove_sample' sample_item.id %}"
-                                                    class="custom_icon"><i
-                                                    class="fas fa-trash-alt custom_icon"></i></a>
-                                        </td>
-                                        <td></td>
+                                                <a
+                                                        href="{% url 'cart:full_remove_sample' sample_item.id %}"
+                                                        class="custom_icon"><i
+                                                        class="fas fa-trash-alt custom_icon"></i></a>
+                                            </td>
+                                            <td></td>
 
-                                    </tr>
+                                        </tr>
 
                                 {% endfor %}
 
@@ -239,66 +239,32 @@
                                         </td>
                                     </tr>
                                 {% endif %}
-
-                                <tr>
-                                    <td>
-                                        <!-- Default checked -->
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" name="radioName" value="1" checked/> Pago con Tarjeta de
-                                            Crédito o Débito <br/>
-                                            <input type="radio" name="radioName" value="2"/> Depósito en efectivo <br/>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-
-                                        {% if user.is_authenticated and total > 0 %}
-
-                                            <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">
-                                                Pagar
-                                            </button>
-
-                                        {% elif user.is_authenticated and total == 0 %}
-
-                                            <button id="EmptyCartButton"
-                                                    class="btn btn-secondary btn-block my_custom_btn">Pagar
-                                            </button>
-
-                                        {% else %}
-
-                                            <button id="CannotbuyButton"
-                                                    class="btn btn-secondary btn-block my_custom_btn">Pagar
-                                            </button>
-
-                                        {% endif %}
-
-                                        <br>
-                                        <br>
-                                        <a href="{% url 'shop:allCat' %}"
-                                           class="btn btn-secondary btn-block my_custom_btn">Seguir
-                                            comprando</a>
-
-                                    </td>
-                                </tr>
-
                             </tboyd>
                         </table>
-
-                        <script>
-                            $(function () {
-                                $('input[type="radio"]').click(function () {
-                                    if ($(this).is(':checked')) {
-                                        $("#buyButton").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                    }
-                                });
-                            });
-                        </script>
+                        <div class="mx-auto">
 
 
+                            {% if user.is_authenticated and total > 0 %}
+
+                                <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
+
+                            {% elif user.is_authenticated and total == 0 %}
+
+                                <button id="EmptyCartButton" class="btn btn-secondary btn-block my_custom_btn">Pagar
+                                </button>
+
+                            {% else %}
+
+                                <button id="CannotbuyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar
+                                </button>
+
+                            {% endif %}
+
+                            <br>
+                            <br>
+                            <a href="{% url 'shop:allCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
+                                comprando</a>
+                        </div>
                         <script>
                             $('#EmptyCartButton').on('click', function (e) {
                                 // Abre el formulario con la configuración en Culqi.settings
