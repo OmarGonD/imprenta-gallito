@@ -245,14 +245,16 @@
                                         <br>
                                         <!-- Default checked -->
                                         <p></p>
-                                            <input class="pago-tarjeta" type="radio" name="radioName" value="1"
-                                                   /> Pago con Tarjeta de
-                                            Crédito o Débito
+                                        <input class="pago-tarjeta" type="radio" name="radioName" value="1"
+                                        /> Pago con Tarjeta de
+                                        Crédito o Débito
                                         <br>
-                                            <input class="pago-deposito" type="radio" name="radioName" value="2" checked/>
-                                            Depósito en efectivo
+                                        <input class="pago-deposito" type="radio" name="radioName" value="2" checked/>
+                                        Depósito en efectivo
                                         <br>
-                                        <p class="pago-deposito-detalle"><i>Después de dar click en el botón de Pagar, se le mostrarán <b>las cuentas bancarias</b> a las cuales deberá depositar.</i></p>
+                                        <p class="pago-deposito-detalle"><i>Después de dar click en el botón de Pagar,
+                                            se le mostrarán <b>las cuentas bancarias</b> a las cuales deberá depositar.</i>
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -264,7 +266,8 @@
                                             <button id="buyButton" class="btn-azul btn-block my_custom_btn">Pagar
                                             </button>
 
-                                             <button id="depositButton" class="btn-naranja btn-block my_custom_btn" checked>Pagar con Efectivo
+                                            <button id="depositButton" class="btn-naranja btn-block my_custom_btn"
+                                                    checked>Pagar con Efectivo
                                             </button>
 
                                         {% elif user.is_authenticated and total == 0 %}
@@ -273,7 +276,9 @@
                                                     class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
                                             </button>
 
-                                            <button id="depositButtonEmptyCart" class="btn-naranja btn-block my_custom_btn" checked>Pagar con Efectivo
+                                            <button id="depositButtonEmptyCart"
+                                                    class="btn-naranja btn-block my_custom_btn" checked>Pagar con
+                                                Efectivo
                                             </button>
 
                                         {% else %}
@@ -282,7 +287,9 @@
                                                     class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
                                             </button>
 
-                                            <button id="depositButtonCannotbuy" class="btn-naranja btn-block my_custom_btn" checked>Pagar con Efectivo
+                                            <button id="depositButtonCannotbuy"
+                                                    class="btn-naranja btn-block my_custom_btn" checked>Pagar con
+                                                Efectivo
                                             </button>
 
                                         {% endif %}
@@ -297,166 +304,6 @@
                                 </tr>
                             </tboyd>
                         </table>
-
-                        <script>
-                            $("#buyButton").hide();
-                            $("#EmptyCartButton").hide();
-                            $("#CannotbuyButton").hide();
-                            $(function () {
-
-                                $("input.pago-tarjeta[type='radio']").click(function () {
-                                    if ($(this).is(':checked')) {
-                                        $("#buyButton").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                        $("#EmptyCartButton").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                        $("#CannotbuyButton").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                        $("#depositButton").hide();
-                                        $("#depositButtonEmptyCart").hide();
-                                        $("#depositButtonCannotbuy").hide();
-                                        $(".pago-deposito-detalle").hide();
-                                    }
-                                });
-                            });
-
-                            $(function () {
-                                {#$('input[type="radio"]').click(function () {#}
-                                $("input.pago-deposito[type='radio']").click(function () {
-                                    if ($(this).is(':checked')) {
-
-                                        $("#depositButton").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                        $("#depositButtonEmptyCart").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                        $("#depositButtonCannotbuy").fadeIn("slow", function () {
-                                            // Animation complete
-                                        });
-                                        $(".pago-deposito-detalle").show();
-                                        $("#buyButton").hide();
-                                        $("#EmptyCartButton").hide();
-                                        $("#CannotbuyButton").hide();
-                                    }
-                                });
-                            });
-                        </script>
-
-
-                        <script>
-                            $('#EmptyCartButton').on('click', function (e) {
-                                // Abre el formulario con la configuración en Culqi.settings
-                                alert("Por favor, añada un pedido a su carrito de compras.");
-                                e.preventDefault();
-                            });
-                            $('#CannotbuyButton').on('click', function (e) {
-                                // Abre el formulario con la configuración en Culqi.settings
-                                alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
-                                e.preventDefault();
-                            });
-                            $('#buyButton').on('click', function (e) {
-                                // Abre el formulario con la configuración en Culqi.settings
-                                Culqi.open();
-                                e.preventDefault();
-                            });
-
-                            /* depositButton */
-
-                            $('#depositButtonEmptyCart').on('click', function (e) {
-                                // Abre el formulario con la configuración en Culqi.settings
-                                alert("Por favor, añada un pedido a su carrito de compras.");
-                                e.preventDefault();
-                            });
-                            $('#depositButtonCannotbuy').on('click', function (e) {
-                                // Abre el formulario con la configuración en Culqi.settings
-                                alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
-                                e.preventDefault();
-                            });
-                        </script>
-
-                        <script>
-                            function getCookie(name) {
-                                var cookieValue = null;
-                                if (document.cookie && document.cookie !== '') {
-                                    var cookies = document.cookie.split(';');
-                                    for (var i = 0; i < cookies.length; i++) {
-                                        var cookie = jQuery.trim(cookies[i]);
-// Does this cookie string begin with the name we want?
-                                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                            break;
-                                        }
-                                    }
-                                }
-                                return cookieValue;
-                            }
-
-                            var csrftoken = getCookie('csrftoken');
-
-                            function csrfSafeMethod(method) {
-// these HTTP methods do not require CSRF protection
-                                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-                            }
-
-                            $.ajaxSetup({
-                                beforeSend: function (xhr, settings) {
-                                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                                    }
-                                }
-                            });
-
-                            function culqi() {
-
-                                if (Culqi.token) {
-                                    var $container = $('.general-container').addClass("preloader");
-                                    var shipping_address = $('#ShippingAddress').val()
-                                    if (Culqi.token) {
-                                        $.post("{% url 'cart:cart_charge' %}", {
-                                                payment_method: 'credit_card_payment',
-                                                amount: {{ culqi_total }},
-                                                currency_code: 'PEN',
-                                                email: Culqi.token.email,
-                                                source_id: Culqi.token.id,
-                                                last_four: Culqi.token.last_four,
-                                                shipping_address: shipping_address,
-                                            },
-                                        ).done(function () {
-                                            window.location.href = "{% url 'order:thanks' %}";
-                                        })
-                                    } else {
-                                        alert("Hubo un error con el pago");
-                                        console.log(Culqi.error);
-                                        alert(Culqi.error.user_message);
-                                    }
-                                } else {
-                                }
-                            }
-                        </script>
-
-                        <script>
-
-                             $('#depositButton').on('click', function (e) {
-                                // Abre el formulario con la configuración en Culqi.settings
-                                var shipping_address = $('#ShippingAddress').val()
-                                 $.post("{% url 'cart:cart_charge' %}", {
-                                        payment_method: 'deposit_payment',
-                                        amount: 1000,
-                                        currency_code: 'PEN',
-                                        source_id: "10",
-                                        last_four: 1111,
-                                        shipping_address: shipping_address,
-                                    },
-                                ).done(function () {
-                                    window.location.href = "{% url 'order:thanks' %}";
-                                })
-                            });
-
-                        </script>
                     </div>
                 </div>
             </div>
@@ -464,4 +311,165 @@
         <br>
         <br>
     {% endif %}
+
+    <script>
+        $("#buyButton").hide();
+        $("#EmptyCartButton").hide();
+        $("#CannotbuyButton").hide();
+        $(function () {
+
+            $("input.pago-tarjeta[type='radio']").click(function () {
+                if ($(this).is(':checked')) {
+                    $("#buyButton").fadeIn("slow", function () {
+                        // Animation complete
+                    });
+                    $("#EmptyCartButton").fadeIn("slow", function () {
+                        // Animation complete
+                    });
+                    $("#CannotbuyButton").fadeIn("slow", function () {
+                        // Animation complete
+                    });
+                    $("#depositButton").hide();
+                    $("#depositButtonEmptyCart").hide();
+                    $("#depositButtonCannotbuy").hide();
+                    $(".pago-deposito-detalle").hide();
+                }
+            });
+        });
+
+        $(function () {
+            {#$('input[type="radio"]').click(function () {#}
+            $("input.pago-deposito[type='radio']").click(function () {
+                if ($(this).is(':checked')) {
+
+                    $("#depositButton").fadeIn("slow", function () {
+                        // Animation complete
+                    });
+                    $("#depositButtonEmptyCart").fadeIn("slow", function () {
+                        // Animation complete
+                    });
+                    $("#depositButtonCannotbuy").fadeIn("slow", function () {
+                        // Animation complete
+                    });
+                    $(".pago-deposito-detalle").show();
+                    $("#buyButton").hide();
+                    $("#EmptyCartButton").hide();
+                    $("#CannotbuyButton").hide();
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $('#EmptyCartButton').on('click', function (e) {
+            // Abre el formulario con la configuración en Culqi.settings
+            alert("Por favor, añada un pedido a su carrito de compras.");
+            e.preventDefault();
+        });
+        $('#CannotbuyButton').on('click', function (e) {
+            // Abre el formulario con la configuración en Culqi.settings
+            alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
+            e.preventDefault();
+        });
+        $('#buyButton').on('click', function (e) {
+            // Abre el formulario con la configuración en Culqi.settings
+            Culqi.open();
+            e.preventDefault();
+        });
+
+        /* depositButton */
+
+        $('#depositButtonEmptyCart').on('click', function (e) {
+            // Abre el formulario con la configuración en Culqi.settings
+            alert("Por favor, añada un pedido a su carrito de compras.");
+            e.preventDefault();
+        });
+        $('#depositButtonCannotbuy').on('click', function (e) {
+            // Abre el formulario con la configuración en Culqi.settings
+            alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
+            e.preventDefault();
+        });
+    </script>
+
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+// Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+// these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        function culqi() {
+
+            if (Culqi.token) {
+                var $container = $('.general-container').addClass("preloader");
+                var shipping_address = $('#ShippingAddress').val()
+                if (Culqi.token) {
+                    $.post("{% url 'cart:cart_charge' %}", {
+                            payment_method: 'credit_card_payment',
+                            amount: {{ culqi_total }},
+                            currency_code: 'PEN',
+                            email: Culqi.token.email,
+                            source_id: Culqi.token.id,
+                            last_four: Culqi.token.last_four,
+                            shipping_address: shipping_address,
+                        },
+                    ).done(function () {
+                        window.location.href = "{% url 'order:thanks' %}";
+                    })
+                } else {
+                    alert("Hubo un error con el pago");
+                    console.log(Culqi.error);
+                    alert(Culqi.error.user_message);
+                }
+            } else {
+            }
+        }
+    </script>
+
+    <script>
+
+        $('#depositButton').on('click', function (e) {
+            // Abre el formulario con la configuración en Culqi.settings
+            var shipping_address = $('#ShippingAddress').val()
+            $.post("{% url 'cart:cart_charge' %}", {
+                    payment_method: 'deposit_payment',
+                    amount: 1000,
+                    currency_code: 'PEN',
+                    source_id: "10",
+                    last_four: 1111,
+                    shipping_address: shipping_address,
+                },
+            ).done(function () {
+                window.location.href = "{% url 'order:thanks' %}";
+            })
+        });
+
+    </script>
+
 {% endblock %}
