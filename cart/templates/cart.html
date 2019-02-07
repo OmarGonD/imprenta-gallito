@@ -160,34 +160,34 @@
                                 {% for sample_item in sample_items %}
 
 
-                                        <tr>
-                                            <td>
-                                                <a href="cart_item.product.get_absolute_url"><img
-                                                        src="{{ sample_item.sample.image.url }}" alt=""
-                                                        class="float-left rounded" width="90" height="90"></a>
-                                            </td>
-                                            <td class="text-left">
-                                                <b>{{ sample_item.sample.name }}</b>
-                                                <br>
-                                                Cantidad: 10 unidades
-                                                <br>
-                                                {{ sample_item.size }}
-                                                <br>
-                                                Precio unitario: {{ sample_item.sample.price }}
-                                                <br>
-                                                Costo total: {{ sample_item.sample.price }}
-                                            </td>
-                                            <td>
-                                                S/.{{ sample_item.sub_total }}
+                                    <tr>
+                                        <td>
+                                            <a href="cart_item.product.get_absolute_url"><img
+                                                    src="{{ sample_item.sample.image.url }}" alt=""
+                                                    class="float-left rounded" width="90" height="90"></a>
+                                        </td>
+                                        <td class="text-left">
+                                            <b>{{ sample_item.sample.name }}</b>
+                                            <br>
+                                            Cantidad: 10 unidades
+                                            <br>
+                                            {{ sample_item.size }}
+                                            <br>
+                                            Precio unitario: {{ sample_item.sample.price }}
+                                            <br>
+                                            Costo total: {{ sample_item.sample.price }}
+                                        </td>
+                                        <td>
+                                            S/.{{ sample_item.sub_total }}
 
-                                                <a
-                                                        href="{% url 'cart:full_remove_sample' sample_item.id %}"
-                                                        class="custom_icon"><i
-                                                        class="fas fa-trash-alt custom_icon"></i></a>
-                                            </td>
-                                            <td></td>
+                                            <a
+                                                    href="{% url 'cart:full_remove_sample' sample_item.id %}"
+                                                    class="custom_icon"><i
+                                                    class="fas fa-trash-alt custom_icon"></i></a>
+                                        </td>
+                                        <td></td>
 
-                                        </tr>
+                                    </tr>
 
                                 {% endfor %}
 
@@ -239,32 +239,114 @@
                                         </td>
                                     </tr>
                                 {% endif %}
+                                <tr>
+                                    <td class="text-left">
+                                        <b>Seleccione método de pago:</b>
+                                        <br>
+                                        <!-- Default checked -->
+                                        <p></p>
+                                            <input class="pago-tarjeta" type="radio" name="radioName" value="1"
+                                                   /> Pago con Tarjeta de
+                                            Crédito o Débito
+                                        <br>
+                                            <input class="pago-deposito" type="radio" name="radioName" value="2" checked/>
+                                            Depósito en efectivo
+                                        <br>
+                                        <p class="pago-deposito-detalle"><i>Después de dar click en el botón de Pagar, se le mostrarán <b>las cuentas bancarias</b> a las cuales deberá depositar.</i></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+
+                                        {% if user.is_authenticated and total > 0 %}
+
+                                            <button id="buyButton" class="btn-azul btn-block my_custom_btn">Pagar
+                                            </button>
+
+                                             <button id="depositButton" class="btn-naranja btn-block my_custom_btn" checked>Pagar con Efectivo
+                                            </button>
+
+                                        {% elif user.is_authenticated and total == 0 %}
+
+                                            <button id="EmptyCartButton"
+                                                    class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
+                                            </button>
+
+                                            <button id="depositButtonEmptyCart" class="btn-naranja btn-block my_custom_btn" checked>Pagar con Efectivo
+                                            </button>
+
+                                        {% else %}
+
+                                            <button id="CannotbuyButton"
+                                                    class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
+                                            </button>
+
+                                            <button id="depositButtonCannotbuy" class="btn-naranja btn-block my_custom_btn" checked>Pagar con Efectivo
+                                            </button>
+
+                                        {% endif %}
+
+                                        <br>
+                                        <br>
+                                        <a href="{% url 'shop:allCat' %}"
+                                           class="btn btn-secondary btn-block my_custom_btn">Seguir
+                                            comprando</a>
+
+                                    </td>
+                                </tr>
                             </tboyd>
                         </table>
-                        <div class="mx-auto">
+
+                        <script>
+                            $("#buyButton").hide();
+                            $("#EmptyCartButton").hide();
+                            $("#CannotbuyButton").hide();
+                            $(function () {
+
+                                $("input.pago-tarjeta[type='radio']").click(function () {
+                                    if ($(this).is(':checked')) {
+                                        $("#buyButton").fadeIn("slow", function () {
+                                            // Animation complete
+                                        });
+                                        $("#EmptyCartButton").fadeIn("slow", function () {
+                                            // Animation complete
+                                        });
+                                        $("#CannotbuyButton").fadeIn("slow", function () {
+                                            // Animation complete
+                                        });
+                                        $("#depositButton").hide();
+                                        $("#depositButtonEmptyCart").hide();
+                                        $("#depositButtonCannotbuy").hide();
+                                        $(".pago-deposito-detalle").hide();
+                                    }
+                                });
+                            });
+
+                            $(function () {
+                                {#$('input[type="radio"]').click(function () {#}
+                                $("input.pago-deposito[type='radio']").click(function () {
+                                    if ($(this).is(':checked')) {
+
+                                        $("#depositButton").fadeIn("slow", function () {
+                                            // Animation complete
+                                        });
+                                        $("#depositButtonEmptyCart").fadeIn("slow", function () {
+                                            // Animation complete
+                                        });
+                                        $("#depositButtonCannotbuy").fadeIn("slow", function () {
+                                            // Animation complete
+                                        });
+                                        $(".pago-deposito-detalle").show();
+                                        $("#buyButton").hide();
+                                        $("#EmptyCartButton").hide();
+                                        $("#CannotbuyButton").hide();
+                                    }
+                                });
+                            });
+                        </script>
 
 
-                            {% if user.is_authenticated and total > 0 %}
-
-                                <button id="buyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar</button>
-
-                            {% elif user.is_authenticated and total == 0 %}
-
-                                <button id="EmptyCartButton" class="btn btn-secondary btn-block my_custom_btn">Pagar
-                                </button>
-
-                            {% else %}
-
-                                <button id="CannotbuyButton" class="btn btn-secondary btn-block my_custom_btn">Pagar
-                                </button>
-
-                            {% endif %}
-
-                            <br>
-                            <br>
-                            <a href="{% url 'shop:allCat' %}" class="btn btn-secondary btn-block my_custom_btn">Seguir
-                                comprando</a>
-                        </div>
                         <script>
                             $('#EmptyCartButton').on('click', function (e) {
                                 // Abre el formulario con la configuración en Culqi.settings
@@ -273,12 +355,25 @@
                             });
                             $('#CannotbuyButton').on('click', function (e) {
                                 // Abre el formulario con la configuración en Culqi.settings
-                                alert("Para comprar debe ingresar con su cuenta o registrarse.");
+                                alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
                                 e.preventDefault();
                             });
                             $('#buyButton').on('click', function (e) {
                                 // Abre el formulario con la configuración en Culqi.settings
                                 Culqi.open();
+                                e.preventDefault();
+                            });
+
+                            /* depositButton */
+
+                            $('#depositButtonEmptyCart').on('click', function (e) {
+                                // Abre el formulario con la configuración en Culqi.settings
+                                alert("Por favor, añada un pedido a su carrito de compras.");
+                                e.preventDefault();
+                            });
+                            $('#depositButtonCannotbuy').on('click', function (e) {
+                                // Abre el formulario con la configuración en Culqi.settings
+                                alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
                                 e.preventDefault();
                             });
                         </script>
@@ -322,6 +417,7 @@
                                     var shipping_address = $('#ShippingAddress').val()
                                     if (Culqi.token) {
                                         $.post("{% url 'cart:cart_charge' %}", {
+                                                payment_method: 'credit_card_payment',
                                                 amount: {{ culqi_total }},
                                                 currency_code: 'PEN',
                                                 email: Culqi.token.email,
@@ -340,6 +436,26 @@
                                 } else {
                                 }
                             }
+                        </script>
+
+                        <script>
+
+                             $('#depositButton').on('click', function (e) {
+                                // Abre el formulario con la configuración en Culqi.settings
+                                var shipping_address = $('#ShippingAddress').val()
+                                 $.post("{% url 'cart:cart_charge' %}", {
+                                        payment_method: 'deposit_payment',
+                                        amount: 1000,
+                                        currency_code: 'PEN',
+                                        source_id: "10",
+                                        last_four: 1111,
+                                        shipping_address: shipping_address,
+                                    },
+                                ).done(function () {
+                                    window.location.href = "{% url 'order:thanks' %}";
+                                })
+                            });
+
                         </script>
                     </div>
                 </div>

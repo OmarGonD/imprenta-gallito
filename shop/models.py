@@ -116,7 +116,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # birth_date = models.DateField(null=True, blank=True)
     dni = models.CharField(max_length=30, blank=True)
-    #phone_number = models.CharField(max_length=15, blank=True)
+    # phone_number = models.CharField(max_length=15, blank=True)
     shipping_address1 = models.CharField(max_length=100, blank=False)
     shipping_address2 = models.CharField(max_length=100, blank=False)
     shipping_department = models.CharField(max_length=100, blank=False)
