@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 
 def thanks(request):
     order_number = Order.objects.latest('id').id
-    response = render(request, 'thanks.html', dict(order_number=order_number))
+    total = Order.objects.latest('id').total
+    response = render(request, 'thanks.html', dict(order_number=order_number, total=total))
     return response
 
 

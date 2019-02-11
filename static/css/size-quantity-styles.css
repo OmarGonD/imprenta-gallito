@@ -65,6 +65,20 @@ form ul li {
     text-align: left;
 }
 
+#quantity .form-items li {
+   display: table;
+   width: 100%;
+}
+#quantity .form-items li span {
+   display:table-cell;
+   width: 33%;
+}
+
+.savings {
+    color: #28a745;
+    /*font-weight: bold;*/
+}
+
 /* BOTONES */
 
 button.btn-azul {

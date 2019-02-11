@@ -11,8 +11,8 @@ from django.forms.widgets import SelectDateWidget
 # Variables
 
 
-TAMANIOS = (('50mm x 50mm', '50 mm x 50 mm',), ('75mm x 75mm', '75 mm x 75 mm',),
-            ('100mm x 100mm', '100 mm x 100 mm',), ('125mm x 125mm', '125 mm x 125 mm',))
+TAMANIOS = (('5cm x 5cm', '5 cm x 5 cm',), ('7cm x 7cm', '7 cm x 7 cm',),
+            ('10cm x 10cm', '10 cm x 10 cm',), ('13cm x 13cm', '13 cm x 13 cm',))
 
 CANTIDADES = (('50', '50',), ('100', '100',),
               ('200', '200',), ('300', '300',),
@@ -82,7 +82,7 @@ class ProfileForm(ModelForm):
 
 
 class StepOneForm(forms.Form):
-    size = forms.ChoiceField(choices=TAMANIOS, widget=forms.RadioSelect(), label='Selecciona un tamaño')
+    size = forms.ChoiceField(choices=TAMANIOS, widget=forms.RadioSelect(), label='Selecciona un tamaño', initial='5 cm x 5 cm')
     quantity = forms.ChoiceField(choices=CANTIDADES, widget=forms.RadioSelect(), label='Selecciona la cantidad')
 
 
@@ -100,7 +100,6 @@ class StepTwoForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super(StepTwoForm, self).save(commit=commit)
-        # self.send_email()
         return instance
 
 
