@@ -99,13 +99,20 @@
                                             <td class="text-left">
                                                 <b>{{ cart_item.product.name }}</b>
                                                 <br>
-                                                {{ cart_item.size }}
+                                                {% if cart_item.product.name == 'Paquete de muestra' %}
+                                                    Varios tamaños
+                                                    <br>
+                                                    Varios diseños
+                                                    <br>
+                                                    Cantidad: 10 stickers
+                                                {% else %}
+                                                    Tamaño: {{ cart_item.size }}
+                                                    <br>
+                                                    Cantidad: {{ cart_item.quantity }}
+                                                    <br>
+                                                    <b>{{ cart_item.file_name }}</b>
+                                                {% endif %}
                                                 <br>
-                                                <b>{{ cart_item.file_name }}</b>
-                                                <br>
-                                                Precio unitario: {{ cart_item.product.price }}
-                                                <br>
-                                                Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
                                             </td>
                                             <td>
                                                 S/.{{ cart_item.sub_total }}
@@ -129,11 +136,9 @@
                                             <td class="text-left">
                                                 <b>{{ cart_item.product.name }}</b>
                                                 <br>
-                                                {{ cart_item.size }}
+                                                Tamaño: {{ cart_item.size }}
                                                 <br>
-                                                Precio unitario: {{ cart_item.product.price }}
-                                                <br>
-                                                Costo total: {{ cart_item.quantity }} * {{ cart_item.product.price }}
+                                                Cantidad: {{ cart_item.quantity }}
                                             </td>
                                             <td>
                                                 S/.{{ cart_item.sub_total }}
@@ -171,14 +176,11 @@
                                             <br>
                                             Cantidad: 10 unidades
                                             <br>
-                                            {{ sample_item.size }}
+                                            Tamaño: {{ sample_item.size }}
                                             <br>
-                                            Precio unitario: {{ sample_item.sample.price }}
-                                            <br>
-                                            Costo total: {{ sample_item.sample.price }}
                                         </td>
                                         <td>
-                                            S/.{{ sample_item.sub_total }}
+                                            S/.10
 
                                             <a
                                                     href="{% url 'cart:full_remove_sample' sample_item.id %}"
@@ -441,7 +443,10 @@
                         },
                     ).done(function () {
                         window.location.href = "{% url 'order:thanks' %}";
-                    })
+                    }).fail(function (xhr, status, error) {
+                        window.location.href = "{% url 'cart:cart_detail' %}";
+                        alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
+                    });
                 } else {
                     alert("Hubo un error con el pago");
                     console.log(Culqi.error);

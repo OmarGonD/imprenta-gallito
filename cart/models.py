@@ -47,9 +47,53 @@ class CartItem(models.Model):
 
     def sub_total(self):
         if self.product.slug == 'paquete-de-muestra':
-            return str(1)
+            return str(3)
         else:
-            return str(self.product.price * int(self.quantity))
+            if self.size == '5cm x 5cm' and self.quantity == '50':
+                return (str(50))
+            elif self.size == '5cm x 5cm' and self.quantity == '100':
+                return (str(70))
+            elif self.size == '5cm x 5cm' and self.quantity == '200':
+                return (str(90))
+            elif self.size == '5cm x 5cm' and self.quantity == '300':
+                return (str(108))
+            elif self.size == '5cm x 5cm' and self.quantity == '500':
+                return (str(240))
+                # 7cm x 7cm
+            elif self.size == '7cm x 7cm' and self.quantity == '50':
+                return (str(70))
+            elif self.size == '7cm x 7cm' and self.quantity == '100':
+                return (str(90))
+            elif self.size == '7cm x 7cm' and self.quantity == '200':
+                return (str(130))
+            elif self.size == '7cm x 7cm' and self.quantity == '300':
+                return (str(160))
+            elif self.size == '7cm x 7cm' and self.quantity == '500':
+                return (str(240))
+                #Size: 10cm x 10cm
+            elif self.size == '10cm x 10cm' and self.quantity == '50':
+                return (str(90))
+            elif self.size == '10cm x 10cm' and self.quantity == '100':
+                return (str(115))
+            elif self.size == '10cm x 10cm' and self.quantity == '200':
+                return (str(180))
+            elif self.size == '10cm x 10cm' and self.quantity == '300':
+                return (str(280))
+            elif self.size == '10cm x 10cm' and self.quantity == '500':
+                return (str(450))
+
+            #13cm x 13cm
+            elif self.size == '13cm x 13cm' and self.quantity == '50':
+                return (str(200))
+            elif self.size == '13cm x 13cm' and self.quantity == '100':
+                return (str(370))
+            elif self.size == '13cm x 13cm' and self.quantity == '200':
+                return (str(430))
+            elif self.size == '13cm x 13cm' and self.quantity == '300':
+                return (str(500))
+            elif self.size == '13cm x 13cm' and self.quantity == '500':
+                return (str(900))
+
 
 
     @property
