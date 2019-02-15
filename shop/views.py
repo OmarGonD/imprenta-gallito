@@ -26,6 +26,7 @@ def allCat(request):
 
 def ProdutcsByCategory(request, c_slug):
     # Para obtener el título de la categoría
+
     category = Category.objects.filter(slug=c_slug)
 
     # Obtiene los productos de la categoría
