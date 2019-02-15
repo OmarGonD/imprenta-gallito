@@ -8,323 +8,112 @@
 }
 
 
-/*@media (min-width: 180px) {*/
-    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-        /*width: 10%;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 200px) {*/
-    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
-    /*.btn, h2, p {*/
-        /*margin-bottom: 15px;*/
-    /*}*/
-
-    /*.my_home_banner_title {*/
-        /*color: white;*/
-        /*font-size: 35px;*/
-        /*font-weight: bold;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-        /*bottom: 0;*/
-        /*position: absolute;*/
-        /*right: -0px;*/
-        /*bottom: 0;*/
-        /*z-index: -1;*/
-    /*}*/
-
-/*}*/
-
-
-/*@media (min-width: 250px) {*/
-    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
-    /*.btn, h2, p {*/
-        /*margin-bottom: 15px;*/
-    /*}*/
-
-    /*.my_home_banner_title {*/
-        /*color: white;*/
-        /*font-size: 35px;*/
-        /*font-weight: bold;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-        /*width: 80%;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 320px) {*/
-    /*!* smartphones, iPhone, portrait 480x320 phones *!*/
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_title {*/
-        /*color: white;*/
-        /*font-size: 50px;*/
-        /*font-weight: bold;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-        /*bottom: 0;*/
-        /*position: absolute;*/
-        /*right: 0px;*/
-        /*bottom: 0;*/
-        /*z-index: 0;*/
-        /*width: 60%;*/
-        /*height: auto;*/
-    /*}*/
-
-    /*.my_home_banner_left .row {*/
-        /*position: relative;*/
-        /*z-index: 1;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*!*z-index: 100;*!*/
-    /*}*/
-
-/*}*/
-
-
-/*@media (min-width: 481px) {*/
-    /*!* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-        /*margin-right: 8%;*/
-        /*z-index: -600;*/
-    /*}*/
-
-
-    /*.my_home_banner_image {*/
-
-        /*bottom: 0;*/
-        /*position: absolute;*/
-        /*right: -0px;*/
-        /*bottom: 0;*/
-        /*z-index: 0;*/
-        /*width: 40%;*/
-    /*}*/
-
-    /*!*.my_home_banner_image_left {*!*/
-    /*!*display: none;*!*/
-    /*!*}*!*/
-    /*.my_home_banner_title {*/
-        /*color: white;*/
-        /*font-size: 50px;*/
-        /*font-weight: bold;*/
-    /*}*/
-
-    /*.my_home_banner_subtitle {*/
-        /*margin-top: 0%;*/
-        /*padding-top: 0%;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-/*}*/
-
-
-/*@media (min-width: 500px) {*/
-    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-        /*width: 60%;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 600px) {*/
-    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-        /*width: 30%;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 641px) {*/
-    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-        /*width: 60%;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 700px) {*/
-    /*!* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-        /*width: 90%;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 961px) {*/
-    /*!* tablet, landscape iPad, lo-res laptops ands desktops *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 50px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-        /*width: 100%;*/
-    /*}*/
-
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-/*}*/
-
-
-/*@media (min-width: 1025px) {*/
-    /*!* big landscape tablets, laptops, and desktops *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-
-        /*width: 100%;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-
-/*}*/
-
-
-/*@media (min-width: 1281px) {*/
-    /*!* hi-res laptops and desktops *!*/
-    /*.my_home_banner {*/
-        /*bottom: 0;*/
-    /*}*/
-
-    /*.btn, h2, p {*/
-        /*margin-bottom: 10px;*/
-    /*}*/
-
-    /*.my_home_banner_image {*/
-
-
-        /*width: 100%;*/
-    /*}*/
-
-    /*.my_home_banner_left {*/
-        /*margin-left: 20px;*/
-        /*z-index: 100;*/
-    /*}*/
-
-
-/*}*/
 
 
 /* STANDAR MEDIA QUIERIES BREAKPOINTS */
 
 
-@media (min-width: 320px) {
+@media (min-width: 320px) and (max-width:480px) {
     /* smartphones, iPhone, portrait 480x320 phones */
+    .my_home_banner {
+        bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
+    }
+
+    .productos_finales_home img {
+
+        padding-bottom: 15px;
+    }
+
+
+    .my_home_banner_image {
+
+        bottom: 0;
+        top: 0;
+        position: relative;
+        z-index: 0;
+        width: 60%;
+        display: block;
+        margin-right: auto;
+        margin-left: 165px;
+    }
+
+    /*.my_home_banner_image {*/
+    /*display: none;*/
+    /*}*/
+    .my_home_banner_title {
+        color: white;
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
+    }
+
+    .btn, h2, p {
+        margin-bottom: 10px;
+    }
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
+    }
+
+
+}
+
+@media (min-width: 481px) {
+    /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+    .my_home_banner {
+        bottom: 0;
+        margin-right: 8%;
+        z-index: -600;
+    }
+
+
+    .my_home_banner_image {
+
+        bottom: 0;
+        position: absolute;
+        right: -0px;
+        bottom: 0;
+        z-index: 0;
+        width: 40%;
+        display: block;
+        margin-right: auto;
+        margin-left: 185px;
+    }
+
+    /*.my_home_banner_image_left {*/
+    /*display: none;*/
+    /*}*/
+    .my_home_banner_title {
+        color: white;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    .my_home_banner_subtitle {
+        margin-top: 0%;
+        padding-top: 0%;
+    }
+
+    .btn, h2, p {
+        margin-bottom: 10px;
+    }
+
+    .my_home_banner_left {
+        margin-left: 20px;
+        z-index: 100;
+    }
+
+}
+
+@media (min-width: 641px) {
+    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
     .my_home_banner {
         bottom: 0;
         margin-right: 8%;
@@ -365,99 +154,6 @@
         z-index: 100;
     }
 
-
-}
-
-@media (min-width: 481px) {
-    /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
-     .my_home_banner {
-        bottom: 0;
-        margin-right: 8%;
-        z-index: -600;
-    }
-
-
-    .my_home_banner_image {
-
-        bottom: 0;
-        position: absolute;
-        right: -0px;
-        bottom: 0;
-        z-index: 0;
-        width: 40%;
-    }
-
-    /*.my_home_banner_image_left {*/
-        /*display: none;*/
-    /*}*/
-
-
-    .my_home_banner_title {
-        color: white;
-        font-size: 50px;
-        font-weight: bold;
-    }
-
-    .my_home_banner_subtitle {
-        margin-top: 0%;
-        padding-top: 0%;
-    }
-
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
-    .my_home_banner_left {
-        margin-left: 20px;
-        z-index: 100;
-    }
-
-}
-
-@media (min-width: 641px) {
-    /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-     .my_home_banner {
-        bottom: 0;
-        margin-right: 8%;
-        z-index: -600;
-    }
-
-
-    .my_home_banner_image {
-
-        bottom: 0;
-        position: absolute;
-        right: -0px;
-        bottom: 0;
-        z-index: 0;
-        width: 40%;
-    }
-
-    /*.my_home_banner_image_left {*/
-        /*display: none;*/
-    /*}*/
-
-
-    .my_home_banner_title {
-        color: white;
-        font-size: 50px;
-        font-weight: bold;
-    }
-
-    .my_home_banner_subtitle {
-        margin-top: 0%;
-        padding-top: 0%;
-    }
-
-    .btn, h2, p {
-        margin-bottom: 10px;
-    }
-
-    .my_home_banner_left {
-        margin-left: 20px;
-        z-index: 100;
-    }
-
     .my_home_banner_lef_text {
         margin-left: 10px;
         z-index: 100;
@@ -467,7 +163,7 @@
 
 @media (min-width: 961px) {
     /* tablet, landscape iPad, lo-res laptops ands desktops */
-     .my_home_banner {
+    .my_home_banner {
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
@@ -481,14 +177,12 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 40%;
+        width: 60%;
     }
 
     /*.my_home_banner_image_left {*/
-        /*display: none;*/
+    /*display: none;*/
     /*}*/
-
-
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -513,7 +207,7 @@
 
 @media (min-width: 1025px) {
     /* big landscape tablets, laptops, and desktops */
-     .my_home_banner {
+    .my_home_banner {
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
@@ -531,10 +225,8 @@
     }
 
     /*.my_home_banner_image_left {*/
-        /*display: none;*/
+    /*display: none;*/
     /*}*/
-
-
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -559,7 +251,7 @@
 
 @media (min-width: 1281px) {
     /* hi-res laptops and desktops */
-     .my_home_banner {
+    .my_home_banner {
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
@@ -577,10 +269,8 @@
     }
 
     /*.my_home_banner_image_left {*/
-        /*display: none;*/
+    /*display: none;*/
     /*}*/
-
-
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -604,4 +294,7 @@
 }
 
 
-.center-video { margin: 0 auto; width: 400px; }
+.center-video {
+    margin: 0 auto;
+    width: 400px;
+}

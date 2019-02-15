@@ -467,3 +467,10 @@ def get_district(request):
 
 def quienes_somos(request):
     return render(request, "footer_links/quienes_somos.html")
+
+
+### ¿Cómo comprar? ###
+
+def como_comprar(request):
+    return render(request, "footer_links/como_comprar.html")
+
