@@ -20,7 +20,7 @@ CANTIDADES = (('cantidad_50', '50',), ('cantidad_100', '100',),
 
 
 # Create your models here.
-
+# EmbedVideoField Optional
 
 
 class Category(models.Model):
