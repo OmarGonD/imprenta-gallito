@@ -153,9 +153,17 @@ ul.my_products_list li {
 
 
 .my_custom_table {
-    min-width: 400px;
+    min-width: 250px;
     font-size: 14px;
 }
+
+.my_custom_table_sm {
+    min-width: 250px;
+    font-size: 12px;
+}
+
+
+
 
 .my_custom_thead {
 

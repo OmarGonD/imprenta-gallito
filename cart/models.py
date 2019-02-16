@@ -47,7 +47,7 @@ class CartItem(models.Model):
 
     def sub_total(self):
         if self.product.slug == 'paquete-de-muestra':
-            return str(3)
+            return str(10)
         else:
             if self.size == '5cm x 5cm' and self.quantity == '50':
                 return (str(50))
@@ -58,7 +58,7 @@ class CartItem(models.Model):
             elif self.size == '5cm x 5cm' and self.quantity == '300':
                 return (str(108))
             elif self.size == '5cm x 5cm' and self.quantity == '500':
-                return (str(240))
+                return (str(140))
                 # 7cm x 7cm
             elif self.size == '7cm x 7cm' and self.quantity == '50':
                 return (str(70))

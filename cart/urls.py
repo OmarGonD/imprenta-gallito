@@ -9,7 +9,8 @@ urlpatterns = [
     # path('remove/<int:cart_item_id>/', views.cart_remove, name = 'cart_remove'),
     path('full_remove/<int:cart_item_id>/', views.full_remove, name='full_remove'),
     path('full_remove_sample/<int:sample_item_id>/', views.full_remove_sample, name='full_remove_sample'),
-    path('charge/', views.cart_charge, name='cart_charge'),
+    path('charge_credit_card/', views.cart_charge_credit_card, name='cart_charge_credit_card'),
+    path('charge_deposit_payment/', views.cart_charge_deposit_payment, name='cart_charge_deposit_payment'),
 
 
 ]

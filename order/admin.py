@@ -15,12 +15,13 @@ class OrderItemAdmin(admin.TabularInline):
     fieldsets = [
         # ('Customer', {'fields': ['first_name', 'last_name'], }),
         ('Product', {'fields': ['product'],}),
+        ('Size', {'fields': ['size'], }),
         ('Quantity', {'fields': ['quantity'],}),
         ('Price', {'fields': ['price'], }),
         ('File', {'fields': ['file'], }),
         ('File_Thumbnail', {'fields': ['file_thumbnail'], }),
     ]
-    readonly_fields = ['product', 'quantity', 'price', 'file', 'file_thumbnail']
+    readonly_fields = ['product', 'size', 'quantity', 'price', 'file', 'file_thumbnail']
     can_delete = False
     max_num = 0
     template = 'admin/order/tabular.html'

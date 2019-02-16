@@ -41,6 +41,11 @@
                 </p>
             </div>
         </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     {% else %}
 
         <div class="container">
@@ -91,7 +96,7 @@
                                                 <td>
                                                     <a href="cart_item.product.get_absolute_url"><img
                                                             src="{{ cart_item.file.url }}" alt=""
-                                                            class="float-left rounded" width="140" height="140"></a>
+                                                            class="float-left rounded" width="90" height="90"></a>
                                                 </td>
 
                                             {% endif %}
@@ -223,7 +228,7 @@
                                 <tr>
                                     <td class="text-left">
                                         A pagar:
-                                        <stron> S/. {{ total }}</stron>
+                                        <strong> S/. {{ total }}</strong>
                                         <br>
                                         <b><i>Incluye costos de envío</i></b>
                                     </td>
@@ -432,7 +437,7 @@
                 var $container = $('.general-container').addClass("preloader");
                 var shipping_address = $('#ShippingAddress').val()
                 if (Culqi.token) {
-                    $.post("{% url 'cart:cart_charge' %}", {
+                    $.post("{% url 'cart:cart_charge_credit_card' %}", {
                             payment_method: 'credit_card_payment',
                             amount: {{ culqi_total }},
                             currency_code: 'PEN',
@@ -442,7 +447,7 @@
                             shipping_address: shipping_address,
                         },
                     ).done(function () {
-                        window.location.href = "{% url 'order:thanks' %}";
+                        window.location.href = "{% url 'order:thanks_credit_card' %}";
                     }).fail(function (xhr, status, error) {
                         window.location.href = "{% url 'cart:cart_detail' %}";
                         alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
@@ -462,16 +467,16 @@
         $('#depositButton').on('click', function (e) {
             // Abre el formulario con la configuración en Culqi.settings
             var shipping_address = $('#ShippingAddress').val()
-            $.post("{% url 'cart:cart_charge' %}", {
+            $.post("{% url 'cart:cart_charge_deposit_payment' %}", {
                     payment_method: 'deposit_payment',
-                    amount: 1000,
+                    amount: {{ total }},
                     currency_code: 'PEN',
                     source_id: "10",
                     last_four: 1111,
                     shipping_address: shipping_address,
                 },
             ).done(function () {
-                window.location.href = "{% url 'order:thanks' %}";
+                window.location.href = "{% url 'order:thanks_deposit_payment' %}";
             })
         });
 

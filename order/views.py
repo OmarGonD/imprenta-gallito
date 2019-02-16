@@ -5,10 +5,21 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
-def thanks(request):
+def thanks_credit_card(request):
     order_number = Order.objects.latest('id').id
+
     total = Order.objects.latest('id').total
-    response = render(request, 'thanks.html', dict(order_number=order_number, total=total))
+
+    response = render(request, 'thanks_credit_card.html', dict(order_number=order_number, total=total))
+    return response
+
+
+def thanks_deposit_payment(request):
+    order_number = Order.objects.latest('id').id
+
+    total = Order.objects.latest('id').total
+
+    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total))
     return response
 
 

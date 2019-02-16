@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Thanks - Perfect Cushion Store
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <br>
+                <br>
+                <br>
+                <h1 class="text-center my_title">
+                    ¡Gracias por confiar en Stickers Gallito!
+                </h1>
+                <br>
+                <p>El número de su orden es: <b>{{ order_number }}</b></p>
+
+                <p>El total de su pedido es: <b>S/.{{ total }}</b></p>
+                <br>
+                <p><i>Hemos recibido su orden y la empezaremos a procesar.</i></p>
+
+                <p><i>En breve le llegará un email con los detalles
+                    de los
+                    productos que compró</i>
+                </p>
+
+                <br>
+
+
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+{% endblock %}
