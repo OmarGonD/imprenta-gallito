@@ -3,8 +3,11 @@ from django.http import HttpResponse
 
 from shop.models import Product, Sample
 
-TAMANIOS = (('50mm x 50mm', '50 mm x 50 mm',), ('75mm x 75mm', '75 mm x 75 mm',),
-            ('100mm x 100mm', '100 mm x 100 mm',), ('125mm x 125mm', '125 mm x 125 mm',))
+# Variables
+
+
+TAMANIOS = (('5cm x 5cm', '5 cm x 5 cm',), ('7cm x 7cm', '7 cm x 7 cm',),
+            ('10cm x 10cm', '10 cm x 10 cm',), ('13cm x 13cm', '13 cm x 13 cm',))
 
 CANTIDADES = (('50', '50',), ('100', '100',),
               ('200', '200',), ('300', '300',),
