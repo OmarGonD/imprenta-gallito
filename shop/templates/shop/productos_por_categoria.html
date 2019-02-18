@@ -48,8 +48,9 @@
 
 
         <div class="row col-md-12">
+        <br>
             {% for product in products %}
-                <div class="col-md-3">
+                <div class="col-md-3 my_products_icons">
                     <div class="text-center">
                         <a href="{{ product.get_url }}"><img class="my_image_medium"
                                                              src="{{ product.image.url }}"
@@ -78,7 +79,7 @@
 
 
         <br>
-        <br>
+
 
         <div class="row">
 
