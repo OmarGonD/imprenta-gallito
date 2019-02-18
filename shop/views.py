@@ -201,18 +201,18 @@ class StepOneView_Sample(FormView):
         # pre-populate form if someone goes back and forth between forms
         initial = super(StepOneView_Sample, self).get_initial()
         initial['size'] = self.request.session.get('size', None)
-        initial['product'] = Sample.objects.get(
-            # category__slug=self.kwargs['muestras'],
-            slug=self.kwargs['product_slug']
+        initial['sample'] = Sample.objects.get(
+            # category=self.kwargs['muestras'],
+            slug=self.kwargs['sample_slug']
         )
 
         return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product'] = Sample.objects.get(
-            # category__slug=self.kwargs['muestras'],
-            slug=self.kwargs['product_slug']
+        context['sample'] = Sample.objects.get(
+            # category=self.kwargs['muestras'],
+            slug=self.kwargs['sample_slug']
         )
         context['sample_form'] = context.get('form')
         return context
@@ -231,8 +231,8 @@ class StepOneView_Sample(FormView):
             size=form.cleaned_data.get('size'),
             quantity=10,
             sample=Sample.objects.get(
-                # category__slug=self.kwargs['muestras'],
-                slug=self.kwargs['product_slug']
+                # category=self.kwargs['muestras'],
+                slug=self.kwargs['sample_slug']
             ),
             cart=cart
         )
