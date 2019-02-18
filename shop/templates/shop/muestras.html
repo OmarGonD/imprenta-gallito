@@ -10,9 +10,9 @@
 {% endblock %}
 {% block title %}
     {% if category %}
-        {{ category.name }} - Perfect Cushion Store
+        {{ category.name }} - Stickers Gallito
     {% else %}
-        See Our Cushion Collection - Perfect Cushion
+        Mira nuestros productos - Stickers Gallito
     {% endif %}
 {% endblock %}
 
@@ -28,7 +28,7 @@
         <br>
         <br>
         <div class="container">
-            <p class="my_samples_title">Paquete de muestras a S/10</p>
+            <p class="my_samples_title">Paquete de muestras a S/.10</p>
             <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>
                 <i class="gold-star fas fa-star-half-alt"></i>
                 <i class="gold-star fas fa-star-half-alt"></i>
@@ -38,7 +38,7 @@
             <div class="row">
 
                 <div class="text-center">
-                    <a href="{% url 'shop:SamplePack' 'muestras' 'paquete-de-muestra' %}"
+                    <a href="{% url 'shop:SamplePack' 'muestras' 'sobre-con-muestras' %}"
                     class="btn btn-azul text-white btn-block">Agregar al carrito</a>
                 </div>
 
@@ -62,9 +62,9 @@
     <br>
 
 
-        <div class="row col-md-12">
+        <div class="row">
             {% for muestra in muestras %}
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="text-center">
                         <a href="{% url 'shop:SampleDetail' muestra.slug %}"><img class="my_image_medium"
                                                              src="{{ muestra.image.url }}"

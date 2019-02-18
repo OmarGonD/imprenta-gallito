@@ -5,7 +5,7 @@
     This is the shopping Cart.
 {% endblock %}
 {% block title %}
-    Cart - Perfect Cushion Store
+    Carrito de compras - Stickers Gallito
 {% endblock %}
 {% block content %}
 
@@ -37,7 +37,7 @@
                 </h1>
                 <br>
                 <p>
-                    Haga click <a class="text-center">aquí</a> para seguir comprando
+                    Haga click <a class="text-center" href="{% url 'shop:allCat' %}">aquí</a> para seguir comprando
                 </p>
             </div>
         </div>
@@ -123,7 +123,7 @@
                                                 S/.{{ cart_item.sub_total }}
 
                                                 <a
-                                                        href="{% url 'cart:full_remove' cart_item.id %}"
+                                                        href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
                                                         class="custom_icon"><i
                                                         class="fas fa-trash-alt custom_icon"></i></a>
                                             </td>
@@ -149,7 +149,7 @@
                                                 S/.{{ cart_item.sub_total }}
 
                                                 <a
-                                                        href="{% url 'cart:full_remove' cart_item.id %}"
+                                                        href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
                                                         class="custom_icon"><i
                                                         class="fas fa-trash-alt custom_icon"></i></a>
                                             </td>
@@ -188,7 +188,7 @@
                                             S/.10
 
                                             <a
-                                                    href="{% url 'cart:full_remove_sample' sample_item.id %}"
+                                                    href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
                                                     class="custom_icon"><i
                                                     class="fas fa-trash-alt custom_icon"></i></a>
                                         </td>
@@ -438,7 +438,7 @@
                 var $container = $('.general-container').addClass("preloader");
                 var shipping_address = $('#ShippingAddress').val()
                 if (Culqi.token) {
-                    $.post("{% url 'cart:cart_charge_credit_card' %}", {
+                    $.post("{% url 'carrito_de_compras:cart_charge_credit_card' %}", {
                             payment_method: 'credit_card_payment',
                             amount: {{ culqi_total }},
                             currency_code: 'PEN',
@@ -450,7 +450,7 @@
                     ).done(function () {
                         window.location.href = "{% url 'order:thanks_credit_card' %}";
                     }).fail(function (xhr, status, error) {
-                        window.location.href = "{% url 'cart:cart_detail' %}";
+                        window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
                         alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
                     });
                 } else {
@@ -468,7 +468,7 @@
         $('#depositButton').on('click', function (e) {
             // Abre el formulario con la configuración en Culqi.settings
             var shipping_address = $('#ShippingAddress').val()
-            $.post("{% url 'cart:cart_charge_deposit_payment' %}", {
+            $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
                     payment_method: 'deposit_payment',
                     amount: {{ total }},
                     currency_code: 'PEN',

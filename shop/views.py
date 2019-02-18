@@ -77,21 +77,21 @@ def SamplePack(request, c_slug, product_slug):
     except Cart.DoesNotExist:
         pass
     try:
-        product = Product.objects.get(
+        sample = Sample.objects.get(
             category__slug=c_slug,
             slug=product_slug,
         )
 
-        item = CartItem.objects.create(
+        item = SampleItem.objects.create(
             cart=cart,
-            product=product,
+            sample=sample,
             size="50 mm x 50 mm",
             quantity="50",
-            file=product.image,
+            file=sample.image,
             comment="",
             step_two_complete=True,
         )
-        response = redirect('/cart/')
+        response = redirect('/carrito_de_compras/')
         response.set_cookie("cart_id", cart_id)
         response.set_cookie("item_id", item.id)
         return response
@@ -160,7 +160,7 @@ class StepOneView(FormView):
 class StepTwoView(FormView):
     form_class = StepTwoForm
     template_name = 'shop/subir-arte.html'
-    success_url = '/cart/'
+    success_url = '/carrito_de_compras/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -248,7 +248,7 @@ class StepOneView_Sample(FormView):
 class StepTwoView_Sample(FormView):
     form_class = StepTwoForm_Sample
     template_name = 'shop/subir-arte.html'
-    success_url = '/cart/'
+    success_url = '/carrito_de_compras/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -300,7 +300,7 @@ def signinView(request):
                 login(request, user)
                 # cart_id =_cart_id(request)
                 # request.session['cart_id'] = cart_id
-                return redirect('cart:cart_detail')
+                return redirect('carrito_de_compras:cart_detail')
             else:
                 return redirect('signup')
 
@@ -419,7 +419,7 @@ def signupView(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
 
-            return redirect('cart:cart_detail')
+            return redirect('carrito_de_compras:cart_detail')
 
         else:
             print("INVALID USeR_FORM")

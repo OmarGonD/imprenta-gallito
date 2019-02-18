@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}
-    Thanks - Perfect Cushion Store
+    Gracias por su compra - Stickers Gallito
 {% endblock %}
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="text-center">
+            <div class="col-md-12 col-lg-12 text-center">
                 <br>
                 <br>
                 <br>
@@ -16,11 +16,12 @@
                 <br>
                 <p>El número de su orden es: <b>{{ order_number }}</b></p>
 
-                <p>El total de su pedido es: {{ total }}</p>
+                <p>El total de su pedido es: S/.{{ total }}</p>
 
-                <p> <b>24 horas: </b> Para hacer efectiva su orden debe hacer el depósito por el monto de su orden <b><i>en las
-                    siguientes 24 horas</i></b>.</p>
+                <p>(A pagar en las siguientes 24 horas para hacer efectivo su pedido).</p>
 
+{#                <p> <b>24 horas: </b> Para hacer efectiva su orden debe hacer el depósito por el monto de su orden <b><i>en las#}
+{#                    siguientes 24 horas</i></b>.</p>#}
                 <br>
 
                 <p>Cuentas bancarias:</p>
@@ -30,10 +31,11 @@
 
 
         <div class="row">
-            <div class="col-md-6">
+
+
                 <!-- BCP -->
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                    <table class="table my_custom_table">
+                    <table class="table my_custom_table_deposit_payment">
 
                         <thead class="my_custom_thead">
 
@@ -47,9 +49,9 @@
 
                             <tr>
                                 <td class="text-left">
-                                    CTA. AHORROS:
+                                    CTA. AHORROS: <b>191-93277552-0-47</b>
                                     <br>
-                                    191 - 93277552 - 0 - 47
+
                                 </td>
                             </tr>
                             <tr>
@@ -64,12 +66,12 @@
                         </tboyd>
                     </table>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <!-- INTERBANK -->
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
 
-                    <table class="table my_custom_table">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                <!-- INTERBANK -->
+
+
+                    <table class="table my_custom_table_deposit_payment">
 
                         <thead class="my_custom_thead">
 
@@ -83,9 +85,9 @@
 
                             <tr>
                                 <td class="text-left">
-                                    CTA. AHORROS:
+                                    CTA. AHORROS: <b>200‑3001651127</b>
                                     <br>
-                                    200‑3001651127
+
                                 </td>
                             </tr>
                             <tr>

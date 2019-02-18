@@ -24,11 +24,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', views.index, name = 'index'),
     path('', include('shop.urls')),
-    path('cart/', include('cart.urls')),
-    path('order/', include('order.urls')),
-    path('account/create/', views.signupView, name = 'signup'),
-    path('account/login/', views.signinView, name = 'signin'),
-    path('account/logout/', views.signoutView, name = 'signout'),
+    path('carrito_de_compras/', include('cart.urls')),
+    path('ordenes/', include('order.urls')),
+    path('registrarse/', views.signupView, name = 'signup'),
+    path('ingresar/', views.signinView, name = 'signin'),
+    path('salir/', views.signoutView, name = 'signout'),
     path('province/', views.get_province, name = 'province')
 ]
 

@@ -12,23 +12,23 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/stickers">Stickers <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Etiquetas</a>
+            <li class="nav-item disabled">
+                <a class="nav-link" href="">Etiquetas</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Imanes</a>
+            <li class="nav-item disabled">
+                <a class="nav-link" href="">Imanes</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Botones</a>
+            <li class="nav-item disabled">
+                <a class="nav-link" href="">Botones</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Empaques</a>
+            <li class="nav-item disabled">
+                <a class="nav-link" href="">Empaques</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
             {% if request.user.is_authenticated %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"
+                    <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
                                                     style="color:white !important;"></i> ( {{ cart_items_counter }})</a>
 
                 </li>
@@ -46,7 +46,7 @@
                 </li>
             {% else %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'cart:cart_detail' %}"><i class="fas fa-shopping-cart"
+                    <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
                                                     style="color:white !important;"></i> ( {{ cart_items_counter }} )</a>
 
                 </li>

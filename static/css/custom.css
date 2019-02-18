@@ -153,15 +153,22 @@ ul.my_products_list li {
 
 
 .my_custom_table {
-    min-width: 250px;
+    min-width: 350px;
     font-size: 14px;
 }
+
+
+
 
 .my_custom_table_sm {
     min-width: 250px;
     font-size: 12px;
 }
 
+.my_custom_table_deposit_payment {
+    min-width: 300px;
+    font-size: 12px;
+}
 
 
 
