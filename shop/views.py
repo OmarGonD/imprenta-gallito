@@ -254,7 +254,7 @@ class StepTwoView_Sample(FormView):
         context = super().get_context_data(**kwargs)
         context['product'] = Sample.objects.get(
             # category__slug=self.kwargs['c_slug'],
-            slug=self.kwargs['product_slug']
+            slug=self.kwargs['sample_slug']
         )
         return context
 
