@@ -46,70 +46,77 @@
 
     <div class="container">
 
+    <br>
+    <br>
 
-        <div class="row col-md-12">
-        <br>
+
+        <div class="row">
             {% for product in products %}
-                <div class="col-md-3 my_products_icons">
-                    <div class="text-center">
+
+                <div class="col-md-3">
+                    <div class="text-center my_products_icons">
                         <a href="{{ product.get_url }}"><img class="my_image_medium"
                                                              src="{{ product.image.url }}"
                                                              alt="{{ product.name }}"></a>
+                    <p class="text-center"><b>{{ product.name }}</b></p>
                     </div>
-                    <p class="text-center">{{ product.name }}</p>
+
                 </div>
+
+
+
             {% endfor %}
         </div>
-        <br>
-        <br>
-
-
-        <div class="row">
-            <div class="col-2 col-md-2"></div>
-            <div class="col-8 col-md-8">
-
-                {% video category.video as my_video %}
-
-                {% video my_video "medium" %}
-                {% endvideo %}
-
-            </div>
-            <div class="col-2 col-md-2"></div>
-        </div>
-
-
-        <br>
-
-
-        <div class="row">
-
-            <div class="col-md-12 col-lg-12">
-            <h2 class="text-center">Productos referenciales</h2>
             <br>
             <br>
+
+
+            <div class="row">
+                <div class="col-2 col-md-2"></div>
+                <div class="col-8 col-md-8">
+
+                    {% video category.video as my_video %}
+
+                    {% video my_video "medium" %}
+                    {% endvideo %}
+
+                </div>
+                <div class="col-2 col-md-2"></div>
             </div>
 
 
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
-            </div>
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
-            </div>
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
+            <br>
+
+
+            <div class="row">
+
+                <div class="col-md-12 col-lg-12">
+                    <h2 class="text-center">Productos referenciales</h2>
+                    <br>
+                    <br>
+                </div>
+
+
+                <div class="col-md-3">
+                    <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
+                </div>
+                <div class="col-md-3">
+                    <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
+                </div>
+                <div class="col-md-3">
+                    <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
+                </div>
+
+                <div class="col-md-3">
+                    <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
+                </div>
+
             </div>
 
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
-            </div>
 
         </div>
 
-
-    </div>
-
-    <br>
-    <br>
+        <br>
+        <br>
 
 {% endblock %}
