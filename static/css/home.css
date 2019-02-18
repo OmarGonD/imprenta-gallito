@@ -62,6 +62,10 @@
         z-index: 100;
     }
 
+    .stickers_referenciales {
+        margin-bottom: 5px;
+    }
+
 
 }
 
@@ -87,9 +91,9 @@
         margin-left: 185px;
     }
 
-    /*.my_home_banner_image_left {*/
-    /*display: none;*/
-    /*}*/
+
+
+
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -131,9 +135,8 @@
         width: 80%;
     }
 
-    /*.my_home_banner_image_left {*/
-    /*display: none;*/
-    /*}*/
+
+
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -180,9 +183,8 @@
         width: 80%;
     }
 
-    /*.my_home_banner_image_left {*/
-    /*display: none;*/
-    /*}*/
+
+
     .my_home_banner_title {
         color: white;
         font-size: 50px;
