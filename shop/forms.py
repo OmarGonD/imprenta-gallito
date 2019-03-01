@@ -61,9 +61,9 @@ class ProfileForm(ModelForm):
 
     def __init__(self, district_list, province_list, department_list, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields['shipping_district'] = forms.ChoiceField(choices=tuple([(name, name) for name in district_list]))
-        self.fields['shipping_province'] = forms.ChoiceField(choices=tuple([(name, name) for name in province_list]))
-        self.fields['shipping_department'] = forms.ChoiceField(choices=tuple([(name, name) for name in department_list]))
+        self.fields['shipping_district'] = forms.ChoiceField(label='Distrito', choices=tuple([(name, name) for name in district_list]))
+        self.fields['shipping_province'] = forms.ChoiceField(label='Provincia', choices=tuple([(name, name) for name in province_list]))
+        self.fields['shipping_department'] = forms.ChoiceField(label='Departamento', choices=tuple([(name, name) for name in department_list]))
 
 
     dni = forms.CharField(label='DNI', max_length=100, required=True)

@@ -13,6 +13,7 @@ urlpatterns = [
     path('district/', views.get_district, name='district'),
     path('quienes_somos/', views.quienes_somos, name='quienes_somos'),
     path('como_comprar/', views.como_comprar, name='como_comprar'),
+    path('contactanos/', views.contactanos, name='contactanos'),
     path('muestras/<slug:sample_slug>/medida-y-cantidad', views.StepOneView_Sample.as_view(), name='SampleDetail'),
     path('muestras/<slug:sample_slug>/subir-arte', views.StepTwoView_Sample.as_view(), name='UploadArt'),
     path('<slug:c_slug>/<slug:product_slug>/medida-y-cantidad', views.StepOneView.as_view(), name='ProdDetail'),

@@ -474,3 +474,9 @@ def quienes_somos(request):
 def como_comprar(request):
     return render(request, "footer_links/como_comprar.html")
 
+### Contactanos ###
+
+def contactanos(request):
+    return render(request, "footer_links/contactanos.html")
+
+

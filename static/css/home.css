@@ -223,12 +223,10 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 90%;
+        width: 55%;
     }
 
-    /*.my_home_banner_image_left {*/
-    /*display: none;*/
-    /*}*/
+
     .my_home_banner_title {
         color: white;
         font-size: 50px;
