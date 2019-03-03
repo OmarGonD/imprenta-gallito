@@ -3,9 +3,6 @@
 }
 
 
-
-
-
 .sizequantityform {
     background-color: #FFFFFF;
     box-shadow: 0 0 0 6px rgba(255, 0, 0, 0.5);
@@ -66,18 +63,29 @@ form ul li {
 }
 
 #quantity .form-items li {
-   display: table;
-   width: 100%;
+    display: table;
+    width: 100%;
 }
+
 #quantity .form-items li span {
-   display:table-cell;
-   width: 33%;
+    display: table-cell;
+    width: 33%;
 }
 
 .savings {
     color: #28a745;
     font-size: 12px;
 }
+
+
+#quantity li:hover {
+    background: #ECF5FF;
+}
+
+#size li:hover {
+    background: #ECF5FF;
+}
+
 
 /* BOTONES */
 
@@ -189,14 +197,9 @@ button.btn-naranja:hover {
 }
 
 
-
 button.btn:focus {
     outline: none;
 }
-
-
-
-
 
 
 @media only screen and (max-width: 600px) {

@@ -58,6 +58,8 @@
         <br>
         <br>
         <br>
+        <br>
+        <br>
     {% else %}
 
         <div class="container">
@@ -197,12 +199,13 @@
                                     <br>
                                 </td>
                                 <td>
-                                    S/.10
+                                    <p>S/.{{ sample_item.sub_total }}
 
                                     <a
                                             href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
                                             class="custom_icon"><i
                                             class="fas fa-trash-alt custom_icon"></i></a>
+                                    </p>
                                 </td>
                                 <td></td>
 
