@@ -23,10 +23,6 @@ $(document).ready(function () {
             $(".savings_500").html("Ahorra 78%");
         } else if ($(this).val() == '7cm x 7cm') {
             $(".quantity_50").html("S/.70");
-            {
-                #$(".savings_50").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                #
-            }
             $(".quantity_100").html("S/.90");
             $(".savings_100").html("Ahorra 36%");
             $(".quantity_200").html("S/.130");
@@ -37,10 +33,6 @@ $(document).ready(function () {
             $(".savings_500").html("Ahorra 66%");
         } else if ($(this).val() == '10cm x 10cm') {
             $(".quantity_50").html("S/.90");
-            {
-                #$(".savings_50").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                #
-            }
             $(".quantity_100").html("S/.115");
             $(".savings_100").html("Ahorra 36%");
             $(".quantity_200").html("S/.180");
@@ -51,10 +43,6 @@ $(document).ready(function () {
             $(".savings_500").html("Ahorra 50%");
         } else if ($(this).val() == '13cm x 13cm') {
             $(".quantity_50").html("S/.200");
-            {
-                #$(".savings_50").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                #
-            }
             $(".quantity_100").html("S/.370");
             $(".savings_100").html("Ahorra 10%");
             $(".quantity_200").html("S/.430");
