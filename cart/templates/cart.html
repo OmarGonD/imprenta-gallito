@@ -61,270 +61,265 @@
     {% else %}
 
         <div class="container">
-            <div class="text-center">
-                <br>
+        <br>
+
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
                 <h1 class="text-center my_title">
                     Tu carrito de compras
                 </h1>
-                <br>
+                </div>
             </div>
 
-
-            {#    {% endif %}#}
+        <br>
+        <br>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="row mx-auto">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
-                            <table class="table my_custom_table">
-                                <thead class="my_custom_thead">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                    <table class="table my_custom_table">
+                        <thead class="my_custom_thead">
+                        <tr>
+                            <th colspan="5">
+                                Tus items
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for cart_item in cart_items %}
+
+
+                            {% if cart_item.file %}
+
+
                                 <tr>
-                                    <th colspan="5">
-                                        Tus items
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
 
-                                {% for cart_item in cart_items %}
+                                    {% if cart_item.file_name|endswith:'.ai' %}
 
-
-                                    {% if cart_item.file %}
-
-
-                                        <tr>
-
-                                            {% if cart_item.file_name|endswith:'.ai' %}
-
-                                                <td>
-                                                    <a href="cart_item.product.get_absolute_url"><img
-                                                            src="/static/img/admin/adobe_illustrator_file_logo.png"
-                                                            alt=""
-                                                            class="float-left rounded" width="90" height="80"></a>
-                                                </td>
+                                        <td>
+                                            <a href="cart_item.product.get_absolute_url"><img
+                                                    src="/static/img/admin/adobe_illustrator_file_logo.png"
+                                                    alt=""
+                                                    class="float-left rounded" width="90" height="80"></a>
+                                        </td>
 
 
 
-                                            {% else %}
-                                                <td>
-                                                    <a href="cart_item.product.get_absolute_url"><img
-                                                            src="{{ cart_item.file.url }}" alt=""
-                                                            class="float-left rounded" width="90" height="90"></a>
-                                                </td>
-
-                                            {% endif %}
-
-                                            <td class="text-left">
-                                                <b>{{ cart_item.product.name }}</b>
-                                                <br>
-                                                {% if cart_item.product.name == 'Paquete de muestra' %}
-                                                    Varios tamaños
-                                                    <br>
-                                                    Varios diseños
-                                                    <br>
-                                                    Cantidad: 10 stickers
-                                                {% else %}
-                                                    Tamaño: {{ cart_item.size }}
-                                                    <br>
-                                                    Cantidad: {{ cart_item.quantity }}
-                                                    <br>
-                                                    <b>{{ cart_item.file_name }}</b>
-                                                {% endif %}
-                                                <br>
-                                            </td>
-                                            <td>
-                                                S/.{{ cart_item.sub_total }}
-
-                                                <a
-                                                        href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
-                                                        class="custom_icon"><i
-                                                        class="fas fa-trash-alt custom_icon"></i></a>
-                                            </td>
-                                            <td></td>
-
-
-                                        </tr>
                                     {% else %}
-                                        <tr>
-                                            <td>
-                                                <a href="cart_item.product.get_absolute_url"><img
-                                                        src="{{ cart_item.product.image.url }}" alt=""
-                                                        class="float-left rounded" width="90" height="90"></a>
-                                            </td>
-                                            <td class="text-left">
-                                                <b>{{ cart_item.product.name }}</b>
-                                                <br>
-                                                Tamaño: {{ cart_item.size }}
-                                                <br>
-                                                Cantidad: {{ cart_item.quantity }}
-                                            </td>
-                                            <td>
-                                                S/.{{ cart_item.sub_total }}
-
-                                                <a
-                                                        href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
-                                                        class="custom_icon"><i
-                                                        class="fas fa-trash-alt custom_icon"></i></a>
-                                            </td>
-                                            <td></td>
-
-                                        </tr>
+                                        <td>
+                                            <a href="cart_item.product.get_absolute_url"><img
+                                                    src="{{ cart_item.file.url }}" alt=""
+                                                    class="float-left rounded" width="90" height="90"></a>
+                                        </td>
 
                                     {% endif %}
 
-
-
-                                {% endfor %}
-
-
-                                <!-- MOSTRAR SAMPLE_ITEMS IN CART_DETAIL -->
-
-
-                                {% for sample_item in sample_items %}
-
-
-                                    <tr>
-                                        <td>
-                                            <a href="cart_item.product.get_absolute_url"><img
-                                                    src="{{ sample_item.sample.image.url }}" alt=""
-                                                    class="float-left rounded" width="90" height="90"></a>
-                                        </td>
-                                        <td class="text-left">
-                                            <b>{{ sample_item.sample.name }}</b>
+                                    <td class="text-left">
+                                        <b>{{ cart_item.product.name }}</b>
+                                        <br>
+                                        {% if cart_item.product.name == 'Paquete de muestra' %}
+                                            Varios tamaños
                                             <br>
-                                            Cantidad: 10 unidades
+                                            Varios diseños
                                             <br>
-                                            Tamaño: {{ sample_item.size }}
+                                            Cantidad: 10 stickers
+                                        {% else %}
+                                            Tamaño: {{ cart_item.size }}
                                             <br>
-                                        </td>
-                                        <td>
-                                            S/.10
+                                            Cantidad: {{ cart_item.quantity }}
+                                            <br>
+                                            <b>{{ cart_item.file_name }}</b>
+                                        {% endif %}
+                                        <br>
+                                    </td>
+                                    <td>
+                                        S/.{{ cart_item.sub_total }}
 
-                                            <a
-                                                    href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
-                                                    class="custom_icon"><i
-                                                    class="fas fa-trash-alt custom_icon"></i></a>
-                                        </td>
-                                        <td></td>
+                                        <a
+                                                href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
+                                                class="custom_icon"><i
+                                                class="fas fa-trash-alt custom_icon"></i></a>
+                                    </td>
+                                    <td></td>
 
-                                    </tr>
 
-                                {% endfor %}
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>
+                                        <a href="cart_item.product.get_absolute_url"><img
+                                                src="{{ cart_item.product.image.url }}" alt=""
+                                                class="float-left rounded" width="90" height="90"></a>
+                                    </td>
+                                    <td class="text-left">
+                                        <b>{{ cart_item.product.name }}</b>
+                                        <br>
+                                        Tamaño: {{ cart_item.size }}
+                                        <br>
+                                        Cantidad: {{ cart_item.quantity }}
+                                    </td>
+                                    <td>
+                                        S/.{{ cart_item.sub_total }}
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                        <a
+                                                href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
+                                                class="custom_icon"><i
+                                                class="fas fa-trash-alt custom_icon"></i></a>
+                                    </td>
+                                    <td></td>
 
-                </div>
-                <div class="col-md-6">
-                    <!-- CHECK OUT TABLE -->
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+                                </tr>
 
-                        <table class="table my_custom_table">
+                            {% endif %}
 
-                            <thead class="my_custom_thead">
+
+
+                        {% endfor %}
+
+
+                        <!-- MOSTRAR SAMPLE_ITEMS IN CART_DETAIL -->
+
+
+                        {% for sample_item in sample_items %}
+
 
                             <tr>
-                                <th>
-                                    Checkout
-                                </th>
+                                <td>
+                                    <a href="cart_item.product.get_absolute_url"><img
+                                            src="{{ sample_item.sample.image.url }}" alt=""
+                                            class="float-left rounded" width="90" height="90"></a>
+                                </td>
+                                <td class="text-left">
+                                    <b>{{ sample_item.sample.name }}</b>
+                                    <br>
+                                    Cantidad: 10 unidades
+                                    <br>
+                                    Tamaño: {{ sample_item.size }}
+                                    <br>
+                                </td>
+                                <td>
+                                    S/.10
+
+                                    <a
+                                            href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
+                                            class="custom_icon"><i
+                                            class="fas fa-trash-alt custom_icon"></i></a>
+                                </td>
+                                <td></td>
+
                             </tr>
-                            </thead>
-                            <tboyd>
-                                <tr>
-                                    <td>
-                                        Por favor, revise su Carrito de Compras antes de proceder con el pago de la
-                                        orden
-                                    </td>
-                                </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+
+                    <table class="table my_custom_table">
+
+                        <thead class="my_custom_thead">
+
+                        <tr>
+                            <th>
+                                Checkout
+                            </th>
+                        </tr>
+                        </thead>
+                        <tboyd>
+                            <tr>
+                                <td>
+                                    Por favor, revise su Carrito de Compras antes de proceder con el pago de la
+                                    orden
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left">
+                                    A pagar:
+                                    <strong> S/. {{ total }}</strong>
+                                    <br>
+                                    <b><i>Incluye costos de envío</i></b>
+                                </td>
+                            </tr>
+
+                            {% if user.is_authenticated %}
                                 <tr>
                                     <td class="text-left">
-                                        A pagar:
-                                        <strong> S/. {{ total }}</strong>
-                                        <br>
-                                        <b><i>Incluye costos de envío</i></b>
+                                        Dirección de envío:
+                                        <select type="text" id="ShippingAddress">
+                                            <option value="{{ request.user.profile.shipping_address1 }}"
+                                                    selected>{{ request.user.profile.shipping_address1 }}</option>
+                                            <option value="{{ request.user.profile.shipping_address2 }}">{{ request.user.profile.shipping_address2 }}</option>
+                                        </select>
                                     </td>
                                 </tr>
-
-                                {% if user.is_authenticated %}
-                                    <tr>
-                                        <td class="text-left">
-                                            Dirección de envío:
-                                            <select type="text" id="ShippingAddress">
-                                                <option value="{{ request.user.profile.shipping_address1 }}"
-                                                        selected>{{ request.user.profile.shipping_address1 }}</option>
-                                                <option value="{{ request.user.profile.shipping_address2 }}">{{ request.user.profile.shipping_address2 }}</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                                <tr>
-                                    <td class="text-left">
-                                        <b>Seleccione método de pago:</b>
-                                        <br>
-                                        <!-- Default checked -->
-                                        <p></p>
-{#                                        <input class="pago-tarjeta" type="radio" name="radioName" value="1"#}
-{#                                        /> Pago con Tarjeta de#}
-{#                                        Crédito o Débito#}
-{#                                        <br>#}
-                                        <input class="pago-deposito" type="radio" name="radioName" value="2" checked/>
-                                        Depósito en efectivo
-                                        <br>
-                                        <br>
-                                        <p class="pago-deposito-detalle"><i>Después de dar click en el botón de Pagar,
-                                            se le mostrarán <b>las cuentas bancarias</b> a las cuales deberá depositar.</i>
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                            {% endif %}
+                            <tr>
+                                <td class="text-left">
+                                    <b>Seleccione método de pago:</b>
+                                    <br>
+                                    <!-- Default checked -->
+                                    <p></p>
+                                    {#                                        <input class="pago-tarjeta" type="radio" name="radioName" value="1"#}
+                                    {#                                        /> Pago con Tarjeta de#}
+                                    {#                                        Crédito o Débito#}
+                                    {#                                        <br>#}
+                                    <input class="pago-deposito" type="radio" name="radioName" value="2" checked/>
+                                    Depósito en efectivo
+                                    <br>
+                                    <br>
+                                    <p class="pago-deposito-detalle"><i>Después de dar click en el botón de Pagar,
+                                        se le mostrarán <b>las cuentas bancarias</b> a las cuales deberá depositar.</i>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
 
 
-                                        {% if user.is_authenticated and total > 0 %}
+                                    {% if user.is_authenticated and total > 0 %}
 
-                                            <button id="buyButton" class="btn-azul btn-block my_custom_btn">Pagar
-                                            </button>
+                                        <button id="buyButton" class="btn-azul btn-block my_custom_btn">Pagar
+                                        </button>
 
-                                            <button id="depositButton" class="btn-naranja btn-block my_custom_btn"
-                                                    checked>Pagar con Efectivo
-                                            </button>
+                                        <button id="depositButton" class="btn-naranja btn-block my_custom_btn"
+                                                checked>Pagar con Efectivo
+                                        </button>
 
-                                        {% elif user.is_authenticated and total == 0 %}
+                                    {% elif user.is_authenticated and total == 0 %}
 
-                                            <button id="EmptyCartButton"
-                                                    class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
-                                            </button>
+                                        <button id="EmptyCartButton"
+                                                class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
+                                        </button>
 
-                                            <button id="depositButtonEmptyCart"
-                                                    class="btn-naranja btn-block my_custom_btn" checked>Pagar con
-                                                Efectivo
-                                            </button>
+                                        <button id="depositButtonEmptyCart"
+                                                class="btn-naranja btn-block my_custom_btn" checked>Pagar con
+                                            Efectivo
+                                        </button>
 
-                                        {% else %}
+                                    {% else %}
 
-                                            <button id="CannotbuyButton"
-                                                    class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
-                                            </button>
+                                        <button id="CannotbuyButton"
+                                                class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
+                                        </button>
 
-                                            <button id="depositButtonCannotbuy"
-                                                    class="btn-naranja btn-block my_custom_btn" checked>Pagar con
-                                                Efectivo
-                                            </button>
+                                        <button id="depositButtonCannotbuy"
+                                                class="btn-naranja btn-block my_custom_btn" checked>Pagar con
+                                            Efectivo
+                                        </button>
 
-                                        {% endif %}
+                                    {% endif %}
 
-                                        <br>
-                                        <br>
-                                        <a href="{% url 'shop:allCat' %}"
-                                           class="btn btn-secondary btn-block my_custom_btn">Seguir
-                                            comprando</a>
+                                    <br>
+                                    <br>
+                                    <a href="{% url 'shop:allCat' %}"
+                                       class="btn btn-secondary btn-block my_custom_btn">Seguir
+                                        comprando</a>
 
-                                    </td>
-                                </tr>
-                            </tboyd>
-                        </table>
-                    </div>
+                                </td>
+                            </tr>
+                        </tboyd>
+                    </table>
                 </div>
             </div>
         </div>
