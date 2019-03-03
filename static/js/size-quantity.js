@@ -2,10 +2,6 @@ $(document).ready(function () {
 
     $('#id_size_0').attr('checked', true);
     $(".quantity_50").html("S/.50");
-    {
-        #$(".savings_50").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-        #
-    }
     $(".quantity_100").html("S/.70");
     $(".savings_100").html("Ahorra 30%");
     $(".quantity_200").html("S/.90");
@@ -17,10 +13,6 @@ $(document).ready(function () {
     $('input:radio[name="size"]').change(function () {
         if ($(this).val() == '5cm x 5cm') {
             $(".quantity_50").html("S/.50");
-            {
-                #$(".savings_50").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                #
-            }
             $(".quantity_100").html("S/.70");
             $(".savings_100").html("Ahorra 30%");
             $(".quantity_200").html("S/.90");
