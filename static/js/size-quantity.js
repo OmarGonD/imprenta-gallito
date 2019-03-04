@@ -20,7 +20,7 @@ $(document).ready(function () {
             $(".quantity_300").html("S/.108");
             $(".savings_300").html("Ahorra 64%");
             $(".quantity_500").html("S/.140");
-            $(".savings_500").html("Ahorra 78%");
+            $(".savings_500").html("Ahorra 72%");
         } else if ($(this).val() == '7cm x 7cm') {
             $(".quantity_50").html("S/.70");
             $(".quantity_100").html("S/.90");
