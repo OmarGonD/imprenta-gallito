@@ -31,11 +31,12 @@ def orderHistory(request):
         print(email)
         order_details = Order.objects.filter(email=email)
         # order_details = get_object_or_404(Order, emailAddress=email)
-        # if not order_details:
-        #     print("No hay orden")
-        # else:
-        #     order_details
-        #     print("Hay orden")
+        if not order_details:
+            print("No hay orden")
+        else:
+            order_details
+            print("Hay orden")
+            print(order_details)
     return render(request, 'order/orders_list.html', {'order_details': order_details})
 
 
@@ -47,5 +48,6 @@ def viewOrder(request, order_id):
         order_items = OrderItem.objects.filter(order = order)
     return render(request, 'order/order_detail.html', {'order': order,
                                                        'order_items': order_items})
+
 
 

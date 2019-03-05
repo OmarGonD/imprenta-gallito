@@ -10,8 +10,10 @@
 
 {% block content %}
 
-    <div>
+    <div class="container">
         <div class="text-center">
+            <br>
+            <br>
             <br>
             <h1 class="text-center my_title">Detalles de la Orden</h1>
             <br>
@@ -25,27 +27,25 @@
                     </td>
                     <td class="text-left" colspan="2">
                         <b>Dirección de facturación: </b><br>
-                        {{ order.billingName }} <br>
-                        {{ order.billingAddress1 }} <br>
-                        {{ order.billingCity }} <br>
-                        {{ order.billingPostcode }} <br>
-                        {{ order.billingCountry }} <br>
-
+                        {{ order.email }} <br>
+                        {{ order.shipping_address }} <br>
+                        {{ order.shipping_district }} <br>
+                        {{ order.shipping_province }} <br>
+                        {{ order.shipping_department }} <br>
                     </td>
                 </tr>
                 <tr>
                     <td><b>Descripción del producto: </b></td>
                     <td><b>Cantidad: </b></td>
-                    <td><b>Precio unitario: </b></td>
-                    <td><b>Sub total:</b></td>
+                    <td><b>Costo: </b></td>
+                    <td><b>Arte o diseño: </b></td>
                 </tr>
                 {% for item in order_items %}
-
                     <tr>
                         <td>{{ item.product }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.price }}</td>
-                        <td>{{ item.sub_total }}</td>
+                        <td>{{ item.file_thumbnail }}</td>
                     </tr>
                 {% endfor %}
                 <tr>
@@ -59,15 +59,13 @@
                 <tr>
                     <td class="text-left" colspan="2">
                         <b>Dirección de envío: </b><br>
-                        {{ order.shippingName }}<br>
-                        {{ order.shippingAddress1 }}<br>
-                        {{ order.shippingCity }}<br>
-                        {{ order.shippingPostcode }}<br>
-                        {{ order.shippingCountry }}<br>
+                        {{ order.shipping_address }}<br>
+                        {{ order.shipping_department }}<br>
+                        {{ order.shipping_province }}<br>
                     </td>
                     <td class="text-left" colspan="2">
                         <b>Detalle del pago: </b><br>
-                        La orden #{{ order.id }} ha sido cancelada exitosamente vía Stripe.
+                        <p>La orden #{{ order.id }} ha sido cancelada exitosamente vía Culqi.</p>
                     </td>
                 </tr>
             </table>

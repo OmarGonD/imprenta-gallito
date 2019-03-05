@@ -34,11 +34,11 @@ class OrderItemAdmin(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     model = Order
-    list_display = ['id', 'first_name', 'last_name', 'email', 'total', 'reason', 'created']
-    list_editable = ['reason',]
+    list_display = ['id', 'status', 'first_name', 'last_name', 'email', 'total', 'reason', 'created']
+    list_editable = ['reason', 'status']
     list_display_links = ('id', 'email')
     search_fields = ['token', 'shipping_department', 'email']
-    readonly_fields = ['id','created']
+    readonly_fields = ['id','created', 'total']
 
     fieldsets = [
         ('ORDER INFORMATION', {'fields': ['id','token', 'total', 'created']}),

@@ -11,7 +11,7 @@
     <div>
         <div class="text-center">
             <br>
-            <h1 class="text-center my_title">Order History</h1>
+            <h1 class="text-center my_title">Historial de compras</h1>
             <br>
             {% if order_details %}
             <table class="table table-striped">
@@ -27,12 +27,12 @@
                 <tbody>
                     {% for order in order_details %}
                         <tr>
-                            <td>{{ order.transaction_id }}</td>
-                            <td>{{ order.creation_date }}</td>
-                            <td>S/. {{ order.amount }}</td>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.created }}</td>
+                            <td>S/. {{ order.total }}</td>
                             <td><i class="fas fa-check"></i>&nbsp;Completo</td>
-{#                            <td><a href="{% url 'order:order_detail' order.id %}">Ver orden</a></td>#}
-                            <td><a href="">Ver orden</a></td>
+                            <td><a href="{% url 'order:order_detail' order.id %}">Ver orden</a></td>
+{#                            <td><a href="">Ver orden</a></td>#}
                         </tr>
                     {% endfor %}
                 </tbody>

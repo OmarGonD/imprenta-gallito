@@ -6,6 +6,12 @@ from django.utils.html import mark_safe
 #
 
 class Order(models.Model):
+    ORDER_STATUS = (
+        ('recibido', 'Recibido'),
+        ('en_proceso', 'En proceso'),
+        ('en_camino', 'En camino'),
+        ('entregado', 'Entregado'),
+    )
     token = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
@@ -20,6 +26,7 @@ class Order(models.Model):
     shipping_province = models.CharField(max_length=100, blank=True, null=True)
     shipping_district = models.CharField(max_length=100, blank=True, null=True)
     reason = models.CharField(max_length=400, blank=True, null=True, default='')
+    status = models.CharField(max_length=10, choices=ORDER_STATUS, default='recibido')
 
 
     class Meta:
