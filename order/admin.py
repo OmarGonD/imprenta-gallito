@@ -41,7 +41,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ['id','created', 'total']
 
     fieldsets = [
-        ('ORDER INFORMATION', {'fields': ['id','token', 'total', 'created']}),
+        ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'created']}),
         # ('BILLING INFORMATION', {'fields': ['billingName', 'billingAddress1', 'billingCity', 'billingPostCode',
         #                                     'billingCountry', 'emailAddress']}),
         ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'email', 'shipping_address', 'shipping_department', 'shipping_province',

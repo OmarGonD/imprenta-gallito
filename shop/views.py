@@ -4,8 +4,9 @@ from django.contrib.auth.models import Group, User
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
-
+from shop.models import Product_Review, Sample_Review
 from cart.models import Cart, CartItem, SampleItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import Category, Product, Peru, Sample
@@ -60,22 +61,16 @@ def SamplePackPage(request):
     muestras = Sample.objects.filter(category__slug=c_slug)
 
     return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,
-                                                  'muestras':muestras})
-
-
-
+                                                  'muestras': muestras})
 
 
 def SamplePack(request, c_slug, product_slug):
-    try:
-        cart_id = request.COOKIES.get('cart_id')
-        if not cart_id:
-            cart = Cart.objects.create(cart_id="Random")
-            cart_id = cart.id
-        cart = Cart.objects.get(id=cart_id)
+    cart_id = request.COOKIES.get('cart_id')
+    if not cart_id:
+        cart = Cart.objects.create(cart_id="Random")
+        cart_id = cart.id
+    cart = Cart.objects.get(id=cart_id)
 
-    except Cart.DoesNotExist:
-        pass
     try:
         sample = Sample.objects.get(
             category__slug=c_slug,
@@ -85,7 +80,7 @@ def SamplePack(request, c_slug, product_slug):
         item = SampleItem.objects.create(
             cart=cart,
             sample=sample,
-            size="50 mm x 50 mm",
+            size="varios",
             quantity="50",
             file=sample.image,
             comment="",
@@ -100,8 +95,6 @@ def SamplePack(request, c_slug, product_slug):
         raise e
 
     return HttpResponse("Hi")
-
-
 
 
 # Tamanos y cantidades
@@ -186,7 +179,6 @@ class StepTwoView(FormView):
         return response
 
 
-
 ### STEPS ONE & TWO FOR SAMPLES
 
 
@@ -216,7 +208,6 @@ class StepOneView_Sample(FormView):
         )
         context['sample_form'] = context.get('form')
         return context
-
 
     def form_invalid(self, form):
         print('Step one: form is NOT valid')
@@ -274,14 +265,8 @@ class StepTwoView_Sample(FormView):
         return response
 
 
-
-
-
-
 ###############################
 ###############################
-
-
 
 
 def signinView(request):
@@ -328,7 +313,6 @@ def signoutView(request):
 ### New SignUp Extended
 
 from django.shortcuts import render
-
 
 
 @transaction.atomic
@@ -384,12 +368,12 @@ def signupView(request):
             province_list = set()
         if len(province_list):
             district_list = set(
-                Peru.objects.filter(departamento__in=department_list, provincia__in=province_list).values_list("distrito",
-                                                                                                             flat=True))
+                Peru.objects.filter(departamento__in=department_list, provincia__in=province_list).values_list(
+                    "distrito",
+                    flat=True))
             print("District LIST in POST", district_list)
         else:
             district_list = set()
-
 
         #####
 
@@ -398,8 +382,7 @@ def signupView(request):
         profile_form = ProfileForm(district_list, province_list, department_list, request.POST)
         # profile_form = ProfileForm(district_list, province_list, department_list, request.POST, instance=user.profile)
 
-
-        if  user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
             username = user_form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
@@ -474,9 +457,91 @@ def quienes_somos(request):
 def como_comprar(request):
     return render(request, "footer_links/como_comprar.html")
 
+
 ### Contactanos ###
 
 def contactanos(request):
     return render(request, "footer_links/contactanos.html")
 
 
+### Reviews ###
+
+
+@csrf_exempt
+def make_review_view(request):
+    user = request.user
+    category_slug = request.POST.get('category_slug')
+    print("Category Slug:")
+    print(category_slug)
+    product_slug = request.POST.get("product_slug")
+
+    sample_slug = request.POST.get("sample_slug")
+    print(sample_slug)
+
+    review = request.POST.get("review")
+    stars = float(request.POST.get("stars"))
+    print("Stars Type")
+    print(stars)
+    print(type(stars))
+
+    if category_slug == 'muestras':
+
+        print("Enters if of Samples")
+        try:
+
+            category = Category.objects.get(
+                slug=category_slug,
+            )
+
+            sample = Sample.objects.get(
+                slug=sample_slug,
+            )
+
+            review = Sample_Review.objects.create(
+                user=user,
+                category=category,
+                sample=sample,
+                review=review,
+                stars=stars
+            )
+
+            if not review:
+                print("No se creó Review Object")
+            else:
+                review.save()
+                print("Se guardo el Review")
+
+        except Sample_Review.DoesNotExist:
+            print("No se creo el Review")
+
+    else:
+
+        try:
+
+            category = Category.objects.get(
+                slug=category_slug,
+            )
+
+            product = Product.objects.get(
+                slug=product_slug,
+            )
+
+            review = Product_Review.objects.create(
+                user=user,
+                category=category,
+                product=product,
+                review=review,
+                stars=stars
+            )
+
+            if not review:
+                print("No se creó Review Object")
+            else:
+                review.save()
+                print("Se guardo el Review")
+
+        except Product_Review.DoesNotExist:
+            print("No se creo el Review")
+
+
+    return HttpResponse("Hi")

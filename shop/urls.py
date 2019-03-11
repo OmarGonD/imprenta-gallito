@@ -20,4 +20,5 @@ urlpatterns = [
     path('<slug:c_slug>/<slug:product_slug>/subir-arte', views.StepTwoView.as_view(), name='UploadArt'),
     path('<slug:c_slug>/<slug:product_slug>', views.SamplePack, name='SamplePack'),
     path('<slug:c_slug>', views.ProdCatDetail, name='ProdCatDetail'),
+    path('make_review/', views.make_review_view, name='make_review_view'),
 ]

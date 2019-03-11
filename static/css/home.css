@@ -8,12 +8,10 @@
 }
 
 
-
-
 /* STANDAR MEDIA QUIERIES BREAKPOINTS */
 
 
-@media (min-width: 320px) and (max-width:480px) {
+@media (min-width: 320px) and (max-width: 480px) {
     /* smartphones, iPhone, portrait 480x320 phones */
     .my_home_banner {
         bottom: 0;
@@ -57,14 +55,43 @@
         margin-bottom: 10px;
     }
 
-    .my_home_banner_left {
-        margin-left: 20px;
-        z-index: 100;
+
+
+    .btn-comentario {
+        text-decoration: none;
+        background-color: #969696;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 700;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+        letter-spacing: 0;
+        line-height: 1.2;
+        -webkit-font-smoothing: antialiased;
+        -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+        -ms-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+        -moz-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+        -o-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+        box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, .09) 0%, rgba(0, 0, 0, .09) 100%);
+        font-size: 1.4rem;
+        padding: 22px 30px;
+        border-radius: 6px;
+        border: none;
     }
 
-    .stickers_referenciales {
-        margin-bottom: 5px;
-    }
+
+.my_home_banner_left {
+    margin-left: 20px;
+    z-index: 100;
+}
+
+.stickers_referenciales {
+    margin-bottom: 5px;
+}
 
 
 }
@@ -92,8 +119,6 @@
     }
 
 
-
-
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -107,6 +132,10 @@
 
     .btn, h2, p {
         margin-bottom: 10px;
+    }
+
+    .btn-comentario {
+        margin-bottom: 100px;
     }
 
     .my_home_banner_left {
@@ -136,7 +165,6 @@
     }
 
 
-
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -150,6 +178,10 @@
 
     .btn, h2, p {
         margin-bottom: 10px;
+    }
+
+    .btn-comentario {
+        margin-bottom: 100px;
     }
 
     .my_home_banner_left {
@@ -184,7 +216,6 @@
     }
 
 
-
     .my_home_banner_title {
         color: white;
         font-size: 50px;
@@ -198,6 +229,10 @@
 
     .btn, h2, p {
         margin-bottom: 10px;
+    }
+
+    .btn-comentario {
+        margin-bottom: 100px;
     }
 
     .my_home_banner_left {
@@ -242,6 +277,10 @@
         margin-bottom: 10px;
     }
 
+    .btn-comentario {
+        margin-bottom: 100px;
+    }
+
     .my_home_banner_left {
         margin-left: 20px;
         z-index: 100;
@@ -284,6 +323,10 @@
 
     .btn, h2, p {
         margin-bottom: 10px;
+    }
+
+    .btn-comentario {
+        margin-bottom: 100px;
     }
 
     .my_home_banner_left {

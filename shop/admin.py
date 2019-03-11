@@ -1,10 +1,12 @@
 from django.contrib import admin
-from .models import Category, Product, Profile, Peru, Sample
+from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review
 
 # Register your models here.
 
 
 
+admin.site.register(Product_Review)
+admin.site.register(Sample_Review)
 
 admin.site.register(Peru)
 
