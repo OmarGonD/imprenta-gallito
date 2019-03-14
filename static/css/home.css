@@ -286,6 +286,10 @@
         z-index: 100;
     }
 
+    .subscribe_field {
+        width: 350px;
+    }
+
 }
 
 @media (min-width: 1281px) {
@@ -334,6 +338,9 @@
         z-index: 100;
     }
 
+    .subscribe_field {
+        width: 350px;
+    }
 }
 
 

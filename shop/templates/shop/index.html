@@ -23,102 +23,119 @@
 
         <div class="container">
 
-{#            <br>#}
-{#            <br>#}
-{##}
-{#            <div>#}
-{#                <h1 class="text-center my_title">Nuestros productos</h1>#}
-{#            </div>#}
-{##}
-{#            <br>#}
-{#            <br>#}
+            {#            <br>#}
+            {#            <br>#}
+            {##}
+            {#            <div>#}
+            {#                <h1 class="text-center my_title">Nuestros productos</h1>#}
+            {#            </div>#}
+            {##}
+            {#            <br>#}
+            {#            <br>#}
 
-{#            <div class="row col-md-12">#}
-{#                {% for category in categories %}#}
-{#                    <div class="col-md-3">#}
-{#                        <div class="my_products_icons text-center">#}
-{#                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"#}
-{#                                                                                        src="{{ category.image.url }}"#}
-{#                                                                                        alt="{{ category.name }}" ></a>#}
-{#                        <p class="text-center">{{ category.name }}</p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                {% endfor %}#}
-{#            </div>#}
+            {#            <div class="row col-md-12">#}
+            {#                {% for category in categories %}#}
+            {#                    <div class="col-md-3">#}
+            {#                        <div class="my_products_icons text-center">#}
+            {#                            <a href="{% url 'shop:ProdCatDetail' category.slug %}"><img class="my_image_medium"#}
+            {#                                                                                        src="{{ category.image.url }}"#}
+            {#                                                                                        alt="{{ category.name }}" ></a>#}
+            {#                        <p class="text-center">{{ category.name }}</p>#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                {% endfor %}#}
+            {#            </div>#}
 
 
-{#            <br>#}
-{#        <br>#}
-        <br>
-        <br>
-
-            <h1 class="text-center">Envío gratis a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}" width="40px" height="40px"></h1>
+            {#            <br>#}
+            {#        <br>#}
             <br>
-            <p class="text-center">Stickers Gallito es la forma más rápida y fácil de comprar stickers, etiquetas, pines, gigantografías, y empaques personalizados.
+            <br>
+
+            <h1 class="text-center">Envío gratis a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}"
+                                                                     width="40px" height="40px"></h1>
+            <br>
+            <p class="text-center">Stickers Gallito es la forma más rápida y fácil de comprar stickers, etiquetas,
+                pines, gigantografías, y empaques personalizados.
                 Envíamos tu orden a cualquier parte del Perú.</p>
 
 
-        <p class="text-center">Solo elige qué tipo de producto deseas: sticker transparente, stickers cuadrados, stickers troquelados. Luego indica el tamaño y
-            la cantidad de stickers. Haz el pago de tu pedido con tarjetas de crédito o débito, o paga con efectivo haciendo un depósito a nuestras cuentas bancarias.</p>
+            <p class="text-center">Solo elige qué tipo de producto deseas: sticker transparente, stickers cuadrados,
+                stickers troquelados. Luego indica el tamaño y
+                la cantidad de stickers. Haz el pago de tu pedido con tarjetas de crédito o débito, o paga con efectivo
+                haciendo un depósito a nuestras cuentas bancarias.</p>
 
-
-
-
-        <br>
-        <br>
-
-
-
-        <div class="productos_finales_home text-center">
-
-            <p class="my_title">Stickers, pines, etiquetas, y más</p>
 
             <br>
             <br>
-            <div class="row">
 
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" width="150px" height="150px">
+
+            <div class="productos_finales_home text-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>¡Suscríbete y recibe nuestras ofertas!</p>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/cats/cat-1.jpg' %}" width="150px" height="150px">
-                </div>
-                <div class="col-md-3">
-                    <img src="{% static 'img/pines/fantasmas.jpg' %}" width="150px" height="150px">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        {% csrf_token %}
+                        <form action="{% url 'marketing:email_signup_form' %}" method="post">
+                            {{ email_signup_form }}
+                            <button type="submit" class="btn">Suscribirse</button>
+                        </form>
+                    </div>
                 </div>
 
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/dogs/dog-2.jpg.png' %}" width="150px" height="150px">
+                <p class="my_title">Stickers, pines, etiquetas, y más</p>
+
+                <br>
+                <br>
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" width="150px" height="150px">
+                    </div>
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/cats/cat-1.jpg' %}" width="150px" height="150px">
+                    </div>
+                    <div class="col-md-3">
+                        <img src="{% static 'img/pines/fantasmas.jpg' %}" width="150px" height="150px">
+                    </div>
+
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/dogs/dog-2.jpg.png' %}" width="150px" height="150px">
+                    </div>
+
                 </div>
+
+                <br>
+                <br>
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
+                    </div>
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
+                    </div>
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
+                    </div>
+
+                    <div class="col-md-3">
+                        <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
+                    </div>
+
+                </div>
+
+
+                <br>
+                <br>
+
 
             </div>
-
-            <br>
-            <br>
-
-            <div class="row">
-
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
-                </div>
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
-                </div>
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
-                </div>
-
-                <div class="col-md-3">
-                    <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
-                </div>
-
-            </div>
-
-            <br>
-            <br>
-
-
-             </div>
 
         </div>
     </div>

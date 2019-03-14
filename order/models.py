@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.html import mark_safe
+import datetime
 
 # Create your models here.
 
@@ -7,7 +8,8 @@ from django.utils.html import mark_safe
 
 class Order(models.Model):
     ORDER_STATUS = (
-        ('recibido', 'Recibido'),
+        ('recibido_pagado', 'Recibido y pagado'),
+        ('recibido_no_pagado', 'Recibido pero no pagado'),
         ('en_proceso', 'En proceso'),
         ('en_camino', 'En camino'),
         ('entregado', 'Entregado'),
@@ -26,7 +28,7 @@ class Order(models.Model):
     shipping_province = models.CharField(max_length=100, blank=True, null=True)
     shipping_district = models.CharField(max_length=100, blank=True, null=True)
     reason = models.CharField(max_length=400, blank=True, null=True, default='')
-    status = models.CharField(max_length=10, choices=ORDER_STATUS, default='recibido')
+    status = models.CharField(max_length=20, choices=ORDER_STATUS, default='recibido_pagado')
 
 
     class Meta:
@@ -35,6 +37,18 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def igv(self):
+        igv = int(self.total) * 18/100
+        return igv
+
+    def shipping_date(self):
+        shipping_date = self.created + datetime.timedelta(days=10)
+        return shipping_date
+
+    def deposit_payment_date(self):
+        deposit_payment_date = self.created + datetime.timedelta(days=1)
+        return deposit_payment_date
 
 
 
@@ -69,7 +83,7 @@ class OrderItem(models.Model):
 
 
     def sub_total(self):
-        return self.quantity * self.price
+        return self.price
 
 
     # @property

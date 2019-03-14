@@ -1,0 +1,161 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Orden #{{ transaction.id }} - Stickers Gallito Perú</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            width: 60%;
+        }
+
+        table {
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        table tr td {
+            border: 1px solid #c1c1c1;
+        }
+
+        p {
+            padding-right: 50px;
+            padding-left: 50px;
+        }
+
+        .td_text_center {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .hello {
+            color: red;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+        }
+
+        .hello_name {
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+        }
+
+        .details {
+            color: red;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+        }
+
+        .thank_you {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+        }
+
+        .my_logo {
+            width: 80%;
+            height: 70%;
+        }
+
+        .shipping_date {
+            color: #00AD80;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .top_row {
+            background-color: black;
+        }
+
+        .text_white {
+            color: white;
+        }
+
+        .text_to_right {
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+<center>
+
+    <span class="hello">Hola </span><span class="hello_name">{{ transaction.first_name }} {{ transaction.last_name }},</span>
+    <p class="thank_you">¡Gracias por confiar en en StickersGallito.pe!</p>
+    <p>Este correo es para confirmarte que hemos recibido tu orden.<br>
+        Por favor, revisa que todos los detalles de tu orden sean los correctos.</p>
+</center>
+<br>
+<h1 class="details">Detalles de la compra:</h1>
+<br>
+<table>
+    <tr>
+        <td class="top_row td_text_center"><p class="text_white">Número de orden: </p></td>
+        <td class="top_row td_text_center"><p class="text_white">Fecha: </p></td>
+        <td class="top_row td_text_center" colspan="4"><p class="text_white">Fecha de entrega: </p></td>
+    </tr>
+    <tr>
+        <td class="td_text_center">#{{ transaction.id }}</td>
+        <td class="td_text_center">{{ transaction.created|date:"d M Y" }}</td>
+        <td class="td_text_center" colspan="4"><b class="shipping_date">{{ transaction.shipping_date|date:"d M Y" }}</b></td>
+    </tr>
+    <tr>
+        <td><b>Descripción del producto: </b></td>
+        <td><b>Cantidad: </b></td>
+        <td><b>Precio: </b></td>
+        <td><b>Sub total: </b></td>
+    </tr>
+    {% for item in order_items %}
+
+        <tr>
+            <td>{{ item.product }}</td>
+            <td>{{ item.quantity }}</td>
+            <td class="text_to_right">S/.{{ item.price }}</td>
+            <td class="text_to_right">S/.{{ item.sub_total }}</td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="3" style="text-align: right;"><b>Total</b></td>
+        <td class="text_to_right">S/.{{ transaction.total }}</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="text-align: right;"><b>IGV (18%):</b></td>
+        <td class="text_to_right">S/.{{ transaction.igv }}</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="text-align: right;"><b>Total pagado:</b></td>
+        <td class="text_to_right">S/.{{ transaction.total }}</td>
+    </tr>
+    <tr>
+        <td valign="top" colspan="2" style="width: 50%">
+            <b>Enviar a: </b><br>
+            <b>Dirección:</b> <i>{{ transaction.shipping_address }}</i><br>
+            <b>Distrito:</b> <i>{{ transaction.shipping_district }}</i><br>
+            <b>Provincia:</b> <i>{{ transaction.shipping_province }}</i><br>
+            <b>Departamento:</b><i>{{ transaction.shipping_department }}</i><br>
+        </td>
+        <td valign="top" colspan="2" style="width: 50%">
+            <b>Detalles del pago: </b><br>
+            S/.{{ transaction.total }} se pagaron existosamente via tarjeta de crédito.
+        </td>
+    </tr>
+</table>
+<center>
+    <br>
+    <hr style="width: 60%">
+    <p>
+        Si eres un urusario registrado y quieres revisar el historial de tus compras, por favor, <a
+            href="http://www.stickersgallito.pe/ingresar/">ingresa a tu cuenta</a>
+    </p>
+</center>
+
+</body>
+</html>

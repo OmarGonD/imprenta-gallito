@@ -10,6 +10,7 @@ from shop.models import Product_Review, Sample_Review
 from cart.models import Cart, CartItem, SampleItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import Category, Product, Peru, Sample
+from marketing.forms import EmailSignUpForm
 
 
 # Create your views here.
@@ -20,9 +21,10 @@ from .models import Category, Product, Peru, Sample
 def allCat(request):
     # Muestras todas las categorias de productos en el home, menos "Muestras"
     categories = Category.objects.exclude(name='Muestras')
+    email_signup_form = EmailSignUpForm()
 
     # return render(request, 'shop/index.html', {'categories': categories}, context_instance=RequestContext(request))
-    return render(request, 'shop/index.html', {'categories': categories})
+    return render(request, 'shop/index.html', {'categories': categories, 'email_signup_form': email_signup_form})
 
 
 def ProdutcsByCategory(request, c_slug):
