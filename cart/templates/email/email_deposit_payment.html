@@ -92,7 +92,9 @@
         class="hello_name">{{ transaction.first_name }} {{ transaction.last_name }},</span>
     <p class="thank_you">¡Gracias por confiar en en StickersGallito.pe!</p>
     <p>Este correo es para confirmarte que hemos recibido tu orden.<br>
-        Por favor, revisa que todos los detalles de tu orden sean los correctos.</p>
+    <p style="color: red;"> Recuerda que para hacer efectiva tu orden debes cancelar el monto de la misma: S/.{{ transaction.total }}. <br>
+    Tienes hasta el <b>{{ transaction.deposit_payment_date|date:"d M Y" }}</b> para hacerlo.</p>
+
 </center>
 <br>
 <h1 class="details">Detalles de la compra:</h1>
