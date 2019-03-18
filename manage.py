@@ -4,11 +4,9 @@ import sys
 
 import dotenv
 
+
 if __name__ == '__main__':
-    # try:
-    #     dotenv.read_dotenv()
-    # except:
-    #     pass
+    dotenv.read_dotenv()
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stickers_gallito.settings')
     try:
         from django.core.management import execute_from_command_line
