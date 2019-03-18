@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Nueva Orden #{{ transaction.id }} - Stickers Gallito Perú</title>
+
     <style>
         @import url('https://fonts.googleapis.com/css?family=Roboto');
 
@@ -54,6 +55,11 @@
             letter-spacing: .2em;
         }
 
+        .send_voucher_text {
+            font-size: 12px;
+            letter-spacing: .1em;
+        }
+
         .thank_you {
             font-size: 14px;
             text-transform: uppercase;
@@ -83,6 +89,21 @@
             text-align: right;
         }
 
+        .my_custom_table_deposit_payment {
+            min-width: 300px;
+            font-size: 12px;
+        }
+
+        .my_custom_thead {
+
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            background-color: #f8f9fa !important;
+
+        }
+
+
     </style>
 </head>
 <body>
@@ -92,8 +113,45 @@
         class="hello_name">{{ transaction.first_name }} {{ transaction.last_name }},</span>
     <p class="thank_you">¡Gracias por confiar en en StickersGallito.pe!</p>
     <p>Este correo es para confirmarte que hemos recibido tu orden.<br>
-    <p style="color: red;"> Recuerda que para hacer efectiva tu orden debes cancelar el monto de la misma: S/.{{ transaction.total }}. <br>
-    Tienes hasta el <b>{{ transaction.deposit_payment_date|date:"d M Y" }}</b> para hacerlo.</p>
+    <p style="color: red;"> Recuerda que para hacer efectiva tu orden debes cancelar el monto de la misma:
+        S/.{{ transaction.total }}. <br>
+        Tienes hasta el <b>{{ transaction.deposit_payment_date|date:"d M Y" }}</b> para hacerlo.</p>
+</center>
+
+<br>
+<h1 class="details">Cuentas bancarias a donde depositar:</h1>
+<h2 class="send_voucher_text">Luego deberás enviar el voucher escaneado a <b>stickersgallito@gmail.com</b>, indicando el número de tu orden: #{{ transaction.id }}</h2>
+<br>
+<center>
+    <table class="table my_custom_table_deposit_payment">
+
+        <tr>
+            <td class="top_row"><p class="text_white">BANCO DE CRÉDITO DEL PERÚ (BPC)</p></td>
+            <td class="top_row"><p class="text_white">INTERBANK</p></td>
+        </tr>
+        <tr>
+            <td>
+                <p class="text-center"><b>CTA. AHORROS:</b><br> 191-93277552-0-47</p>
+            </td>
+            <td class="text-left">
+                <p class="text-center"><b>CTA. AHORROS:</b><br> 200‑3001651127</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="text-left">
+                <p class="text-center"><b>CTA. INTERBANCARIA:</b><br> 002-191-193277552047-54</p>
+            </td>
+            <td class="text-left">
+                <p class="text-center"><b>CTA. INTERBANCARIA:</b><br> 003-200-003001651127-38</p>
+            </td>
+        </tr>
+        <tr>
+
+        </tr>
+
+    </table>
+
 
 </center>
 <br>
@@ -108,7 +166,8 @@
     <tr>
         <td class="td_text_center">#{{ transaction.id }}</td>
         <td class="td_text_center">{{ transaction.created|date:"d M Y" }}</td>
-        <td class="td_text_center" colspan="4"><b class="shipping_date"> Se define una vez haga el depósito por su orden.</b>
+        <td class="td_text_center" colspan="4"><b class="shipping_date"> Se define una vez haga el depósito por su
+            orden.</b>
         </td>
     </tr>
     <tr>
