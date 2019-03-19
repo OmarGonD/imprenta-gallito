@@ -15,6 +15,10 @@ my_default_errors = {
 
 
 class SignUpForm(UserCreationForm):
+    error_messages = {
+        'password_mismatch': "Las contraseñas no coinciden.",
+    }
+
     first_name = forms.CharField(label="Nombre", max_length=100, required=True)
     last_name = forms.CharField(label='Apellido', max_length=100, required=True)
     username = forms.CharField(label='Nombre de usuario', max_length=100, required=True,
@@ -28,6 +32,17 @@ class SignUpForm(UserCreationForm):
 
         for fieldname in ['username', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                self.error_messages['password_mismatch'],
+                code='password_mismatch',
+            )
+        return password2
+
 
     class Meta:
         model = User

@@ -13,271 +13,258 @@
 
 {% block content %}
 
+    <style>
+        .errorlist {
+            color: red;
+        }
+    </style>
+
     <div>
-        {% if not form.is_valid %}
+    {% if not form.is_valid %}
 
-            <div class="container">
-                <h1 class="text-center my_title">
-                    Crear una nueva cuenta
-                </h1>
-                <br>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mx-auto-bg-light">
-                    <br>
-                    <p>Ingresa la siguiente información para crear una cuenta</p>
+        <div class="container">
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1 class="text-center my_title">
+                Crear una nueva cuenta
+            </h1>
+            <br>
+            {#                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mx-auto-bg-light">#}
+            <br>
+            <div class="row">
 
+
+                <div class="col-md-6">
 
                     <form method="post">
                         {% csrf_token %}
+                        <table>
+                            <tr>
+                                <th>{{ user_form.first_name.label_tag }}</th>
+                                <td>
+                                    {{ user_form.first_name.errors }}
+                                    {{ user_form.first_name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ user_form.last_name.label_tag }}</th>
+                                <td>
+                                    {{ user_form.last_name.errors }}
+                                    {{ user_form.last_name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ user_form.username.label_tag }}</th>
+                                <td>
+                                    {{ user_form.username.errors }}
+                                    {{ user_form.username }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ profile_form.dni.label_tag }}</th>
+                                <td>{{ profile_form.dni }}<i data-toggle="modal" data-target="#exampleModal"
+                                                             style="margin-left: 5px"
+                                                             class="far fa-question-circle"></i></td>
+                            </tr>
+                            <tr>
+                                <th>{{ profile_form.phone_number.label_tag }}</th>
+                                <td>{{ profile_form.phone_number }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ profile_form.birthdate.label_tag }}</th>
+                                <td>{{ profile_form.birthdate }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ user_form.email.label_tag }}</th>
+                                <td>{{ user_form.email }}</td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <span class="errorlist">{{ user_form.password2.errors.0 }}</span>
+                                    <span class="errorlist">{{ user_form.password2.errors.1 }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ user_form.password1.label_tag }}</th>
+                                <td>
+                                    {{ user_form.password1.errors }}
+                                    {{ user_form.password1 }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ user_form.password2.label_tag }}</th>
+                                <td>
+                                    {{ user_form.password2 }}
 
-                        <div class="row">
+                                </td>
+                            </tr>
 
-                            <div class="col-md-6">
+                        </table>
 
-
-                                <table>
-                                    <tr>
-                                        <th>{{ user_form.first_name.label_tag }}</th>
-                                        <td>
-                                            {{ user_form.first_name.errors }}
-                                            {{ user_form.first_name }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ user_form.last_name.label_tag }}</th>
-                                        <td>
-                                            {{ user_form.last_name.errors }}
-                                            {{ user_form.last_name }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ user_form.username.label_tag }}</th>
-                                        <td>
-                                            {{ user_form.username.errors }}
-                                            {{ user_form.username }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ profile_form.dni.label_tag }}</th>
-                                        <td>{{ profile_form.dni }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ profile_form.phone_number.label_tag }}</th>
-                                        <td>{{ profile_form.phone_number }}</td>
-                                    </tr>
-                                     <tr>
-                                        <th>{{ profile_form.birthdate.label_tag }}</th>
-                                        <td>{{ profile_form.birthdate }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ user_form.email.label_tag }}</th>
-                                        <td>{{ user_form.email }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ user_form.password1.label_tag }}</th>
-                                        <td>
-                                            {{ user_form.password1.errors }}
-                                            {{ user_form.password1 }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ user_form.password2.label_tag }}</th>
-                                        <td>
-                                            {{ user_form.password2.errors }}
-                                            {{ user_form.password2 }}
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </div>
-
-                            {{ profile_form.errors }}
-
-                            <div class="col-md-6">
-
-                                <table>
-
-                                    <tr>
-                                        <th>{{ profile_form.shipping_address1.label_tag }}</th>
-                                        <td>
-                                            {{ profile_form.shipping_address1.errors }}
-                                            {{ profile_form.shipping_address1 }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ profile_form.shipping_address2.label_tag }}</th>
-                                        <td>
-                                            {{ profile_form.shipping_address2.errors }}
-                                            {{ profile_form.shipping_address2 }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ profile_form.shipping_department.label_tag }}</th>
-                                        <td>
-                                            {{ profile_form.shipping_department.errors }}
-                                            {{ profile_form.shipping_department }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ profile_form.shipping_province.label_tag }}</th>
-                                        <td>
-                                            {{ profile_form.shipping_province.errors }}
-                                            {{ profile_form.shipping_province }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ profile_form.shipping_district.label_tag }}</th>
-                                        <td>
-                                            {{ profile_form.shipping_district.errors }}
-                                            {{ profile_form.shipping_district }}
-                                        </td>
-                                    </tr>
+                </div>
 
 
-                                </table>
+                <div class="col-md-6">
 
-                            </div>
+                    <table>
 
-                        </div>
+                        <tr>
+                            <th>{{ profile_form.shipping_address1.label_tag }}</th>
+                            <td>
+                                {{ profile_form.shipping_address1.errors }}
+                                {{ profile_form.shipping_address1 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ profile_form.shipping_address2.label_tag }}</th>
+                            <td>
+                                {{ profile_form.shipping_address2.errors }}
+                                {{ profile_form.shipping_address2 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ profile_form.shipping_department.label_tag }}</th>
+                            <td>
+                                {{ profile_form.shipping_department.errors }}
+                                {{ profile_form.shipping_department }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ profile_form.shipping_province.label_tag }}</th>
+                            <td>
+                                {{ profile_form.shipping_province.errors }}
+                                {{ profile_form.shipping_province }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ profile_form.shipping_district.label_tag }}</th>
+                            <td>
+                                {{ profile_form.shipping_district.errors }}
+                                {{ profile_form.shipping_district }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <p></p>
+                            </th>
+                            <td>
+                                <button class="btn btn-secondary" type="submit">Registrarse</button>
+                            </td>
+                        </tr>
 
 
-                        <div class="row">
-                            <div class="col-md-6"></div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-6"></div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-secondary" type="submit">Registrarse</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                    </table>
+
+                </div>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- NEW Javascript --- collects correctly Province and District -->
+
+        <script>
+
+            function get_provinces() {
+                // notice the promise
+                return new Promise(function (resolve, reject) {
+                    var val_d = $("#id_shipping_department").val()
+                    $.ajax({
+                        url: "/province/",
+                        data: { // Pass parameters in separate object
+                            d_name: val_d
+                        },
+                    }).done(function (result) {
+                        $("#id_shipping_province").html(result);
+                        resolve(result)
+                    });
+                });
+            }
+
+
+            function get_districts() {
+                return new Promise(function (resolve, reject) {
+                    var val_d = $("#id_shipping_department").val()
+                    var val_p = $("#id_shipping_province").val()
+                    $.ajax({
+                        url: "/district/",
+                        data: { // Pass parameters in separate object
+                            d_name: val_d,
+                            p_name: val_p
+                        },
+                    }).done(function (result) {
+                        $("#id_shipping_district").html(result);
+                        resolve(result)
+                    });
+                });
+            }
+
+            $("document").ready(function () {
+                $("#id_shipping_department").change(async /* <--- */ function () {
+                    await /* <--- */ get_provinces();
+                    await /* <--- */ get_districts();
+
+                });
+
+                $("#id_shipping_province").change(async /* <--- */ function () {
+                    await get_districts();
+                });
+
+            });
+        </script>
+
+
+        <!-- END of new Javascript -->
+
+    {% else %}
+        <div class="container">
+            <br>
+            <h1 class="my_title text-center">
+                Account
+            </h1>
+            <br>
+            <div>
+                <p>
+                    Estimado cliente,
                     <br>
+                    <br>
+                    Su cuenta ha sido creada y ya puede ser usada
+
+                    <br>
+                    <a href="{% url 'shop:allCat' %}">Seguir comprando</a> y disfruta de los mejores cojines
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    <br>
+    <br>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Por qué solicitamos el número de tu DNI?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Para hacer los envíos a provincia utilizamos los servicios de Olva Currier.<br>
+                        Esta empresa solicita el DNI de la persona que va a recoger los stickers, a fin de evitar
+                        confusiones al momento de entregarlos.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
-
-
-<!-- OLD but "OK" Javascript" --- allows submit -->
-{#            <script>#}
-{#                function get_provinces() {#}
-{#                    var val_d = $("#id_shipping_department").val()#}
-{#                    $.ajax({#}
-{#                        url: "/province/",#}
-{#                        data: { // Pass parameters in separate object#}
-{#                            d_name: val_d#}
-{#                        },#}
-{#                    }).done(function (result) {#}
-{#                        $("#id_shipping_province").html(result);#}
-{#                    });#}
-{#                }#}
-{##}
-{##}
-{#                function get_districts() {#}
-{#                    var val_d = $("#id_shipping_department").val()#}
-{#                    var val_p = $("#id_shipping_province").val()#}
-{#                    $.ajax({#}
-{#                        url: "/district/",#}
-{#                        data: { // Pass parameters in separate object#}
-{#                            d_name: val_d,#}
-{#                            p_name: val_p#}
-{#                        },#}
-{#                    }).done(function (result) {#}
-{#                        $("#id_shipping_district").html(result);#}
-{#                    });#}
-{#                }#}
-{##}
-{#                $("document").ready(function () {#}
-{##}
-{##}
-{#                    $("#id_shipping_department").change(function () {#}
-{#                        get_provinces();#}
-{#                        get_districts();#}
-{##}
-{#                    });#}
-{#                });#}
-{#            </script>#}
-
-
-<!-- END OF OLD But OK Javascript -->
-
-<!-- NEW Javascript --- collects correctly Province and District but Does not Submitt correctly -->
-
-                        <script>
-
-                            function get_provinces() {
-                                // notice the promise
-                                return new Promise(function (resolve, reject) {
-                                    var val_d = $("#id_shipping_department").val()
-                                    $.ajax({
-                                        url: "/province/",
-                                        data: { // Pass parameters in separate object
-                                            d_name: val_d
-                                        },
-                                    }).done(function (result) {
-                                        $("#id_shipping_province").html(result);
-                                        resolve(result)
-                                    });
-                                });
-                            }
-
-
-                            function get_districts() {
-                                return new Promise(function (resolve, reject) {
-                                    var val_d = $("#id_shipping_department").val()
-                                    var val_p = $("#id_shipping_province").val()
-                                    $.ajax({
-                                        url: "/district/",
-                                        data: { // Pass parameters in separate object
-                                            d_name: val_d,
-                                            p_name: val_p
-                                        },
-                                    }).done(function (result) {
-                                        $("#id_shipping_district").html(result);
-                                        resolve(result)
-                                    });
-                                });
-                            }
-
-                            $("document").ready(function () {
-                                $("#id_shipping_department").change(async /* <--- */ function () {
-                                    await /* <--- */ get_provinces();
-                                    await /* <--- */ get_districts();
-
-                                });
-
-                                $("#id_shipping_province").change(async /* <--- */ function () {
-                                    await get_districts();
-                                });
-
-                            });
-                        </script>
-
-
-<!-- END of new Javascript -->
-
-        {% else %}
-            <div class="container">
-                <br>
-                <h1 class="my_title text-center">
-                   Account
-                </h1>
-                <br>
-                <div>
-                    <p>
-                        Estimado cliente,
-                        <br>
-                        <br>
-                        Su cuenta ha sido creada y ya puede ser usada
-
-                        <br>
-                        <a href="{% url 'shop:allCat' %}">Seguir comprando</a> y disfruta de los mejores cojines
-                    </p>
-                </div>
-            </div>
-        {% endif %}
+        </div>
     </div>
-    <br>
-    <br>
 
 {% endblock %}
 
