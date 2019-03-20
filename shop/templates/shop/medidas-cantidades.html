@@ -48,9 +48,9 @@
             padding: 0;
         }
 
-        body {
-            margin: 20px;
-        }
+        {#body {#}
+        {#    margin: 20px;#}
+        {#}#}
 
         h1 {
             font-size: 1.5em;
@@ -97,12 +97,14 @@
         }
     </style>
 
+    <div class="container">
+
+    <br>
+    <br>
+    <br>
+
     {% if product %}
 
-        <br>
-        <br>
-        <br>
-        <br>
         <div class="row">
 
             <div class="col-md-1"></div>
@@ -142,9 +144,18 @@
                             StickersGallito.pe</p>
                     </div>
                     <div class="col-lg-6 col-md-6">
-                        <div class="col text-center">
-                            <button id="add_review" class="btn center-block">Añadir comentario</button>
-                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="col text-center">
+                                <button id="add_review" class="btn center-block">Añadir comentario</button>
+                            </div>
+                        {% else %}
+                            <div class="col text-center">
+                                <button type="button" class="btn" data-toggle="modal"
+                                        data-target="#exampleModal">
+                                    Añadir comentario
+                                </button>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -199,7 +210,7 @@
                     </div>
                 </div>
 
-                <hr>
+                <hr class="to-hidde">
 
 
             </div>
@@ -322,10 +333,6 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-        </div>
-        <br>
-
-        </div>
 
 
 
@@ -374,9 +381,10 @@
                 ).done(function () {
                     $("#user_comment").addClass('hidden');
                     $("fieldset").addClass('hidden');
-                    $("#ya-conoces-nuestros-productos").text('¡Gracias por ayudarnos a mejorar!').delay(3000).fadeOut('slow');
-                    $(".calificanos-text").addClass('hidden');
+                    $("#ya-conoces-nuestros-productos").text("");
+                    $("#ya-conoces-nuestros-productos").append("<b><i>¡Gracias por ayudarnos a mejorar!</i></b><br><br>Vamos a trabajar aún más por ustedes <i class=\"far fa-smile-beam\"></i>").delay(6000).fadeOut('slow');
                     $("#send_review").addClass('hidden');
+                    $(".to-hidde").addClass('hidden');
                 })
             });
 
@@ -384,11 +392,6 @@
 
     {% else %}
 
-
-        <br>
-        <br>
-        <br>
-        <br>
         <div class="row">
 
             <div class="col-md-1"></div>
@@ -422,9 +425,18 @@
                             StickersGallito.pe</p>
                     </div>
                     <div class="col-lg-6 col-md-6">
-                        <div class="col text-center">
-                            <button id="add_review" class="btn center-block">Añadir comentario</button>
-                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="col text-center">
+                                <button id="add_review" class="btn center-block">Añadir comentario</button>
+                            </div>
+                        {% else %}
+                            <div class="col text-center">
+                                <button type="button" class="btn" data-toggle="modal"
+                                        data-target="#exampleModal">
+                                    Añadir comentario
+                                </button>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="col-12">
@@ -542,13 +554,6 @@
             <div class="col-md-1"></div>
         </div>
 
-        <br>
-
-        </div>
-
-
-
-
         <script>
             $("#add_review").click(function () {
                 $("#user_comment").removeClass('hidden');
@@ -594,20 +599,46 @@
                 ).done(function () {
                     $("#user_comment").addClass('hidden');
                     $("fieldset").addClass('hidden');
-                    $("#ya-conoces-nuestros-productos").text('¡Gracias por ayudarnos a mejorar!').delay(3000).fadeOut('slow');
+                    {#$("#ya-conoces-nuestros-productos").text('¡Gracias por ayudarnos a mejorar!').delay(3000).fadeOut('slow');#}
+                    $("#ya-conoces-nuestros-productos").append("<b><i>¡Gracias por ayudarnos a mejorar!</i></b><br>Vamos a trabajar aún más por ustedes <i class=\"far fa-smile-beam\"></i>").delay(3000).fadeOut('slow');
                     $("#send_review").addClass('hidden');
+                    $(".to-hidde").addClass('hidden');
                 })
             });
 
         </script>
 
-
     {% endif %}
 
-
-
-
     <br>
     <br>
+    <br>
+
+    </div> <!--Enf of Container -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ingrese con su cuenta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Para hacer un comentario, por favor, regístrese o ingrese con su cuenta.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+{#                    <button type="button" class="btn btn-primary">Save changes</button>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 {% endblock %}
