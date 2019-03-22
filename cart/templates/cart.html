@@ -63,18 +63,18 @@
     {% else %}
 
         <div class="container">
-        <br>
+            <br>
 
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                <h1 class="text-center my_title">
-                    Tu carrito de compras
-                </h1>
+                    <h1 class="text-center my_title">
+                        Tu carrito de compras
+                    </h1>
                 </div>
             </div>
 
-        <br>
-        <br>
+            <br>
+            <br>
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
                     <table class="table my_custom_table">
@@ -201,10 +201,10 @@
                                 <td>
                                     <p>S/.{{ sample_item.sub_total }}
 
-                                    <a
-                                            href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
-                                            class="custom_icon"><i
-                                            class="fas fa-trash-alt custom_icon"></i></a>
+                                        <a
+                                                href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
+                                                class="custom_icon"><i
+                                                class="fas fa-trash-alt custom_icon"></i></a>
                                     </p>
                                 </td>
                                 <td></td>
@@ -238,10 +238,18 @@
                             </tr>
                             <tr>
                                 <td class="text-left">
-                                    A pagar:
-                                    <strong> S/. {{ total }}</strong>
-                                    <br>
-                                    <b><i>Incluye costos de envío</i></b>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            Total: S/. {{ total }}<br>
+                                            Descuento: <span class="savings"><b>S/.{{ descuento }}</b></span><br>
+                                            A pagar: <strong>S/. {{ total_a_pagar }}</strong><br>
+                                            <b><i>Incluye costos de envío</i></b>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" id="user_cupon" style="display: inline-block; height: 35px;" placeholder="Ingrese cupón">
+                                            <input type="submit" class="" id="cuponButton" style="display: inline-block; height: 35px;">
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -480,7 +488,7 @@
             var shipping_address = $('#ShippingAddress').val()
             $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
                     payment_method: 'deposit_payment',
-                    amount: {{ total }},
+                    amount: {{ total_a_pagar }},
                     currency_code: 'PEN',
                     source_id: "10",
                     last_four: 1111,
@@ -488,6 +496,24 @@
                 },
             ).done(function () {
                 window.location.href = "{% url 'order:thanks_deposit_payment' %}";
+            })
+        });
+
+    </script>
+
+
+
+     <script>
+
+        $('#cuponButton').on('click', function (e) {
+            //
+            alert("Ingrese cupon");
+            var user_cupon = $('#user_cupon').val()
+            $.post("{% url 'marketing:cupones' %}", {
+                    user_cupon: user_cupon,
+                },
+            ).done(function () {
+                window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
             })
         });
 

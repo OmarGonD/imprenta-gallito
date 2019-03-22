@@ -7,7 +7,7 @@ from requests.auth import HTTPBasicAuth
 import requests
 from django.views.decorators.csrf import csrf_exempt
 from .forms import EmailSignUpForm
-from .models import SignUp
+from .models import SignUp, Cupons
 from django.contrib.auth.models import User
 
 
@@ -53,6 +53,29 @@ def email_signup_form(request):
     return HttpResponse("Hi")
 
 
+
+def cupons(request):
+    if request.method == 'POST':
+        user_cupon = request.POST.get('user_cupon')
+        try:
+            cupon = Cupons.objects.get(cupon=user_cupon)
+            if cupon.active:
+                if cupon.percentage:
+                    response = HttpResponse("Hi")
+                    response.set_cookie("cupon_percentage_discount", cupon.percentage)
+                    return response
+
+                else:
+                    response = HttpResponse("Hi")
+                    response.set_cookie("cupon_hard_discount", cupon.hard_discount)
+                    return response
+            else:
+                print("El cupón no está activo")
+
+        except:
+            print("El cupón introducido no es válido.")
+
+    return response
 
 
 

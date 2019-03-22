@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include('shop.urls')),
     path('carrito_de_compras/', include('cart.urls')),
     path('ordenes/', include('order.urls')),
-    path('suscribirse/', include('marketing.urls')),
+    path('marketing/', include('marketing.urls')),
     path('registrarse/', views.signupView, name = 'signup'),
     path('ingresar/', views.signinView, name = 'signin'),
     path('salir/', views.signoutView, name = 'signout'),
