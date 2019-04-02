@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -119,7 +120,7 @@
 
     <span class="hello">Hola </span><span
         class="hello_name">{{ transaction.first_name }} {{ transaction.last_name }},</span>
-    <p class="thank_you">¡Gracias por confiar en en StickersGallito.pe!</p>
+    <p class="thank_you">¡Gracias por confiar en StickersGallito.pe!</p>
 {#    <p>Este correo es para confirmarte que hemos recibido tu orden.<br>#}
     <p class="para_hacer_efectiva_su_orden"> Recuerda que para hacer efectiva tu orden debes cancelar el monto de la
         misma:
@@ -137,7 +138,7 @@
     <table class="table my_custom_table_deposit_payment">
 
         <tr>
-            <td class="my_custom_thead td_text_center"><p class="text-center"><b>BPC</b></p></td>
+            <td class="my_custom_thead td_text_center"><p class="text-center"><b>BCP</b></p></td>
             <td class="my_custom_thead td_text_center"><p class="text-center"><b>INTERBANK</b></p></td>
         </tr>
         <tr>
@@ -192,21 +193,25 @@
         <tr>
             <td>{{ item.product }}</td>
             <td>{{ item.quantity }}</td>
-            <td class="text_to_right">S/.{{ item.price }}</td>
-            <td class="text_to_right">S/.{{ item.sub_total }}</td>
+            <td class="text_to_right">S/{{ item.price }}</td>
+            <td class="text_to_right">S/{{ item.sub_total }}</td>
         </tr>
     {% endfor %}
     <tr>
+        <td colspan="3" style="text-align: right;"><b>Costo de envío</b></td>
+        <td class="text_to_right">S/{{ transaction.total }}</td>
+    </tr>
+    <tr>
         <td colspan="3" style="text-align: right;"><b>Total</b></td>
-        <td class="text_to_right">S/.{{ transaction.total }}</td>
+        <td class="text_to_right">S/{{ transaction.total }}</td>
     </tr>
     <tr>
         <td colspan="3" style="text-align: right;"><b>IGV (18%):</b></td>
-        <td class="text_to_right">S/.{{ transaction.igv }}</td>
+        <td class="text_to_right">S/{{ transaction.igv }}</td>
     </tr>
     <tr>
         <td colspan="3" style="text-align: right;"><b>Total a pagar:</b></td>
-        <td class="text_to_right">S/.{{ transaction.total }}</td>
+        <td class="text_to_right">S/{{ transaction.total }}</td>
     </tr>
     <tr>
         <td valign="top" colspan="2" style="width: 50%">
@@ -218,7 +223,7 @@
         </td>
         <td valign="top" colspan="2" style="width: 50%">
             <b>Detalles del pago: </b><br>
-            S/.{{ transaction.total }} a pagar dentro de las próximas 24 horas. <br>
+            S/ {{ transaction.total }} a pagar dentro de las próximas 24 horas. <br>
             <b>Fecha máxima para hacer efectivo su pedido:</b> {{ transaction.deposit_payment_date|date:"d M Y" }}
         </td>
     </tr>

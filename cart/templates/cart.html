@@ -134,7 +134,7 @@
                                         <br>
                                     </td>
                                     <td>
-                                        S/.{{ cart_item.sub_total }}
+                                        S/{{ cart_item.sub_total }}
 
                                         <a
                                                 href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
@@ -160,7 +160,7 @@
                                         Cantidad: {{ cart_item.quantity }}
                                     </td>
                                     <td>
-                                        S/.{{ cart_item.sub_total }}
+                                        S/{{ cart_item.sub_total }}
 
                                         <a
                                                 href="{% url 'carrito_de_compras:full_remove' cart_item.id %}"
@@ -199,7 +199,7 @@
                                     <br>
                                 </td>
                                 <td>
-                                    <p>S/.{{ sample_item.sub_total }}
+                                    <p>S/{{ sample_item.sub_total }}
 
                                         <a
                                                 href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
@@ -240,14 +240,18 @@
                                 <td class="text-left">
                                     <div class="row">
                                         <div class="col-6">
-                                            Total: S/. {{ total }}<br>
-                                            Descuento: <span class="savings"><b>S/.{{ descuento }}</b></span><br>
-                                            A pagar: <strong>S/. {{ total_a_pagar }}</strong><br>
-                                            <b><i>Incluye costos de envío</i></b>
+                                            Total: S/{{ total }}<br>
+                                            Costo de envío: S/{{ costo_despacho }}<br>
+                                            Descuento: <span class="savings"><b>S/{{ descuento }}</b></span><br>
+                                            A pagar: <strong>S/{{ total_a_pagar }}</strong><br>
                                         </div>
                                         <div class="col-6">
-                                            <input type="text" id="user_cupon" style="display: inline-block; height: 35px;" placeholder="Ingrese cupón">
-                                            <input type="submit" class="" id="cuponButton" style="display: inline-block; height: 35px;">
+                                            <br>
+                                            <input type="text" id="user_cupon"
+                                                   style="display: inline-block; height: 36px;"
+                                                   placeholder="Ingrese cupón">
+                                            <button type="submit" class="btn btn-secondary" id="cuponButton"
+                                                    style="display: inline-block; height: 35px;">Enviar</button>
                                         </div>
                                     </div>
                                 </td>
@@ -299,23 +303,28 @@
 
                                     {% elif user.is_authenticated and total == 0 %}
 
-                                        <button id="EmptyCartButton"
+                                        <button id="EmptyCartButton" data-toggle="modal" data-target="#exampleModal"
                                                 class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
                                         </button>
 
-                                        <button id="depositButtonEmptyCart"
+                                        <button id="depositButtonEmptyCart" data-toggle="modal"
+                                                data-target="#exampleModal"
                                                 class="btn-naranja btn-block my_custom_btn" checked>Pagar con
                                             Efectivo
                                         </button>
 
                                     {% else %}
 
-                                        <button id="CannotbuyButton"
-                                                class="btn-azul btn-secondary btn-block my_custom_btn">Pagar
+                                        <!-- Button trigger modal -->
+                                        <button id="CannotbuyButton"  class="btn-azul btn-secondary btn-block my_custom_btn" data-toggle="modal"
+                                                data-target="#CannotbuyButtonModal">
+                                            Pagar
                                         </button>
 
+
                                         <button id="depositButtonCannotbuy"
-                                                class="btn-naranja btn-block my_custom_btn" checked>Pagar con
+                                                class="btn-naranja btn-block my_custom_btn" data-toggle="modal"
+                                                data-target="#CannotbuyButtonModal"  checked>Pagar con
                                             Efectivo
                                         </button>
 
@@ -393,11 +402,7 @@
             alert("Por favor, añada un pedido a su carrito de compras.");
             e.preventDefault();
         });
-        $('#CannotbuyButton').on('click', function (e) {
-            // Abre el formulario con la configuración en Culqi.settings
-            alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
-            e.preventDefault();
-        });
+
         $('#buyButton').on('click', function (e) {
             // Abre el formulario con la configuración en Culqi.settings
             Culqi.open();
@@ -411,11 +416,7 @@
             alert("Por favor, añada un pedido a su carrito de compras.");
             e.preventDefault();
         });
-        $('#depositButtonCannotbuy').on('click', function (e) {
-            // Abre el formulario con la configuración en Culqi.settings
-            alert("Para ingresar su orden debe ingresar con su cuenta o registrarse.");
-            e.preventDefault();
-        });
+
     </script>
 
     <script>
@@ -452,31 +453,29 @@
 
         function culqi() {
 
+            var $container = $('.general-container').addClass("preloader");
+            var shipping_address = $('#ShippingAddress').val();
+
             if (Culqi.token) {
-                var $container = $('.general-container').addClass("preloader");
-                var shipping_address = $('#ShippingAddress').val()
-                if (Culqi.token) {
-                    $.post("{% url 'carrito_de_compras:cart_charge_credit_card' %}", {
-                            payment_method: 'credit_card_payment',
-                            amount: {{ culqi_total }},
-                            currency_code: 'PEN',
-                            email: Culqi.token.email,
-                            source_id: Culqi.token.id,
-                            last_four: Culqi.token.last_four,
-                            shipping_address: shipping_address,
-                        },
-                    ).done(function () {
-                        window.location.href = "{% url 'order:thanks_credit_card' %}";
-                    }).fail(function (xhr, status, error) {
-                        window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
-                        alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
-                    });
-                } else {
-                    alert("Hubo un error con el pago");
-                    console.log(Culqi.error);
-                    alert(Culqi.error.user_message);
-                }
+                $.post("{% url 'carrito_de_compras:cart_charge_credit_card' %}", {
+                        payment_method: 'credit_card_payment',
+                        status: 'aprobado',
+                        amount: {{ culqi_total }},
+                        currency_code: 'PEN',
+                        email: Culqi.token.email,
+                        source_id: Culqi.token.id,
+                        last_four: Culqi.token.last_four,
+                        shipping_address: shipping_address,
+                    },
+                ).done(function () {
+                    window.location.href = "{% url 'order:thanks_credit_card' %}";
+                }).fail(function (xhr, status, error) {
+                    window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
+                    alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
+                });
             } else {
+
+                //
             }
         }
     </script>
@@ -503,11 +502,10 @@
 
 
 
-     <script>
+    <script>
 
         $('#cuponButton').on('click', function (e) {
             //
-            alert("Ingrese cupon");
             var user_cupon = $('#user_cupon').val()
             $.post("{% url 'marketing:cupones' %}", {
                     user_cupon: user_cupon,
@@ -518,5 +516,30 @@
         });
 
     </script>
+
+
+
+
+    <!-- Modal No Registrado -->
+    <div class="modal fade" id="CannotbuyButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Regístrate</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   Hola Gallito(a), recuerda que debes registrarte para poder realizar la compra. <br>
+                    Registrándote podrás ingresar la dirección a donde quieres que enviemos los productos.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

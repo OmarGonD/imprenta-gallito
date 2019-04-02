@@ -31,10 +31,10 @@
             <p class="my_samples_title">Sobre con muestras a S/. 3.00</p>
             <p>Cada sobre contiene 10 stickers.</p>
             <p><i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
+                <i class="gold-star fas fa-star"></i>
+                <i class="gold-star fas fa-star"></i>
+                <i class="gold-star fas fa-star"></i>
+                <i class="gold-star fas fa-star"></i>
             </p>
 
 
@@ -42,7 +42,7 @@
 
                 <div class="text-center">
                     <p><a href="{% url 'shop:SamplePack' 'muestras' 'sobre-con-muestras' %}"
-                    class="btn btn-azul text-white btn-block">Agregar al carrito</a>
+                          class="btn btn-azul text-white btn-block">Agregar al carrito</a>
                     </p>
                 </div>
 
@@ -54,36 +54,37 @@
         </div>
 
 
-
-    <br>
-    <br>
-    <br>
+        <br>
+        <br>
+        <br>
 
         <div class="container">
 
-    <p class="my_samples_subtitle text-center">O también puedes obtener tus muestras con tu diseño personalizado.</p>
+            <p class="my_samples_subtitle text-center">O también puedes obtener tus muestras con tu diseño
+                personalizado.</p>
+            <h4 class="text-center">Son 10 stickers personalizados a S/9.00 (no incluye costos de envío).</h4>
+            <br>
+            <br>
 
-    <br>
 
+            <div class="row">
+                {% for muestra in muestras %}
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <a href="{% url 'shop:SampleDetail' muestra.slug %}"><img class="my_image_medium"
+                                                                                      src="{{ muestra.image.url }}"
+                                                                                      alt="{{ muestra.name }}"></a>
 
-        <div class="row">
-            {% for muestra in muestras %}
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <a href="{% url 'shop:SampleDetail' muestra.slug %}"><img class="my_image_medium"
-                                                             src="{{ muestra.image.url }}"
-                                                             alt="{{ muestra.name }}"></a>
-
+                        </div>
+                        <p class="text-center"><b>{{ muestra.name }}</b></p>
                     </div>
-                    <p class="text-center"><b>{{ muestra.name }}</b></p>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-    <br>
-    <br>
+            <br>
+            <br>
 
-                <div class="row col-md-12">
+            <div class="row col-md-12">
 
                 <p class="text-center">
 
@@ -94,12 +95,12 @@
 
                 </p>
 
-                </div>
+            </div>
 
 
-    </div>
+        </div>
 
-    <br>
-    <br>
+        <br>
+        <br>
 
 {% endblock %}

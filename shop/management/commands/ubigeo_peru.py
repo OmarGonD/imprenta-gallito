@@ -15,7 +15,11 @@ class Command(BaseCommand):
                 departamento=row['departamento'],
                 provincia=row['provincia'],
                 distrito=row['distrito'],
-            )
+                costo_despacho_con_recojo=row['costo_despacho_con_recojo'],
+                costo_despacho_sin_recojo=row['costo_despacho_sin_recojo'],
+                dias_despacho = row['dias_despacho']
+
+        )
             for idx, row in tmp_data.iterrows()
         ]
 

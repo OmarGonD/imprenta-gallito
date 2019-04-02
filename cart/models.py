@@ -2,19 +2,9 @@ from django.db import models
 from django.http import HttpResponse
 
 from shop.models import Product, Sample
+from shop.sizes_and_quantities import TAMANIOS, CANTIDADES
 
 # Variables
-
-
-TAMANIOS = (('5cm x 5cm', '5 cm x 5 cm',), ('7cm x 7cm', '7 cm x 7 cm',),
-            ('10cm x 10cm', '10 cm x 10 cm',), ('13cm x 13cm', '13 cm x 13 cm',))
-
-CANTIDADES = (('50', '50',), ('100', '100',),
-              ('200', '200',), ('300', '300',),
-              ('500', '500',), ('1000', '1000',),
-              ('2000', '2000',), ('3000', '3000',),
-              ('4000', '4000',), ('5000', '5000',),
-              ('10000', '10000',))
 
 
 # Create your models here.

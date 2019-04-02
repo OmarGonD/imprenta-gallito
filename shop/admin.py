@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review
+from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review, costo_de_los_productos
 
 # Register your models here.
 
@@ -41,3 +41,12 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Product, ProductAdmin)
+
+
+class costo_de_los_productos_admin(admin.ModelAdmin):
+    list_display = ['size', 'quantity', 'category', 'product', 'price']
+    list_editable = ['category', 'product', 'price']
+    list_per_page = 20
+
+
+admin.site.register(costo_de_los_productos, costo_de_los_productos_admin)

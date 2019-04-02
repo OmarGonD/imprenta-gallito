@@ -60,7 +60,7 @@ def SamplePackPage(request):
 
     # muestras = Product.objects.filter(category__slug=c_slug)
 
-    muestras = Sample.objects.filter(category__slug=c_slug)
+    muestras = Sample.objects.filter(category__slug=c_slug).exclude(slug='sobre-con-muestras')
 
     return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,
                                                   'muestras': muestras})
@@ -309,6 +309,7 @@ def signoutView(request):
 
     response = redirect('signin')
     response.delete_cookie("cart_id")
+    response.delete_cookie("cupon")
     return response
 
 

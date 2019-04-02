@@ -58,6 +58,25 @@ class Product(models.Model):
 
 
 
+##############################
+### COSTO DE LOS PRODUCTOS ###
+##############################
+
+
+class costo_de_los_productos(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.IntegerField(default=30)
+    size = models.CharField(max_length=20, choices=TAMANIOS)
+    quantity = models.CharField(max_length=20, choices=CANTIDADES)
+
+
+
+
+
+
+
+
 ### Sample Packs ###
 
 class Sample(models.Model):
@@ -149,10 +168,22 @@ def update_user_profile(sender, instance, created, **kwargs):
     instance.profile.save()
 
 
+
+#####################################################################
+# Model con informacion sobre el costo de los despachos a provincia #
+#####################################################################
+
+
 class Peru(models.Model):
     departamento = models.CharField(max_length=100, blank=False)
     provincia = models.CharField(max_length=100, blank=False)
     distrito = models.CharField(max_length=100, blank=False)
+    costo_despacho_con_recojo = models.IntegerField(default=15)
+    costo_despacho_sin_recojo = models.IntegerField(default=15)
+    dias_despacho = models.IntegerField(default=4)
 
     def __str__(self):
-        return self.departamento + " - " + self.provincia + " - " + self.distrito
+        return self.departamento + " - " + self.provincia + " - " + self.distrito + '-' + str(self.dias_despacho)
+
+
+
