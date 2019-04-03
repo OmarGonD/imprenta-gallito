@@ -73,10 +73,6 @@ class costo_de_los_productos(models.Model):
 
 
 
-
-
-
-
 ### Sample Packs ###
 
 class Sample(models.Model):
