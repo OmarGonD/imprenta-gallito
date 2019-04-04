@@ -34,7 +34,7 @@ class OrderItemAdmin(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     model = Order
-    list_display = ['id', 'status', 'first_name', 'last_name', 'email', 'total', 'reason', 'created']
+    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'last_four', 'total', 'reason', 'created']
     list_editable = ['reason', 'status']
     list_display_links = ('id', 'email')
     search_fields = ['token', 'shipping_department', 'email']
@@ -44,7 +44,7 @@ class OrderAdmin(admin.ModelAdmin):
         ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'created']}),
         # ('BILLING INFORMATION', {'fields': ['billingName', 'billingAddress1', 'billingCity', 'billingPostCode',
         #                                     'billingCountry', 'emailAddress']}),
-        ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'email', 'shipping_address', 'shipping_department', 'shipping_province',
+        ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'phone_number', 'email', 'last_four', 'shipping_address', 'shipping_department', 'shipping_province',
                                              'shipping_district', 'shipping_address1', 'shipping_address2']}),
     ]
 

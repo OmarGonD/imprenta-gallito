@@ -17,6 +17,7 @@ class Order(models.Model):
     token = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
+    phone_number = models.CharField(max_length=30, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     email = models.EmailField(max_length=250, blank = True, verbose_name= 'Correo electrónico')
     last_four = models.CharField(max_length=100, blank=True, null=True)
