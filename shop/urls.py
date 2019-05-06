@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -21,4 +21,8 @@ urlpatterns = [
     path('<slug:c_slug>/<slug:product_slug>', views.SamplePack, name='SamplePack'),
     path('<slug:c_slug>', views.ProdCatDetail, name='ProdCatDetail'),
     path('make_review/', views.make_review_view, name='make_review_view'),
+    path('prices/', views.prices, name='prices'),
+    path('email_confirmation_needed/', views.email_confirmation_needed, name='email_confirmation_needed'),
+    re_path(r'^confirmacion-de-correo-electronico/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate')
 ]

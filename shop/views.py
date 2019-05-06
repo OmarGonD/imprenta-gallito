@@ -1,16 +1,27 @@
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group, User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import redirect, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
-from shop.models import Product_Review, Sample_Review
+from shop.models import Product_Review, Sample_Review, ProductsPricing
 from cart.models import Cart, CartItem, SampleItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import Category, Product, Peru, Sample
 from marketing.forms import EmailSignUpForm
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 
 
 # Create your views here.
@@ -68,11 +79,15 @@ def SamplePackPage(request):
 
 def SamplePack(request, c_slug, product_slug):
     cart_id = request.COOKIES.get('cart_id')
-    if not cart_id:
+    if cart_id:
+        try:
+            cart = Cart.objects.get(id=cart_id)
+        except ObjectDoesNotExist:
+            # supplied ID doesn't match a Cart from your BD
+            cart = Cart.objects.create(cart_id="Random")
+    else:
         cart = Cart.objects.create(cart_id="Random")
         cart_id = cart.id
-    cart = Cart.objects.get(id=cart_id)
-
     try:
         sample = Sample.objects.get(
             category__slug=c_slug,
@@ -83,7 +98,7 @@ def SamplePack(request, c_slug, product_slug):
             cart=cart,
             sample=sample,
             size="varios",
-            quantity="50",
+            quantity="10",
             file=sample.image,
             comment="",
             step_two_complete=True,
@@ -131,10 +146,15 @@ class StepOneView(FormView):
 
     def form_valid(self, form):
         cart_id = self.request.COOKIES.get('cart_id')
-        if not cart_id:
+        if cart_id:
+            try:
+                cart = Cart.objects.get(id=cart_id)
+            except ObjectDoesNotExist:
+                # supplied ID doesn't match a Cart from your BD
+                cart = Cart.objects.create(cart_id="Random")
+        else:
             cart = Cart.objects.create(cart_id="Random")
             cart_id = cart.id
-        cart = Cart.objects.get(id=cart_id)
         item = CartItem.objects.create(
             size=form.cleaned_data.get('size'),
             quantity=form.cleaned_data.get('quantity'),
@@ -216,10 +236,15 @@ class StepOneView_Sample(FormView):
 
     def form_valid(self, form):
         cart_id = self.request.COOKIES.get('cart_id')
-        if not cart_id:
+        if cart_id:
+            try:
+                cart = Cart.objects.get(id=cart_id)
+            except ObjectDoesNotExist:
+                # supplied ID doesn't match a Cart from your BD
+                cart = Cart.objects.create(cart_id="Random")
+        else:
             cart = Cart.objects.create(cart_id="Random")
             cart_id = cart.id
-        cart = Cart.objects.get(id=cart_id)
         item = SampleItem.objects.create(
             size=form.cleaned_data.get('size'),
             quantity=10,
@@ -318,6 +343,30 @@ def signoutView(request):
 from django.shortcuts import render
 
 
+
+### Email Confirmation Needed ###
+
+def email_confirmation_needed(request):
+    return render(request, "accounts/email_confirmation_needed.html")
+
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return redirect('shop:allCat')
+    else:
+        return HttpResponse('¡Enlace de activación inválido! Intente registrarse nuevamente.')
+
+
+
 @transaction.atomic
 def signupView(request):
     peru = Peru.objects.all()
@@ -344,14 +393,6 @@ def signupView(request):
         district_list = set()
 
     if request.method == 'POST':
-        print("INSIDE REQUEST.POST")
-        print("Department List: ", department_list)
-        print("Provice List: ", province_list)
-        print("district List: ", district_list)
-        print("REQUEST")
-        print(request.POST)
-
-        #####
 
         peru = Peru.objects.all()
         department_list = set()
@@ -381,50 +422,58 @@ def signupView(request):
         #####
 
         user_form = SignUpForm(request.POST)
-        # profile_form = ProfileForm(request.POST) #__init__() missing 2 required positional arguments: 'province_list' and 'department_list'
-        profile_form = ProfileForm(district_list, province_list, department_list, request.POST)
-        # profile_form = ProfileForm(district_list, province_list, department_list, request.POST, instance=user.profile)
+        profile_form = ProfileForm(district_list, province_list, department_list, request.POST, request.FILES)
 
         if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
+            user = user_form.save(commit=False)
+            user.is_active = False
+            user.save()
             username = user_form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
             customer_group = Group.objects.get(name='Clientes')
             customer_group.user_set.add(signup_user)
             raw_password = user_form.cleaned_data.get('password1')
             user.refresh_from_db()  # This will load the Profile created by the Signal
-            # print(user_form.cleaned_data)
-            print("Form is valid: district_list, province_list, department_list")
-            print(district_list, province_list, department_list)
-            profile_form = ProfileForm(district_list, province_list, department_list, request.POST,
+
+            profile_form = ProfileForm(district_list, province_list, department_list, request.POST, request.FILES,
                                        instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
-            # print(profile_form.cleaned_data)
+
+
             profile_form.save()  # Gracefully save the form
 
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
+            # user = authenticate(username=username, password=raw_password)
+            # login(request, user) #Cannot login a NOT Active user
 
-            return redirect('carrito_de_compras:cart_detail')
+            current_site = get_current_site(request)
+            mail_subject = 'Confirmación de correo electrónico'
+            message = render_to_string('accounts/acc_activate_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                'token': account_activation_token.make_token(user),
+            })
+            # to_email = user_form.cleaned_data.get('email')
+            to_email = 'oma.gonzales@gmail.com'
+            from_email = 'stickersgallito@stickersgallito.pe'
+            email = EmailMessage(
+                mail_subject, message, to=[to_email], from_email=from_email
+            )
+            email.send()
+
+            return redirect('shop:email_confirmation_needed')
+
 
         else:
-            print("INVALID USeR_FORM")
             print(user_form.errors)
-            print("INVALID Profile_FORM")
             print(profile_form.errors)
+
 
     else:
 
         user_form = SignUpForm()
 
         profile_form = ProfileForm(district_list, province_list, department_list)
-        print("GET PART!!!!!!")
-        print("Deparment_List in GET: ", department_list)
-        print("Province_List in GET: ", province_list)
-        print("District_List in GET: ", district_list)
-        # print('end of profile postdata print')
-        # print(profile_form)
-        # print("Profile Data:")
 
     return render(request, 'accounts/signup.html', {
         'user_form': user_form,
@@ -548,3 +597,18 @@ def make_review_view(request):
 
 
     return HttpResponse("Hi")
+
+
+
+from django.http.response import JsonResponse
+def prices(request):
+    size_selected = request.GET.get("size_selected")
+    c_slug = 'stickers'
+    product_slug = 'stickers-transparentes'
+
+
+    prices = list(ProductsPricing.objects.filter(category=Category.objects.get(slug=c_slug),
+                                              product=Product.objects.get(slug=product_slug),
+                                              size=size_selected).values_list("price",flat=True))
+
+    return JsonResponse({'prices': prices})

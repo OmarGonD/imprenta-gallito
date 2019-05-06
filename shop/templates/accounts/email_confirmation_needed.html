@@ -1,10 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        ¡Bienvenidos a Stickers Gallito Perú!
+    {% endif %}
+{% endblock %}
+{% block email_confirmation_redirect %}
+    <meta http-equiv="refresh" content="60;url=https://stickersgallito.pe"/>
+{% endblock %}
+{% block title %}
+    <p>Stickers Gallito - Confirma tu correo electrónico</p>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <br>
+        <br>
+        <br>
+
+        <div class="col-md-12">
+
+            <h3> ¡Gracias por registrarte! </h3>
+
+            <br>
+
+            <p>Acabamos de enviarte un email con un enlace para confirmar tu correo electrónico.</p>
+
+            <p>Al darle click al enlace validaremos tu registro, y automáticamente ingresarás con tu
+                usuario y clave.</p>
+
+            <p>Será redirigido a la página de inicio en <b><span id="time">01:00</span></b> segundos.</p>
+
+
+            <style>
+                #time {
+                    color: red;
+                }
+            </style>
+
+
+            <script>
+                function startTimer(duration, display) {
+                    var timer = duration, minutes, seconds;
+                    setInterval(function () {
+                        minutes = parseInt(timer / 60, 10)
+                        seconds = parseInt(timer % 60, 10);
+
+                        minutes = minutes < 10 ? "0" + minutes : minutes;
+                        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                        display.textContent = minutes + ":" + seconds;
+
+                        if (--timer < 0) {
+                            timer = duration;
+                        }
+                    }, 1000);
+                }
+
+                window.onload = function () {
+                    var fiveMinutes = 60,
+                        display = document.querySelector('#time');
+                    startTimer(fiveMinutes, display);
+                };
+
+            </script>
+
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review, costo_de_los_productos
+from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review, ProductsPricing
 
 # Register your models here.
 
@@ -34,8 +34,8 @@ admin.site.register(Category, CategoryAdmin)
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'stock', 'available', 'created', 'updated']
-    list_editable = ['price', 'stock', 'available']
+    list_display = ['name', 'available', 'created', 'updated']
+    list_editable = ['available']
     prepopulated_fields = {'slug':('name',)}
     list_per_page = 20
 
@@ -43,10 +43,10 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 
-class costo_de_los_productos_admin(admin.ModelAdmin):
+class ProductsPricingAdmin(admin.ModelAdmin):
     list_display = ['size', 'quantity', 'category', 'product', 'price']
     list_editable = ['category', 'product', 'price']
     list_per_page = 20
 
 
-admin.site.register(costo_de_los_productos, costo_de_los_productos_admin)
+admin.site.register(ProductsPricing, ProductsPricingAdmin)

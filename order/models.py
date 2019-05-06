@@ -24,7 +24,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     shipping_address = models.CharField(max_length=100, blank=True, null=True)
     shipping_address1 = models.CharField(max_length=100, blank=True, null=True)
-    shipping_address2 = models.CharField(max_length=100, blank=True, null=True)
+    reference = models.CharField(max_length=100, blank=True, null=True)
     shipping_department = models.CharField(max_length=100, blank=True, null=True)
     shipping_province = models.CharField(max_length=100, blank=True, null=True)
     shipping_district = models.CharField(max_length=100, blank=True, null=True)

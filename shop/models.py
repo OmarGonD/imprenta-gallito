@@ -18,7 +18,7 @@ class Category(models.Model):
     name = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(max_length=250, unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='category', blank=True)
+    image = models.ImageField(upload_to='category', blank=True, null=True)
     video = EmbedVideoField(null=True, blank=True)
 
     class Meta:
@@ -34,13 +34,11 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=250, unique=True)
-    slug = models.SlugField(max_length=250, unique=True)
+    name = models.CharField(max_length=250, unique=False)
+    slug = models.SlugField(max_length=250, unique=False)
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='product', blank=True)
-    stock = models.IntegerField()
+    image = models.ImageField(upload_to='product_images', blank=True, null=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -63,14 +61,12 @@ class Product(models.Model):
 ##############################
 
 
-class costo_de_los_productos(models.Model):
+class ProductsPricing(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.IntegerField(default=30)
     size = models.CharField(max_length=20, choices=TAMANIOS)
     quantity = models.CharField(max_length=20, choices=CANTIDADES)
-
-
+    price = models.IntegerField(default=30)
 
 
 ### Sample Packs ###
@@ -80,10 +76,7 @@ class Sample(models.Model):
     slug = models.SlugField(max_length=250, unique=True)
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.IntegerField(default=1)
-    image = models.ImageField(upload_to='product', blank=True)
-    stock = models.IntegerField()
+    image = models.ImageField(upload_to='sample_images', blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -101,7 +94,17 @@ class Sample(models.Model):
         return '{}'.format(self.name)
 
 
+##############################
+### COSTO DE LAS MUESTRAS ###
+##############################
 
+
+class SamplesPricing(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
+    size = models.CharField(max_length=20, choices=TAMANIOS)
+    quantity = models.CharField(max_length=20, choices=CANTIDADES)
+    price = models.IntegerField(default=30)
 
 ### Reviews ###
 
@@ -145,7 +148,7 @@ class Profile(models.Model):
     dni = models.CharField(max_length=30, blank=True)
     phone_number = models.CharField(max_length=30, blank=True)
     shipping_address1 = models.CharField(max_length=100, blank=False)
-    shipping_address2 = models.CharField(max_length=100, blank=False)
+    reference = models.CharField(max_length=100, blank=False)
     shipping_department = models.CharField(max_length=100, blank=False)
     shipping_province = models.CharField(max_length=100, blank=False)
     shipping_district = models.CharField(max_length=100, blank=False)
@@ -180,6 +183,5 @@ class Peru(models.Model):
 
     def __str__(self):
         return self.departamento + " - " + self.provincia + " - " + self.distrito + '-' + str(self.dias_despacho)
-
 
 

@@ -45,7 +45,7 @@ class OrderAdmin(admin.ModelAdmin):
         # ('BILLING INFORMATION', {'fields': ['billingName', 'billingAddress1', 'billingCity', 'billingPostCode',
         #                                     'billingCountry', 'emailAddress']}),
         ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'phone_number', 'email', 'last_four', 'shipping_address', 'shipping_department', 'shipping_province',
-                                             'shipping_district', 'shipping_address1', 'shipping_address2']}),
+                                             'shipping_district', 'shipping_address1', 'reference']}),
     ]
 
     inlines = [

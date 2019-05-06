@@ -50,4 +50,3 @@ def viewOrder(request, order_id):
                                                        'order_items': order_items})
 
 
-
