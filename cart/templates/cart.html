@@ -465,6 +465,7 @@
                         email: Culqi.token.email,
                         source_id: Culqi.token.id,
                         last_four: Culqi.token.last_four,
+                        shipping_cost: {{ costo_despacho }},
                         shipping_address: shipping_address,
                     },
                 ).done(function () {
@@ -491,6 +492,7 @@
                     currency_code: 'PEN',
                     source_id: "10",
                     last_four: 1111,
+                    shipping_cost: {{ costo_despacho }},
                     shipping_address: shipping_address,
                 },
             ).done(function () {

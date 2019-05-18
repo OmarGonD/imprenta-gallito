@@ -13,6 +13,13 @@
         <br>
         <br>
 
+         <script>
+            $(document).ready(function () {
+                $('label[for="id_file"]').hide();
+            });
+        </script>
+
+
         <script>
             $(function () {
                 $("input:file").change(function () {
@@ -24,8 +31,10 @@
                     }
                 });
             });
-            $("#id_file").hidden();
+
         </script>
+
+
 
         <div class="row padding80-top">
 

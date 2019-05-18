@@ -17,6 +17,7 @@ class Command(BaseCommand):
                 category=Category.objects.get(name=row['category']),
                 name=row['product'],
                 slug=row['slug'],
+                sku=row['sku'],
                 description=row['description'],
                 available=row['available']
         )

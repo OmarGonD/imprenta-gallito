@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Order, OrderItem
 from django.contrib.auth.decorators import login_required
+import json
+from django.core.serializers import serialize
 
 # Create your views here.
 
@@ -10,7 +12,15 @@ def thanks_credit_card(request):
 
     total = Order.objects.latest('id').total
 
-    response = render(request, 'thanks_credit_card.html', dict(order_number=order_number, total=total))
+    costo_despacho = Order.objects.latest('id').shipping_cost
+
+    order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
+
+    order_items = serialize('json', order_items, fields=['id', 'sku', 'product', 'price', 'size', 'quantity'])
+
+    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total,
+                                                                   order_items=order_items,
+                                                                   costo_despacho=costo_despacho))
     return response
 
 
@@ -19,7 +29,15 @@ def thanks_deposit_payment(request):
 
     total = Order.objects.latest('id').total
 
-    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total))
+    costo_despacho = Order.objects.latest('id').shipping_cost
+
+    order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
+
+
+    order_items = serialize('json', order_items, fields=['id', 'sku', 'product', 'price', 'size', 'quantity'])
+
+    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total,
+                                                                   order_items=order_items, costo_despacho=costo_despacho))
     return response
 
 

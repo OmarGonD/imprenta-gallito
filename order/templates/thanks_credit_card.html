@@ -1,7 +1,30 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}
-    Thanks - Perfect Cushion Store
+    Gracias por su compra - Stickers Gallito
+{% endblock %}
+{% block data_layer %}
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'eec.purchase',
+            ecommerce: {
+                currencyCode: 'PEN',
+                purchase: {
+                    actionField: {
+                        id: {{ order_number }},
+                        affiliation: 'Stickers Gallito E-Commerce',
+                        revenue: {{ total }},
+                        shipping: {{ costo_despacho }},
+                        coupon: ''
+                    }
+                },
+                products: JSON.parse('{{ order_items | safe }}')
+            }
+        });
+    </script>
+
 {% endblock %}
 {% block content %}
     <div class="container">

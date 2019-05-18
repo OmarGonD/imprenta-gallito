@@ -36,6 +36,7 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=250, unique=False)
     slug = models.SlugField(max_length=250, unique=False)
+    sku = models.CharField(max_length=10, unique=True)
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images', blank=True, null=True)
@@ -74,6 +75,7 @@ class ProductsPricing(models.Model):
 class Sample(models.Model):
     name = models.CharField(max_length=250, unique=True)
     slug = models.SlugField(max_length=250, unique=True)
+    sku = models.CharField(max_length=10, unique=True)
     description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='sample_images', blank=True)

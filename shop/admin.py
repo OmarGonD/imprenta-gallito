@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review, ProductsPricing
+from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review, ProductsPricing, \
+    SamplesPricing
 
 # Register your models here.
 
@@ -16,6 +17,14 @@ class SampleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Sample, SampleAdmin)
+
+class SamplesPricingAdmin(admin.ModelAdmin):
+    list_display = ['size', 'quantity', 'category', 'price']
+    list_editable = ['category', 'price']
+    list_per_page = 20
+
+
+admin.site.register(SamplesPricing, SamplesPricingAdmin)
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -50,3 +59,5 @@ class ProductsPricingAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ProductsPricing, ProductsPricingAdmin)
+
+

@@ -19,6 +19,7 @@ class Order(models.Model):
     last_name = models.CharField(max_length=50, blank=True, null=True)
     phone_number = models.CharField(max_length=30, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2)
     email = models.EmailField(max_length=250, blank = True, verbose_name= 'Correo electrónico')
     last_four = models.CharField(max_length=100, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -64,8 +65,6 @@ class OrderItem(models.Model):
     comment = models.CharField(max_length=200, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-
-
     class Meta:
         db_table = "OrderItem"
 
@@ -97,30 +96,3 @@ class OrderItem(models.Model):
 
 
 
-
-###############################
-
-
-
-# class Order(models.Model):
-#     token = models.CharField(max_length=250, blank = True)
-#     total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name= 'PEN Order Total')
-#     emailAddress = models.EmailField(max_length=250, blank = True, verbose_name= 'Email Address')
-#     created = models.DateTimeField(auto_now_add=True)
-#     billingName = models.CharField(max_length=250, blank=True)
-#     billingAddress1 = models.CharField(max_length=250, blank=True)
-#     billingCity = models.CharField(max_length=250, blank=True)
-#     billingPostCode = models.CharField(max_length=10, blank=True)
-#     billingCountry = models.CharField(max_length=200, blank=True)
-#     shippingName = models.CharField(max_length=250, blank=True)
-#     shippingAddress1 = models.CharField(max_length=250, blank=True)
-#     shippingCity = models.CharField(max_length=250, blank=True)
-#     shippingPostcode = models.CharField(max_length=10, blank=True)
-#     shippingCountry = models.CharField(max_length=10, blank=True)
-#
-#     class Meta:
-#         db_table = 'Order'
-#         ordering = ['-created']
-#
-#     def __str__(self):
-#         return str(self.id)

@@ -3,6 +3,31 @@
 {% block title %}
     Gracias por su compra - Stickers Gallito
 {% endblock %}
+
+
+{% block data_layer %}
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'eec.purchase',
+            ecommerce: {
+                currencyCode: 'PEN',
+                purchase: {
+                    actionField: {
+                        id: {{ order_number }},
+                        affiliation: 'Stickers Gallito E-Commerce',
+                        revenue: {{ total }},
+                        shipping: {{ costo_despacho }},
+                        coupon: ''
+                    }
+                },
+                products: JSON.parse('{{ order_items | safe }}')
+            }
+        });
+    </script>
+
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -20,8 +45,8 @@
 
                 <p>(A pagar en las siguientes 24 horas para hacer efectivo su pedido).</p>
 
-{#                <p> <b>24 horas: </b> Para hacer efectiva su orden debe hacer el depósito por el monto de su orden <b><i>en las#}
-{#                    siguientes 24 horas</i></b>.</p>#}
+                {#                <p> <b>24 horas: </b> Para hacer efectiva su orden debe hacer el depósito por el monto de su orden <b><i>en las#}
+                {#                    siguientes 24 horas</i></b>.</p>#}
                 <br>
 
                 <p>Cuentas bancarias:</p>
@@ -33,67 +58,67 @@
         <div class="row">
 
 
-                <!-- BCP -->
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                    <table class="table my_custom_table_deposit_payment">
+            <!-- BCP -->
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                <table class="table my_custom_table_deposit_payment">
 
-                        <thead class="my_custom_thead">
+                    <thead class="my_custom_thead">
+
+                    <tr>
+                        <th>
+                            BANCO DE CRÉDITO DEL PERÚ (BCP)
+                        </th>
+                    </tr>
+                    </thead>
+                    <tboyd>
 
                         <tr>
-                            <th>
-                                BANCO DE CRÉDITO DEL PERÚ (BCP)
-                            </th>
+                            <td class="text-left">
+                                <p class="text-center"><b>CTA. AHORROS:</b> 191-93277552-0-47</p>
+                            </td>
                         </tr>
-                        </thead>
-                        <tboyd>
+                        <tr>
+                            <td class="text-left">
+                                <p class="text-center"><b>CTA. INTERBANCARIA:</b> 002-191-193277552047-54</p>
+                            </td>
+                        </tr>
 
-                            <tr>
-                                <td class="text-left">
-                                    <p class="text-center"><b>CTA. AHORROS:</b> 191-93277552-0-47</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-left">
-                                    <p class="text-center"><b>CTA. INTERBANCARIA:</b> 002-191-193277552047-54</p>
-                                </td>
-                            </tr>
-
-                        </tboyd>
-                    </table>
-                </div>
+                    </tboyd>
+                </table>
+            </div>
 
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
                 <!-- INTERBANK -->
 
 
-                    <table class="table my_custom_table_deposit_payment">
+                <table class="table my_custom_table_deposit_payment">
 
-                        <thead class="my_custom_thead">
+                    <thead class="my_custom_thead">
+
+                    <tr>
+                        <th>
+                            INTERBANK
+                        </th>
+                    </tr>
+                    </thead>
+                    <tboyd>
 
                         <tr>
-                            <th>
-                                INTERBANK
-                            </th>
+                            <td class="text-left">
+                                <p class="text-center"><b>CTA. AHORROS:</b> 200‑3001651127</p>
+                            </td>
                         </tr>
-                        </thead>
-                        <tboyd>
+                        <tr>
+                            <td class="text-left">
+                                <p class="text-center"><b>CTA. INTERBANCARIA:</b> 003-200-003001651127-38</p>
+                            </td>
+                        </tr>
 
-                            <tr>
-                                <td class="text-left">
-                                    <p class="text-center"><b>CTA. AHORROS:</b> 200‑3001651127</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-left">
-                                    <p class="text-center"><b>CTA. INTERBANCARIA:</b> 003-200-003001651127-38</p>
-                                </td>
-                            </tr>
-
-                        </tboyd>
-                    </table>
-                </div>
+                    </tboyd>
+                </table>
             </div>
         </div>
+    </div>
     </div>
     <br>
     <br>
