@@ -54,10 +54,10 @@ class Order(models.Model):
 
 
 
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.CharField(max_length= 200)
+    name = models.CharField(max_length= 200)
+    sku = models.CharField(max_length=20)
     quantity = models.CharField(max_length= 200)
     size = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name= 'PEN Price')

@@ -14,14 +14,14 @@ class OrderItemAdmin(admin.TabularInline):
     model = OrderItem
     fieldsets = [
         # ('Customer', {'fields': ['first_name', 'last_name'], }),
-        ('Product', {'fields': ['product'],}),
+        ('Name', {'fields': ['name'],}),
         ('Size', {'fields': ['size'], }),
         ('Quantity', {'fields': ['quantity'],}),
         ('Price', {'fields': ['price'], }),
         ('File', {'fields': ['file'], }),
         ('File_Thumbnail', {'fields': ['file_thumbnail'], }),
     ]
-    readonly_fields = ['product', 'size', 'quantity', 'price', 'file', 'file_thumbnail']
+    readonly_fields = ['name', 'size', 'quantity', 'price', 'file', 'file_thumbnail']
     can_delete = False
     max_num = 0
     template = 'admin/order/tabular.html'

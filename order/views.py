@@ -16,9 +16,9 @@ def thanks_credit_card(request):
 
     order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
 
-    order_items = serialize('json', order_items, fields=['id', 'sku', 'product', 'price', 'size', 'quantity'])
+    order_items = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
 
-    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total,
+    response = render(request, 'thanks_credit_card.html', dict(order_number=order_number, total=total,
                                                                    order_items=order_items,
                                                                    costo_despacho=costo_despacho))
     return response
@@ -34,7 +34,9 @@ def thanks_deposit_payment(request):
     order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
 
 
-    order_items = serialize('json', order_items, fields=['id', 'sku', 'product', 'price', 'size', 'quantity'])
+    order_items = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
+
+
 
     response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total,
                                                                    order_items=order_items, costo_despacho=costo_despacho))

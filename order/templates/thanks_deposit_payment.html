@@ -20,9 +20,10 @@
                         revenue: {{ total }},
                         shipping: {{ costo_despacho }},
                         coupon: ''
-                    }
+                    },
+                    products: JSON.parse('{{ order_items | safe }}')
                 },
-                products: JSON.parse('{{ order_items | safe }}')
+
             }
         });
     </script>
