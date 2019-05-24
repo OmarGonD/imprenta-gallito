@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5e225f5a-ac87-47be-842f-2e8d78e25412" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stickers_gallito/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/stickers_gallito/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,7 +39,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/order/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
@@ -58,11 +56,11 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/stickers_gallito/settings.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="93">
-              <caret line="83" column="12" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="12" />
+              <caret line="83" column="13" lean-forward="true" selection-start-line="83" selection-start-column="13" selection-end-line="83" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -143,8 +141,8 @@
         <option value="$PROJECT_DIR$/order/models.py" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" />
-        <option value="$PROJECT_DIR$/stickers_gallito/settings.py" />
         <option value="$PROJECT_DIR$/order/views.py" />
+        <option value="$PROJECT_DIR$/stickers_gallito/settings.py" />
       </list>
     </option>
   </component>
@@ -257,15 +255,16 @@
       <workItem from="1558459253268" duration="2431000" />
       <workItem from="1558532390806" duration="2015000" />
       <workItem from="1558535766213" duration="14000" />
-      <workItem from="1558719307436" duration="2121000" />
+      <workItem from="1558719307436" duration="2542000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89715000" />
+    <option name="totallyTimeSpent" value="90136000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="696" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29045308" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -547,13 +546,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stickers_gallito/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="83" column="12" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/order/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -561,6 +553,13 @@
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stickers_gallito/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="83" column="13" lean-forward="true" selection-start-line="83" selection-start-column="13" selection-end-line="83" selection-end-column="13" />
         </state>
       </provider>
     </entry>
