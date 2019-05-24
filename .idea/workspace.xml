@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5e225f5a-ac87-47be-842f-2e8d78e25412" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stickers_gallito/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/stickers_gallito/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,8 +35,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/order/templates/thanks_deposit_payment.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+            <state relative-caret-position="-136">
+              <caret line="7" selection-start-line="7" selection-end-line="30" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/order/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="43" column="29" selection-start-line="43" selection-start-column="29" selection-end-line="43" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#54#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -46,16 +61,16 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/stickers_gallito/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="113" column="4" selection-start-line="113" selection-start-column="4" selection-end-line="113" selection-end-column="4" />
+            <state relative-caret-position="93">
+              <caret line="83" column="12" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.env">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="136">
               <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
             </state>
           </provider>
@@ -123,13 +138,13 @@
         <option value="$PROJECT_DIR$/shop/management/commands/samples.py" />
         <option value="$PROJECT_DIR$/order/templates/thanks_credit_card.html" />
         <option value="$PROJECT_DIR$/shop/templates/shop/subir-arte.html" />
-        <option value="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" />
         <option value="$PROJECT_DIR$/cart/views.py" />
         <option value="$PROJECT_DIR$/order/admin.py" />
-        <option value="$PROJECT_DIR$/order/views.py" />
         <option value="$PROJECT_DIR$/order/models.py" />
-        <option value="$PROJECT_DIR$/stickers_gallito/settings.py" />
         <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/order/templates/thanks_deposit_payment.html" />
+        <option value="$PROJECT_DIR$/stickers_gallito/settings.py" />
+        <option value="$PROJECT_DIR$/order/views.py" />
       </list>
     </option>
   </component>
@@ -157,12 +172,6 @@
               <item name="stickers-gallito-app" type="b2602c69:ProjectViewProjectNode" />
               <item name="stickers-gallito-app" type="462c0819:PsiDirectoryNode" />
               <item name="order" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="stickers-gallito-app" type="b2602c69:ProjectViewProjectNode" />
-              <item name="stickers-gallito-app" type="462c0819:PsiDirectoryNode" />
-              <item name="order" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="stickers-gallito-app" type="b2602c69:ProjectViewProjectNode" />
@@ -245,18 +254,20 @@
       <workItem from="1558363949097" duration="9726000" />
       <workItem from="1558395314871" duration="8763000" />
       <workItem from="1558449524502" duration="3969000" />
-      <workItem from="1558459253268" duration="257000" />
+      <workItem from="1558459253268" duration="2431000" />
+      <workItem from="1558532390806" duration="2015000" />
+      <workItem from="1558535766213" duration="14000" />
+      <workItem from="1558719307436" duration="2121000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83391000" />
+    <option name="totallyTimeSpent" value="89715000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1296" height="696" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27588996" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29045308" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -489,16 +500,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/order/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="41" column="90" selection-start-line="41" selection-start-column="90" selection-end-line="41" selection-end-column="90" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/order/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -529,27 +530,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/order/templates/thanks_deposit_payment.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stickers_gallito/urls.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/stickers_gallito/settings.py">
+    <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="113" column="4" selection-start-line="113" selection-start-column="4" selection-end-line="113" selection-end-column="4" />
+        <state relative-caret-position="136">
+          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
+    <entry file="file://$PROJECT_DIR$/order/templates/thanks_deposit_payment.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
+        <state relative-caret-position="-136">
+          <caret line="7" selection-start-line="7" selection-end-line="30" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stickers_gallito/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="83" column="12" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/order/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="43" column="29" selection-start-line="43" selection-start-column="29" selection-end-line="43" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
