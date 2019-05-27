@@ -41,9 +41,9 @@ def thanks_deposit_payment(request):
     # define the target mapping
     def mapper(p):
         return {
+            'name': p['fields']['name'],
             'id': p['fields']['sku'],
             # 'sku': p['fields']['sku'],
-            'name': p['fields']['name'],
             'price': p['fields']['price'],
             'size': p['fields']['size'],
             'quantity': p['fields']['quantity']
