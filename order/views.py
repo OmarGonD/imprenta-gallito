@@ -16,11 +16,26 @@ def thanks_credit_card(request):
 
     order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
 
-    order_items = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
+    order_items_serialized = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
+
+    # convert the serialized string to a Python object
+    order_items_obj = json.loads(order_items_serialized)
+
+    # define the target mapping
+    def mapper(p):
+        return {
+            'id': p['fields']['sku'],
+            'name': p['fields']['name'],
+            'price': p['fields']['price'],
+            'size': p['fields']['size'],
+            'quantity': 1 #quantity de order_item, no la cantidad de stickers. esto para que google analytics calcule correctamente el product revenue
+        }
+
+    # re-map and re-serialize the items
+    order_items = json.dumps(list(map(mapper, order_items_obj)))
 
     response = render(request, 'thanks_credit_card.html', dict(order_number=order_number, total=total,
-                                                                   order_items=order_items,
-                                                                   costo_despacho=costo_despacho))
+                                                                   order_items=order_items, costo_despacho=costo_despacho))
     return response
 
 
@@ -41,12 +56,11 @@ def thanks_deposit_payment(request):
     # define the target mapping
     def mapper(p):
         return {
-            'name': p['fields']['name'],
             'id': p['fields']['sku'],
-            # 'sku': p['fields']['sku'],
+            'name': p['fields']['name'],
             'price': p['fields']['price'],
             'size': p['fields']['size'],
-            'quantity': p['fields']['quantity']
+            'quantity': 1 #quantity de order_item, no la cantidad de stickers. esto para que google analytics calcule correctamente el product revenue
         }
 
     # re-map and re-serialize the items
