@@ -16,6 +16,12 @@ def thanks_credit_card(request):
 
     order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
 
+    revenue = []
+    for oi in order_items:
+        revenue.append(oi.price)
+
+    revenue = sum(revenue[0:len(revenue)])
+
     order_items_serialized = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
 
     # convert the serialized string to a Python object
@@ -34,19 +40,23 @@ def thanks_credit_card(request):
     # re-map and re-serialize the items
     order_items = json.dumps(list(map(mapper, order_items_obj)))
 
-    response = render(request, 'thanks_credit_card.html', dict(order_number=order_number, total=total,
+    response = render(request, 'thanks_credit_card.html', dict(order_number=order_number, total=total, revenue = revenue,
                                                                    order_items=order_items, costo_despacho=costo_despacho))
     return response
 
 
 def thanks_deposit_payment(request):
+
     order_number = Order.objects.latest('id').id
-
     total = Order.objects.latest('id').total
-
     costo_despacho = Order.objects.latest('id').shipping_cost
-
     order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
+
+    revenue = []
+    for oi in order_items:
+        revenue.append(oi.price)
+
+    revenue = sum(revenue[0:len(revenue)])
 
     order_items_serialized = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
 
@@ -66,7 +76,7 @@ def thanks_deposit_payment(request):
     # re-map and re-serialize the items
     order_items = json.dumps(list(map(mapper, order_items_obj)))
 
-    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total,
+    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total, revenue = revenue,
                                                                    order_items=order_items, costo_despacho=costo_despacho))
     return response
 
