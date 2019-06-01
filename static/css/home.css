@@ -19,9 +19,21 @@
         z-index: -600;
     }
 
+    .col-md-6 .btn {
+        margin-bottom: 10%;
+      }
+      
+      .col-md-6:last-child .btn {
+        margin-bottom: 0;
+      }
+
     .productos_finales_home img {
 
         padding-bottom: 15px;
+    }
+
+    .my_home_buttons {
+        width: 90%;
     }
 
 
@@ -37,9 +49,7 @@
         margin-left: 0px;
     }
 
-    /*.my_home_banner_image {*/
-    /*display: none;*/
-    /*}*/
+
     .my_home_banner_title {
         color: white;
         font-size: 36px;
@@ -247,10 +257,13 @@
     .my_home_banner {
         bottom: 0;
         margin-right: 8%;
+        top: 40px;
         z-index: -600;
     }
 
-
+    .my_home_banner_content {
+        padding-top: 100px;
+    }
     .my_home_banner_image {
 
         bottom: 0;
@@ -273,6 +286,10 @@
         padding-top: 0%;
     }
 
+    .my_home_buttons {
+        width: 90%;
+    }
+
     .btn, h2, p {
         margin-bottom: 10px;
     }
@@ -282,8 +299,9 @@
     }
 
     .my_home_banner_left {
-        margin-left: 20px;
         z-index: 100;
+        padding-bottom: 50px;
+        padding-left: 40px;
     }
 
     .subscribe_field {
@@ -297,6 +315,7 @@
     .my_home_banner {
         bottom: 0;
         margin-right: 8%;
+        top: 40px;
         z-index: -600;
     }
 
