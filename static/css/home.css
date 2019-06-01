@@ -8,6 +8,17 @@
 }
 
 
+.stickers-word {
+    margin-bottom: -4%;
+    padding-bottom: 0%;
+}
+
+.personalizados-word {
+    margin-top: 0%;
+    margin-bottom: 0%;
+}
+
+
 /* STANDAR MEDIA QUIERIES BREAKPOINTS */
 
 
@@ -269,7 +280,7 @@
     } 
 
     .my_home_banner_content {
-        padding-top: 20px;
+        padding-top: 26px;
     }
     .my_home_banner_image {
 
@@ -309,7 +320,7 @@
         z-index: 100;
         padding-bottom: 30px;
         padding-left: 40px;
-        padding-top: 10px;
+        padding-top: 15px;
     }
 
     .subscribe_field {
