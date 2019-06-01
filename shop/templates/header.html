@@ -26,8 +26,11 @@
             <br>
         </div>
         <div class="col-md-6">
-            <img class="my_home_banner_image" src="{% static 'img/home/banner-home2.png' %}"
-                 width="" height="">
+            <picture>
+                <source media="(max-width: 480px)" srcset="{% static 'img/home/banner_home_lion_mobile.png' %}">
+                <source media="(max-width: 2056px)" srcset="{% static 'img/home/banner_home_lion.png' %}">
+                <img class="my_home_banner_image" src="{% static 'img/home/banner_home_lion.png' %}">
+            </picture>
         </div>
     </div>
 </div>
