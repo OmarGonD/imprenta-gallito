@@ -17,10 +17,11 @@
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
+        vertical-align: top;
     }
 
     .col-md-6 .btn {
-        margin-bottom: 10%;
+        margin-bottom: 6%;
       }
       
       .col-md-6:last-child .btn {
@@ -112,6 +113,7 @@
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
+        vertical-align: top;
     }
 
 
@@ -161,6 +163,7 @@
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
+        vertical-align: top;
     }
 
 
@@ -212,6 +215,7 @@
         bottom: 0;
         margin-right: 8%;
         z-index: -600;
+        vertical-align: top;
     }
 
 
@@ -259,6 +263,7 @@
         margin-right: 8%;
         top: 40px;
         z-index: -600;
+        vertical-align: top;
     }
 
     .my_home_banner_content {
@@ -317,6 +322,7 @@
         margin-right: 8%;
         top: 40px;
         z-index: -600;
+        vertical-align: top;
     }
 
 
