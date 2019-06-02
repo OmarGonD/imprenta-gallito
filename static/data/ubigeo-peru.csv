@@ -1,6 +1,6 @@
 departamento,provincia,distrito,id,costo_despacho_sin_recojo,costo_despacho_con_recojo,dias_despacho
 Amazonas,Chachapoyas,Chachapoyas,1,17,17,8
-Amazonas,Chachapoyas,Asunci√≥n,2,17,17,8
+Amazonas,Chachapoyas,AsunciÛn,2,17,17,8
 Amazonas,Chachapoyas,Balsas,3,17,17,8
 Amazonas,Chachapoyas,Cheto,4,17,17,8
 Amazonas,Chachapoyas,Chiliquin,5,17,17,8
@@ -26,21 +26,21 @@ Amazonas,Bagua,Copallin,24,17,17,8
 Amazonas,Bagua,El Parco,25,17,17,8
 Amazonas,Bagua,Imaza,26,17,17,8
 Amazonas,Bagua,La Peca,27,17,17,8
-Amazonas,Bongar√°,Jumbilla,28,17,17,8
-Amazonas,Bongar√°,Chisquilla,29,17,17,8
-Amazonas,Bongar√°,Churuja,30,17,17,8
-Amazonas,Bongar√°,Corosha,31,17,17,8
-Amazonas,Bongar√°,Cuispes,32,17,17,8
-Amazonas,Bongar√°,Florida,33,17,17,8
-Amazonas,Bongar√°,Jazan,34,17,17,8
-Amazonas,Bongar√°,Recta,35,17,17,8
-Amazonas,Bongar√°,San Carlos,36,17,17,8
-Amazonas,Bongar√°,Shipasbamba,37,17,17,8
-Amazonas,Bongar√°,Valera,38,17,17,8
-Amazonas,Bongar√°,Yambrasbamba,39,17,17,8
+Amazonas,Bongar·,Jumbilla,28,17,17,8
+Amazonas,Bongar·,Chisquilla,29,17,17,8
+Amazonas,Bongar·,Churuja,30,17,17,8
+Amazonas,Bongar·,Corosha,31,17,17,8
+Amazonas,Bongar·,Cuispes,32,17,17,8
+Amazonas,Bongar·,Florida,33,17,17,8
+Amazonas,Bongar·,Jazan,34,17,17,8
+Amazonas,Bongar·,Recta,35,17,17,8
+Amazonas,Bongar·,San Carlos,36,17,17,8
+Amazonas,Bongar·,Shipasbamba,37,17,17,8
+Amazonas,Bongar·,Valera,38,17,17,8
+Amazonas,Bongar·,Yambrasbamba,39,17,17,8
 Amazonas,Condorcanqui,Nieva,40,17,17,8
 Amazonas,Condorcanqui,El Cenepa,41,17,17,8
-Amazonas,Condorcanqui,R√≠o Santiago,42,17,17,8
+Amazonas,Condorcanqui,RÌo Santiago,42,17,17,8
 Amazonas,Luya,Lamud,43,17,17,8
 Amazonas,Luya,Camporredondo,44,17,17,8
 Amazonas,Luya,Cocabamba,45,17,17,8
@@ -51,31 +51,31 @@ Amazonas,Luya,Longuita,49,17,17,8
 Amazonas,Luya,Lonya Chico,50,17,17,8
 Amazonas,Luya,Luya,51,17,17,8
 Amazonas,Luya,Luya Viejo,52,17,17,8
-Amazonas,Luya,Mar√≠a,53,17,17,8
+Amazonas,Luya,MarÌa,53,17,17,8
 Amazonas,Luya,Ocalli,54,17,17,8
 Amazonas,Luya,Ocumal,55,17,17,8
 Amazonas,Luya,Pisuquia,56,17,17,8
 Amazonas,Luya,Providencia,57,17,17,8
-Amazonas,Luya,San Crist√≥bal,58,17,17,8
+Amazonas,Luya,San CristÛbal,58,17,17,8
 Amazonas,Luya,San Francisco de Yeso,59,17,17,8
-Amazonas,Luya,San Jer√≥nimo,60,17,17,8
+Amazonas,Luya,San JerÛnimo,60,17,17,8
 Amazonas,Luya,San Juan de Lopecancha,61,17,17,8
 Amazonas,Luya,Santa Catalina,62,17,17,8
 Amazonas,Luya,Santo Tomas,63,17,17,8
 Amazonas,Luya,Tingo,64,17,17,8
 Amazonas,Luya,Trita,65,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,San Nicol√°s,66,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Chirimoto,67,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Cochamal,68,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Huambo,69,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Limabamba,70,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Longar,71,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Mariscal Benavides,72,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Milpuc,73,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Omia,74,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Santa Rosa,75,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Totora,76,17,17,8
-Amazonas,Rodr√≠guez de Mendoza,Vista Alegre,77,17,17,8
+Amazonas,RodrÌguez de Mendoza,San Nicol·s,66,17,17,8
+Amazonas,RodrÌguez de Mendoza,Chirimoto,67,17,17,8
+Amazonas,RodrÌguez de Mendoza,Cochamal,68,17,17,8
+Amazonas,RodrÌguez de Mendoza,Huambo,69,17,17,8
+Amazonas,RodrÌguez de Mendoza,Limabamba,70,17,17,8
+Amazonas,RodrÌguez de Mendoza,Longar,71,17,17,8
+Amazonas,RodrÌguez de Mendoza,Mariscal Benavides,72,17,17,8
+Amazonas,RodrÌguez de Mendoza,Milpuc,73,17,17,8
+Amazonas,RodrÌguez de Mendoza,Omia,74,17,17,8
+Amazonas,RodrÌguez de Mendoza,Santa Rosa,75,17,17,8
+Amazonas,RodrÌguez de Mendoza,Totora,76,17,17,8
+Amazonas,RodrÌguez de Mendoza,Vista Alegre,77,17,17,8
 Amazonas,Utcubamba,Bagua Grande,78,17,17,8
 Amazonas,Utcubamba,Cajaruro,79,17,17,8
 Amazonas,Utcubamba,Cumba,80,17,17,8
@@ -83,255 +83,255 @@ Amazonas,Utcubamba,El Milagro,81,17,17,8
 Amazonas,Utcubamba,Jamalca,82,17,17,8
 Amazonas,Utcubamba,Lonya Grande,83,17,17,8
 Amazonas,Utcubamba,Yamon,84,17,17,8
-√Åncash,Huaraz,Huaraz,85,17,17,8
-√Åncash,Huaraz,Cochabamba,86,17,17,8
-√Åncash,Huaraz,Colcabamba,87,17,17,8
-√Åncash,Huaraz,Huanchay,88,17,17,8
-√Åncash,Huaraz,Independencia,89,17,17,8
-√Åncash,Huaraz,Jangas,90,17,17,8
-√Åncash,Huaraz,La Libertad,91,17,17,8
-√Åncash,Huaraz,Olleros,92,17,17,8
-√Åncash,Huaraz,Pampas Grande,93,17,17,8
-√Åncash,Huaraz,Pariacoto,94,17,17,8
-√Åncash,Huaraz,Pira,95,17,17,8
-√Åncash,Huaraz,Tarica,96,17,17,8
-√Åncash,Aija,Aija,97,17,17,8
-√Åncash,Aija,Coris,98,17,17,8
-√Åncash,Aija,Huacllan,99,17,17,8
-√Åncash,Aija,La Merced,100,17,17,8
-√Åncash,Aija,Succha,101,17,17,8
-√Åncash,Antonio Raymondi,Llamellin,102,17,17,8
-√Åncash,Antonio Raymondi,Aczo,103,17,17,8
-√Åncash,Antonio Raymondi,Chaccho,104,17,17,8
-√Åncash,Antonio Raymondi,Chingas,105,17,17,8
-√Åncash,Antonio Raymondi,Mirgas,106,17,17,8
-√Åncash,Antonio Raymondi,San Juan de Rontoy,107,17,17,8
-√Åncash,Asunci√≥n,Chacas,108,17,17,8
-√Åncash,Asunci√≥n,Acochaca,109,17,17,8
-√Åncash,Bolognesi,Chiquian,110,17,17,8
-√Åncash,Bolognesi,Abelardo Pardo Lezameta,111,17,17,8
-√Åncash,Bolognesi,Antonio Raymondi,112,17,17,8
-√Åncash,Bolognesi,Aquia,113,17,17,8
-√Åncash,Bolognesi,Cajacay,114,17,17,8
-√Åncash,Bolognesi,Canis,115,17,17,8
-√Åncash,Bolognesi,Colquioc,116,17,17,8
-√Åncash,Bolognesi,Huallanca,117,17,17,8
-√Åncash,Bolognesi,Huasta,118,17,17,8
-√Åncash,Bolognesi,Huayllacayan,119,17,17,8
-√Åncash,Bolognesi,La Primavera,120,17,17,8
-√Åncash,Bolognesi,Mangas,121,17,17,8
-√Åncash,Bolognesi,Pacllon,122,17,17,8
-√Åncash,Bolognesi,San Miguel de Corpanqui,123,17,17,8
-√Åncash,Bolognesi,Ticllos,124,17,17,8
-√Åncash,Carhuaz,Carhuaz,125,17,17,8
-√Åncash,Carhuaz,Acopampa,126,17,17,8
-√Åncash,Carhuaz,Amashca,127,17,17,8
-√Åncash,Carhuaz,Anta,128,17,17,8
-√Åncash,Carhuaz,Ataquero,129,17,17,8
-√Åncash,Carhuaz,Marcara,130,17,17,8
-√Åncash,Carhuaz,Pariahuanca,131,17,17,8
-√Åncash,Carhuaz,San Miguel de Aco,132,17,17,8
-√Åncash,Carhuaz,Shilla,133,17,17,8
-√Åncash,Carhuaz,Tinco,134,17,17,8
-√Åncash,Carhuaz,Yungar,135,17,17,8
-√Åncash,Carlos Ferm√≠n Fitzcarrald,San Luis,136,17,17,8
-√Åncash,Carlos Ferm√≠n Fitzcarrald,San Nicol√°s,137,17,17,8
-√Åncash,Carlos Ferm√≠n Fitzcarrald,Yauya,138,17,17,8
-√Åncash,Casma,Casma,139,17,17,8
-√Åncash,Casma,Buena Vista Alta,140,17,17,8
-√Åncash,Casma,Comandante Noel,141,17,17,8
-√Åncash,Casma,Yautan,142,17,17,8
-√Åncash,Corongo,Corongo,143,17,17,8
-√Åncash,Corongo,Aco,144,17,17,8
-√Åncash,Corongo,Bambas,145,17,17,8
-√Åncash,Corongo,Cusca,146,17,17,8
-√Åncash,Corongo,La Pampa,147,17,17,8
-√Åncash,Corongo,Yanac,148,17,17,8
-√Åncash,Corongo,Yupan,149,17,17,8
-√Åncash,Huari,Huari,150,17,17,8
-√Åncash,Huari,Anra,151,17,17,8
-√Åncash,Huari,Cajay,152,17,17,8
-√Åncash,Huari,Chavin de Huantar,153,17,17,8
-√Åncash,Huari,Huacachi,154,17,17,8
-√Åncash,Huari,Huacchis,155,17,17,8
-√Åncash,Huari,Huachis,156,17,17,8
-√Åncash,Huari,Huantar,157,17,17,8
-√Åncash,Huari,Masin,158,17,17,8
-√Åncash,Huari,Paucas,159,17,17,8
-√Åncash,Huari,Ponto,160,17,17,8
-√Åncash,Huari,Rahuapampa,161,17,17,8
-√Åncash,Huari,Rapayan,162,17,17,8
-√Åncash,Huari,San Marcos,163,17,17,8
-√Åncash,Huari,San Pedro de Chana,164,17,17,8
-√Åncash,Huari,Uco,165,17,17,8
-√Åncash,Huarmey,Huarmey,166,17,17,8
-√Åncash,Huarmey,Cochapeti,167,17,17,8
-√Åncash,Huarmey,Culebras,168,17,17,8
-√Åncash,Huarmey,Huayan,169,17,17,8
-√Åncash,Huarmey,Malvas,170,17,17,8
-√Åncash,Huaylas,Caraz,171,17,17,8
-√Åncash,Huaylas,Huallanca,172,17,17,8
-√Åncash,Huaylas,Huata,173,17,17,8
-√Åncash,Huaylas,Huaylas,174,17,17,8
-√Åncash,Huaylas,Mato,175,17,17,8
-√Åncash,Huaylas,Pamparomas,176,17,17,8
-√Åncash,Huaylas,Pueblo Libre,177,17,17,8
-√Åncash,Huaylas,Santa Cruz,178,17,17,8
-√Åncash,Huaylas,Santo Toribio,179,17,17,8
-√Åncash,Huaylas,Yuracmarca,180,17,17,8
-√Åncash,Mariscal Luzuriaga,Piscobamba,181,17,17,8
-√Åncash,Mariscal Luzuriaga,Casca,182,17,17,8
-√Åncash,Mariscal Luzuriaga,Eleazar Guzm√°n Barron,183,17,17,8
-√Åncash,Mariscal Luzuriaga,Fidel Olivas Escudero,184,17,17,8
-√Åncash,Mariscal Luzuriaga,Llama,185,17,17,8
-√Åncash,Mariscal Luzuriaga,Llumpa,186,17,17,8
-√Åncash,Mariscal Luzuriaga,Lucma,187,17,17,8
-√Åncash,Mariscal Luzuriaga,Musga,188,17,17,8
-√Åncash,Ocros,Ocros,189,17,17,8
-√Åncash,Ocros,Acas,190,17,17,8
-√Åncash,Ocros,Cajamarquilla,191,17,17,8
-√Åncash,Ocros,Carhuapampa,192,17,17,8
-√Åncash,Ocros,Cochas,193,17,17,8
-√Åncash,Ocros,Congas,194,17,17,8
-√Åncash,Ocros,Llipa,195,17,17,8
-√Åncash,Ocros,San Crist√≥bal de Rajan,196,17,17,8
-√Åncash,Ocros,San Pedro,197,17,17,8
-√Åncash,Ocros,Santiago de Chilcas,198,17,17,8
-√Åncash,Pallasca,Cabana,199,17,17,8
-√Åncash,Pallasca,Bolognesi,200,17,17,8
-√Åncash,Pallasca,Conchucos,201,17,17,8
-√Åncash,Pallasca,Huacaschuque,202,17,17,8
-√Åncash,Pallasca,Huandoval,203,17,17,8
-√Åncash,Pallasca,Lacabamba,204,17,17,8
-√Åncash,Pallasca,Llapo,205,17,17,8
-√Åncash,Pallasca,Pallasca,206,17,17,8
-√Åncash,Pallasca,Pampas,207,17,17,8
-√Åncash,Pallasca,Santa Rosa,208,17,17,8
-√Åncash,Pallasca,Tauca,209,17,17,8
-√Åncash,Pomabamba,Pomabamba,210,17,17,8
-√Åncash,Pomabamba,Huayllan,211,17,17,8
-√Åncash,Pomabamba,Parobamba,212,17,17,8
-√Åncash,Pomabamba,Quinuabamba,213,17,17,8
-√Åncash,Recuay,Recuay,214,17,17,8
-√Åncash,Recuay,Catac,215,17,17,8
-√Åncash,Recuay,Cotaparaco,216,17,17,8
-√Åncash,Recuay,Huayllapampa,217,17,17,8
-√Åncash,Recuay,Llacllin,218,17,17,8
-√Åncash,Recuay,Marca,219,17,17,8
-√Åncash,Recuay,Pampas Chico,220,17,17,8
-√Åncash,Recuay,Pararin,221,17,17,8
-√Åncash,Recuay,Tapacocha,222,17,17,8
-√Åncash,Recuay,Ticapampa,223,17,17,8
-√Åncash,Santa,Chimbote,224,17,17,8
-√Åncash,Santa,C√°ceres del Per√∫,225,17,17,8
-√Åncash,Santa,Coishco,226,17,17,8
-√Åncash,Santa,Macate,227,17,17,8
-√Åncash,Santa,Moro,228,17,17,8
-√Åncash,Santa,Nepe√±a,229,17,17,8
-√Åncash,Santa,Samanco,230,17,17,8
-√Åncash,Santa,Santa,231,17,17,8
-√Åncash,Santa,Nuevo Chimbote,232,17,17,8
-√Åncash,Sihuas,Sihuas,233,17,17,8
-√Åncash,Sihuas,Acobamba,234,17,17,8
-√Åncash,Sihuas,Alfonso Ugarte,235,17,17,8
-√Åncash,Sihuas,Cashapampa,236,17,17,8
-√Åncash,Sihuas,Chingalpo,237,17,17,8
-√Åncash,Sihuas,Huayllabamba,238,17,17,8
-√Åncash,Sihuas,Quiches,239,17,17,8
-√Åncash,Sihuas,Ragash,240,17,17,8
-√Åncash,Sihuas,San Juan,241,17,17,8
-√Åncash,Sihuas,Sicsibamba,242,17,17,8
-√Åncash,Yungay,Yungay,243,17,17,8
-√Åncash,Yungay,Cascapara,244,17,17,8
-√Åncash,Yungay,Mancos,245,17,17,8
-√Åncash,Yungay,Matacoto,246,17,17,8
-√Åncash,Yungay,Quillo,247,17,17,8
-√Åncash,Yungay,Ranrahirca,248,17,17,8
-√Åncash,Yungay,Shupluy,249,17,17,8
-√Åncash,Yungay,Yanama,250,17,17,8
-Apur√≠mac,Abancay,Abancay,251,17,17,8
-Apur√≠mac,Abancay,Chacoche,252,17,17,8
-Apur√≠mac,Abancay,Circa,253,17,17,8
-Apur√≠mac,Abancay,Curahuasi,254,17,17,8
-Apur√≠mac,Abancay,Huanipaca,255,17,17,8
-Apur√≠mac,Abancay,Lambrama,256,17,17,8
-Apur√≠mac,Abancay,Pichirhua,257,17,17,8
-Apur√≠mac,Abancay,San Pedro de Cachora,258,17,17,8
-Apur√≠mac,Abancay,Tamburco,259,17,17,8
-Apur√≠mac,Andahuaylas,Andahuaylas,260,17,17,8
-Apur√≠mac,Andahuaylas,Andarapa,261,17,17,8
-Apur√≠mac,Andahuaylas,Chiara,262,17,17,8
-Apur√≠mac,Andahuaylas,Huancarama,263,17,17,8
-Apur√≠mac,Andahuaylas,Huancaray,264,17,17,8
-Apur√≠mac,Andahuaylas,Huayana,265,17,17,8
-Apur√≠mac,Andahuaylas,Kishuara,266,17,17,8
-Apur√≠mac,Andahuaylas,Pacobamba,267,17,17,8
-Apur√≠mac,Andahuaylas,Pacucha,268,17,17,8
-Apur√≠mac,Andahuaylas,Pampachiri,269,17,17,8
-Apur√≠mac,Andahuaylas,Pomacocha,270,17,17,8
-Apur√≠mac,Andahuaylas,San Antonio de Cachi,271,17,17,8
-Apur√≠mac,Andahuaylas,San Jer√≥nimo,272,17,17,8
-Apur√≠mac,Andahuaylas,San Miguel de Chaccrampa,273,17,17,8
-Apur√≠mac,Andahuaylas,Santa Mar√≠a de Chicmo,274,17,17,8
-Apur√≠mac,Andahuaylas,Talavera,275,17,17,8
-Apur√≠mac,Andahuaylas,Tumay Huaraca,276,17,17,8
-Apur√≠mac,Andahuaylas,Turpo,277,17,17,8
-Apur√≠mac,Andahuaylas,Kaquiabamba,278,17,17,8
-Apur√≠mac,Andahuaylas,Jos√© Mar√≠a Arguedas,279,17,17,8
-Apur√≠mac,Antabamba,Antabamba,280,17,17,8
-Apur√≠mac,Antabamba,El Oro,281,17,17,8
-Apur√≠mac,Antabamba,Huaquirca,282,17,17,8
-Apur√≠mac,Antabamba,Juan Espinoza Medrano,283,17,17,8
-Apur√≠mac,Antabamba,Oropesa,284,17,17,8
-Apur√≠mac,Antabamba,Pachaconas,285,17,17,8
-Apur√≠mac,Antabamba,Sabaino,286,17,17,8
-Apur√≠mac,Aymaraes,Chalhuanca,287,17,17,8
-Apur√≠mac,Aymaraes,Capaya,288,17,17,8
-Apur√≠mac,Aymaraes,Caraybamba,289,17,17,8
-Apur√≠mac,Aymaraes,Chapimarca,290,17,17,8
-Apur√≠mac,Aymaraes,Colcabamba,291,17,17,8
-Apur√≠mac,Aymaraes,Cotaruse,292,17,17,8
-Apur√≠mac,Aymaraes,Ihuayllo,293,17,17,8
-Apur√≠mac,Aymaraes,Justo Apu Sahuaraura,294,17,17,8
-Apur√≠mac,Aymaraes,Lucre,295,17,17,8
-Apur√≠mac,Aymaraes,Pocohuanca,296,17,17,8
-Apur√≠mac,Aymaraes,San Juan de Chac√±a,297,17,17,8
-Apur√≠mac,Aymaraes,Sa√±ayca,298,17,17,8
-Apur√≠mac,Aymaraes,Soraya,299,17,17,8
-Apur√≠mac,Aymaraes,Tapairihua,300,17,17,8
-Apur√≠mac,Aymaraes,Tintay,301,17,17,8
-Apur√≠mac,Aymaraes,Toraya,302,17,17,8
-Apur√≠mac,Aymaraes,Yanaca,303,17,17,8
-Apur√≠mac,Cotabambas,Tambobamba,304,17,17,8
-Apur√≠mac,Cotabambas,Cotabambas,305,17,17,8
-Apur√≠mac,Cotabambas,Coyllurqui,306,17,17,8
-Apur√≠mac,Cotabambas,Haquira,307,17,17,8
-Apur√≠mac,Cotabambas,Mara,308,17,17,8
-Apur√≠mac,Cotabambas,Challhuahuacho,309,17,17,8
-Apur√≠mac,Chincheros,Chincheros,310,17,17,8
-Apur√≠mac,Chincheros,Anco_Huallo,311,17,17,8
-Apur√≠mac,Chincheros,Cocharcas,312,17,17,8
-Apur√≠mac,Chincheros,Huaccana,313,17,17,8
-Apur√≠mac,Chincheros,Ocobamba,314,17,17,8
-Apur√≠mac,Chincheros,Ongoy,315,17,17,8
-Apur√≠mac,Chincheros,Uranmarca,316,17,17,8
-Apur√≠mac,Chincheros,Ranracancha,317,17,17,8
-Apur√≠mac,Chincheros,Rocchacc,318,17,17,8
-Apur√≠mac,Chincheros,El Porvenir,319,17,17,8
-Apur√≠mac,Grau,Chuquibambilla,320,17,17,8
-Apur√≠mac,Grau,Curpahuasi,321,17,17,8
-Apur√≠mac,Grau,Gamarra,322,17,17,8
-Apur√≠mac,Grau,Huayllati,323,17,17,8
-Apur√≠mac,Grau,Mamara,324,17,17,8
-Apur√≠mac,Grau,Micaela Bastidas,325,17,17,8
-Apur√≠mac,Grau,Pataypampa,326,17,17,8
-Apur√≠mac,Grau,Progreso,327,17,17,8
-Apur√≠mac,Grau,San Antonio,328,17,17,8
-Apur√≠mac,Grau,Santa Rosa,329,17,17,8
-Apur√≠mac,Grau,Turpay,330,17,17,8
-Apur√≠mac,Grau,Vilcabamba,331,17,17,8
-Apur√≠mac,Grau,Virundo,332,17,17,8
-Apur√≠mac,Grau,Curasco,333,17,17,8
+¡ncash,Huaraz,Huaraz,85,17,17,8
+¡ncash,Huaraz,Cochabamba,86,17,17,8
+¡ncash,Huaraz,Colcabamba,87,17,17,8
+¡ncash,Huaraz,Huanchay,88,17,17,8
+¡ncash,Huaraz,Independencia,89,17,17,8
+¡ncash,Huaraz,Jangas,90,17,17,8
+¡ncash,Huaraz,La Libertad,91,17,17,8
+¡ncash,Huaraz,Olleros,92,17,17,8
+¡ncash,Huaraz,Pampas Grande,93,17,17,8
+¡ncash,Huaraz,Pariacoto,94,17,17,8
+¡ncash,Huaraz,Pira,95,17,17,8
+¡ncash,Huaraz,Tarica,96,17,17,8
+¡ncash,Aija,Aija,97,17,17,8
+¡ncash,Aija,Coris,98,17,17,8
+¡ncash,Aija,Huacllan,99,17,17,8
+¡ncash,Aija,La Merced,100,17,17,8
+¡ncash,Aija,Succha,101,17,17,8
+¡ncash,Antonio Raymondi,Llamellin,102,17,17,8
+¡ncash,Antonio Raymondi,Aczo,103,17,17,8
+¡ncash,Antonio Raymondi,Chaccho,104,17,17,8
+¡ncash,Antonio Raymondi,Chingas,105,17,17,8
+¡ncash,Antonio Raymondi,Mirgas,106,17,17,8
+¡ncash,Antonio Raymondi,San Juan de Rontoy,107,17,17,8
+¡ncash,AsunciÛn,Chacas,108,17,17,8
+¡ncash,AsunciÛn,Acochaca,109,17,17,8
+¡ncash,Bolognesi,Chiquian,110,17,17,8
+¡ncash,Bolognesi,Abelardo Pardo Lezameta,111,17,17,8
+¡ncash,Bolognesi,Antonio Raymondi,112,17,17,8
+¡ncash,Bolognesi,Aquia,113,17,17,8
+¡ncash,Bolognesi,Cajacay,114,17,17,8
+¡ncash,Bolognesi,Canis,115,17,17,8
+¡ncash,Bolognesi,Colquioc,116,17,17,8
+¡ncash,Bolognesi,Huallanca,117,17,17,8
+¡ncash,Bolognesi,Huasta,118,17,17,8
+¡ncash,Bolognesi,Huayllacayan,119,17,17,8
+¡ncash,Bolognesi,La Primavera,120,17,17,8
+¡ncash,Bolognesi,Mangas,121,17,17,8
+¡ncash,Bolognesi,Pacllon,122,17,17,8
+¡ncash,Bolognesi,San Miguel de Corpanqui,123,17,17,8
+¡ncash,Bolognesi,Ticllos,124,17,17,8
+¡ncash,Carhuaz,Carhuaz,125,17,17,8
+¡ncash,Carhuaz,Acopampa,126,17,17,8
+¡ncash,Carhuaz,Amashca,127,17,17,8
+¡ncash,Carhuaz,Anta,128,17,17,8
+¡ncash,Carhuaz,Ataquero,129,17,17,8
+¡ncash,Carhuaz,Marcara,130,17,17,8
+¡ncash,Carhuaz,Pariahuanca,131,17,17,8
+¡ncash,Carhuaz,San Miguel de Aco,132,17,17,8
+¡ncash,Carhuaz,Shilla,133,17,17,8
+¡ncash,Carhuaz,Tinco,134,17,17,8
+¡ncash,Carhuaz,Yungar,135,17,17,8
+¡ncash,Carlos FermÌn Fitzcarrald,San Luis,136,17,17,8
+¡ncash,Carlos FermÌn Fitzcarrald,San Nicol·s,137,17,17,8
+¡ncash,Carlos FermÌn Fitzcarrald,Yauya,138,17,17,8
+¡ncash,Casma,Casma,139,17,17,8
+¡ncash,Casma,Buena Vista Alta,140,17,17,8
+¡ncash,Casma,Comandante Noel,141,17,17,8
+¡ncash,Casma,Yautan,142,17,17,8
+¡ncash,Corongo,Corongo,143,17,17,8
+¡ncash,Corongo,Aco,144,17,17,8
+¡ncash,Corongo,Bambas,145,17,17,8
+¡ncash,Corongo,Cusca,146,17,17,8
+¡ncash,Corongo,La Pampa,147,17,17,8
+¡ncash,Corongo,Yanac,148,17,17,8
+¡ncash,Corongo,Yupan,149,17,17,8
+¡ncash,Huari,Huari,150,17,17,8
+¡ncash,Huari,Anra,151,17,17,8
+¡ncash,Huari,Cajay,152,17,17,8
+¡ncash,Huari,Chavin de Huantar,153,17,17,8
+¡ncash,Huari,Huacachi,154,17,17,8
+¡ncash,Huari,Huacchis,155,17,17,8
+¡ncash,Huari,Huachis,156,17,17,8
+¡ncash,Huari,Huantar,157,17,17,8
+¡ncash,Huari,Masin,158,17,17,8
+¡ncash,Huari,Paucas,159,17,17,8
+¡ncash,Huari,Ponto,160,17,17,8
+¡ncash,Huari,Rahuapampa,161,17,17,8
+¡ncash,Huari,Rapayan,162,17,17,8
+¡ncash,Huari,San Marcos,163,17,17,8
+¡ncash,Huari,San Pedro de Chana,164,17,17,8
+¡ncash,Huari,Uco,165,17,17,8
+¡ncash,Huarmey,Huarmey,166,17,17,8
+¡ncash,Huarmey,Cochapeti,167,17,17,8
+¡ncash,Huarmey,Culebras,168,17,17,8
+¡ncash,Huarmey,Huayan,169,17,17,8
+¡ncash,Huarmey,Malvas,170,17,17,8
+¡ncash,Huaylas,Caraz,171,17,17,8
+¡ncash,Huaylas,Huallanca,172,17,17,8
+¡ncash,Huaylas,Huata,173,17,17,8
+¡ncash,Huaylas,Huaylas,174,17,17,8
+¡ncash,Huaylas,Mato,175,17,17,8
+¡ncash,Huaylas,Pamparomas,176,17,17,8
+¡ncash,Huaylas,Pueblo Libre,177,17,17,8
+¡ncash,Huaylas,Santa Cruz,178,17,17,8
+¡ncash,Huaylas,Santo Toribio,179,17,17,8
+¡ncash,Huaylas,Yuracmarca,180,17,17,8
+¡ncash,Mariscal Luzuriaga,Piscobamba,181,17,17,8
+¡ncash,Mariscal Luzuriaga,Casca,182,17,17,8
+¡ncash,Mariscal Luzuriaga,Eleazar Guzm·n Barron,183,17,17,8
+¡ncash,Mariscal Luzuriaga,Fidel Olivas Escudero,184,17,17,8
+¡ncash,Mariscal Luzuriaga,Llama,185,17,17,8
+¡ncash,Mariscal Luzuriaga,Llumpa,186,17,17,8
+¡ncash,Mariscal Luzuriaga,Lucma,187,17,17,8
+¡ncash,Mariscal Luzuriaga,Musga,188,17,17,8
+¡ncash,Ocros,Ocros,189,17,17,8
+¡ncash,Ocros,Acas,190,17,17,8
+¡ncash,Ocros,Cajamarquilla,191,17,17,8
+¡ncash,Ocros,Carhuapampa,192,17,17,8
+¡ncash,Ocros,Cochas,193,17,17,8
+¡ncash,Ocros,Congas,194,17,17,8
+¡ncash,Ocros,Llipa,195,17,17,8
+¡ncash,Ocros,San CristÛbal de Rajan,196,17,17,8
+¡ncash,Ocros,San Pedro,197,17,17,8
+¡ncash,Ocros,Santiago de Chilcas,198,17,17,8
+¡ncash,Pallasca,Cabana,199,17,17,8
+¡ncash,Pallasca,Bolognesi,200,17,17,8
+¡ncash,Pallasca,Conchucos,201,17,17,8
+¡ncash,Pallasca,Huacaschuque,202,17,17,8
+¡ncash,Pallasca,Huandoval,203,17,17,8
+¡ncash,Pallasca,Lacabamba,204,17,17,8
+¡ncash,Pallasca,Llapo,205,17,17,8
+¡ncash,Pallasca,Pallasca,206,17,17,8
+¡ncash,Pallasca,Pampas,207,17,17,8
+¡ncash,Pallasca,Santa Rosa,208,17,17,8
+¡ncash,Pallasca,Tauca,209,17,17,8
+¡ncash,Pomabamba,Pomabamba,210,17,17,8
+¡ncash,Pomabamba,Huayllan,211,17,17,8
+¡ncash,Pomabamba,Parobamba,212,17,17,8
+¡ncash,Pomabamba,Quinuabamba,213,17,17,8
+¡ncash,Recuay,Recuay,214,17,17,8
+¡ncash,Recuay,Catac,215,17,17,8
+¡ncash,Recuay,Cotaparaco,216,17,17,8
+¡ncash,Recuay,Huayllapampa,217,17,17,8
+¡ncash,Recuay,Llacllin,218,17,17,8
+¡ncash,Recuay,Marca,219,17,17,8
+¡ncash,Recuay,Pampas Chico,220,17,17,8
+¡ncash,Recuay,Pararin,221,17,17,8
+¡ncash,Recuay,Tapacocha,222,17,17,8
+¡ncash,Recuay,Ticapampa,223,17,17,8
+¡ncash,Santa,Chimbote,224,17,17,8
+¡ncash,Santa,C·ceres del Per˙,225,17,17,8
+¡ncash,Santa,Coishco,226,17,17,8
+¡ncash,Santa,Macate,227,17,17,8
+¡ncash,Santa,Moro,228,17,17,8
+¡ncash,Santa,NepeÒa,229,17,17,8
+¡ncash,Santa,Samanco,230,17,17,8
+¡ncash,Santa,Santa,231,17,17,8
+¡ncash,Santa,Nuevo Chimbote,232,17,17,8
+¡ncash,Sihuas,Sihuas,233,17,17,8
+¡ncash,Sihuas,Acobamba,234,17,17,8
+¡ncash,Sihuas,Alfonso Ugarte,235,17,17,8
+¡ncash,Sihuas,Cashapampa,236,17,17,8
+¡ncash,Sihuas,Chingalpo,237,17,17,8
+¡ncash,Sihuas,Huayllabamba,238,17,17,8
+¡ncash,Sihuas,Quiches,239,17,17,8
+¡ncash,Sihuas,Ragash,240,17,17,8
+¡ncash,Sihuas,San Juan,241,17,17,8
+¡ncash,Sihuas,Sicsibamba,242,17,17,8
+¡ncash,Yungay,Yungay,243,17,17,8
+¡ncash,Yungay,Cascapara,244,17,17,8
+¡ncash,Yungay,Mancos,245,17,17,8
+¡ncash,Yungay,Matacoto,246,17,17,8
+¡ncash,Yungay,Quillo,247,17,17,8
+¡ncash,Yungay,Ranrahirca,248,17,17,8
+¡ncash,Yungay,Shupluy,249,17,17,8
+¡ncash,Yungay,Yanama,250,17,17,8
+ApurÌmac,Abancay,Abancay,251,17,17,8
+ApurÌmac,Abancay,Chacoche,252,17,17,8
+ApurÌmac,Abancay,Circa,253,17,17,8
+ApurÌmac,Abancay,Curahuasi,254,17,17,8
+ApurÌmac,Abancay,Huanipaca,255,17,17,8
+ApurÌmac,Abancay,Lambrama,256,17,17,8
+ApurÌmac,Abancay,Pichirhua,257,17,17,8
+ApurÌmac,Abancay,San Pedro de Cachora,258,17,17,8
+ApurÌmac,Abancay,Tamburco,259,17,17,8
+ApurÌmac,Andahuaylas,Andahuaylas,260,17,17,8
+ApurÌmac,Andahuaylas,Andarapa,261,17,17,8
+ApurÌmac,Andahuaylas,Chiara,262,17,17,8
+ApurÌmac,Andahuaylas,Huancarama,263,17,17,8
+ApurÌmac,Andahuaylas,Huancaray,264,17,17,8
+ApurÌmac,Andahuaylas,Huayana,265,17,17,8
+ApurÌmac,Andahuaylas,Kishuara,266,17,17,8
+ApurÌmac,Andahuaylas,Pacobamba,267,17,17,8
+ApurÌmac,Andahuaylas,Pacucha,268,17,17,8
+ApurÌmac,Andahuaylas,Pampachiri,269,17,17,8
+ApurÌmac,Andahuaylas,Pomacocha,270,17,17,8
+ApurÌmac,Andahuaylas,San Antonio de Cachi,271,17,17,8
+ApurÌmac,Andahuaylas,San JerÛnimo,272,17,17,8
+ApurÌmac,Andahuaylas,San Miguel de Chaccrampa,273,17,17,8
+ApurÌmac,Andahuaylas,Santa MarÌa de Chicmo,274,17,17,8
+ApurÌmac,Andahuaylas,Talavera,275,17,17,8
+ApurÌmac,Andahuaylas,Tumay Huaraca,276,17,17,8
+ApurÌmac,Andahuaylas,Turpo,277,17,17,8
+ApurÌmac,Andahuaylas,Kaquiabamba,278,17,17,8
+ApurÌmac,Andahuaylas,JosÈ MarÌa Arguedas,279,17,17,8
+ApurÌmac,Antabamba,Antabamba,280,17,17,8
+ApurÌmac,Antabamba,El Oro,281,17,17,8
+ApurÌmac,Antabamba,Huaquirca,282,17,17,8
+ApurÌmac,Antabamba,Juan Espinoza Medrano,283,17,17,8
+ApurÌmac,Antabamba,Oropesa,284,17,17,8
+ApurÌmac,Antabamba,Pachaconas,285,17,17,8
+ApurÌmac,Antabamba,Sabaino,286,17,17,8
+ApurÌmac,Aymaraes,Chalhuanca,287,17,17,8
+ApurÌmac,Aymaraes,Capaya,288,17,17,8
+ApurÌmac,Aymaraes,Caraybamba,289,17,17,8
+ApurÌmac,Aymaraes,Chapimarca,290,17,17,8
+ApurÌmac,Aymaraes,Colcabamba,291,17,17,8
+ApurÌmac,Aymaraes,Cotaruse,292,17,17,8
+ApurÌmac,Aymaraes,Ihuayllo,293,17,17,8
+ApurÌmac,Aymaraes,Justo Apu Sahuaraura,294,17,17,8
+ApurÌmac,Aymaraes,Lucre,295,17,17,8
+ApurÌmac,Aymaraes,Pocohuanca,296,17,17,8
+ApurÌmac,Aymaraes,San Juan de ChacÒa,297,17,17,8
+ApurÌmac,Aymaraes,SaÒayca,298,17,17,8
+ApurÌmac,Aymaraes,Soraya,299,17,17,8
+ApurÌmac,Aymaraes,Tapairihua,300,17,17,8
+ApurÌmac,Aymaraes,Tintay,301,17,17,8
+ApurÌmac,Aymaraes,Toraya,302,17,17,8
+ApurÌmac,Aymaraes,Yanaca,303,17,17,8
+ApurÌmac,Cotabambas,Tambobamba,304,17,17,8
+ApurÌmac,Cotabambas,Cotabambas,305,17,17,8
+ApurÌmac,Cotabambas,Coyllurqui,306,17,17,8
+ApurÌmac,Cotabambas,Haquira,307,17,17,8
+ApurÌmac,Cotabambas,Mara,308,17,17,8
+ApurÌmac,Cotabambas,Challhuahuacho,309,17,17,8
+ApurÌmac,Chincheros,Chincheros,310,17,17,8
+ApurÌmac,Chincheros,Anco_Huallo,311,17,17,8
+ApurÌmac,Chincheros,Cocharcas,312,17,17,8
+ApurÌmac,Chincheros,Huaccana,313,17,17,8
+ApurÌmac,Chincheros,Ocobamba,314,17,17,8
+ApurÌmac,Chincheros,Ongoy,315,17,17,8
+ApurÌmac,Chincheros,Uranmarca,316,17,17,8
+ApurÌmac,Chincheros,Ranracancha,317,17,17,8
+ApurÌmac,Chincheros,Rocchacc,318,17,17,8
+ApurÌmac,Chincheros,El Porvenir,319,17,17,8
+ApurÌmac,Grau,Chuquibambilla,320,17,17,8
+ApurÌmac,Grau,Curpahuasi,321,17,17,8
+ApurÌmac,Grau,Gamarra,322,17,17,8
+ApurÌmac,Grau,Huayllati,323,17,17,8
+ApurÌmac,Grau,Mamara,324,17,17,8
+ApurÌmac,Grau,Micaela Bastidas,325,17,17,8
+ApurÌmac,Grau,Pataypampa,326,17,17,8
+ApurÌmac,Grau,Progreso,327,17,17,8
+ApurÌmac,Grau,San Antonio,328,17,17,8
+ApurÌmac,Grau,Santa Rosa,329,17,17,8
+ApurÌmac,Grau,Turpay,330,17,17,8
+ApurÌmac,Grau,Vilcabamba,331,17,17,8
+ApurÌmac,Grau,Virundo,332,17,17,8
+ApurÌmac,Grau,Curasco,333,17,17,8
 Arequipa,Arequipa,Arequipa,334,17,17,8
 Arequipa,Arequipa,Alto Selva Alegre,335,17,17,8
 Arequipa,Arequipa,Cayma,336,17,17,8
@@ -346,7 +346,7 @@ Arequipa,Arequipa,Mollebaya,344,17,17,8
 Arequipa,Arequipa,Paucarpata,345,17,17,8
 Arequipa,Arequipa,Pocsi,346,17,17,8
 Arequipa,Arequipa,Polobaya,347,17,17,8
-Arequipa,Arequipa,Queque√±a,348,17,17,8
+Arequipa,Arequipa,QuequeÒa,348,17,17,8
 Arequipa,Arequipa,Sabandia,349,17,17,8
 Arequipa,Arequipa,Sachaca,350,17,17,8
 Arequipa,Arequipa,San Juan de Siguas,351,17,17,8
@@ -360,28 +360,28 @@ Arequipa,Arequipa,Vitor,358,17,17,8
 Arequipa,Arequipa,Yanahuara,359,17,17,8
 Arequipa,Arequipa,Yarabamba,360,17,17,8
 Arequipa,Arequipa,Yura,361,17,17,8
-Arequipa,Arequipa,Jos√© Luis Bustamante Y Rivero,362,17,17,8
-Arequipa,Caman√°,Caman√°,363,17,17,8
-Arequipa,Caman√°,Jos√© Mar√≠a Quimper,364,17,17,8
-Arequipa,Caman√°,Mariano Nicol√°s Valc√°rcel,365,17,17,8
-Arequipa,Caman√°,Mariscal C√°ceres,366,17,17,8
-Arequipa,Caman√°,Nicol√°s de Pierola,367,17,17,8
-Arequipa,Caman√°,Oco√±a,368,17,17,8
-Arequipa,Caman√°,Quilca,369,17,17,8
-Arequipa,Caman√°,Samuel Pastor,370,17,17,8
-Arequipa,Caravel√≠,Caravel√≠,371,17,17,8
-Arequipa,Caravel√≠,Acar√≠,372,17,17,8
-Arequipa,Caravel√≠,Atico,373,17,17,8
-Arequipa,Caravel√≠,Atiquipa,374,17,17,8
-Arequipa,Caravel√≠,Bella Uni√≥n,375,17,17,8
-Arequipa,Caravel√≠,Cahuacho,376,17,17,8
-Arequipa,Caravel√≠,Chala,377,17,17,8
-Arequipa,Caravel√≠,Chaparra,378,17,17,8
-Arequipa,Caravel√≠,Huanuhuanu,379,17,17,8
-Arequipa,Caravel√≠,Jaqui,380,17,17,8
-Arequipa,Caravel√≠,Lomas,381,17,17,8
-Arequipa,Caravel√≠,Quicacha,382,17,17,8
-Arequipa,Caravel√≠,Yauca,383,17,17,8
+Arequipa,Arequipa,JosÈ Luis Bustamante Y Rivero,362,17,17,8
+Arequipa,Caman·,Caman·,363,17,17,8
+Arequipa,Caman·,JosÈ MarÌa Quimper,364,17,17,8
+Arequipa,Caman·,Mariano Nicol·s Valc·rcel,365,17,17,8
+Arequipa,Caman·,Mariscal C·ceres,366,17,17,8
+Arequipa,Caman·,Nicol·s de Pierola,367,17,17,8
+Arequipa,Caman·,OcoÒa,368,17,17,8
+Arequipa,Caman·,Quilca,369,17,17,8
+Arequipa,Caman·,Samuel Pastor,370,17,17,8
+Arequipa,CaravelÌ,CaravelÌ,371,17,17,8
+Arequipa,CaravelÌ,AcarÌ,372,17,17,8
+Arequipa,CaravelÌ,Atico,373,17,17,8
+Arequipa,CaravelÌ,Atiquipa,374,17,17,8
+Arequipa,CaravelÌ,Bella UniÛn,375,17,17,8
+Arequipa,CaravelÌ,Cahuacho,376,17,17,8
+Arequipa,CaravelÌ,Chala,377,17,17,8
+Arequipa,CaravelÌ,Chaparra,378,17,17,8
+Arequipa,CaravelÌ,Huanuhuanu,379,17,17,8
+Arequipa,CaravelÌ,Jaqui,380,17,17,8
+Arequipa,CaravelÌ,Lomas,381,17,17,8
+Arequipa,CaravelÌ,Quicacha,382,17,17,8
+Arequipa,CaravelÌ,Yauca,383,17,17,8
 Arequipa,Castilla,Aplao,384,17,17,8
 Arequipa,Castilla,Andagua,385,17,17,8
 Arequipa,Castilla,Ayo,386,17,17,8
@@ -393,7 +393,7 @@ Arequipa,Castilla,Machaguay,391,17,17,8
 Arequipa,Castilla,Orcopampa,392,17,17,8
 Arequipa,Castilla,Pampacolca,393,17,17,8
 Arequipa,Castilla,Tipan,394,17,17,8
-Arequipa,Castilla,U√±on,395,17,17,8
+Arequipa,Castilla,UÒon,395,17,17,8
 Arequipa,Castilla,Uraca,396,17,17,8
 Arequipa,Castilla,Viraco,397,17,17,8
 Arequipa,Caylloma,Chivay,398,17,17,8
@@ -421,7 +421,7 @@ Arequipa,Condesuyos,Andaray,419,17,17,8
 Arequipa,Condesuyos,Cayarani,420,17,17,8
 Arequipa,Condesuyos,Chichas,421,17,17,8
 Arequipa,Condesuyos,Iray,422,17,17,8
-Arequipa,Condesuyos,R√≠o Grande,423,17,17,8
+Arequipa,Condesuyos,RÌo Grande,423,17,17,8
 Arequipa,Condesuyos,Salamanca,424,17,17,8
 Arequipa,Condesuyos,Yanaquihua,425,17,17,8
 Arequipa,Islay,Mollendo,426,17,17,8
@@ -429,18 +429,18 @@ Arequipa,Islay,Cocachacra,427,17,17,8
 Arequipa,Islay,Dean Valdivia,428,17,17,8
 Arequipa,Islay,Islay,429,17,17,8
 Arequipa,Islay,Mejia,430,17,17,8
-Arequipa,Islay,Punta de Bomb√≥n,431,17,17,8
-Arequipa,La Uni√≤n,Cotahuasi,432,17,17,8
-Arequipa,La Uni√≤n,Alca,433,17,17,8
-Arequipa,La Uni√≤n,Charcana,434,17,17,8
-Arequipa,La Uni√≤n,Huaynacotas,435,17,17,8
-Arequipa,La Uni√≤n,Pampamarca,436,17,17,8
-Arequipa,La Uni√≤n,Puyca,437,17,17,8
-Arequipa,La Uni√≤n,Quechualla,438,17,17,8
-Arequipa,La Uni√≤n,Sayla,439,17,17,8
-Arequipa,La Uni√≤n,Tauria,440,17,17,8
-Arequipa,La Uni√≤n,Tomepampa,441,17,17,8
-Arequipa,La Uni√≤n,Toro,442,17,17,8
+Arequipa,Islay,Punta de BombÛn,431,17,17,8
+Arequipa,La UniÚn,Cotahuasi,432,17,17,8
+Arequipa,La UniÚn,Alca,433,17,17,8
+Arequipa,La UniÚn,Charcana,434,17,17,8
+Arequipa,La UniÚn,Huaynacotas,435,17,17,8
+Arequipa,La UniÚn,Pampamarca,436,17,17,8
+Arequipa,La UniÚn,Puyca,437,17,17,8
+Arequipa,La UniÚn,Quechualla,438,17,17,8
+Arequipa,La UniÚn,Sayla,439,17,17,8
+Arequipa,La UniÚn,Tauria,440,17,17,8
+Arequipa,La UniÚn,Tomepampa,441,17,17,8
+Arequipa,La UniÚn,Toro,442,17,17,8
 Ayacucho,Huamanga,Ayacucho,443,17,17,8
 Ayacucho,Huamanga,Acocro,444,17,17,8
 Ayacucho,Huamanga,Acos Vinchos,445,17,17,8
@@ -449,18 +449,18 @@ Ayacucho,Huamanga,Chiara,447,17,17,8
 Ayacucho,Huamanga,Ocros,448,17,17,8
 Ayacucho,Huamanga,Pacaycasa,449,17,17,8
 Ayacucho,Huamanga,Quinua,450,17,17,8
-Ayacucho,Huamanga,San Jos√© de Ticllas,451,17,17,8
+Ayacucho,Huamanga,San JosÈ de Ticllas,451,17,17,8
 Ayacucho,Huamanga,San Juan Bautista,452,17,17,8
 Ayacucho,Huamanga,Santiago de Pischa,453,17,17,8
 Ayacucho,Huamanga,Socos,454,17,17,8
 Ayacucho,Huamanga,Tambillo,455,17,17,8
 Ayacucho,Huamanga,Vinchos,456,17,17,8
-Ayacucho,Huamanga,Jes√∫s Nazareno,457,17,17,8
-Ayacucho,Huamanga,Andr√©s Avelino C√°ceres Dorregaray,458,17,17,8
+Ayacucho,Huamanga,Jes˙s Nazareno,457,17,17,8
+Ayacucho,Huamanga,AndrÈs Avelino C·ceres Dorregaray,458,17,17,8
 Ayacucho,Cangallo,Cangallo,459,17,17,8
 Ayacucho,Cangallo,Chuschi,460,17,17,8
 Ayacucho,Cangallo,Los Morochucos,461,17,17,8
-Ayacucho,Cangallo,Mar√≠a Parado de Bellido,462,17,17,8
+Ayacucho,Cangallo,MarÌa Parado de Bellido,462,17,17,8
 Ayacucho,Cangallo,Paras,463,17,17,8
 Ayacucho,Cangallo,Totos,464,17,17,8
 Ayacucho,Huanca Sancos,Sancos,465,17,17,8
@@ -493,17 +493,17 @@ Ayacucho,Lucanas,Puquio,491,17,17,8
 Ayacucho,Lucanas,Aucara,492,17,17,8
 Ayacucho,Lucanas,Cabana,493,17,17,8
 Ayacucho,Lucanas,Carmen Salcedo,494,17,17,8
-Ayacucho,Lucanas,Chavi√±a,495,17,17,8
+Ayacucho,Lucanas,ChaviÒa,495,17,17,8
 Ayacucho,Lucanas,Chipao,496,17,17,8
 Ayacucho,Lucanas,Huac-Huas,497,17,17,8
 Ayacucho,Lucanas,Laramate,498,17,17,8
 Ayacucho,Lucanas,Leoncio Prado,499,17,17,8
 Ayacucho,Lucanas,Llauta,500,17,17,8
 Ayacucho,Lucanas,Lucanas,501,17,17,8
-Ayacucho,Lucanas,Oca√±a,502,17,17,8
+Ayacucho,Lucanas,OcaÒa,502,17,17,8
 Ayacucho,Lucanas,Otoca,503,17,17,8
 Ayacucho,Lucanas,Saisa,504,17,17,8
-Ayacucho,Lucanas,San Crist√≥bal,505,17,17,8
+Ayacucho,Lucanas,San CristÛbal,505,17,17,8
 Ayacucho,Lucanas,San Juan,506,17,17,8
 Ayacucho,Lucanas,San Pedro,507,17,17,8
 Ayacucho,Lucanas,San Pedro de Palco,508,17,17,8
@@ -512,61 +512,61 @@ Ayacucho,Lucanas,Santa Ana de Huaycahuacho,510,17,17,8
 Ayacucho,Lucanas,Santa Lucia,511,17,17,8
 Ayacucho,Parinacochas,Coracora,512,17,17,8
 Ayacucho,Parinacochas,Chumpi,513,17,17,8
-Ayacucho,Parinacochas,Coronel Casta√±eda,514,17,17,8
+Ayacucho,Parinacochas,Coronel CastaÒeda,514,17,17,8
 Ayacucho,Parinacochas,Pacapausa,515,17,17,8
 Ayacucho,Parinacochas,Pullo,516,17,17,8
 Ayacucho,Parinacochas,Puyusca,517,17,17,8
 Ayacucho,Parinacochas,San Francisco de Ravacayco,518,17,17,8
 Ayacucho,Parinacochas,Upahuacho,519,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Pausa,520,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Colta,521,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Corculla,522,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Lampa,523,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Marcabamba,524,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Oyolo,525,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Pararca,526,17,17,8
-Ayacucho,P√†ucar del Sara Sara,San Javier de Alpabamba,527,17,17,8
-Ayacucho,P√†ucar del Sara Sara,San Jos√© de Ushua,528,17,17,8
-Ayacucho,P√†ucar del Sara Sara,Sara Sara,529,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Pausa,520,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Colta,521,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Corculla,522,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Lampa,523,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Marcabamba,524,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Oyolo,525,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Pararca,526,17,17,8
+Ayacucho,P‡ucar del Sara Sara,San Javier de Alpabamba,527,17,17,8
+Ayacucho,P‡ucar del Sara Sara,San JosÈ de Ushua,528,17,17,8
+Ayacucho,P‡ucar del Sara Sara,Sara Sara,529,17,17,8
 Ayacucho,Sucre,Querobamba,530,17,17,8
-Ayacucho,Sucre,Bel√©n,531,17,17,8
+Ayacucho,Sucre,BelÈn,531,17,17,8
 Ayacucho,Sucre,Chalcos,532,17,17,8
 Ayacucho,Sucre,Chilcayoc,533,17,17,8
-Ayacucho,Sucre,Huaca√±a,534,17,17,8
+Ayacucho,Sucre,HuacaÒa,534,17,17,8
 Ayacucho,Sucre,Morcolla,535,17,17,8
 Ayacucho,Sucre,Paico,536,17,17,8
 Ayacucho,Sucre,San Pedro de Larcay,537,17,17,8
 Ayacucho,Sucre,San Salvador de Quije,538,17,17,8
 Ayacucho,Sucre,Santiago de Paucaray,539,17,17,8
 Ayacucho,Sucre,Soras,540,17,17,8
-Ayacucho,V√≠ctor Fajardo,Huancapi,541,17,17,8
-Ayacucho,V√≠ctor Fajardo,Alcamenca,542,17,17,8
-Ayacucho,V√≠ctor Fajardo,Apongo,543,17,17,8
-Ayacucho,V√≠ctor Fajardo,Asquipata,544,17,17,8
-Ayacucho,V√≠ctor Fajardo,Canaria,545,17,17,8
-Ayacucho,V√≠ctor Fajardo,Cayara,546,17,17,8
-Ayacucho,V√≠ctor Fajardo,Colca,547,17,17,8
-Ayacucho,V√≠ctor Fajardo,Huamanquiquia,548,17,17,8
-Ayacucho,V√≠ctor Fajardo,Huancaraylla,549,17,17,8
-Ayacucho,V√≠ctor Fajardo,Huaya,550,17,17,8
-Ayacucho,V√≠ctor Fajardo,Sarhua,551,17,17,8
-Ayacucho,V√≠ctor Fajardo,Vilcanchos,552,17,17,8
-Ayacucho,Vilcas Huam√°n,Vilcas Huaman,553,17,17,8
-Ayacucho,Vilcas Huam√°n,Accomarca,554,17,17,8
-Ayacucho,Vilcas Huam√°n,Carhuanca,555,17,17,8
-Ayacucho,Vilcas Huam√°n,Concepci√≥n,556,17,17,8
-Ayacucho,Vilcas Huam√°n,Huambalpa,557,17,17,8
-Ayacucho,Vilcas Huam√°n,Independencia,558,17,17,8
-Ayacucho,Vilcas Huam√°n,Saurama,559,17,17,8
-Ayacucho,Vilcas Huam√°n,Vischongo,560,17,17,8
+Ayacucho,VÌctor Fajardo,Huancapi,541,17,17,8
+Ayacucho,VÌctor Fajardo,Alcamenca,542,17,17,8
+Ayacucho,VÌctor Fajardo,Apongo,543,17,17,8
+Ayacucho,VÌctor Fajardo,Asquipata,544,17,17,8
+Ayacucho,VÌctor Fajardo,Canaria,545,17,17,8
+Ayacucho,VÌctor Fajardo,Cayara,546,17,17,8
+Ayacucho,VÌctor Fajardo,Colca,547,17,17,8
+Ayacucho,VÌctor Fajardo,Huamanquiquia,548,17,17,8
+Ayacucho,VÌctor Fajardo,Huancaraylla,549,17,17,8
+Ayacucho,VÌctor Fajardo,Huaya,550,17,17,8
+Ayacucho,VÌctor Fajardo,Sarhua,551,17,17,8
+Ayacucho,VÌctor Fajardo,Vilcanchos,552,17,17,8
+Ayacucho,Vilcas Huam·n,Vilcas Huaman,553,17,17,8
+Ayacucho,Vilcas Huam·n,Accomarca,554,17,17,8
+Ayacucho,Vilcas Huam·n,Carhuanca,555,17,17,8
+Ayacucho,Vilcas Huam·n,ConcepciÛn,556,17,17,8
+Ayacucho,Vilcas Huam·n,Huambalpa,557,17,17,8
+Ayacucho,Vilcas Huam·n,Independencia,558,17,17,8
+Ayacucho,Vilcas Huam·n,Saurama,559,17,17,8
+Ayacucho,Vilcas Huam·n,Vischongo,560,17,17,8
 Cajamarca,Cajamarca,Cajamarca,561,17,17,8
-Cajamarca,Cajamarca,Asunci√≥n,562,17,17,8
+Cajamarca,Cajamarca,AsunciÛn,562,17,17,8
 Cajamarca,Cajamarca,Chetilla,563,17,17,8
 Cajamarca,Cajamarca,Cospan,564,17,17,8
-Cajamarca,Cajamarca,Enca√±ada,565,17,17,8
-Cajamarca,Cajamarca,Jes√∫s,566,17,17,8
+Cajamarca,Cajamarca,EncaÒada,565,17,17,8
+Cajamarca,Cajamarca,Jes˙s,566,17,17,8
 Cajamarca,Cajamarca,Llacanora,567,17,17,8
-Cajamarca,Cajamarca,Los Ba√±os del Inca,568,17,17,8
+Cajamarca,Cajamarca,Los BaÒos del Inca,568,17,17,8
 Cajamarca,Cajamarca,Magdalena,569,17,17,8
 Cajamarca,Cajamarca,Matara,570,17,17,8
 Cajamarca,Cajamarca,Namora,571,17,17,8
@@ -575,18 +575,18 @@ Cajamarca,Cajabamba,Cajabamba,573,17,17,8
 Cajamarca,Cajabamba,Cachachi,574,17,17,8
 Cajamarca,Cajabamba,Condebamba,575,17,17,8
 Cajamarca,Cajabamba,Sitacocha,576,17,17,8
-Cajamarca,Celend√≠n,Celend√≠n,577,17,17,8
-Cajamarca,Celend√≠n,Chumuch,578,17,17,8
-Cajamarca,Celend√≠n,Cortegana,579,17,17,8
-Cajamarca,Celend√≠n,Huasmin,580,17,17,8
-Cajamarca,Celend√≠n,Jorge Ch√°vez,581,17,17,8
-Cajamarca,Celend√≠n,Jos√© G√°lvez,582,17,17,8
-Cajamarca,Celend√≠n,Miguel Iglesias,583,17,17,8
-Cajamarca,Celend√≠n,Oxamarca,584,17,17,8
-Cajamarca,Celend√≠n,Sorochuco,585,17,17,8
-Cajamarca,Celend√≠n,Sucre,586,17,17,8
-Cajamarca,Celend√≠n,Utco,587,17,17,8
-Cajamarca,Celend√≠n,La Libertad de Pallan,588,17,17,8
+Cajamarca,CelendÌn,CelendÌn,577,17,17,8
+Cajamarca,CelendÌn,Chumuch,578,17,17,8
+Cajamarca,CelendÌn,Cortegana,579,17,17,8
+Cajamarca,CelendÌn,Huasmin,580,17,17,8
+Cajamarca,CelendÌn,Jorge Ch·vez,581,17,17,8
+Cajamarca,CelendÌn,JosÈ G·lvez,582,17,17,8
+Cajamarca,CelendÌn,Miguel Iglesias,583,17,17,8
+Cajamarca,CelendÌn,Oxamarca,584,17,17,8
+Cajamarca,CelendÌn,Sorochuco,585,17,17,8
+Cajamarca,CelendÌn,Sucre,586,17,17,8
+Cajamarca,CelendÌn,Utco,587,17,17,8
+Cajamarca,CelendÌn,La Libertad de Pallan,588,17,17,8
 Cajamarca,Chota,Chota,589,17,17,8
 Cajamarca,Chota,Anguia,590,17,17,8
 Cajamarca,Chota,Chadin,591,17,17,8
@@ -606,14 +606,14 @@ Cajamarca,Chota,San Juan de Licupis,604,17,17,8
 Cajamarca,Chota,Tacabamba,605,17,17,8
 Cajamarca,Chota,Tocmoche,606,17,17,8
 Cajamarca,Chota,Chalamarca,607,17,17,8
-Cajamarca,Contumaz√°,Contumaza,608,17,17,8
-Cajamarca,Contumaz√°,Chilete,609,17,17,8
-Cajamarca,Contumaz√°,Cupisnique,610,17,17,8
-Cajamarca,Contumaz√°,Guzmango,611,17,17,8
-Cajamarca,Contumaz√°,San Benito,612,17,17,8
-Cajamarca,Contumaz√°,Santa Cruz de Toledo,613,17,17,8
-Cajamarca,Contumaz√°,Tantarica,614,17,17,8
-Cajamarca,Contumaz√°,Yonan,615,17,17,8
+Cajamarca,Contumaz·,Contumaza,608,17,17,8
+Cajamarca,Contumaz·,Chilete,609,17,17,8
+Cajamarca,Contumaz·,Cupisnique,610,17,17,8
+Cajamarca,Contumaz·,Guzmango,611,17,17,8
+Cajamarca,Contumaz·,San Benito,612,17,17,8
+Cajamarca,Contumaz·,Santa Cruz de Toledo,613,17,17,8
+Cajamarca,Contumaz·,Tantarica,614,17,17,8
+Cajamarca,Contumaz·,Yonan,615,17,17,8
 Cajamarca,Cutervo,Cutervo,616,17,17,8
 Cajamarca,Cutervo,Callayuc,617,17,17,8
 Cajamarca,Cutervo,Choros,618,17,17,8
@@ -621,7 +621,7 @@ Cajamarca,Cutervo,Cujillo,619,17,17,8
 Cajamarca,Cutervo,La Ramada,620,17,17,8
 Cajamarca,Cutervo,Pimpingos,621,17,17,8
 Cajamarca,Cutervo,Querocotillo,622,17,17,8
-Cajamarca,Cutervo,San Andr√©s de Cutervo,623,17,17,8
+Cajamarca,Cutervo,San AndrÈs de Cutervo,623,17,17,8
 Cajamarca,Cutervo,San Juan de Cutervo,624,17,17,8
 Cajamarca,Cutervo,San Luis de Lucma,625,17,17,8
 Cajamarca,Cutervo,Santa Cruz,626,17,17,8
@@ -632,34 +632,34 @@ Cajamarca,Cutervo,Toribio Casanova,630,17,17,8
 Cajamarca,Hualgayoc,Bambamarca,631,17,17,8
 Cajamarca,Hualgayoc,Chugur,632,17,17,8
 Cajamarca,Hualgayoc,Hualgayoc,633,17,17,8
-Cajamarca,Ja√©n,Ja√©n,634,17,17,8
-Cajamarca,Ja√©n,Bellavista,635,17,17,8
-Cajamarca,Ja√©n,Chontali,636,17,17,8
-Cajamarca,Ja√©n,Colasay,637,17,17,8
-Cajamarca,Ja√©n,Huabal,638,17,17,8
-Cajamarca,Ja√©n,Las Pirias,639,17,17,8
-Cajamarca,Ja√©n,Pomahuaca,640,17,17,8
-Cajamarca,Ja√©n,Pucara,641,17,17,8
-Cajamarca,Ja√©n,Sallique,642,17,17,8
-Cajamarca,Ja√©n,San Felipe,643,17,17,8
-Cajamarca,Ja√©n,San Jos√© del Alto,644,17,17,8
-Cajamarca,Ja√©n,Santa Rosa,645,17,17,8
+Cajamarca,JaÈn,JaÈn,634,17,17,8
+Cajamarca,JaÈn,Bellavista,635,17,17,8
+Cajamarca,JaÈn,Chontali,636,17,17,8
+Cajamarca,JaÈn,Colasay,637,17,17,8
+Cajamarca,JaÈn,Huabal,638,17,17,8
+Cajamarca,JaÈn,Las Pirias,639,17,17,8
+Cajamarca,JaÈn,Pomahuaca,640,17,17,8
+Cajamarca,JaÈn,Pucara,641,17,17,8
+Cajamarca,JaÈn,Sallique,642,17,17,8
+Cajamarca,JaÈn,San Felipe,643,17,17,8
+Cajamarca,JaÈn,San JosÈ del Alto,644,17,17,8
+Cajamarca,JaÈn,Santa Rosa,645,17,17,8
 Cajamarca,San Ignacio,San Ignacio,646,17,17,8
 Cajamarca,San Ignacio,Chirinos,647,17,17,8
 Cajamarca,San Ignacio,Huarango,648,17,17,8
 Cajamarca,San Ignacio,La Coipa,649,17,17,8
 Cajamarca,San Ignacio,Namballe,650,17,17,8
-Cajamarca,San Ignacio,San Jos√© de Lourdes,651,17,17,8
+Cajamarca,San Ignacio,San JosÈ de Lourdes,651,17,17,8
 Cajamarca,San Ignacio,Tabaconas,652,17,17,8
-Cajamarca,San Marcos,Pedro G√°lvez,653,17,17,8
+Cajamarca,San Marcos,Pedro G·lvez,653,17,17,8
 Cajamarca,San Marcos,Chancay,654,17,17,8
 Cajamarca,San Marcos,Eduardo Villanueva,655,17,17,8
 Cajamarca,San Marcos,Gregorio Pita,656,17,17,8
 Cajamarca,San Marcos,Ichocan,657,17,17,8
-Cajamarca,San Marcos,Jos√© Manuel Quiroz,658,17,17,8
-Cajamarca,San Marcos,Jos√© Sabogal,659,17,17,8
+Cajamarca,San Marcos,JosÈ Manuel Quiroz,658,17,17,8
+Cajamarca,San Marcos,JosÈ Sabogal,659,17,17,8
 Cajamarca,San Miguel,San Miguel,660,17,17,8
-Cajamarca,San Miguel,Bol√≠var,661,17,17,8
+Cajamarca,San Miguel,BolÌvar,661,17,17,8
 Cajamarca,San Miguel,Calquis,662,17,17,8
 Cajamarca,San Miguel,Catilluc,663,17,17,8
 Cajamarca,San Miguel,El Prado,664,17,17,8
@@ -670,7 +670,7 @@ Cajamarca,San Miguel,Niepos,668,17,17,8
 Cajamarca,San Miguel,San Gregorio,669,17,17,8
 Cajamarca,San Miguel,San Silvestre de Cochan,670,17,17,8
 Cajamarca,San Miguel,Tongod,671,17,17,8
-Cajamarca,San Miguel,Uni√≥n Agua Blanca,672,17,17,8
+Cajamarca,San Miguel,UniÛn Agua Blanca,672,17,17,8
 Cajamarca,San Pablo,San Pablo,673,17,17,8
 Cajamarca,San Pablo,San Bernardino,674,17,17,8
 Cajamarca,San Pablo,San Luis,675,17,17,8
@@ -678,7 +678,7 @@ Cajamarca,San Pablo,Tumbaden,676,17,17,8
 Cajamarca,Santa Cruz,Santa Cruz,677,17,17,8
 Cajamarca,Santa Cruz,Andabamba,678,17,17,8
 Cajamarca,Santa Cruz,Catache,679,17,17,8
-Cajamarca,Santa Cruz,Chancayba√±os,680,17,17,8
+Cajamarca,Santa Cruz,ChancaybaÒos,680,17,17,8
 Cajamarca,Santa Cruz,La Esperanza,681,17,17,8
 Cajamarca,Santa Cruz,Ninabamba,682,17,17,8
 Cajamarca,Santa Cruz,Pulan,683,17,17,8
@@ -692,11 +692,11 @@ Callao,Prov. Const. del Callao,Carmen de la Legua Reynoso,690,17,17,8
 Callao,Prov. Const. del Callao,La Perla,691,17,17,8
 Callao,Prov. Const. del Callao,La Punta,692,17,17,8
 Callao,Prov. Const. del Callao,Ventanilla,693,17,17,8
-Callao,Prov. Const. del Callao,Mi Per√∫,694,17,17,8
+Callao,Prov. Const. del Callao,Mi Per˙,694,17,17,8
 Cusco,Cusco,Cusco,695,17,17,8
 Cusco,Cusco,Ccorca,696,17,17,8
 Cusco,Cusco,Poroy,697,17,17,8
-Cusco,Cusco,San Jer√≥nimo,698,17,17,8
+Cusco,Cusco,San JerÛnimo,698,17,17,8
 Cusco,Cusco,San Sebastian,699,17,17,8
 Cusco,Cusco,Santiago,700,17,17,8
 Cusco,Cusco,Saylla,701,17,17,8
@@ -747,7 +747,7 @@ Cusco,Chumbivilcas,Chamaca,745,17,17,8
 Cusco,Chumbivilcas,Colquemarca,746,17,17,8
 Cusco,Chumbivilcas,Livitaca,747,17,17,8
 Cusco,Chumbivilcas,Llusco,748,17,17,8
-Cusco,Chumbivilcas,Qui√±ota,749,17,17,8
+Cusco,Chumbivilcas,QuiÒota,749,17,17,8
 Cusco,Chumbivilcas,Velille,750,17,17,8
 Cusco,Espinar,Espinar,751,17,17,8
 Cusco,Espinar,Condoroma,752,17,17,8
@@ -757,19 +757,19 @@ Cusco,Espinar,Pallpata,755,17,17,8
 Cusco,Espinar,Pichigua,756,17,17,8
 Cusco,Espinar,Suyckutambo,757,17,17,8
 Cusco,Espinar,Alto Pichigua,758,17,17,8
-Cusco,La Convenci√≥n,Santa Ana,759,17,17,8
-Cusco,La Convenci√≥n,Echarate,760,17,17,8
-Cusco,La Convenci√≥n,Huayopata,761,17,17,8
-Cusco,La Convenci√≥n,Maranura,762,17,17,8
-Cusco,La Convenci√≥n,Ocobamba,763,17,17,8
-Cusco,La Convenci√≥n,Quellouno,764,17,17,8
-Cusco,La Convenci√≥n,Kimbiri,765,17,17,8
-Cusco,La Convenci√≥n,Santa Teresa,766,17,17,8
-Cusco,La Convenci√≥n,Vilcabamba,767,17,17,8
-Cusco,La Convenci√≥n,Pichari,768,17,17,8
-Cusco,La Convenci√≥n,Inkawasi,769,17,17,8
-Cusco,La Convenci√≥n,Villa Virgen,770,17,17,8
-Cusco,La Convenci√≥n,Villa Kintiarina,771,17,17,8
+Cusco,La ConvenciÛn,Santa Ana,759,17,17,8
+Cusco,La ConvenciÛn,Echarate,760,17,17,8
+Cusco,La ConvenciÛn,Huayopata,761,17,17,8
+Cusco,La ConvenciÛn,Maranura,762,17,17,8
+Cusco,La ConvenciÛn,Ocobamba,763,17,17,8
+Cusco,La ConvenciÛn,Quellouno,764,17,17,8
+Cusco,La ConvenciÛn,Kimbiri,765,17,17,8
+Cusco,La ConvenciÛn,Santa Teresa,766,17,17,8
+Cusco,La ConvenciÛn,Vilcabamba,767,17,17,8
+Cusco,La ConvenciÛn,Pichari,768,17,17,8
+Cusco,La ConvenciÛn,Inkawasi,769,17,17,8
+Cusco,La ConvenciÛn,Villa Virgen,770,17,17,8
+Cusco,La ConvenciÛn,Villa Kintiarina,771,17,17,8
 Cusco,Paruro,Paruro,772,17,17,8
 Cusco,Paruro,Accha,773,17,17,8
 Cusco,Paruro,Ccapi,774,17,17,8
@@ -784,7 +784,7 @@ Cusco,Paucartambo,Caicay,782,17,17,8
 Cusco,Paucartambo,Challabamba,783,17,17,8
 Cusco,Paucartambo,Colquepata,784,17,17,8
 Cusco,Paucartambo,Huancarani,785,17,17,8
-Cusco,Paucartambo,Kos√±ipata,786,17,17,8
+Cusco,Paucartambo,KosÒipata,786,17,17,8
 Cusco,Quispicanchi,Urcos,787,17,17,8
 Cusco,Quispicanchi,Andahuaylillas,788,17,17,8
 Cusco,Quispicanchi,Camanti,789,17,17,8
@@ -814,14 +814,14 @@ Huancavelica,Huancavelica,Huayllahuara,812,17,17,8
 Huancavelica,Huancavelica,Izcuchaca,813,17,17,8
 Huancavelica,Huancavelica,Laria,814,17,17,8
 Huancavelica,Huancavelica,Manta,815,17,17,8
-Huancavelica,Huancavelica,Mariscal C√°ceres,816,17,17,8
+Huancavelica,Huancavelica,Mariscal C·ceres,816,17,17,8
 Huancavelica,Huancavelica,Moya,817,17,17,8
 Huancavelica,Huancavelica,Nuevo Occoro,818,17,17,8
 Huancavelica,Huancavelica,Palca,819,17,17,8
 Huancavelica,Huancavelica,Pilchaca,820,17,17,8
 Huancavelica,Huancavelica,Vilca,821,17,17,8
 Huancavelica,Huancavelica,Yauli,822,17,17,8
-Huancavelica,Huancavelica,Ascensi√≥n,823,17,17,8
+Huancavelica,Huancavelica,AscensiÛn,823,17,17,8
 Huancavelica,Huancavelica,Huando,824,17,17,8
 Huancavelica,Acobamba,Acobamba,825,17,17,8
 Huancavelica,Acobamba,Andabamba,826,17,17,8
@@ -867,31 +867,31 @@ Huancavelica,Churcampa,San Miguel de Mayocc,865,17,17,8
 Huancavelica,Churcampa,San Pedro de Coris,866,17,17,8
 Huancavelica,Churcampa,Pachamarca,867,17,17,8
 Huancavelica,Churcampa,Cosme,868,17,17,8
-Huancavelica,Huaytar√°,Huaytara,869,17,17,8
-Huancavelica,Huaytar√°,Ayavi,870,17,17,8
-Huancavelica,Huaytar√°,C√≥rdova,871,17,17,8
-Huancavelica,Huaytar√°,Huayacundo Arma,872,17,17,8
-Huancavelica,Huaytar√°,Laramarca,873,17,17,8
-Huancavelica,Huaytar√°,Ocoyo,874,17,17,8
-Huancavelica,Huaytar√°,Pilpichaca,875,17,17,8
-Huancavelica,Huaytar√°,Querco,876,17,17,8
-Huancavelica,Huaytar√°,Quito-Arma,877,17,17,8
-Huancavelica,Huaytar√°,San Antonio de Cusicancha,878,17,17,8
-Huancavelica,Huaytar√°,San Francisco de Sangayaico,879,17,17,8
-Huancavelica,Huaytar√°,San Isidro,880,17,17,8
-Huancavelica,Huaytar√°,Santiago de Chocorvos,881,17,17,8
-Huancavelica,Huaytar√°,Santiago de Quirahuara,882,17,17,8
-Huancavelica,Huaytar√°,Santo Domingo de Capillas,883,17,17,8
-Huancavelica,Huaytar√°,Tambo,884,17,17,8
+Huancavelica,Huaytar·,Huaytara,869,17,17,8
+Huancavelica,Huaytar·,Ayavi,870,17,17,8
+Huancavelica,Huaytar·,CÛrdova,871,17,17,8
+Huancavelica,Huaytar·,Huayacundo Arma,872,17,17,8
+Huancavelica,Huaytar·,Laramarca,873,17,17,8
+Huancavelica,Huaytar·,Ocoyo,874,17,17,8
+Huancavelica,Huaytar·,Pilpichaca,875,17,17,8
+Huancavelica,Huaytar·,Querco,876,17,17,8
+Huancavelica,Huaytar·,Quito-Arma,877,17,17,8
+Huancavelica,Huaytar·,San Antonio de Cusicancha,878,17,17,8
+Huancavelica,Huaytar·,San Francisco de Sangayaico,879,17,17,8
+Huancavelica,Huaytar·,San Isidro,880,17,17,8
+Huancavelica,Huaytar·,Santiago de Chocorvos,881,17,17,8
+Huancavelica,Huaytar·,Santiago de Quirahuara,882,17,17,8
+Huancavelica,Huaytar·,Santo Domingo de Capillas,883,17,17,8
+Huancavelica,Huaytar·,Tambo,884,17,17,8
 Huancavelica,Tayacaja,Pampas,885,17,17,8
 Huancavelica,Tayacaja,Acostambo,886,17,17,8
 Huancavelica,Tayacaja,Acraquia,887,17,17,8
 Huancavelica,Tayacaja,Ahuaycha,888,17,17,8
 Huancavelica,Tayacaja,Colcabamba,889,17,17,8
-Huancavelica,Tayacaja,Daniel Hern√°ndez,890,17,17,8
+Huancavelica,Tayacaja,Daniel Hern·ndez,890,17,17,8
 Huancavelica,Tayacaja,Huachocolpa,891,17,17,8
 Huancavelica,Tayacaja,Huaribamba,892,17,17,8
-Huancavelica,Tayacaja,√ëahuimpuquio,893,17,17,8
+Huancavelica,Tayacaja,—ahuimpuquio,893,17,17,8
 Huancavelica,Tayacaja,Pazos,894,17,17,8
 Huancavelica,Tayacaja,Quishuar,895,17,17,8
 Huancavelica,Tayacaja,Salcabamba,896,17,17,8
@@ -903,97 +903,97 @@ Huancavelica,Tayacaja,Quichuas,901,17,17,8
 Huancavelica,Tayacaja,Andaymarca,902,17,17,8
 Huancavelica,Tayacaja,Roble,903,17,17,8
 Huancavelica,Tayacaja,Pichos,904,17,17,8
-Hu√°nuco,Hu√°nuco,Huanuco,905,17,17,8
-Hu√°nuco,Hu√°nuco,Amarilis,906,17,17,8
-Hu√°nuco,Hu√°nuco,Chinchao,907,17,17,8
-Hu√°nuco,Hu√°nuco,Churubamba,908,17,17,8
-Hu√°nuco,Hu√°nuco,Margos,909,17,17,8
-Hu√°nuco,Hu√°nuco,Quisqui (Kichki),910,17,17,8
-Hu√°nuco,Hu√°nuco,San Francisco de Cayran,911,17,17,8
-Hu√°nuco,Hu√°nuco,San Pedro de Chaulan,912,17,17,8
-Hu√°nuco,Hu√°nuco,Santa Mar√≠a del Valle,913,17,17,8
-Hu√°nuco,Hu√°nuco,Yarumayo,914,17,17,8
-Hu√°nuco,Hu√°nuco,Pillco Marca,915,17,17,8
-Hu√°nuco,Hu√°nuco,Yacus,916,17,17,8
-Hu√°nuco,Hu√°nuco,San Pablo de Pillao,917,17,17,8
-Hu√°nuco,Ambo,Ambo,918,17,17,8
-Hu√°nuco,Ambo,Cayna,919,17,17,8
-Hu√°nuco,Ambo,Colpas,920,17,17,8
-Hu√°nuco,Ambo,Conchamarca,921,17,17,8
-Hu√°nuco,Ambo,Huacar,922,17,17,8
-Hu√°nuco,Ambo,San Francisco,923,17,17,8
-Hu√°nuco,Ambo,San Rafael,924,17,17,8
-Hu√°nuco,Ambo,Tomay Kichwa,925,17,17,8
-Hu√°nuco,Dos de Mayo,La Uni√≥n,926,17,17,8
-Hu√°nuco,Dos de Mayo,Chuquis,927,17,17,8
-Hu√°nuco,Dos de Mayo,Mar√≠as,928,17,17,8
-Hu√°nuco,Dos de Mayo,Pachas,929,17,17,8
-Hu√°nuco,Dos de Mayo,Quivilla,930,17,17,8
-Hu√°nuco,Dos de Mayo,Ripan,931,17,17,8
-Hu√°nuco,Dos de Mayo,Shunqui,932,17,17,8
-Hu√°nuco,Dos de Mayo,Sillapata,933,17,17,8
-Hu√°nuco,Dos de Mayo,Yanas,934,17,17,8
-Hu√°nuco,Huacaybamba,Huacaybamba,935,17,17,8
-Hu√°nuco,Huacaybamba,Canchabamba,936,17,17,8
-Hu√°nuco,Huacaybamba,Cochabamba,937,17,17,8
-Hu√°nuco,Huacaybamba,Pinra,938,17,17,8
-Hu√°nuco,Huamal√≠es,Llata,939,17,17,8
-Hu√°nuco,Huamal√≠es,Arancay,940,17,17,8
-Hu√°nuco,Huamal√≠es,Chav√≠n de Pariarca,941,17,17,8
-Hu√°nuco,Huamal√≠es,Jacas Grande,942,17,17,8
-Hu√°nuco,Huamal√≠es,Jircan,943,17,17,8
-Hu√°nuco,Huamal√≠es,Miraflores,944,17,17,8
-Hu√°nuco,Huamal√≠es,Monz√≥n,945,17,17,8
-Hu√°nuco,Huamal√≠es,Punchao,946,17,17,8
-Hu√°nuco,Huamal√≠es,Pu√±os,947,17,17,8
-Hu√°nuco,Huamal√≠es,Singa,948,17,17,8
-Hu√°nuco,Huamal√≠es,Tantamayo,949,17,17,8
-Hu√°nuco,Leoncio Prado,Rupa-Rupa,950,17,17,8
-Hu√°nuco,Leoncio Prado,Daniel Alom√≠a Robles,951,17,17,8
-Hu√°nuco,Leoncio Prado,Herm√≠lio Valdizan,952,17,17,8
-Hu√°nuco,Leoncio Prado,Jos√© Crespo y Castillo,953,17,17,8
-Hu√°nuco,Leoncio Prado,Luyando,954,17,17,8
-Hu√°nuco,Leoncio Prado,Mariano Damaso Beraun,955,17,17,8
-Hu√°nuco,Leoncio Prado,Pucayacu,956,17,17,8
-Hu√°nuco,Leoncio Prado,Castillo Grande,957,17,17,8
-Hu√°nuco,Mara√±√≥n,Huacrachuco,958,17,17,8
-Hu√°nuco,Mara√±√≥n,Cholon,959,17,17,8
-Hu√°nuco,Mara√±√≥n,San Buenaventura,960,17,17,8
-Hu√°nuco,Mara√±√≥n,La Morada,961,17,17,8
-Hu√°nuco,Mara√±√≥n,Santa Rosa de Alto Yanajanca,962,17,17,8
-Hu√°nuco,Pachitea,Panao,963,17,17,8
-Hu√°nuco,Pachitea,Chaglla,964,17,17,8
-Hu√°nuco,Pachitea,Molino,965,17,17,8
-Hu√°nuco,Pachitea,Umari,966,17,17,8
-Hu√°nuco,Puerto Inca,Puerto Inca,967,17,17,8
-Hu√°nuco,Puerto Inca,Codo del Pozuzo,968,17,17,8
-Hu√°nuco,Puerto Inca,Honoria,969,17,17,8
-Hu√°nuco,Puerto Inca,Tournavista,970,17,17,8
-Hu√°nuco,Puerto Inca,Yuyapichis,971,17,17,8
-Hu√°nuco,Lauricocha,Jes√∫s,972,17,17,8
-Hu√°nuco,Lauricocha,Ba√±os,973,17,17,8
-Hu√°nuco,Lauricocha,Jivia,974,17,17,8
-Hu√°nuco,Lauricocha,Queropalca,975,17,17,8
-Hu√°nuco,Lauricocha,Rondos,976,17,17,8
-Hu√°nuco,Lauricocha,San Francisco de As√≠s,977,17,17,8
-Hu√°nuco,Lauricocha,San Miguel de Cauri,978,17,17,8
-Hu√°nuco,Yarowilca,Chavinillo,979,17,17,8
-Hu√°nuco,Yarowilca,Cahuac,980,17,17,8
-Hu√°nuco,Yarowilca,Chacabamba,981,17,17,8
-Hu√°nuco,Yarowilca,Aparicio Pomares,982,17,17,8
-Hu√°nuco,Yarowilca,Jacas Chico,983,17,17,8
-Hu√°nuco,Yarowilca,Obas,984,17,17,8
-Hu√°nuco,Yarowilca,Pampamarca,985,17,17,8
-Hu√°nuco,Yarowilca,Choras,986,17,17,8
+Hu·nuco,Hu·nuco,Huanuco,905,17,17,8
+Hu·nuco,Hu·nuco,Amarilis,906,17,17,8
+Hu·nuco,Hu·nuco,Chinchao,907,17,17,8
+Hu·nuco,Hu·nuco,Churubamba,908,17,17,8
+Hu·nuco,Hu·nuco,Margos,909,17,17,8
+Hu·nuco,Hu·nuco,Quisqui (Kichki),910,17,17,8
+Hu·nuco,Hu·nuco,San Francisco de Cayran,911,17,17,8
+Hu·nuco,Hu·nuco,San Pedro de Chaulan,912,17,17,8
+Hu·nuco,Hu·nuco,Santa MarÌa del Valle,913,17,17,8
+Hu·nuco,Hu·nuco,Yarumayo,914,17,17,8
+Hu·nuco,Hu·nuco,Pillco Marca,915,17,17,8
+Hu·nuco,Hu·nuco,Yacus,916,17,17,8
+Hu·nuco,Hu·nuco,San Pablo de Pillao,917,17,17,8
+Hu·nuco,Ambo,Ambo,918,17,17,8
+Hu·nuco,Ambo,Cayna,919,17,17,8
+Hu·nuco,Ambo,Colpas,920,17,17,8
+Hu·nuco,Ambo,Conchamarca,921,17,17,8
+Hu·nuco,Ambo,Huacar,922,17,17,8
+Hu·nuco,Ambo,San Francisco,923,17,17,8
+Hu·nuco,Ambo,San Rafael,924,17,17,8
+Hu·nuco,Ambo,Tomay Kichwa,925,17,17,8
+Hu·nuco,Dos de Mayo,La UniÛn,926,17,17,8
+Hu·nuco,Dos de Mayo,Chuquis,927,17,17,8
+Hu·nuco,Dos de Mayo,MarÌas,928,17,17,8
+Hu·nuco,Dos de Mayo,Pachas,929,17,17,8
+Hu·nuco,Dos de Mayo,Quivilla,930,17,17,8
+Hu·nuco,Dos de Mayo,Ripan,931,17,17,8
+Hu·nuco,Dos de Mayo,Shunqui,932,17,17,8
+Hu·nuco,Dos de Mayo,Sillapata,933,17,17,8
+Hu·nuco,Dos de Mayo,Yanas,934,17,17,8
+Hu·nuco,Huacaybamba,Huacaybamba,935,17,17,8
+Hu·nuco,Huacaybamba,Canchabamba,936,17,17,8
+Hu·nuco,Huacaybamba,Cochabamba,937,17,17,8
+Hu·nuco,Huacaybamba,Pinra,938,17,17,8
+Hu·nuco,HuamalÌes,Llata,939,17,17,8
+Hu·nuco,HuamalÌes,Arancay,940,17,17,8
+Hu·nuco,HuamalÌes,ChavÌn de Pariarca,941,17,17,8
+Hu·nuco,HuamalÌes,Jacas Grande,942,17,17,8
+Hu·nuco,HuamalÌes,Jircan,943,17,17,8
+Hu·nuco,HuamalÌes,Miraflores,944,17,17,8
+Hu·nuco,HuamalÌes,MonzÛn,945,17,17,8
+Hu·nuco,HuamalÌes,Punchao,946,17,17,8
+Hu·nuco,HuamalÌes,PuÒos,947,17,17,8
+Hu·nuco,HuamalÌes,Singa,948,17,17,8
+Hu·nuco,HuamalÌes,Tantamayo,949,17,17,8
+Hu·nuco,Leoncio Prado,Rupa-Rupa,950,17,17,8
+Hu·nuco,Leoncio Prado,Daniel AlomÌa Robles,951,17,17,8
+Hu·nuco,Leoncio Prado,HermÌlio Valdizan,952,17,17,8
+Hu·nuco,Leoncio Prado,JosÈ Crespo y Castillo,953,17,17,8
+Hu·nuco,Leoncio Prado,Luyando,954,17,17,8
+Hu·nuco,Leoncio Prado,Mariano Damaso Beraun,955,17,17,8
+Hu·nuco,Leoncio Prado,Pucayacu,956,17,17,8
+Hu·nuco,Leoncio Prado,Castillo Grande,957,17,17,8
+Hu·nuco,MaraÒÛn,Huacrachuco,958,17,17,8
+Hu·nuco,MaraÒÛn,Cholon,959,17,17,8
+Hu·nuco,MaraÒÛn,San Buenaventura,960,17,17,8
+Hu·nuco,MaraÒÛn,La Morada,961,17,17,8
+Hu·nuco,MaraÒÛn,Santa Rosa de Alto Yanajanca,962,17,17,8
+Hu·nuco,Pachitea,Panao,963,17,17,8
+Hu·nuco,Pachitea,Chaglla,964,17,17,8
+Hu·nuco,Pachitea,Molino,965,17,17,8
+Hu·nuco,Pachitea,Umari,966,17,17,8
+Hu·nuco,Puerto Inca,Puerto Inca,967,17,17,8
+Hu·nuco,Puerto Inca,Codo del Pozuzo,968,17,17,8
+Hu·nuco,Puerto Inca,Honoria,969,17,17,8
+Hu·nuco,Puerto Inca,Tournavista,970,17,17,8
+Hu·nuco,Puerto Inca,Yuyapichis,971,17,17,8
+Hu·nuco,Lauricocha,Jes˙s,972,17,17,8
+Hu·nuco,Lauricocha,BaÒos,973,17,17,8
+Hu·nuco,Lauricocha,Jivia,974,17,17,8
+Hu·nuco,Lauricocha,Queropalca,975,17,17,8
+Hu·nuco,Lauricocha,Rondos,976,17,17,8
+Hu·nuco,Lauricocha,San Francisco de AsÌs,977,17,17,8
+Hu·nuco,Lauricocha,San Miguel de Cauri,978,17,17,8
+Hu·nuco,Yarowilca,Chavinillo,979,17,17,8
+Hu·nuco,Yarowilca,Cahuac,980,17,17,8
+Hu·nuco,Yarowilca,Chacabamba,981,17,17,8
+Hu·nuco,Yarowilca,Aparicio Pomares,982,17,17,8
+Hu·nuco,Yarowilca,Jacas Chico,983,17,17,8
+Hu·nuco,Yarowilca,Obas,984,17,17,8
+Hu·nuco,Yarowilca,Pampamarca,985,17,17,8
+Hu·nuco,Yarowilca,Choras,986,17,17,8
 Ica,Ica,Ica,987,17,17,8
-Ica,Ica,La Tingui√±a,988,17,17,8
+Ica,Ica,La TinguiÒa,988,17,17,8
 Ica,Ica,Los Aquijes,989,17,17,8
 Ica,Ica,Ocucaje,990,17,17,8
 Ica,Ica,Pachacutec,991,17,17,8
 Ica,Ica,Parcona,992,17,17,8
 Ica,Ica,Pueblo Nuevo,993,17,17,8
 Ica,Ica,Salas,994,17,17,8
-Ica,Ica,San Jos√© de Los Molinos,995,17,17,8
+Ica,Ica,San JosÈ de Los Molinos,995,17,17,8
 Ica,Ica,San Juan Bautista,996,17,17,8
 Ica,Ica,Santiago,997,17,17,8
 Ica,Ica,Subtanjalla,998,17,17,8
@@ -1017,7 +1017,7 @@ Ica,Nasca,Marcona,1015,17,17,8
 Ica,Nasca,Vista Alegre,1016,17,17,8
 Ica,Palpa,Palpa,1017,17,17,8
 Ica,Palpa,Llipata,1018,17,17,8
-Ica,Palpa,R√≠o Grande,1019,17,17,8
+Ica,Palpa,RÌo Grande,1019,17,17,8
 Ica,Palpa,Santa Cruz,1020,17,17,8
 Ica,Palpa,Tibillo,1021,17,17,8
 Ica,Pisco,Pisco,1022,17,17,8
@@ -1025,133 +1025,133 @@ Ica,Pisco,Huancano,1023,17,17,8
 Ica,Pisco,Humay,1024,17,17,8
 Ica,Pisco,Independencia,1025,17,17,8
 Ica,Pisco,Paracas,1026,17,17,8
-Ica,Pisco,San Andr√©s,1027,17,17,8
+Ica,Pisco,San AndrÈs,1027,17,17,8
 Ica,Pisco,San Clemente,1028,17,17,8
 Ica,Pisco,Tupac Amaru Inca,1029,17,17,8
-Jun√≠n,Huancayo,Huancayo,1030,17,17,8
-Jun√≠n,Huancayo,Carhuacallanga,1031,17,17,8
-Jun√≠n,Huancayo,Chacapampa,1032,17,17,8
-Jun√≠n,Huancayo,Chicche,1033,17,17,8
-Jun√≠n,Huancayo,Chilca,1034,17,17,8
-Jun√≠n,Huancayo,Chongos Alto,1035,17,17,8
-Jun√≠n,Huancayo,Chupuro,1036,17,17,8
-Jun√≠n,Huancayo,Colca,1037,17,17,8
-Jun√≠n,Huancayo,Cullhuas,1038,17,17,8
-Jun√≠n,Huancayo,El Tambo,1039,17,17,8
-Jun√≠n,Huancayo,Huacrapuquio,1040,17,17,8
-Jun√≠n,Huancayo,Hualhuas,1041,17,17,8
-Jun√≠n,Huancayo,Huancan,1042,17,17,8
-Jun√≠n,Huancayo,Huasicancha,1043,17,17,8
-Jun√≠n,Huancayo,Huayucachi,1044,17,17,8
-Jun√≠n,Huancayo,Ingenio,1045,17,17,8
-Jun√≠n,Huancayo,Pariahuanca,1046,17,17,8
-Jun√≠n,Huancayo,Pilcomayo,1047,17,17,8
-Jun√≠n,Huancayo,Pucara,1048,17,17,8
-Jun√≠n,Huancayo,Quichuay,1049,17,17,8
-Jun√≠n,Huancayo,Quilcas,1050,17,17,8
-Jun√≠n,Huancayo,San Agust√≠n,1051,17,17,8
-Jun√≠n,Huancayo,San Jer√≥nimo de Tunan,1052,17,17,8
-Jun√≠n,Huancayo,Sa√±o,1053,17,17,8
-Jun√≠n,Huancayo,Sapallanga,1054,17,17,8
-Jun√≠n,Huancayo,Sicaya,1055,17,17,8
-Jun√≠n,Huancayo,Santo Domingo de Acobamba,1056,17,17,8
-Jun√≠n,Huancayo,Viques,1057,17,17,8
-Jun√≠n,Concepci√≥n,Concepci√≥n,1058,17,17,8
-Jun√≠n,Concepci√≥n,Aco,1059,17,17,8
-Jun√≠n,Concepci√≥n,Andamarca,1060,17,17,8
-Jun√≠n,Concepci√≥n,Chambara,1061,17,17,8
-Jun√≠n,Concepci√≥n,Cochas,1062,17,17,8
-Jun√≠n,Concepci√≥n,Comas,1063,17,17,8
-Jun√≠n,Concepci√≥n,Hero√≠nas Toledo,1064,17,17,8
-Jun√≠n,Concepci√≥n,Manzanares,1065,17,17,8
-Jun√≠n,Concepci√≥n,Mariscal Castilla,1066,17,17,8
-Jun√≠n,Concepci√≥n,Matahuasi,1067,17,17,8
-Jun√≠n,Concepci√≥n,Mito,1068,17,17,8
-Jun√≠n,Concepci√≥n,Nueve de Julio,1069,17,17,8
-Jun√≠n,Concepci√≥n,Orcotuna,1070,17,17,8
-Jun√≠n,Concepci√≥n,San Jos√© de Quero,1071,17,17,8
-Jun√≠n,Concepci√≥n,Santa Rosa de Ocopa,1072,17,17,8
-Jun√≠n,Chanchamayo,Chanchamayo,1073,17,17,8
-Jun√≠n,Chanchamayo,Perene,1074,17,17,8
-Jun√≠n,Chanchamayo,Pichanaqui,1075,17,17,8
-Jun√≠n,Chanchamayo,San Luis de Shuaro,1076,17,17,8
-Jun√≠n,Chanchamayo,San Ram√≥n,1077,17,17,8
-Jun√≠n,Chanchamayo,Vitoc,1078,17,17,8
-Jun√≠n,Jauja,Jauja,1079,17,17,8
-Jun√≠n,Jauja,Acolla,1080,17,17,8
-Jun√≠n,Jauja,Apata,1081,17,17,8
-Jun√≠n,Jauja,Ataura,1082,17,17,8
-Jun√≠n,Jauja,Canchayllo,1083,17,17,8
-Jun√≠n,Jauja,Curicaca,1084,17,17,8
-Jun√≠n,Jauja,El Mantaro,1085,17,17,8
-Jun√≠n,Jauja,Huamali,1086,17,17,8
-Jun√≠n,Jauja,Huaripampa,1087,17,17,8
-Jun√≠n,Jauja,Huertas,1088,17,17,8
-Jun√≠n,Jauja,Janjaillo,1089,17,17,8
-Jun√≠n,Jauja,Julc√°n,1090,17,17,8
-Jun√≠n,Jauja,Leonor Ord√≥√±ez,1091,17,17,8
-Jun√≠n,Jauja,Llocllapampa,1092,17,17,8
-Jun√≠n,Jauja,Marco,1093,17,17,8
-Jun√≠n,Jauja,Masma,1094,17,17,8
-Jun√≠n,Jauja,Masma Chicche,1095,17,17,8
-Jun√≠n,Jauja,Molinos,1096,17,17,8
-Jun√≠n,Jauja,Monobamba,1097,17,17,8
-Jun√≠n,Jauja,Muqui,1098,17,17,8
-Jun√≠n,Jauja,Muquiyauyo,1099,17,17,8
-Jun√≠n,Jauja,Paca,1100,17,17,8
-Jun√≠n,Jauja,Paccha,1101,17,17,8
-Jun√≠n,Jauja,Pancan,1102,17,17,8
-Jun√≠n,Jauja,Parco,1103,17,17,8
-Jun√≠n,Jauja,Pomacancha,1104,17,17,8
-Jun√≠n,Jauja,Ricran,1105,17,17,8
-Jun√≠n,Jauja,San Lorenzo,1106,17,17,8
-Jun√≠n,Jauja,San Pedro de Chunan,1107,17,17,8
-Jun√≠n,Jauja,Sausa,1108,17,17,8
-Jun√≠n,Jauja,Sincos,1109,17,17,8
-Jun√≠n,Jauja,Tunan Marca,1110,17,17,8
-Jun√≠n,Jauja,Yauli,1111,17,17,8
-Jun√≠n,Jauja,Yauyos,1112,17,17,8
-Jun√≠n,Jun√≠n,Junin,1113,17,17,8
-Jun√≠n,Jun√≠n,Carhuamayo,1114,17,17,8
-Jun√≠n,Jun√≠n,Ondores,1115,17,17,8
-Jun√≠n,Jun√≠n,Ulcumayo,1116,17,17,8
-Jun√≠n,Satipo,Satipo,1117,17,17,8
-Jun√≠n,Satipo,Coviriali,1118,17,17,8
-Jun√≠n,Satipo,Llaylla,1119,17,17,8
-Jun√≠n,Satipo,Mazamari,1120,17,17,8
-Jun√≠n,Satipo,Pampa Hermosa,1121,17,17,8
-Jun√≠n,Satipo,Pangoa,1122,17,17,8
-Jun√≠n,Satipo,R√≠o Negro,1123,17,17,8
-Jun√≠n,Satipo,R√≠o Tambo,1124,17,17,8
-Jun√≠n,Satipo,Vizcatan del Ene,1125,17,17,8
-Jun√≠n,Tarma,Tarma,1126,17,17,8
-Jun√≠n,Tarma,Acobamba,1127,17,17,8
-Jun√≠n,Tarma,Huaricolca,1128,17,17,8
-Jun√≠n,Tarma,Huasahuasi,1129,17,17,8
-Jun√≠n,Tarma,La Uni√≥n,1130,17,17,8
-Jun√≠n,Tarma,Palca,1131,17,17,8
-Jun√≠n,Tarma,Palcamayo,1132,17,17,8
-Jun√≠n,Tarma,San Pedro de Cajas,1133,17,17,8
-Jun√≠n,Tarma,Tapo,1134,17,17,8
-Jun√≠n,Yauli,La Oroya,1135,17,17,8
-Jun√≠n,Yauli,Chacapalpa,1136,17,17,8
-Jun√≠n,Yauli,Huay-Huay,1137,17,17,8
-Jun√≠n,Yauli,Marcapomacocha,1138,17,17,8
-Jun√≠n,Yauli,Morococha,1139,17,17,8
-Jun√≠n,Yauli,Paccha,1140,17,17,8
-Jun√≠n,Yauli,Santa B√°rbara de Carhuacayan,1141,17,17,8
-Jun√≠n,Yauli,Santa Rosa de Sacco,1142,17,17,8
-Jun√≠n,Yauli,Suitucancha,1143,17,17,8
-Jun√≠n,Yauli,Yauli,1144,17,17,8
-Jun√≠n,Chupaca,Chupaca,1145,17,17,8
-Jun√≠n,Chupaca,Ahuac,1146,17,17,8
-Jun√≠n,Chupaca,Chongos Bajo,1147,17,17,8
-Jun√≠n,Chupaca,Huachac,1148,17,17,8
-Jun√≠n,Chupaca,Huamancaca Chico,1149,17,17,8
-Jun√≠n,Chupaca,San Juan de Iscos,1150,17,17,8
-Jun√≠n,Chupaca,San Juan de Jarpa,1151,17,17,8
-Jun√≠n,Chupaca,Tres de Diciembre,1152,17,17,8
-Jun√≠n,Chupaca,Yanacancha,1153,17,17,8
+JunÌn,Huancayo,Huancayo,1030,17,17,8
+JunÌn,Huancayo,Carhuacallanga,1031,17,17,8
+JunÌn,Huancayo,Chacapampa,1032,17,17,8
+JunÌn,Huancayo,Chicche,1033,17,17,8
+JunÌn,Huancayo,Chilca,1034,17,17,8
+JunÌn,Huancayo,Chongos Alto,1035,17,17,8
+JunÌn,Huancayo,Chupuro,1036,17,17,8
+JunÌn,Huancayo,Colca,1037,17,17,8
+JunÌn,Huancayo,Cullhuas,1038,17,17,8
+JunÌn,Huancayo,El Tambo,1039,17,17,8
+JunÌn,Huancayo,Huacrapuquio,1040,17,17,8
+JunÌn,Huancayo,Hualhuas,1041,17,17,8
+JunÌn,Huancayo,Huancan,1042,17,17,8
+JunÌn,Huancayo,Huasicancha,1043,17,17,8
+JunÌn,Huancayo,Huayucachi,1044,17,17,8
+JunÌn,Huancayo,Ingenio,1045,17,17,8
+JunÌn,Huancayo,Pariahuanca,1046,17,17,8
+JunÌn,Huancayo,Pilcomayo,1047,17,17,8
+JunÌn,Huancayo,Pucara,1048,17,17,8
+JunÌn,Huancayo,Quichuay,1049,17,17,8
+JunÌn,Huancayo,Quilcas,1050,17,17,8
+JunÌn,Huancayo,San AgustÌn,1051,17,17,8
+JunÌn,Huancayo,San JerÛnimo de Tunan,1052,17,17,8
+JunÌn,Huancayo,SaÒo,1053,17,17,8
+JunÌn,Huancayo,Sapallanga,1054,17,17,8
+JunÌn,Huancayo,Sicaya,1055,17,17,8
+JunÌn,Huancayo,Santo Domingo de Acobamba,1056,17,17,8
+JunÌn,Huancayo,Viques,1057,17,17,8
+JunÌn,ConcepciÛn,ConcepciÛn,1058,17,17,8
+JunÌn,ConcepciÛn,Aco,1059,17,17,8
+JunÌn,ConcepciÛn,Andamarca,1060,17,17,8
+JunÌn,ConcepciÛn,Chambara,1061,17,17,8
+JunÌn,ConcepciÛn,Cochas,1062,17,17,8
+JunÌn,ConcepciÛn,Comas,1063,17,17,8
+JunÌn,ConcepciÛn,HeroÌnas Toledo,1064,17,17,8
+JunÌn,ConcepciÛn,Manzanares,1065,17,17,8
+JunÌn,ConcepciÛn,Mariscal Castilla,1066,17,17,8
+JunÌn,ConcepciÛn,Matahuasi,1067,17,17,8
+JunÌn,ConcepciÛn,Mito,1068,17,17,8
+JunÌn,ConcepciÛn,Nueve de Julio,1069,17,17,8
+JunÌn,ConcepciÛn,Orcotuna,1070,17,17,8
+JunÌn,ConcepciÛn,San JosÈ de Quero,1071,17,17,8
+JunÌn,ConcepciÛn,Santa Rosa de Ocopa,1072,17,17,8
+JunÌn,Chanchamayo,Chanchamayo,1073,17,17,8
+JunÌn,Chanchamayo,Perene,1074,17,17,8
+JunÌn,Chanchamayo,Pichanaqui,1075,17,17,8
+JunÌn,Chanchamayo,San Luis de Shuaro,1076,17,17,8
+JunÌn,Chanchamayo,San RamÛn,1077,17,17,8
+JunÌn,Chanchamayo,Vitoc,1078,17,17,8
+JunÌn,Jauja,Jauja,1079,17,17,8
+JunÌn,Jauja,Acolla,1080,17,17,8
+JunÌn,Jauja,Apata,1081,17,17,8
+JunÌn,Jauja,Ataura,1082,17,17,8
+JunÌn,Jauja,Canchayllo,1083,17,17,8
+JunÌn,Jauja,Curicaca,1084,17,17,8
+JunÌn,Jauja,El Mantaro,1085,17,17,8
+JunÌn,Jauja,Huamali,1086,17,17,8
+JunÌn,Jauja,Huaripampa,1087,17,17,8
+JunÌn,Jauja,Huertas,1088,17,17,8
+JunÌn,Jauja,Janjaillo,1089,17,17,8
+JunÌn,Jauja,Julc·n,1090,17,17,8
+JunÌn,Jauja,Leonor OrdÛÒez,1091,17,17,8
+JunÌn,Jauja,Llocllapampa,1092,17,17,8
+JunÌn,Jauja,Marco,1093,17,17,8
+JunÌn,Jauja,Masma,1094,17,17,8
+JunÌn,Jauja,Masma Chicche,1095,17,17,8
+JunÌn,Jauja,Molinos,1096,17,17,8
+JunÌn,Jauja,Monobamba,1097,17,17,8
+JunÌn,Jauja,Muqui,1098,17,17,8
+JunÌn,Jauja,Muquiyauyo,1099,17,17,8
+JunÌn,Jauja,Paca,1100,17,17,8
+JunÌn,Jauja,Paccha,1101,17,17,8
+JunÌn,Jauja,Pancan,1102,17,17,8
+JunÌn,Jauja,Parco,1103,17,17,8
+JunÌn,Jauja,Pomacancha,1104,17,17,8
+JunÌn,Jauja,Ricran,1105,17,17,8
+JunÌn,Jauja,San Lorenzo,1106,17,17,8
+JunÌn,Jauja,San Pedro de Chunan,1107,17,17,8
+JunÌn,Jauja,Sausa,1108,17,17,8
+JunÌn,Jauja,Sincos,1109,17,17,8
+JunÌn,Jauja,Tunan Marca,1110,17,17,8
+JunÌn,Jauja,Yauli,1111,17,17,8
+JunÌn,Jauja,Yauyos,1112,17,17,8
+JunÌn,JunÌn,Junin,1113,17,17,8
+JunÌn,JunÌn,Carhuamayo,1114,17,17,8
+JunÌn,JunÌn,Ondores,1115,17,17,8
+JunÌn,JunÌn,Ulcumayo,1116,17,17,8
+JunÌn,Satipo,Satipo,1117,17,17,8
+JunÌn,Satipo,Coviriali,1118,17,17,8
+JunÌn,Satipo,Llaylla,1119,17,17,8
+JunÌn,Satipo,Mazamari,1120,17,17,8
+JunÌn,Satipo,Pampa Hermosa,1121,17,17,8
+JunÌn,Satipo,Pangoa,1122,17,17,8
+JunÌn,Satipo,RÌo Negro,1123,17,17,8
+JunÌn,Satipo,RÌo Tambo,1124,17,17,8
+JunÌn,Satipo,Vizcatan del Ene,1125,17,17,8
+JunÌn,Tarma,Tarma,1126,17,17,8
+JunÌn,Tarma,Acobamba,1127,17,17,8
+JunÌn,Tarma,Huaricolca,1128,17,17,8
+JunÌn,Tarma,Huasahuasi,1129,17,17,8
+JunÌn,Tarma,La UniÛn,1130,17,17,8
+JunÌn,Tarma,Palca,1131,17,17,8
+JunÌn,Tarma,Palcamayo,1132,17,17,8
+JunÌn,Tarma,San Pedro de Cajas,1133,17,17,8
+JunÌn,Tarma,Tapo,1134,17,17,8
+JunÌn,Yauli,La Oroya,1135,17,17,8
+JunÌn,Yauli,Chacapalpa,1136,17,17,8
+JunÌn,Yauli,Huay-Huay,1137,17,17,8
+JunÌn,Yauli,Marcapomacocha,1138,17,17,8
+JunÌn,Yauli,Morococha,1139,17,17,8
+JunÌn,Yauli,Paccha,1140,17,17,8
+JunÌn,Yauli,Santa B·rbara de Carhuacayan,1141,17,17,8
+JunÌn,Yauli,Santa Rosa de Sacco,1142,17,17,8
+JunÌn,Yauli,Suitucancha,1143,17,17,8
+JunÌn,Yauli,Yauli,1144,17,17,8
+JunÌn,Chupaca,Chupaca,1145,17,17,8
+JunÌn,Chupaca,Ahuac,1146,17,17,8
+JunÌn,Chupaca,Chongos Bajo,1147,17,17,8
+JunÌn,Chupaca,Huachac,1148,17,17,8
+JunÌn,Chupaca,Huamancaca Chico,1149,17,17,8
+JunÌn,Chupaca,San Juan de Iscos,1150,17,17,8
+JunÌn,Chupaca,San Juan de Jarpa,1151,17,17,8
+JunÌn,Chupaca,Tres de Diciembre,1152,17,17,8
+JunÌn,Chupaca,Yanacancha,1153,17,17,8
 La Libertad,Trujillo,Trujillo,1154,17,17,8
 La Libertad,Trujillo,El Porvenir,1155,17,17,8
 La Libertad,Trujillo,Florencia de Mora,1156,17,17,8
@@ -1168,22 +1168,22 @@ La Libertad,Ascope,Chicama,1166,17,17,8
 La Libertad,Ascope,Chocope,1167,17,17,8
 La Libertad,Ascope,Magdalena de Cao,1168,17,17,8
 La Libertad,Ascope,Paijan,1169,17,17,8
-La Libertad,Ascope,R√°zuri,1170,17,17,8
+La Libertad,Ascope,R·zuri,1170,17,17,8
 La Libertad,Ascope,Santiago de Cao,1171,17,17,8
 La Libertad,Ascope,Casa Grande,1172,17,17,8
-La Libertad,Bol√≠var,Bol√≠var,1173,17,17,8
-La Libertad,Bol√≠var,Bambamarca,1174,17,17,8
-La Libertad,Bol√≠var,Condormarca,1175,17,17,8
-La Libertad,Bol√≠var,Longotea,1176,17,17,8
-La Libertad,Bol√≠var,Uchumarca,1177,17,17,8
-La Libertad,Bol√≠var,Ucuncha,1178,17,17,8
-La Libertad,Chep√©n,Chepen,1179,17,17,8
-La Libertad,Chep√©n,Pacanga,1180,17,17,8
-La Libertad,Chep√©n,Pueblo Nuevo,1181,17,17,8
-La Libertad,Julc√°n,Julcan,1182,17,17,8
-La Libertad,Julc√°n,Calamarca,1183,17,17,8
-La Libertad,Julc√°n,Carabamba,1184,17,17,8
-La Libertad,Julc√°n,Huaso,1185,17,17,8
+La Libertad,BolÌvar,BolÌvar,1173,17,17,8
+La Libertad,BolÌvar,Bambamarca,1174,17,17,8
+La Libertad,BolÌvar,Condormarca,1175,17,17,8
+La Libertad,BolÌvar,Longotea,1176,17,17,8
+La Libertad,BolÌvar,Uchumarca,1177,17,17,8
+La Libertad,BolÌvar,Ucuncha,1178,17,17,8
+La Libertad,ChepÈn,Chepen,1179,17,17,8
+La Libertad,ChepÈn,Pacanga,1180,17,17,8
+La Libertad,ChepÈn,Pueblo Nuevo,1181,17,17,8
+La Libertad,Julc·n,Julcan,1182,17,17,8
+La Libertad,Julc·n,Calamarca,1183,17,17,8
+La Libertad,Julc·n,Carabamba,1184,17,17,8
+La Libertad,Julc·n,Huaso,1185,17,17,8
 La Libertad,Otuzco,Otuzco,1186,17,17,8
 La Libertad,Otuzco,Agallpampa,1187,17,17,8
 La Libertad,Otuzco,Charat,1188,17,17,8
@@ -1198,7 +1198,7 @@ La Libertad,Pacasmayo,San Pedro de Lloc,1196,17,17,8
 La Libertad,Pacasmayo,Guadalupe,1197,17,17,8
 La Libertad,Pacasmayo,Jequetepeque,1198,17,17,8
 La Libertad,Pacasmayo,Pacasmayo,1199,17,17,8
-La Libertad,Pacasmayo,San Jos√©,1200,17,17,8
+La Libertad,Pacasmayo,San JosÈ,1200,17,17,8
 La Libertad,Pataz,Tayabamba,1201,17,17,8
 La Libertad,Pataz,Buldibuyo,1202,17,17,8
 La Libertad,Pataz,Chillia,1203,17,17,8
@@ -1212,14 +1212,14 @@ La Libertad,Pataz,Pias,1210,17,17,8
 La Libertad,Pataz,Santiago de Challas,1211,17,17,8
 La Libertad,Pataz,Taurija,1212,17,17,8
 La Libertad,Pataz,Urpay,1213,17,17,8
-La Libertad,S√°nchez Carri√≥n,Huamachuco,1214,17,17,8
-La Libertad,S√°nchez Carri√≥n,Chugay,1215,17,17,8
-La Libertad,S√°nchez Carri√≥n,Cochorco,1216,17,17,8
-La Libertad,S√°nchez Carri√≥n,Curgos,1217,17,17,8
-La Libertad,S√°nchez Carri√≥n,Marcabal,1218,17,17,8
-La Libertad,S√°nchez Carri√≥n,Sanagoran,1219,17,17,8
-La Libertad,S√°nchez Carri√≥n,Sarin,1220,17,17,8
-La Libertad,S√°nchez Carri√≥n,Sartimbamba,1221,17,17,8
+La Libertad,S·nchez CarriÛn,Huamachuco,1214,17,17,8
+La Libertad,S·nchez CarriÛn,Chugay,1215,17,17,8
+La Libertad,S·nchez CarriÛn,Cochorco,1216,17,17,8
+La Libertad,S·nchez CarriÛn,Curgos,1217,17,17,8
+La Libertad,S·nchez CarriÛn,Marcabal,1218,17,17,8
+La Libertad,S·nchez CarriÛn,Sanagoran,1219,17,17,8
+La Libertad,S·nchez CarriÛn,Sarin,1220,17,17,8
+La Libertad,S·nchez CarriÛn,Sartimbamba,1221,17,17,8
 La Libertad,Santiago de Chuco,Santiago de Chuco,1222,17,17,8
 La Libertad,Santiago de Chuco,Angasmarca,1223,17,17,8
 La Libertad,Santiago de Chuco,Cachicadan,1224,17,17,8
@@ -1228,18 +1228,18 @@ La Libertad,Santiago de Chuco,Mollepata,1226,17,17,8
 La Libertad,Santiago de Chuco,Quiruvilca,1227,17,17,8
 La Libertad,Santiago de Chuco,Santa Cruz de Chuca,1228,17,17,8
 La Libertad,Santiago de Chuco,Sitabamba,1229,17,17,8
-La Libertad,Gran Chim√∫,Cascas,1230,17,17,8
-La Libertad,Gran Chim√∫,Lucma,1231,17,17,8
-La Libertad,Gran Chim√∫,Marmot,1232,17,17,8
-La Libertad,Gran Chim√∫,Sayapullo,1233,17,17,8
-La Libertad,Vir√∫,Viru,1234,17,17,8
-La Libertad,Vir√∫,Chao,1235,17,17,8
-La Libertad,Vir√∫,Guadalupito,1236,17,17,8
+La Libertad,Gran Chim˙,Cascas,1230,17,17,8
+La Libertad,Gran Chim˙,Lucma,1231,17,17,8
+La Libertad,Gran Chim˙,Marmot,1232,17,17,8
+La Libertad,Gran Chim˙,Sayapullo,1233,17,17,8
+La Libertad,Vir˙,Viru,1234,17,17,8
+La Libertad,Vir˙,Chao,1235,17,17,8
+La Libertad,Vir˙,Guadalupito,1236,17,17,8
 Lambayeque,Chiclayo,Chiclayo,1237,17,17,8
 Lambayeque,Chiclayo,Chongoyape,1238,17,17,8
 Lambayeque,Chiclayo,Eten,1239,17,17,8
 Lambayeque,Chiclayo,Eten Puerto,1240,17,17,8
-Lambayeque,Chiclayo,Jos√© Leonardo Ortiz,1241,17,17,8
+Lambayeque,Chiclayo,JosÈ Leonardo Ortiz,1241,17,17,8
 Lambayeque,Chiclayo,La Victoria,1242,17,17,8
 Lambayeque,Chiclayo,Lagunas,1243,17,17,8
 Lambayeque,Chiclayo,Monsefu,1244,17,17,8
@@ -1249,18 +1249,18 @@ Lambayeque,Chiclayo,Picsi,1247,17,17,8
 Lambayeque,Chiclayo,Pimentel,1248,17,17,8
 Lambayeque,Chiclayo,Reque,1249,17,17,8
 Lambayeque,Chiclayo,Santa Rosa,1250,17,17,8
-Lambayeque,Chiclayo,Sa√±a,1251,17,17,8
+Lambayeque,Chiclayo,SaÒa,1251,17,17,8
 Lambayeque,Chiclayo,Cayalti,1252,17,17,8
 Lambayeque,Chiclayo,Patapo,1253,17,17,8
 Lambayeque,Chiclayo,Pomalca,1254,17,17,8
 Lambayeque,Chiclayo,Pucala,1255,17,17,8
 Lambayeque,Chiclayo,Tuman,1256,17,17,8
-Lambayeque,Ferre√±afe,Ferre√±afe,1257,17,17,8
-Lambayeque,Ferre√±afe,Ca√±aris,1258,17,17,8
-Lambayeque,Ferre√±afe,Incahuasi,1259,17,17,8
-Lambayeque,Ferre√±afe,Manuel Antonio Mesones Muro,1260,17,17,8
-Lambayeque,Ferre√±afe,Pitipo,1261,17,17,8
-Lambayeque,Ferre√±afe,Pueblo Nuevo,1262,17,17,8
+Lambayeque,FerreÒafe,FerreÒafe,1257,17,17,8
+Lambayeque,FerreÒafe,CaÒaris,1258,17,17,8
+Lambayeque,FerreÒafe,Incahuasi,1259,17,17,8
+Lambayeque,FerreÒafe,Manuel Antonio Mesones Muro,1260,17,17,8
+Lambayeque,FerreÒafe,Pitipo,1261,17,17,8
+Lambayeque,FerreÒafe,Pueblo Nuevo,1262,17,17,8
 Lambayeque,Lambayeque,Lambayeque,1263,17,17,8
 Lambayeque,Lambayeque,Chochope,1264,17,17,8
 Lambayeque,Lambayeque,Illimo,1265,17,17,8
@@ -1271,13 +1271,13 @@ Lambayeque,Lambayeque,Motupe,1269,17,17,8
 Lambayeque,Lambayeque,Olmos,1270,17,17,8
 Lambayeque,Lambayeque,Pacora,1271,17,17,8
 Lambayeque,Lambayeque,Salas,1272,17,17,8
-Lambayeque,Lambayeque,San Jos√©,1273,17,17,8
+Lambayeque,Lambayeque,San JosÈ,1273,17,17,8
 Lambayeque,Lambayeque,Tucume,1274,17,17,8
 Lima,Lima,Lima,1275,24,7,8
 Lima,Lima,AncÛn,1276,24,11,8
 Lima,Lima,Ate,1277,24,11,8
 Lima,Lima,Barranco,1278,24,7,8
-Lima,Lima,Brena,1279,24,7,8
+Lima,Lima,BreÒa,1279,24,7,8
 Lima,Lima,Carabayllo,1280,24,11,8
 Lima,Lima,Chaclacayo,1281,24,11,8
 Lima,Lima,Chorrillos,1282,24,11,8
@@ -1333,7 +1333,7 @@ Lima,Canta,Huaros,1331,24,11,8
 Lima,Canta,Lachaqui,1332,24,11,8
 Lima,Canta,San Buenaventura,1333,24,11,8
 Lima,Canta,Santa Rosa de Quives,1334,24,11,8
-Lima,CaÒete,San Vicente de Ca√±ete,1335,24,11,8
+Lima,CaÒete,San Vicente de CaÒete,1335,24,11,8
 Lima,CaÒete,Asia,1336,24,11,8
 Lima,CaÒete,Calango,1337,24,11,8
 Lima,CaÒete,Cerro Azul,1338,24,11,8
@@ -1348,7 +1348,7 @@ Lima,CaÒete,Quilmana,1346,24,11,8
 Lima,CaÒete,San Antonio,1347,24,11,8
 Lima,CaÒete,San Luis,1348,24,11,8
 Lima,CaÒete,Santa Cruz de Flores,1349,24,11,8
-Lima,CaÒete,Z√∫√±iga,1350,24,11,8
+Lima,CaÒete,Z˙Òiga,1350,24,11,8
 Lima,Huaral,Huaral,1351,24,11,8
 Lima,Huaral,Atavillos Alto,1352,24,11,8
 Lima,Huaral,Atavillos Bajo,1353,24,11,8
@@ -1361,38 +1361,38 @@ Lima,Huaral,San Miguel de Acos,1359,24,11,8
 Lima,Huaral,Santa Cruz de Andamarca,1360,24,11,8
 Lima,Huaral,Sumbilca,1361,24,11,8
 Lima,Huaral,Veintisiete de Noviembre,1362,24,11,8
-Lima,Huarochir√≠,Matucana,1363,24,11,8
-Lima,Huarochir√≠,Antioquia,1364,24,11,8
-Lima,Huarochir√≠,Callahuanca,1365,24,11,8
-Lima,Huarochir√≠,Carampoma,1366,24,11,8
-Lima,Huarochir√≠,Chicla,1367,24,11,8
-Lima,Huarochir√≠,Cuenca,1368,24,11,8
-Lima,Huarochir√≠,Huachupampa,1369,24,11,8
-Lima,Huarochir√≠,Huanza,1370,24,11,8
-Lima,Huarochir√≠,Huarochiri,1371,24,11,8
-Lima,Huarochir√≠,Lahuaytambo,1372,24,11,8
-Lima,Huarochir√≠,Langa,1373,24,11,8
-Lima,Huarochir√≠,Laraos,1374,24,11,8
-Lima,Huarochir√≠,Mariatana,1375,24,11,8
-Lima,Huarochir√≠,Ricardo Palma,1376,24,11,8
-Lima,Huarochir√≠,San Andr√©s de Tupicocha,1377,24,11,8
-Lima,Huarochir√≠,San Antonio,1378,24,11,8
-Lima,Huarochir√≠,San Bartolom√©,1379,24,11,8
-Lima,Huarochir√≠,San Damian,1380,24,11,8
-Lima,Huarochir√≠,San Juan de Iris,1381,24,11,8
-Lima,Huarochir√≠,San Juan de Tantaranche,1382,24,11,8
-Lima,Huarochir√≠,San Lorenzo de Quinti,1383,24,11,8
-Lima,Huarochir√≠,San Mateo,1384,24,11,8
-Lima,Huarochir√≠,San Mateo de Otao,1385,24,11,8
-Lima,Huarochir√≠,San Pedro de Casta,1386,24,11,8
-Lima,Huarochir√≠,San Pedro de Huancayre,1387,24,11,8
-Lima,Huarochir√≠,Sangallaya,1388,24,11,8
-Lima,Huarochir√≠,Santa Cruz de Cocachacra,1389,24,11,8
-Lima,Huarochir√≠,Santa Eulalia,1390,24,11,8
-Lima,Huarochir√≠,Santiago de Anchucaya,1391,24,11,8
-Lima,Huarochir√≠,Santiago de Tuna,1392,24,11,8
-Lima,Huarochir√≠,Santo Domingo de Los Olleros,1393,24,11,8
-Lima,Huarochir√≠,Surco,1394,24,11,8
+Lima,HuarochirÌ,Matucana,1363,24,11,8
+Lima,HuarochirÌ,Antioquia,1364,24,11,8
+Lima,HuarochirÌ,Callahuanca,1365,24,11,8
+Lima,HuarochirÌ,Carampoma,1366,24,11,8
+Lima,HuarochirÌ,Chicla,1367,24,11,8
+Lima,HuarochirÌ,Cuenca,1368,24,11,8
+Lima,HuarochirÌ,Huachupampa,1369,24,11,8
+Lima,HuarochirÌ,Huanza,1370,24,11,8
+Lima,HuarochirÌ,Huarochiri,1371,24,11,8
+Lima,HuarochirÌ,Lahuaytambo,1372,24,11,8
+Lima,HuarochirÌ,Langa,1373,24,11,8
+Lima,HuarochirÌ,Laraos,1374,24,11,8
+Lima,HuarochirÌ,Mariatana,1375,24,11,8
+Lima,HuarochirÌ,Ricardo Palma,1376,24,11,8
+Lima,HuarochirÌ,San AndrÈs de Tupicocha,1377,24,11,8
+Lima,HuarochirÌ,San Antonio,1378,24,11,8
+Lima,HuarochirÌ,San BartolomÈ,1379,24,11,8
+Lima,HuarochirÌ,San Damian,1380,24,11,8
+Lima,HuarochirÌ,San Juan de Iris,1381,24,11,8
+Lima,HuarochirÌ,San Juan de Tantaranche,1382,24,11,8
+Lima,HuarochirÌ,San Lorenzo de Quinti,1383,24,11,8
+Lima,HuarochirÌ,San Mateo,1384,24,11,8
+Lima,HuarochirÌ,San Mateo de Otao,1385,24,11,8
+Lima,HuarochirÌ,San Pedro de Casta,1386,24,11,8
+Lima,HuarochirÌ,San Pedro de Huancayre,1387,24,11,8
+Lima,HuarochirÌ,Sangallaya,1388,24,11,8
+Lima,HuarochirÌ,Santa Cruz de Cocachacra,1389,24,11,8
+Lima,HuarochirÌ,Santa Eulalia,1390,24,11,8
+Lima,HuarochirÌ,Santiago de Anchucaya,1391,24,11,8
+Lima,HuarochirÌ,Santiago de Tuna,1392,24,11,8
+Lima,HuarochirÌ,Santo Domingo de Los Olleros,1393,24,11,8
+Lima,HuarochirÌ,Surco,1394,24,11,8
 Lima,Huaura,Huacho,1395,24,11,8
 Lima,Huaura,Ambar,1396,24,11,8
 Lima,Huaura,Caleta de Carquin,1397,24,11,8
@@ -1402,20 +1402,20 @@ Lima,Huaura,Huaura,1400,24,11,8
 Lima,Huaura,Leoncio Prado,1401,24,11,8
 Lima,Huaura,Paccho,1402,24,11,8
 Lima,Huaura,Santa Leonor,1403,24,11,8
-Lima,Huaura,Santa Mar√≠a,1404,24,11,8
+Lima,Huaura,Santa MarÌa,1404,24,11,8
 Lima,Huaura,Sayan,1405,24,11,8
 Lima,Huaura,Vegueta,1406,24,11,8
-Lima,Oy√≥n,Oyon,1407,24,11,8
-Lima,Oy√≥n,Andajes,1408,24,11,8
-Lima,Oy√≥n,Caujul,1409,24,11,8
-Lima,Oy√≥n,Cochamarca,1410,24,11,8
-Lima,Oy√≥n,Navan,1411,24,11,8
-Lima,Oy√≥n,Pachangara,1412,24,11,8
+Lima,OyÛn,Oyon,1407,24,11,8
+Lima,OyÛn,Andajes,1408,24,11,8
+Lima,OyÛn,Caujul,1409,24,11,8
+Lima,OyÛn,Cochamarca,1410,24,11,8
+Lima,OyÛn,Navan,1411,24,11,8
+Lima,OyÛn,Pachangara,1412,24,11,8
 Lima,Yauyos,Yauyos,1413,24,11,8
 Lima,Yauyos,Alis,1414,24,11,8
 Lima,Yauyos,Allauca,1415,24,11,8
 Lima,Yauyos,Ayaviri,1416,24,11,8
-Lima,Yauyos,Az√°ngaro,1417,24,11,8
+Lima,Yauyos,Az·ngaro,1417,24,11,8
 Lima,Yauyos,Cacra,1418,24,11,8
 Lima,Yauyos,Carania,1419,24,11,8
 Lima,Yauyos,Catahuasi,1420,24,11,8
@@ -1427,7 +1427,7 @@ Lima,Yauyos,Huampara,1425,24,11,8
 Lima,Yauyos,Huancaya,1426,24,11,8
 Lima,Yauyos,Huangascar,1427,24,11,8
 Lima,Yauyos,Huantan,1428,24,11,8
-Lima,Yauyos,Hua√±ec,1429,24,11,8
+Lima,Yauyos,HuaÒec,1429,24,11,8
 Lima,Yauyos,Laraos,1430,24,11,8
 Lima,Yauyos,Lincha,1431,24,11,8
 Lima,Yauyos,Madean,1432,24,11,8
@@ -1436,13 +1436,13 @@ Lima,Yauyos,Omas,1434,24,11,8
 Lima,Yauyos,Putinza,1435,24,11,8
 Lima,Yauyos,Quinches,1436,24,11,8
 Lima,Yauyos,Quinocay,1437,24,11,8
-Lima,Yauyos,San Joaqu√≠n,1438,24,11,8
+Lima,Yauyos,San JoaquÌn,1438,24,11,8
 Lima,Yauyos,San Pedro de Pilas,1439,24,11,8
 Lima,Yauyos,Tanta,1440,24,11,8
 Lima,Yauyos,Tauripampa,1441,24,11,8
 Lima,Yauyos,Tomas,1442,24,11,8
 Lima,Yauyos,Tupe,1443,24,11,8
-Lima,Yauyos,Vi√±ac,1444,24,11,8
+Lima,Yauyos,ViÒac,1444,24,11,8
 Lima,Yauyos,Vitis,1445,24,11,8
 Loreto,Maynas,Iquitos,1446,17,17,8
 Loreto,Maynas,Alto Nanay,1447,17,17,8
@@ -1453,27 +1453,27 @@ Loreto,Maynas,Mazan,1451,17,17,8
 Loreto,Maynas,Napo,1452,17,17,8
 Loreto,Maynas,Punchana,1453,17,17,8
 Loreto,Maynas,Torres Causana,1454,17,17,8
-Loreto,Maynas,Bel√©n,1455,17,17,8
+Loreto,Maynas,BelÈn,1455,17,17,8
 Loreto,Maynas,San Juan Bautista,1456,17,17,8
 Loreto,Alto Amazonas,Yurimaguas,1457,17,17,8
 Loreto,Alto Amazonas,Balsapuerto,1458,17,17,8
 Loreto,Alto Amazonas,Jeberos,1459,17,17,8
 Loreto,Alto Amazonas,Lagunas,1460,17,17,8
 Loreto,Alto Amazonas,Santa Cruz,1461,17,17,8
-Loreto,Alto Amazonas,Teniente Cesar L√≥pez Rojas,1462,17,17,8
+Loreto,Alto Amazonas,Teniente Cesar LÛpez Rojas,1462,17,17,8
 Loreto,Loreto,Nauta,1463,17,17,8
 Loreto,Loreto,Parinari,1464,17,17,8
 Loreto,Loreto,Tigre,1465,17,17,8
 Loreto,Loreto,Trompeteros,1466,17,17,8
 Loreto,Loreto,Urarinas,1467,17,17,8
-Loreto,Mariscal Ram√≥n Castilla,Ram√≥n Castilla,1468,17,17,8
-Loreto,Mariscal Ram√≥n Castilla,Pebas,1469,17,17,8
-Loreto,Mariscal Ram√≥n Castilla,Yavari,1470,17,17,8
-Loreto,Mariscal Ram√≥n Castilla,San Pablo,1471,17,17,8
+Loreto,Mariscal RamÛn Castilla,RamÛn Castilla,1468,17,17,8
+Loreto,Mariscal RamÛn Castilla,Pebas,1469,17,17,8
+Loreto,Mariscal RamÛn Castilla,Yavari,1470,17,17,8
+Loreto,Mariscal RamÛn Castilla,San Pablo,1471,17,17,8
 Loreto,Requena,Requena,1472,17,17,8
 Loreto,Requena,Alto Tapiche,1473,17,17,8
 Loreto,Requena,Capelo,1474,17,17,8
-Loreto,Requena,Emilio San Mart√≠n,1475,17,17,8
+Loreto,Requena,Emilio San MartÌn,1475,17,17,8
 Loreto,Requena,Maquia,1476,17,17,8
 Loreto,Requena,Puinahua,1477,17,17,8
 Loreto,Requena,Saquena,1478,17,17,8
@@ -1483,16 +1483,16 @@ Loreto,Requena,Jenaro Herrera,1481,17,17,8
 Loreto,Requena,Yaquerana,1482,17,17,8
 Loreto,Ucayali,Contamana,1483,17,17,8
 Loreto,Ucayali,Inahuaya,1484,17,17,8
-Loreto,Ucayali,Padre M√°rquez,1485,17,17,8
+Loreto,Ucayali,Padre M·rquez,1485,17,17,8
 Loreto,Ucayali,Pampa Hermosa,1486,17,17,8
 Loreto,Ucayali,Sarayacu,1487,17,17,8
 Loreto,Ucayali,Vargas Guerra,1488,17,17,8
-Loreto,Datem del Mara√±√≥n,Barranca,1489,17,17,8
-Loreto,Datem del Mara√±√≥n,Cahuapanas,1490,17,17,8
-Loreto,Datem del Mara√±√≥n,Manseriche,1491,17,17,8
-Loreto,Datem del Mara√±√≥n,Morona,1492,17,17,8
-Loreto,Datem del Mara√±√≥n,Pastaza,1493,17,17,8
-Loreto,Datem del Mara√±√≥n,Andoas,1494,17,17,8
+Loreto,Datem del MaraÒÛn,Barranca,1489,17,17,8
+Loreto,Datem del MaraÒÛn,Cahuapanas,1490,17,17,8
+Loreto,Datem del MaraÒÛn,Manseriche,1491,17,17,8
+Loreto,Datem del MaraÒÛn,Morona,1492,17,17,8
+Loreto,Datem del MaraÒÛn,Pastaza,1493,17,17,8
+Loreto,Datem del MaraÒÛn,Andoas,1494,17,17,8
 Loreto,Putumayo,Putumayo,1495,17,17,8
 Loreto,Putumayo,Rosa Panduro,1496,17,17,8
 Loreto,Putumayo,Teniente Manuel Clavero,1497,17,17,8
@@ -1505,26 +1505,26 @@ Madre de Dios,Manu,Manu,1503,17,17,8
 Madre de Dios,Manu,Fitzcarrald,1504,17,17,8
 Madre de Dios,Manu,Madre de Dios,1505,17,17,8
 Madre de Dios,Manu,Huepetuhe,1506,17,17,8
-Madre de Dios,Tahuamanu,I√±apari,1507,17,17,8
+Madre de Dios,Tahuamanu,IÒapari,1507,17,17,8
 Madre de Dios,Tahuamanu,Iberia,1508,17,17,8
 Madre de Dios,Tahuamanu,Tahuamanu,1509,17,17,8
 Moquegua,Mariscal Nieto,Moquegua,1510,17,17,8
 Moquegua,Mariscal Nieto,Carumas,1511,17,17,8
 Moquegua,Mariscal Nieto,Cuchumbaya,1512,17,17,8
 Moquegua,Mariscal Nieto,Samegua,1513,17,17,8
-Moquegua,Mariscal Nieto,San Crist√≥bal,1514,17,17,8
+Moquegua,Mariscal Nieto,San CristÛbal,1514,17,17,8
 Moquegua,Mariscal Nieto,Torata,1515,17,17,8
-Moquegua,General S√°nchez Cerro,Omate,1516,17,17,8
-Moquegua,General S√°nchez Cerro,Chojata,1517,17,17,8
-Moquegua,General S√°nchez Cerro,Coalaque,1518,17,17,8
-Moquegua,General S√°nchez Cerro,Ichu√±a,1519,17,17,8
-Moquegua,General S√°nchez Cerro,La Capilla,1520,17,17,8
-Moquegua,General S√°nchez Cerro,Lloque,1521,17,17,8
-Moquegua,General S√°nchez Cerro,Matalaque,1522,17,17,8
-Moquegua,General S√°nchez Cerro,Puquina,1523,17,17,8
-Moquegua,General S√°nchez Cerro,Quinistaquillas,1524,17,17,8
-Moquegua,General S√°nchez Cerro,Ubinas,1525,17,17,8
-Moquegua,General S√°nchez Cerro,Yunga,1526,17,17,8
+Moquegua,General S·nchez Cerro,Omate,1516,17,17,8
+Moquegua,General S·nchez Cerro,Chojata,1517,17,17,8
+Moquegua,General S·nchez Cerro,Coalaque,1518,17,17,8
+Moquegua,General S·nchez Cerro,IchuÒa,1519,17,17,8
+Moquegua,General S·nchez Cerro,La Capilla,1520,17,17,8
+Moquegua,General S·nchez Cerro,Lloque,1521,17,17,8
+Moquegua,General S·nchez Cerro,Matalaque,1522,17,17,8
+Moquegua,General S·nchez Cerro,Puquina,1523,17,17,8
+Moquegua,General S·nchez Cerro,Quinistaquillas,1524,17,17,8
+Moquegua,General S·nchez Cerro,Ubinas,1525,17,17,8
+Moquegua,General S·nchez Cerro,Yunga,1526,17,17,8
 Moquegua,Ilo,Ilo,1527,17,17,8
 Moquegua,Ilo,El Algarrobal,1528,17,17,8
 Moquegua,Ilo,Pacocha,1529,17,17,8
@@ -1535,35 +1535,35 @@ Pasco,Pasco,Huayllay,1533,17,17,8
 Pasco,Pasco,Ninacaca,1534,17,17,8
 Pasco,Pasco,Pallanchacra,1535,17,17,8
 Pasco,Pasco,Paucartambo,1536,17,17,8
-Pasco,Pasco,San Francisco de As√≠s de Yarusyacan,1537,17,17,8
-Pasco,Pasco,Simon Bol√≠var,1538,17,17,8
+Pasco,Pasco,San Francisco de AsÌs de Yarusyacan,1537,17,17,8
+Pasco,Pasco,Simon BolÌvar,1538,17,17,8
 Pasco,Pasco,Ticlacayan,1539,17,17,8
 Pasco,Pasco,Tinyahuarco,1540,17,17,8
 Pasco,Pasco,Vicco,1541,17,17,8
 Pasco,Pasco,Yanacancha,1542,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Yanahuanca,1543,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Chacayan,1544,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Goyllarisquizga,1545,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Paucar,1546,17,17,8
-Pasco,Daniel Alcides Carri√≥n,San Pedro de Pillao,1547,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Santa Ana de Tusi,1548,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Tapuc,1549,17,17,8
-Pasco,Daniel Alcides Carri√≥n,Vilcabamba,1550,17,17,8
+Pasco,Daniel Alcides CarriÛn,Yanahuanca,1543,17,17,8
+Pasco,Daniel Alcides CarriÛn,Chacayan,1544,17,17,8
+Pasco,Daniel Alcides CarriÛn,Goyllarisquizga,1545,17,17,8
+Pasco,Daniel Alcides CarriÛn,Paucar,1546,17,17,8
+Pasco,Daniel Alcides CarriÛn,San Pedro de Pillao,1547,17,17,8
+Pasco,Daniel Alcides CarriÛn,Santa Ana de Tusi,1548,17,17,8
+Pasco,Daniel Alcides CarriÛn,Tapuc,1549,17,17,8
+Pasco,Daniel Alcides CarriÛn,Vilcabamba,1550,17,17,8
 Pasco,Oxapampa,Oxapampa,1551,17,17,8
 Pasco,Oxapampa,Chontabamba,1552,17,17,8
 Pasco,Oxapampa,Huancabamba,1553,17,17,8
 Pasco,Oxapampa,Palcazu,1554,17,17,8
 Pasco,Oxapampa,Pozuzo,1555,17,17,8
-Pasco,Oxapampa,Puerto Berm√∫dez,1556,17,17,8
+Pasco,Oxapampa,Puerto Berm˙dez,1556,17,17,8
 Pasco,Oxapampa,Villa Rica,1557,17,17,8
-Pasco,Oxapampa,Constituci√≥n,1558,17,17,8
+Pasco,Oxapampa,ConstituciÛn,1558,17,17,8
 Piura,Piura,Piura,1559,17,17,8
 Piura,Piura,Castilla,1560,17,17,8
 Piura,Piura,Catacaos,1561,17,17,8
 Piura,Piura,Cura Mori,1562,17,17,8
 Piura,Piura,El Tallan,1563,17,17,8
 Piura,Piura,La Arena,1564,17,17,8
-Piura,Piura,La Uni√≥n,1565,17,17,8
+Piura,Piura,La UniÛn,1565,17,17,8
 Piura,Piura,Las Lomas,1566,17,17,8
 Piura,Piura,Tambo Grande,1567,17,17,8
 Piura,Piura,Veintiseis de Octubre,1568,17,17,8
@@ -1585,16 +1585,16 @@ Piura,Huancabamba,Lalaquiz,1583,17,17,8
 Piura,Huancabamba,San Miguel de El Faique,1584,17,17,8
 Piura,Huancabamba,Sondor,1585,17,17,8
 Piura,Huancabamba,Sondorillo,1586,17,17,8
-Piura,Morrop√≥n,Chulucanas,1587,17,17,8
-Piura,Morrop√≥n,Buenos Aires,1588,17,17,8
-Piura,Morrop√≥n,Chalaco,1589,17,17,8
-Piura,Morrop√≥n,La Matanza,1590,17,17,8
-Piura,Morrop√≥n,Morropon,1591,17,17,8
-Piura,Morrop√≥n,Salitral,1592,17,17,8
-Piura,Morrop√≥n,San Juan de Bigote,1593,17,17,8
-Piura,Morrop√≥n,Santa Catalina de Mossa,1594,17,17,8
-Piura,Morrop√≥n,Santo Domingo,1595,17,17,8
-Piura,Morrop√≥n,Yamango,1596,17,17,8
+Piura,MorropÛn,Chulucanas,1587,17,17,8
+Piura,MorropÛn,Buenos Aires,1588,17,17,8
+Piura,MorropÛn,Chalaco,1589,17,17,8
+Piura,MorropÛn,La Matanza,1590,17,17,8
+Piura,MorropÛn,Morropon,1591,17,17,8
+Piura,MorropÛn,Salitral,1592,17,17,8
+Piura,MorropÛn,San Juan de Bigote,1593,17,17,8
+Piura,MorropÛn,Santa Catalina de Mossa,1594,17,17,8
+Piura,MorropÛn,Santo Domingo,1595,17,17,8
+Piura,MorropÛn,Yamango,1596,17,17,8
 Piura,Paita,Paita,1597,17,17,8
 Piura,Paita,Amotape,1598,17,17,8
 Piura,Paita,Arenal,1599,17,17,8
@@ -1610,14 +1610,14 @@ Piura,Sullana,Marcavelica,1608,17,17,8
 Piura,Sullana,Miguel Checa,1609,17,17,8
 Piura,Sullana,Querecotillo,1610,17,17,8
 Piura,Sullana,Salitral,1611,17,17,8
-Piura,Talara,Pari√±as,1612,17,17,8
+Piura,Talara,PariÒas,1612,17,17,8
 Piura,Talara,El Alto,1613,17,17,8
 Piura,Talara,La Brea,1614,17,17,8
 Piura,Talara,Lobitos,1615,17,17,8
 Piura,Talara,Los Organos,1616,17,17,8
 Piura,Talara,Mancora,1617,17,17,8
 Piura,Sechura,Sechura,1618,17,17,8
-Piura,Sechura,Bellavista de la Uni√≥n,1619,17,17,8
+Piura,Sechura,Bellavista de la UniÛn,1619,17,17,8
 Piura,Sechura,Bernal,1620,17,17,8
 Piura,Sechura,Cristo Nos Valga,1621,17,17,8
 Piura,Sechura,Vice,1622,17,17,8
@@ -1630,28 +1630,28 @@ Puno,Puno,Capachica,1628,17,17,8
 Puno,Puno,Chucuito,1629,17,17,8
 Puno,Puno,Coata,1630,17,17,8
 Puno,Puno,Huata,1631,17,17,8
-Puno,Puno,Ma√±azo,1632,17,17,8
+Puno,Puno,MaÒazo,1632,17,17,8
 Puno,Puno,Paucarcolla,1633,17,17,8
 Puno,Puno,Pichacani,1634,17,17,8
 Puno,Puno,Plateria,1635,17,17,8
 Puno,Puno,San Antonio,1636,17,17,8
 Puno,Puno,Tiquillaca,1637,17,17,8
 Puno,Puno,Vilque,1638,17,17,8
-Puno,Az√°ngaro,Az√°ngaro,1639,17,17,8
-Puno,Az√°ngaro,Achaya,1640,17,17,8
-Puno,Az√°ngaro,Arapa,1641,17,17,8
-Puno,Az√°ngaro,Asillo,1642,17,17,8
-Puno,Az√°ngaro,Caminaca,1643,17,17,8
-Puno,Az√°ngaro,Chupa,1644,17,17,8
-Puno,Az√°ngaro,Jos√© Domingo Choquehuanca,1645,17,17,8
-Puno,Az√°ngaro,Mu√±ani,1646,17,17,8
-Puno,Az√°ngaro,Potoni,1647,17,17,8
-Puno,Az√°ngaro,Saman,1648,17,17,8
-Puno,Az√°ngaro,San Anton,1649,17,17,8
-Puno,Az√°ngaro,San Jos√©,1650,17,17,8
-Puno,Az√°ngaro,San Juan de Salinas,1651,17,17,8
-Puno,Az√°ngaro,Santiago de Pupuja,1652,17,17,8
-Puno,Az√°ngaro,Tirapata,1653,17,17,8
+Puno,Az·ngaro,Az·ngaro,1639,17,17,8
+Puno,Az·ngaro,Achaya,1640,17,17,8
+Puno,Az·ngaro,Arapa,1641,17,17,8
+Puno,Az·ngaro,Asillo,1642,17,17,8
+Puno,Az·ngaro,Caminaca,1643,17,17,8
+Puno,Az·ngaro,Chupa,1644,17,17,8
+Puno,Az·ngaro,JosÈ Domingo Choquehuanca,1645,17,17,8
+Puno,Az·ngaro,MuÒani,1646,17,17,8
+Puno,Az·ngaro,Potoni,1647,17,17,8
+Puno,Az·ngaro,Saman,1648,17,17,8
+Puno,Az·ngaro,San Anton,1649,17,17,8
+Puno,Az·ngaro,San JosÈ,1650,17,17,8
+Puno,Az·ngaro,San Juan de Salinas,1651,17,17,8
+Puno,Az·ngaro,Santiago de Pupuja,1652,17,17,8
+Puno,Az·ngaro,Tirapata,1653,17,17,8
 Puno,Carabaya,Macusani,1654,17,17,8
 Puno,Carabaya,Ajoyani,1655,17,17,8
 Puno,Carabaya,Ayapata,1656,17,17,8
@@ -1674,14 +1674,14 @@ Puno,El Collao,Capazo,1672,17,17,8
 Puno,El Collao,Pilcuyo,1673,17,17,8
 Puno,El Collao,Santa Rosa,1674,17,17,8
 Puno,El Collao,Conduriri,1675,17,17,8
-Puno,Huancan√©,Huancane,1676,17,17,8
-Puno,Huancan√©,Cojata,1677,17,17,8
-Puno,Huancan√©,Huatasani,1678,17,17,8
-Puno,Huancan√©,Inchupalla,1679,17,17,8
-Puno,Huancan√©,Pusi,1680,17,17,8
-Puno,Huancan√©,Rosaspata,1681,17,17,8
-Puno,Huancan√©,Taraco,1682,17,17,8
-Puno,Huancan√©,Vilque Chico,1683,17,17,8
+Puno,HuancanÈ,Huancane,1676,17,17,8
+Puno,HuancanÈ,Cojata,1677,17,17,8
+Puno,HuancanÈ,Huatasani,1678,17,17,8
+Puno,HuancanÈ,Inchupalla,1679,17,17,8
+Puno,HuancanÈ,Pusi,1680,17,17,8
+Puno,HuancanÈ,Rosaspata,1681,17,17,8
+Puno,HuancanÈ,Taraco,1682,17,17,8
+Puno,HuancanÈ,Vilque Chico,1683,17,17,8
 Puno,Lampa,Lampa,1684,17,17,8
 Puno,Lampa,Cabanilla,1685,17,17,8
 Puno,Lampa,Calapuja,1686,17,17,8
@@ -1697,7 +1697,7 @@ Puno,Melgar,Antauta,1695,17,17,8
 Puno,Melgar,Cupi,1696,17,17,8
 Puno,Melgar,Llalli,1697,17,17,8
 Puno,Melgar,Macari,1698,17,17,8
-Puno,Melgar,Nu√±oa,1699,17,17,8
+Puno,Melgar,NuÒoa,1699,17,17,8
 Puno,Melgar,Orurillo,1700,17,17,8
 Puno,Melgar,Santa Rosa,1701,17,17,8
 Puno,Melgar,Umachiri,1702,17,17,8
@@ -1710,10 +1710,10 @@ Puno,San Antonio de Putina,Ananea,1708,17,17,8
 Puno,San Antonio de Putina,Pedro Vilca Apaza,1709,17,17,8
 Puno,San Antonio de Putina,Quilcapuncu,1710,17,17,8
 Puno,San Antonio de Putina,Sina,1711,17,17,8
-Puno,San Rom√°n,Juliaca,1712,17,17,8
-Puno,San Rom√°n,Cabana,1713,17,17,8
-Puno,San Rom√°n,Cabanillas,1714,17,17,8
-Puno,San Rom√°n,Caracoto,1715,17,17,8
+Puno,San Rom·n,Juliaca,1712,17,17,8
+Puno,San Rom·n,Cabana,1713,17,17,8
+Puno,San Rom·n,Cabanillas,1714,17,17,8
+Puno,San Rom·n,Caracoto,1715,17,17,8
 Puno,Sandia,Sandia,1716,17,17,8
 Puno,Sandia,Cuyocuyo,1717,17,17,8
 Puno,Sandia,Limbani,1718,17,17,8
@@ -1731,83 +1731,83 @@ Puno,Yunguyo,Cuturapi,1729,17,17,8
 Puno,Yunguyo,Ollaraya,1730,17,17,8
 Puno,Yunguyo,Tinicachi,1731,17,17,8
 Puno,Yunguyo,Unicachi,1732,17,17,8
-San Mart√≠n,Moyobamba,Moyobamba,1733,17,17,8
-San Mart√≠n,Moyobamba,Calzada,1734,17,17,8
-San Mart√≠n,Moyobamba,Habana,1735,17,17,8
-San Mart√≠n,Moyobamba,Jepelacio,1736,17,17,8
-San Mart√≠n,Moyobamba,Soritor,1737,17,17,8
-San Mart√≠n,Moyobamba,Yantalo,1738,17,17,8
-San Mart√≠n,Bellavista,Bellavista,1739,17,17,8
-San Mart√≠n,Bellavista,Alto Biavo,1740,17,17,8
-San Mart√≠n,Bellavista,Bajo Biavo,1741,17,17,8
-San Mart√≠n,Bellavista,Huallaga,1742,17,17,8
-San Mart√≠n,Bellavista,San Pablo,1743,17,17,8
-San Mart√≠n,Bellavista,San Rafael,1744,17,17,8
-San Mart√≠n,El Dorado,San Jos√© de Sisa,1745,17,17,8
-San Mart√≠n,El Dorado,Agua Blanca,1746,17,17,8
-San Mart√≠n,El Dorado,San Mart√≠n,1747,17,17,8
-San Mart√≠n,El Dorado,Santa Rosa,1748,17,17,8
-San Mart√≠n,El Dorado,Shatoja,1749,17,17,8
-San Mart√≠n,Huallaga,Saposoa,1750,17,17,8
-San Mart√≠n,Huallaga,Alto Saposoa,1751,17,17,8
-San Mart√≠n,Huallaga,El Eslab√≥n,1752,17,17,8
-San Mart√≠n,Huallaga,Piscoyacu,1753,17,17,8
-San Mart√≠n,Huallaga,Sacanche,1754,17,17,8
-San Mart√≠n,Huallaga,Tingo de Saposoa,1755,17,17,8
-San Mart√≠n,Lamas,Lamas,1756,17,17,8
-San Mart√≠n,Lamas,Alonso de Alvarado,1757,17,17,8
-San Mart√≠n,Lamas,Barranquita,1758,17,17,8
-San Mart√≠n,Lamas,Caynarachi,1759,17,17,8
-San Mart√≠n,Lamas,Cu√±umbuqui,1760,17,17,8
-San Mart√≠n,Lamas,Pinto Recodo,1761,17,17,8
-San Mart√≠n,Lamas,Rumisapa,1762,17,17,8
-San Mart√≠n,Lamas,San Roque de Cumbaza,1763,17,17,8
-San Mart√≠n,Lamas,Shanao,1764,17,17,8
-San Mart√≠n,Lamas,Tabalosos,1765,17,17,8
-San Mart√≠n,Lamas,Zapatero,1766,17,17,8
-San Mart√≠n,Mariscal C√°ceres,Juanju√≠,1767,17,17,8
-San Mart√≠n,Mariscal C√°ceres,Campanilla,1768,17,17,8
-San Mart√≠n,Mariscal C√°ceres,Huicungo,1769,17,17,8
-San Mart√≠n,Mariscal C√°ceres,Pachiza,1770,17,17,8
-San Mart√≠n,Mariscal C√°ceres,Pajarillo,1771,17,17,8
-San Mart√≠n,Picota,Picota,1772,17,17,8
-San Mart√≠n,Picota,Buenos Aires,1773,17,17,8
-San Mart√≠n,Picota,Caspisapa,1774,17,17,8
-San Mart√≠n,Picota,Pilluana,1775,17,17,8
-San Mart√≠n,Picota,Pucacaca,1776,17,17,8
-San Mart√≠n,Picota,San Crist√≥bal,1777,17,17,8
-San Mart√≠n,Picota,San Hilari√≥n,1778,17,17,8
-San Mart√≠n,Picota,Shamboyacu,1779,17,17,8
-San Mart√≠n,Picota,Tingo de Ponasa,1780,17,17,8
-San Mart√≠n,Picota,Tres Unidos,1781,17,17,8
-San Mart√≠n,Rioja,Rioja,1782,17,17,8
-San Mart√≠n,Rioja,Awajun,1783,17,17,8
-San Mart√≠n,Rioja,El√≠as Soplin Vargas,1784,17,17,8
-San Mart√≠n,Rioja,Nueva Cajamarca,1785,17,17,8
-San Mart√≠n,Rioja,Pardo Miguel,1786,17,17,8
-San Mart√≠n,Rioja,Posic,1787,17,17,8
-San Mart√≠n,Rioja,San Fernando,1788,17,17,8
-San Mart√≠n,Rioja,Yorongos,1789,17,17,8
-San Mart√≠n,Rioja,Yuracyacu,1790,17,17,8
-San Mart√≠n,San Mart√≠n,Tarapoto,1791,17,17,8
-San Mart√≠n,San Mart√≠n,Alberto Leveau,1792,17,17,8
-San Mart√≠n,San Mart√≠n,Cacatachi,1793,17,17,8
-San Mart√≠n,San Mart√≠n,Chazuta,1794,17,17,8
-San Mart√≠n,San Mart√≠n,Chipurana,1795,17,17,8
-San Mart√≠n,San Mart√≠n,El Porvenir,1796,17,17,8
-San Mart√≠n,San Mart√≠n,Huimbayoc,1797,17,17,8
-San Mart√≠n,San Mart√≠n,Juan Guerra,1798,17,17,8
-San Mart√≠n,San Mart√≠n,La Banda de Shilcayo,1799,17,17,8
-San Mart√≠n,San Mart√≠n,Morales,1800,17,17,8
-San Mart√≠n,San Mart√≠n,Papaplaya,1801,17,17,8
-San Mart√≠n,San Mart√≠n,San Antonio,1802,17,17,8
-San Mart√≠n,San Mart√≠n,Sauce,1803,17,17,8
-San Mart√≠n,San Mart√≠n,Shapaja,1804,17,17,8
-San Mart√≠n,Tocache,Tocache,1805,17,17,8
-San Mart√≠n,Tocache,Nuevo Progreso,1806,17,17,8
-San Mart√≠n,Tocache,Polvora,1807,17,17,8
-San Mart√≠n,Tocache,Shunte,1808,17,17,8
-San Mart√≠n,Tocache,Uchiza,1809,17,17,8
+San MartÌn,Moyobamba,Moyobamba,1733,17,17,8
+San MartÌn,Moyobamba,Calzada,1734,17,17,8
+San MartÌn,Moyobamba,Habana,1735,17,17,8
+San MartÌn,Moyobamba,Jepelacio,1736,17,17,8
+San MartÌn,Moyobamba,Soritor,1737,17,17,8
+San MartÌn,Moyobamba,Yantalo,1738,17,17,8
+San MartÌn,Bellavista,Bellavista,1739,17,17,8
+San MartÌn,Bellavista,Alto Biavo,1740,17,17,8
+San MartÌn,Bellavista,Bajo Biavo,1741,17,17,8
+San MartÌn,Bellavista,Huallaga,1742,17,17,8
+San MartÌn,Bellavista,San Pablo,1743,17,17,8
+San MartÌn,Bellavista,San Rafael,1744,17,17,8
+San MartÌn,El Dorado,San JosÈ de Sisa,1745,17,17,8
+San MartÌn,El Dorado,Agua Blanca,1746,17,17,8
+San MartÌn,El Dorado,San MartÌn,1747,17,17,8
+San MartÌn,El Dorado,Santa Rosa,1748,17,17,8
+San MartÌn,El Dorado,Shatoja,1749,17,17,8
+San MartÌn,Huallaga,Saposoa,1750,17,17,8
+San MartÌn,Huallaga,Alto Saposoa,1751,17,17,8
+San MartÌn,Huallaga,El EslabÛn,1752,17,17,8
+San MartÌn,Huallaga,Piscoyacu,1753,17,17,8
+San MartÌn,Huallaga,Sacanche,1754,17,17,8
+San MartÌn,Huallaga,Tingo de Saposoa,1755,17,17,8
+San MartÌn,Lamas,Lamas,1756,17,17,8
+San MartÌn,Lamas,Alonso de Alvarado,1757,17,17,8
+San MartÌn,Lamas,Barranquita,1758,17,17,8
+San MartÌn,Lamas,Caynarachi,1759,17,17,8
+San MartÌn,Lamas,CuÒumbuqui,1760,17,17,8
+San MartÌn,Lamas,Pinto Recodo,1761,17,17,8
+San MartÌn,Lamas,Rumisapa,1762,17,17,8
+San MartÌn,Lamas,San Roque de Cumbaza,1763,17,17,8
+San MartÌn,Lamas,Shanao,1764,17,17,8
+San MartÌn,Lamas,Tabalosos,1765,17,17,8
+San MartÌn,Lamas,Zapatero,1766,17,17,8
+San MartÌn,Mariscal C·ceres,JuanjuÌ,1767,17,17,8
+San MartÌn,Mariscal C·ceres,Campanilla,1768,17,17,8
+San MartÌn,Mariscal C·ceres,Huicungo,1769,17,17,8
+San MartÌn,Mariscal C·ceres,Pachiza,1770,17,17,8
+San MartÌn,Mariscal C·ceres,Pajarillo,1771,17,17,8
+San MartÌn,Picota,Picota,1772,17,17,8
+San MartÌn,Picota,Buenos Aires,1773,17,17,8
+San MartÌn,Picota,Caspisapa,1774,17,17,8
+San MartÌn,Picota,Pilluana,1775,17,17,8
+San MartÌn,Picota,Pucacaca,1776,17,17,8
+San MartÌn,Picota,San CristÛbal,1777,17,17,8
+San MartÌn,Picota,San HilariÛn,1778,17,17,8
+San MartÌn,Picota,Shamboyacu,1779,17,17,8
+San MartÌn,Picota,Tingo de Ponasa,1780,17,17,8
+San MartÌn,Picota,Tres Unidos,1781,17,17,8
+San MartÌn,Rioja,Rioja,1782,17,17,8
+San MartÌn,Rioja,Awajun,1783,17,17,8
+San MartÌn,Rioja,ElÌas Soplin Vargas,1784,17,17,8
+San MartÌn,Rioja,Nueva Cajamarca,1785,17,17,8
+San MartÌn,Rioja,Pardo Miguel,1786,17,17,8
+San MartÌn,Rioja,Posic,1787,17,17,8
+San MartÌn,Rioja,San Fernando,1788,17,17,8
+San MartÌn,Rioja,Yorongos,1789,17,17,8
+San MartÌn,Rioja,Yuracyacu,1790,17,17,8
+San MartÌn,San MartÌn,Tarapoto,1791,17,17,8
+San MartÌn,San MartÌn,Alberto Leveau,1792,17,17,8
+San MartÌn,San MartÌn,Cacatachi,1793,17,17,8
+San MartÌn,San MartÌn,Chazuta,1794,17,17,8
+San MartÌn,San MartÌn,Chipurana,1795,17,17,8
+San MartÌn,San MartÌn,El Porvenir,1796,17,17,8
+San MartÌn,San MartÌn,Huimbayoc,1797,17,17,8
+San MartÌn,San MartÌn,Juan Guerra,1798,17,17,8
+San MartÌn,San MartÌn,La Banda de Shilcayo,1799,17,17,8
+San MartÌn,San MartÌn,Morales,1800,17,17,8
+San MartÌn,San MartÌn,Papaplaya,1801,17,17,8
+San MartÌn,San MartÌn,San Antonio,1802,17,17,8
+San MartÌn,San MartÌn,Sauce,1803,17,17,8
+San MartÌn,San MartÌn,Shapaja,1804,17,17,8
+San MartÌn,Tocache,Tocache,1805,17,17,8
+San MartÌn,Tocache,Nuevo Progreso,1806,17,17,8
+San MartÌn,Tocache,Polvora,1807,17,17,8
+San MartÌn,Tocache,Shunte,1808,17,17,8
+San MartÌn,Tocache,Uchiza,1809,17,17,8
 Tacna,Tacna,Tacna,1810,17,17,8
 Tacna,Tacna,Alto de la Alianza,1811,17,17,8
 Tacna,Tacna,Calana,1812,17,17,8
@@ -1817,7 +1817,7 @@ Tacna,Tacna,Pachia,1815,17,17,8
 Tacna,Tacna,Palca,1816,17,17,8
 Tacna,Tacna,Pocollay,1817,17,17,8
 Tacna,Tacna,Sama,1818,17,17,8
-Tacna,Tacna,Coronel Gregorio Albarrac√≠n Lanchipa,1819,17,17,8
+Tacna,Tacna,Coronel Gregorio AlbarracÌn Lanchipa,1819,17,17,8
 Tacna,Tacna,La Yarada los Palos,1820,17,17,8
 Tacna,Candarave,Candarave,1821,17,17,8
 Tacna,Candarave,Cairani,1822,17,17,8
@@ -1829,7 +1829,7 @@ Tacna,Jorge Basadre,Locumba,1827,17,17,8
 Tacna,Jorge Basadre,Ilabaya,1828,17,17,8
 Tacna,Jorge Basadre,Ite,1829,17,17,8
 Tacna,Tarata,Tarata,1830,17,17,8
-Tacna,Tarata,H√©roes Albarrac√≠n,1831,17,17,8
+Tacna,Tarata,HÈroes AlbarracÌn,1831,17,17,8
 Tacna,Tarata,Estique,1832,17,17,8
 Tacna,Tarata,Estique-Pampa,1833,17,17,8
 Tacna,Tarata,Sitajara,1834,17,17,8
@@ -1865,4 +1865,4 @@ Ucayali,Padre Abad,Irazola,1863,17,17,8
 Ucayali,Padre Abad,Curimana,1864,17,17,8
 Ucayali,Padre Abad,Neshuya,1865,17,17,8
 Ucayali,Padre Abad,Alexander Von Humboldt,1866,17,17,8
-Ucayali,Pur√∫s,Purus,1867,17,17,8
+Ucayali,Pur˙s,Purus,1867,17,17,8
