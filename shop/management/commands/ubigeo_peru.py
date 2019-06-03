@@ -4,10 +4,11 @@ from shop.models import Peru
 from django.core.management.base import BaseCommand
 
 
-
 # tmp_data=pd.read_csv('static/data/ubigeo-peru.csv',sep=',', encoding="utf-8")
 
-tmp_data=pd.read_csv('static/data/ubigeo-peru.csv',sep=',')
+tmp_data=pd.ExcelFile("static/data/ubigeo-peru.xlsx")
+
+tmp_data=tmp_data.parse("ubigeo-peru")
 
 class Command(BaseCommand):
     def handle(self, **options):
