@@ -5,8 +5,9 @@ from django.core.management.base import BaseCommand
 
 
 
-tmp_data=pd.read_csv('static/data/ubigeo-peru.csv',sep=',', encoding="utf-8")
+# tmp_data=pd.read_csv('static/data/ubigeo-peru.csv',sep=',', encoding="utf-8")
 
+tmp_data=pd.read_csv('static/data/ubigeo-peru.csv',sep=',')
 
 class Command(BaseCommand):
     def handle(self, **options):
