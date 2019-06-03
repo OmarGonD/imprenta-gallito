@@ -440,11 +440,11 @@ def signupView(request):
             message = render_to_string('accounts/acc_activate_email.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
-            # to_email = user_form.cleaned_data.get('email')
-            to_email = 'oma.gonzales@gmail.com'
+            to_email = user_form.cleaned_data.get('email')
+            # to_email = 'oma.gonzales@gmail.com'
             from_email = 'stickersgallito@stickersgallito.pe'
             email = EmailMessage(
                 mail_subject, message, to=[to_email], from_email=from_email
