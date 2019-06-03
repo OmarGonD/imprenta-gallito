@@ -38,22 +38,12 @@ def allCat(request):
     return render(request, 'shop/index.html', {'categories': categories, 'email_signup_form': email_signup_form})
 
 
-def ProdutcsByCategory(request, c_slug):
-    # Para obtener el título de la categoría
-
-    category = Category.objects.filter(slug=c_slug)
-
-    # Obtiene los productos de la categoría
-    products = Product.objects.filter(slug=c_slug)
-    return render(request, 'shop/productos_por_categoria.html', {'products': products})
-
-
 def ProdCatDetail(request, c_slug):
     if c_slug is not "muestras":
 
         try:
             category = Category.objects.get(slug=c_slug)
-            products = Product.objects.filter(category__slug=c_slug)
+            products = Product.objects.filter(category__slug=c_slug, available=True)
         except Exception as e:
             raise e
 
