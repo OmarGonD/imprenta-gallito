@@ -19,8 +19,8 @@ class SampleAdmin(admin.ModelAdmin):
 admin.site.register(Sample, SampleAdmin)
 
 class SamplesPricingAdmin(admin.ModelAdmin):
-    list_display = ['size', 'quantity', 'category', 'price']
-    list_editable = ['category', 'price']
+    list_display = ['category', 'sample', 'size', 'quantity', 'price']
+    list_editable = ['quantity', 'price']
     list_per_page = 20
 
 

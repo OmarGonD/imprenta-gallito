@@ -30,16 +30,16 @@
     <div id="footer-navbar" class="footer_text">
         <div class="container padding-top3 padding-bottom2">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="padding-left0">
                         <ul class="footer_ul padding-left0">
-                            <li class="footer_nav_links">
+                            <li class="footer_nav_links margin-right2">
                                 <a class="" href="{% url 'shop:quienes_somos' %}">¿Quiénes somos?</a>
                             </li>
-                            <li class="footer_nav_links">
+                            <li class="footer_nav_links margin-right2">
                                 <a class="" href="{% url 'shop:como_comprar' %}">¿Cómo comprar?</a>
                             </li>
-                            <li class="footer_nav_links">
+                            <li class="footer_nav_links margin-right2">
                                 <a class="" href="{% url 'shop:contactanos' %}">Contáctanos</a>
                             </li>
                             <li class="footer_nav_links">
@@ -49,8 +49,8 @@
                     </div>
 
                 </div>
-                <div class="col-md-4">
-                    <div class="margin-right5">
+                <div class="col-md-3">
+                    <div class="">
                         <p class="footer_text_right text-right"><img
                                 style="display:inline-block; align:center;vertical-align: middle;"
                                 src="{% static 'img/home/peru-square-flag.jpg' %}" width="5%" height="5%">
@@ -59,24 +59,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-7">
-                    <ul class="footer_ul">
-                        
-                    </ul>
-
-                </div>
-                <div class="col-md-5 text-right">
-                    <div class="margin-right5 footer_nav_links">
-                        <a class="footer_text_right text-right footer_links"
-                            href="{% url 'shop:legales_privacidad' %}">Privacidad</a> &amp; <a
-                            class="footer_text_right text-right footer_links" href="{% url 'shop:legales_terminos' %}">Términos</a>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-9">
                     <ul class="footer_ul footer-links">
                         <!-- <li class="margin-right3"><a href="https://twitter.com/stickersgallito" rel="nofollow noopener" target="_blank" title="Twitter"><i class="fab fa-twitter footer_icons"></i></i></a></li> -->
                         <li class="margin-right3"><a href="https://facebook.com/stickersgallito" rel="nofollow noopener"
@@ -87,9 +70,24 @@
                                     class="fab fa-instagram footer_icons"></i></i></a></li>
                         <!-- <li class="margin-right3"><a href="https://www.youtube.com/user/stickersgallito" rel="nofollow noopener" target="_blank" title="YouTube"><i class="fab fa-youtube footer_icons"></i></i></a></li> -->
                     </ul>
+
                 </div>
-                <div class="col-md-5 text-right">
-                    <div class="right margin-right5">
+                <div class="col-md-3 text-right">
+                    <div class="footer_nav_links">
+                        <a class="footer_text_right text-right footer_links"
+                            href="{% url 'shop:legales_privacidad' %}">Privacidad</a> &amp; <a
+                            class="footer_text_right text-right footer_links" href="{% url 'shop:legales_terminos' %}">Términos</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-9">
+                   
+                </div>
+                <div class="col-md-3 text-right">
+                    <div class="right">
                         <span class="footer_text_right">&copy; 2019 StickersGallito</span>
                     </div>
                 </div>
