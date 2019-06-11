@@ -35,13 +35,11 @@
 
 li.footer_nav_links a {
    color: #008965; 
-   margin-right: 2%; 
    text-decoration: none;
 }
 
 li.footer_nav_links a:focus, a:hover {
     color: rgb(2, 214, 158);
-    margin-right: 2%;
     text-decoration: none;
 }
 
