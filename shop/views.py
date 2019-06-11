@@ -88,7 +88,7 @@ def SamplePack(request, c_slug, product_slug):
             cart=cart,
             sample=sample,
             size="varios",
-            quantity="10",
+            quantity="5",
             file=sample.image,
             comment="",
             step_two_complete=True,
