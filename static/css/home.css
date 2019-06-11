@@ -1,11 +1,4 @@
-.my_header_bg_color {
 
-    /*background-color: #4FB99F;*/
-    /*background-color: #00ADB5;*/
-    /*background-color: #6BB983;*/
-    background-color: #00AD80;
-
-}
 
 
 .stickers-word {
@@ -289,7 +282,7 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 90%;
+        width: 80%;
     }
 
 
