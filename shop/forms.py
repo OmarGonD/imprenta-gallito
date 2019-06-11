@@ -72,7 +72,7 @@ class ProfileForm(ModelForm):
     phone_number = forms.CharField(label='Celular')
     birthdate = forms.DateField(label='Fecha de nacimiento', widget=SelectDateWidget(years=range(1980, 2012), months=MONTHS))
     shipping_address1 = forms.CharField(label='Dirección de envío', max_length=100, required=True)
-    shipping_address2 = forms.CharField(label='Dirección de envío 2 (opcional)', max_length=100, required=False)
+    shipping_address2 = forms.CharField(label='Referencia (opcional)', max_length=100, required=False)
 
     class Meta:
         model = Profile

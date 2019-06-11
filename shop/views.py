@@ -506,6 +506,24 @@ def contactanos(request):
     return render(request, "footer_links/contactanos.html")
 
 
+### Legales - Privacidad ###
+
+
+def legales_privacidad(request):
+    return render(request, 'footer_links/legales_privacidad.html')
+
+### Legales - Términos ###
+
+def legales_terminos(request):
+    return render(request, 'footer_links/legales_terminos.html')    
+
+### Preguntas frecuentes ###
+
+def preguntas_frecuentes(request):
+    return render(request, 'footer_links/preguntas_frecuentes.html')
+
+
+
 ### Reviews ###
 
 
@@ -602,3 +620,4 @@ def prices(request):
                                               size=size_selected).values_list("price",flat=True))
 
     return JsonResponse({'prices': prices})
+

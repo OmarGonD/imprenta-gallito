@@ -22,11 +22,8 @@
 
 
 
-    <div class="my_header_categories my_header_bg_color">
-
-        <br>
-        <br>
-        <div class="container">
+    <div class="my_header_categories my_header_bg_color  margin-top3">
+        <div class="container padding-top3">
             <p class="my_category_title">{{ category.name|title }}</p>
             {#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
             <i class="gold-star fas fa-star"></i>
@@ -34,26 +31,20 @@
             <i class="gold-star fas fa-star"></i>
             <i class="gold-star fas fa-star"></i>
             <i class="gold-star fas fa-star-half-alt"></i>
-
             </p>
-
         </div>
     </div>
 
-    <br>
-    <br>
+   
 
 
     <div class="container">
 
-        <br>
-        <br>
 
-
-        <div class="row">
+        <div class="row margin-bottom5 margin-top3">
             {% for product in products %}
 
-                <div class="col-md-3">
+                <div class="col-md-3 padding-top3">
                     <div class="text-center my_products_icons">
                         <a href="{{ product.get_url }}"><img class="my_image_medium"
                                                              src="{{ product.image.url }}"
@@ -67,11 +58,10 @@
 
             {% endfor %}
         </div>
-        <br>
-        <br>
+        
 
 
-        <div class="row">
+        <div class="row margin-bottom3 margin-top3">
             <div class="col-2 col-md-2"></div>
             <div class="col-8 col-md-8">
 
@@ -84,22 +74,11 @@
             <div class="col-2 col-md-2"></div>
         </div>
 
+        <div class="row margin-bottom5 margin-top3">
 
-        <br>
-
-
-        <div class="row">
-
-            <div class="col-md-12 col-lg-12">
+            <div class="col-md-12 col-lg-12 margin-bottom3">
                 <h2 class="text-center">Stickers referenciales</h2>
-                <br>
-                <br>
             </div>
-
-        </div>
-
-        <div class="row">
-
 
             <div class="text-center col-md-3">
                 <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="120px" height="120px">
@@ -120,7 +99,6 @@
 
     </div>
 
-    <br>
-    <br>
+
 
 {% endblock %}
