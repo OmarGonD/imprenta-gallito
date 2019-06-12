@@ -17,6 +17,35 @@ ul > li {
 }
 
 
+
+.width40 {
+    width: 40%
+}
+
+.width50 {
+    width: 50%
+}
+
+.width55 {
+    width: 55% !important;
+}
+
+.width60 {
+    width: 60% !important;
+}
+
+.width65 {
+    width: 65% !important;
+}
+
+.width70 {
+    width: 70% !important;
+}
+
+.display-inline {
+   display: inline-block !important;
+}
+
 /* Blocks Marings (Replacement of BR tags) */
 
 .margin3 {
@@ -42,67 +71,83 @@ ul > li {
   }
 
 .margin-right3 {
-    margin-right: 3%;
+    margin-right: 3% !important;
   }
 
 .margin-right5 {
-    margin-right: 5%;
+    margin-right: 5% !important;
   }
 
 .margin-right10 {
-    margin-right: 10%;
+    margin-right: 10% !important;
   }
 
   .margin-right15 {
-    margin-right: 15%;
+    margin-right: 15% !important;
   }  
 
   .margin-right20 {
-    margin-right: 20%;
+    margin-right: 20% !important;
   }
 
   .margin-right25 {
-    margin-right: 25%;
+    margin-right: 25% !important;
   }
 
   .margin-right30 {
-    margin-right: 30%;
+    margin-right: 30% !important;
   }
 
   .margin-bottom0 {
-    margin-bottom: 0%;
+    margin-bottom: 0% !important;
 }
 
 .margin-bottom2 {
-    margin-bottom: 2%;
-}
-
-.margin-top0 {
-    margin-top: 0%;
-}
-
-.margin-top2 {
-    margin-top: 2%;
+    margin-bottom: 2% !important;
 }
 
 .margin-bottom3 {
-    margin-bottom: 3%;
+    margin-bottom: 3% !important;
+}
+
+.margin-top0 {
+    margin-top: 0% !important;
+}
+
+.margin-top2 {
+    margin-top: 2% !important;
 }
 
 .margin-top3 {
-    margin-top: 3%;
+    margin-top: 3% !important;
 }
 
-.margin-bottom5 {
-    margin-bottom: 5%;
+.margin-top4 {
+    margin-top: 4% !important;
 }
 
 .margin-top5 {
-    margin-top: 5%;
+    margin-top: 5% !important;
+}
+
+.margin-bottom3 {
+    margin-bottom: 3% !important;
+}
+
+.margin-top3 {
+    margin-top: 3% !important;
+}
+
+.margin-bottom5 {
+    margin-bottom: 5% !important;
+}
+
+.margin-top5 {
+    margin-top: 5% !important;
 }
 
 .margin-bottom10 {
-    margin-bottom: 10%;
+    margin-bottom: 10% !important;
 }
 
 .margin-top10 {
@@ -135,13 +180,32 @@ ul > li {
 }
 
 
-.padding5 {
-    padding: 5px;
+.padding2 {
+    padding: 2%;
 }
 
+.padding3 {
+    padding: 3%;
+}
+
+.padding5 {
+    padding: 5%;
+}
+
+.padding6 {
+    padding: 6%;
+}
+
+.padding7 {
+    padding: 7%;
+}
+
+.padding8 {
+    padding: 8%;
+}
 
 .padding10 {
-    padding: 10px;
+    padding: 10%;
 }
 
 
@@ -168,6 +232,22 @@ ul > li {
 
 .padding-top5 {
     padding-top: 5%;
+}
+
+.padding-bottom6 {
+    padding-bottom: 6%;
+}
+
+.padding-top6 {
+    padding-top: 6%;
+}
+
+.padding-bottom7 {
+    padding-bottom: 7%;
+}
+
+.padding-top7 {
+    padding-top: 7%;
 }
 
 .padding-bottom10 {
@@ -431,147 +511,6 @@ ul.my_products_list li {
 .text-white {
     color: white;
 }
-
-/* BOTONES JUMBOTRON */
-
-
-
-a.btn-azul {
-  text-decoration: none;
-  background-color: #5ba4e6;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 700;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-  letter-spacing: 0;
-  line-height: 1.2;
-  -webkit-font-smoothing: antialiased;
-  -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
-  font-size: 1.4rem;
-  padding: 22px 30px;
-  border-radius: 6px;
-  border:none;
-}
-
-a.btn-azul:focus {
-	outline:none;
-}
-
-
-a.btn-azul:hover {
-  text-decoration: none;
-  background-color: #7ab6eb;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 700;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-  letter-spacing: 0;
-  line-height: 1.2;
-  -webkit-font-smoothing: antialiased;
-  -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
-  font-size: 1.4rem;
-  padding: 22px 30px;
-  border-radius: 6px;
-  border:none;
-}
-
-
-a.btn-naranja {
-  text-decoration: none;
-  background-color: #ffa31a;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 700;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-  letter-spacing: 0;
-  line-height: 1.2;
-  -webkit-font-smoothing: antialiased;
-  -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  background-image: linear-gradient(to bottom,rgba(255,255,250,.09) 0%,rgba(0,0,0,.09) 100%);
-  font-size: 1.4rem;
-  padding: 22px 30px;
-  border-radius: 6px;
-  border:none;
-}
-
-a.btn-naranja:focus {
-	outline:none;
-}
-
-
-
-
-a.btn-naranja:hover {
-  text-decoration: none;
-  background-color: #ffad33;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 700;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-  letter-spacing: 0;
-  line-height: 1.2;
-  -webkit-font-smoothing: antialiased;
-  -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
-  background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
-  font-size: 1.4rem;
-  padding: 22px 30px;
-  border-radius: 6px;
-  border:none;
-}
-
-
-
-
-
-
-/* ==================== */
-
-.btn-xlarge {
-    padding: 18px 28px;
-    font-size: 22px;
-    line-height: normal;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
-    }
-
-
-
-
 
 
 .my_products_icons {
