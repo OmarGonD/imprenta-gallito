@@ -226,7 +226,11 @@
 
                                     <div id="size">
 
-                                        <legend class="text-size16 bold-font"> {{ form.size.label }}</legend>
+                                        <legend class="text-size16 bold-font"> {{ form.size.label }}
+                                            <i data-toggle="modal" data-target="#choosing_size"
+                                        style="margin-left: 5px"
+                                        class="far fa-question-circle"></i>
+                                        </legend>
 
 
                                         <ul class="form-items">
@@ -328,8 +332,6 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
-
-
 
             <script>
                 $("#add_review").click(function () {
@@ -600,16 +602,14 @@
 
                                     <div id="size">
 
-                                        <legend class="text-size16 bold-font"> {{ form.size.label }}</legend>
+                                        <legend class="text-size16 bold-font"> {{ form.size.label }}
+                                            <i data-toggle="modal" data-target="#chooszine_size"
+                                        style="margin-left: 5px"
+                                        class="far fa-question-circle"></i>
+                                        </legend>
 
 
                                         <ul class="form-items">
-                                            <li>
-                                                <span>
-                                                    {{ form.size.0.tag }}
-                                                    {{ form.size.0.choice_label }}
-                                                </span>
-                                            </li>
                                             <li>
                                                 <span>
                                                     {{ form.size.1.tag }}
@@ -626,6 +626,12 @@
                                                 <span>
                                                     {{ form.size.3.tag }}
                                                     {{ form.size.3.choice_label }}
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span>
+                                                    {{ form.size.4.tag }}
+                                                    {{ form.size.4.choice_label }}
                                                 </span>
                                             </li>
                                         </ul>
@@ -732,6 +738,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     {#                    <button type="button" class="btn btn-primary">Save changes</button>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Choosing Size -->
+    <div class="modal fade" id="choosing_size" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content padding-top5">
+                <div class="modal-header">
+                    <h3 class="modal-title margin-right5 margin-left5" id="exampleModalLabel"><b>¿Necesitas ayuda para elegir un tamaño?</b></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body margin-right5 margin-left5">
+                    <p><b>No tienes que ser exacto(a) al momento de elegir un tamaño.</b> Nosotros determinaremos el tamaño exacto en base al diseño que nos envíes.</p>
+
+                    <p>Cuando te enviemos la muestra de cómo quedarían tus stickers (vía correo electrónico), verás el tamaño exacto que tendrás tus stickers. También puedes solicitar que cambiemos el tamaño de tus sticker hasta que quedes conforme, sin embargo,
+                        debes considerar que el cambio de algunos tamaños implicará una modificación del costo de tu pedido.</p>
+
+                        <p>¿Aún necesitas ayuda para elegir un tamaño? Contáctanos: stickersgallito@gmail.com,
+                            o a través de 
+                            <a href="https://facebook.com/stickersgallito" rel="nofollow noopener"
+                                        target="_blank" title="Facebook"><i
+                                            class="fab fa-facebook-square footer_icons"></i></i></a>.
+                        </p>
+                       
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>

@@ -393,10 +393,6 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
 
 
-        print("### CART_ITEMS LEN###")
-        print(len(cart_items))
-        print(len(sample_items))
-
         return render(request, 'cart.html',
                       dict(cart_items=cart_items, sample_items=sample_items, total=total, counter=counter,
                            culqi_total=culqi_total, culqi_my_public_key=culqi_my_public_key,
