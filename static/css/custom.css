@@ -17,6 +17,15 @@ ul > li {
 }
 
 
+.help_size {
+    width:5% !important;
+    height: 5% !important;
+}
+
+.fb-blue-icon {
+    color: #3b5998 !important;
+}
+
 
 .width40 {
     width: 40%
