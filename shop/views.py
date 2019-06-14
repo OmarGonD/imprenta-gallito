@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
-from shop.models import Product_Review, Sample_Review, ProductsPricing
+from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile
 from cart.models import Cart, CartItem, SampleItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import Category, Product, Peru, Sample
@@ -22,6 +22,8 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django.template.loader import get_template
+
 
 
 # Create your views here.
@@ -351,10 +353,40 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
+        '''send email to admin when a new user has activate his/her account'''
+        send_email_new_registered_user(user.id)
         return redirect('shop:allCat')
     else:
         return HttpResponse('¡Enlace de activación inválido! Intente registrarse nuevamente.')
 
+
+
+def send_email_new_registered_user(user_id):
+    try:
+        print("Enters send_email_new_registed_user try")
+        profile = Profile.objects.get(id=user_id)
+        if profile:
+            print("Se obtuvo profile")
+        '''sending the order to the customer'''
+        subject = f"Stickers Gallito Perú - Nuevo usuario registrado #{profile.id}"
+        to = [f'{profile.user.email}', 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
+        from_email = 'stickersgallito@stickersgallito.pe'
+        user_information = {
+            'user_id': profile.user.id,
+            'user_name': profile.user.username,
+            'user_full_name': profile.user.get_full_name,
+            'user_dni': profile.dni,
+            'user_email': profile.user.email,
+            'user_phone': profile.phone_number,
+            'user_is_active': profile.user.is_active,
+        }
+        message = get_template('accounts/new_registered_user.html').render(user_information)
+        msg = EmailMessage(subject, message, to=to, from_email=from_email)
+        msg.content_subtype = 'html'
+        msg.send()
+        print("Se envió msj")
+    except IOError as e:
+        return e        
 
 
 @transaction.atomic
@@ -366,19 +398,15 @@ def signupView(request):
     for p in peru:
         department_list.add(p.departamento)
     department_list = list(department_list)
-    # print("Department List: ", department_list)
     if len(department_list):
         province_list = set(Peru.objects.filter(departamento=department_list[0]).values_list("provincia", flat=True))
-        # print("Provice List: ", province_list)
         province_list = list(province_list)
-        # print("dfsfs", province_list)
     else:
         province_list = set()
     if len(province_list):
         district_list = set(
             Peru.objects.filter(departamento=department_list[0], provincia=province_list[0]).values_list("distrito",
                                                                                                          flat=True))
-        # print("district List: ", district_list)
     else:
         district_list = set()
 
@@ -391,13 +419,11 @@ def signupView(request):
         for p in peru:
             department_list.add(p.departamento)
         department_list = list(department_list)
-        print("Department List in POST: ", department_list)
         if len(department_list):
             province_list = set(
                 Peru.objects.filter(departamento__in=department_list).values_list("provincia", flat=True))
 
             province_list = list(province_list)
-            print("Province LIST in POST", province_list)
         else:
             province_list = set()
         if len(province_list):
@@ -405,7 +431,6 @@ def signupView(request):
                 Peru.objects.filter(departamento__in=department_list, provincia__in=province_list).values_list(
                     "distrito",
                     flat=True))
-            print("District LIST in POST", district_list)
         else:
             district_list = set()
 
@@ -432,8 +457,6 @@ def signupView(request):
 
             profile_form.save()  # Gracefully save the form
 
-            # user = authenticate(username=username, password=raw_password)
-            # login(request, user) #Cannot login a NOT Active user
 
             current_site = get_current_site(request)
             mail_subject = 'Confirmación de correo electrónico'
@@ -455,8 +478,7 @@ def signupView(request):
 
 
         else:
-            print(user_form.errors)
-            print(profile_form.errors)
+            pass
 
 
     else:

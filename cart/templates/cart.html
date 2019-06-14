@@ -197,11 +197,12 @@ Carrito de compras - Stickers Gallito
                                     A pagar: <strong>S/{{ total_a_pagar }}</strong><br>
                                 </div>
                                 <div class="col-6">
-                                    <br>
+                                    <div class="flex">
                                     <input type="text" id="user_cupon" style="display: inline-block; height: 36px;"
-                                        placeholder="Ingrese cupón">
+                                        placeholder="Ingrese cupón" class="margin-right2">
                                     <button type="submit" class="btn btn-secondary" id="cuponButton"
-                                        style="display: inline-block; height: 35px;">Enviar</button>
+                                        style="display: inline-block; height: 36px;">Enviar</button>
+                                    </div>    
                                 </div>
                             </div>
                         </td>
@@ -220,23 +221,7 @@ Carrito de compras - Stickers Gallito
                         </td>
                     </tr>
                     {% endif %}
-                    <!-- <tr>
-                        <td class="text-left">
-                            <b>Seleccione método de pago:</b>
-                            <br>
-                            <p></p>
-                            <input class="pago-tarjeta" type="radio" name="radioName" value="1" /> Pago con Tarjeta de
-                            Crédito o Débito
-                            <br>
-                            <input class="pago-deposito" type="radio" name="radioName" value="2" checked />
-                            Depósito en efectivo
-                            <br>
-                            <br>
-                            <p class="pago-deposito-detalle"><i>Después de dar click en el botón de Pagar,
-                                    se le mostrarán <b>las cuentas bancarias</b> a las cuales deberá depositar.</i>
-                            </p>
-                        </td>
-                    </tr> -->
+                    
                     <tr>
                         <td>
                             <div class="bg-buttons margin-top3 padding-top6 padding-bottom3">

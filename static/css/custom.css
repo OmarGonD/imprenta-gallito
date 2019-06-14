@@ -26,6 +26,10 @@ ul > li {
     color: #3b5998 !important;
 }
 
+.flex {
+    display: flex;
+}
+
 
 .width40 {
     width: 40%

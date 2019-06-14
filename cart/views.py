@@ -448,3 +448,24 @@ def send_email_deposit_payment(order_id):
 
 
 
+
+def send_email_new_registration(registration_id):
+    profile = Profile.objects.get(id=registration_id)
+    try:
+        '''sending the order to the customer'''
+        subject = f"Stickers Gallito Perú - Nuevo registro #{profile.id}"
+        to = [f'{profile.email}', 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
+        from_email = 'stickersgallito@stickersgallito.pe'
+        order_information = {
+            'username': profile.User.username,
+            'order_items': order_items
+        }
+        message = get_template('email/email_deposit_payment.html').render(order_information)
+        msg = EmailMessage(subject, message, to=to, from_email=from_email)
+        msg.content_subtype = 'html'
+        msg.send()
+    except IOError as e:
+        return e        
+
+
+
