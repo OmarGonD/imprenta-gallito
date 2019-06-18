@@ -380,17 +380,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
                 descuento = int(cupon.hard_discount)
             elif cupon.percentage:
                 cupon_percentage = int(cupon.percentage) / int(100)
-                print("cupon.percentage: ", cupon.percentage)
-                print("cupon_percentage: ", cupon_percentage, type(cupon_percentage))
-                print("total: ", total)
-                print("total type: ", type(total))
                 descuento = total * cupon_percentage
-                print("descuento: ", descuento, type(descuento))
-                print("descuento esperado: ", total * 10/100)
-                print("total es:", total)
-                print("porcentaje: ", int(cupon.percentage) / int(100))
-                print("descuento es: ", descuento)
-                print(5 * 10/100)
             else:
                 descuento = 0
         except:
