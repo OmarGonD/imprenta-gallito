@@ -163,6 +163,7 @@ def cart_charge_credit_card(request):
 
             cupon = Cupons.objects.get(cupon=cupon_name)
 
+            
             cupon.quantity = cupon.quantity - 1
 
             cupon.save()
@@ -373,19 +374,30 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
             pass
 
         try:
-            if cupon.hard_discount:
+            if cupon.free_shipping:
+                descuento = costo_despacho
+            elif cupon.hard_discount:
                 descuento = int(cupon.hard_discount)
             elif cupon.percentage:
-                print("Inicia: percentage_discount if condition")
-                print("%: ", type(cupon.percentage))
-                descuento = int(int(total) * int(cupon.percentage) / int(100))
+                cupon_percentage = int(cupon.percentage) / int(100)
+                print("cupon.percentage: ", cupon.percentage)
+                print("cupon_percentage: ", cupon_percentage, type(cupon_percentage))
+                print("total: ", total)
+                print("total type: ", type(total))
+                descuento = total * cupon_percentage
+                print("descuento: ", descuento, type(descuento))
+                print("descuento esperado: ", total * 10/100)
+                print("total es:", total)
+                print("porcentaje: ", int(cupon.percentage) / int(100))
+                print("descuento es: ", descuento)
+                print(5 * 10/100)
             else:
                 descuento = 0
         except:
             descuento = 0
 
 
-        total_a_pagar = int(total) - int(descuento) + costo_despacho
+        total_a_pagar = int(total) - descuento + costo_despacho
 
 
         culqi_my_public_key = settings.CULQI_PUBLISHABLE_KEY  # Es necesario mandar la llave pública para generar un token
@@ -449,23 +461,7 @@ def send_email_deposit_payment(order_id):
 
 
 
-def send_email_new_registration(registration_id):
-    profile = Profile.objects.get(id=registration_id)
-    try:
-        '''sending the order to the customer'''
-        subject = f"Stickers Gallito Perú - Nuevo registro #{profile.id}"
-        to = [f'{profile.email}', 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
-        from_email = 'stickersgallito@stickersgallito.pe'
-        order_information = {
-            'username': profile.User.username,
-            'order_items': order_items
-        }
-        message = get_template('email/email_deposit_payment.html').render(order_information)
-        msg = EmailMessage(subject, message, to=to, from_email=from_email)
-        msg.content_subtype = 'html'
-        msg.send()
-    except IOError as e:
-        return e        
+
 
 
 

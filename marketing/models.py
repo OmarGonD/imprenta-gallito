@@ -23,6 +23,7 @@ class Cupons(models.Model):
     cupon = models.CharField(max_length=100, blank=False)
     percentage = models.CharField(max_length=20, blank=True, null=True, validators=[valid_percentage])
     hard_discount = models.IntegerField(blank=True, null=True)
+    free_shipping = models.BooleanField(default=False)
     quantity = models.IntegerField(default=10)
     start_date = models.DateField()
     end_date = models.DateField()

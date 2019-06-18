@@ -11,6 +11,7 @@ from .models import SignUp, Cupons
 from django.contrib.auth.models import User
 
 
+
 # Create your views here.
 
 MAILCHIMP_API_KEY = settings.MAILCHIMP_API_KEY
@@ -55,12 +56,17 @@ def email_signup_form(request):
 
 ### CUPONES ###
 
+@csrf_exempt
 def cupons(request):
     if request.method == 'POST':
         user_cupon = request.POST.get('user_cupon')
+        if user_cupon:
+            print("## USER CUPON")
+        else:
+            print("## NO USER CUPON")    
         response = HttpResponse("Hi")
         response.set_cookie("cupon", user_cupon)
-    return response
+        return response
 
 
 
