@@ -453,8 +453,6 @@ def signupView(request):
             profile_form = ProfileForm(district_list, province_list, department_list, request.POST, request.FILES,
                                        instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
-
-
             profile_form.save()  # Gracefully save the form
 
 

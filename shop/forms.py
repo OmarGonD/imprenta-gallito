@@ -48,11 +48,7 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password1',
                   'password2')
-        # help_texts = {
-        #     'username': '',
-        #     'password': '',
-        # }
-
+     
 
 class ProfileForm(ModelForm):
     MONTHS = {

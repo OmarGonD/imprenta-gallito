@@ -30,7 +30,7 @@
 
 {% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="container margin-top5">
         <div class="row">
             <div class="col-md-12 col-lg-12 text-center">
                 <br>
@@ -40,23 +40,23 @@
                     ¡Gracias por confiar en Stickers Gallito!
                 </h1>
                 <br>
-                <p>El número de su orden es: <b>{{ order_number }}</b></p>
+                <p>El número de su orden es: <b>#{{ order_number }}</b></p>
 
-                <p>El total de su pedido es: S/{{ total }}</p>
+                <p><b>El total de su pedido es: S/{{ total }}</b></p>
 
-                <p>(A pagar en las siguientes 24 horas para hacer efectivo su pedido).</p>
+                <p><i>Costo de los stickers: S/ {{ revenue }} + Costo del envío: S/ {{ costo_despacho }}</i></p>
+            
 
-                {#                <p> <b>24 horas: </b> Para hacer efectiva su orden debe hacer el depósito por el monto de su orden <b><i>en las#}
-                {#                    siguientes 24 horas</i></b>.</p>#}
-                <br>
-
-                <p>Cuentas bancarias:</p>
+                <p>(A pagar en las siguientes 48 horas para hacer efectivo su pedido).</p>
+                <p class="text-center"><b>  También le hemos enviado un correo electrónico con los detalles de su orden :).</b></p>
+                
+                <p class="text-center my_title margin-top6">Cuentas bancarias a donde hacer el depósito:</p>
 
             </div>
         </div>
 
 
-        <div class="row">
+        <div class="row margin-top3">
 
 
             <!-- BCP -->

@@ -125,7 +125,7 @@
     <p class="para_hacer_efectiva_su_orden"> Recuerda que para hacer efectiva tu orden debes cancelar el monto de la
         misma:
         <strong>S/.{{ transaction.total }}. </strong><br>
-        Tienes hasta el <strong>{{ transaction.deposit_payment_date|date:"d M Y" }}</strong> para hacerlo.</p>
+        <b>Tienes hasta el <strong>{{ transaction.deposit_payment_date|date:"d M Y" }}</strong> para hacerlo.</b></p>
 </center>
 
 <br>
@@ -199,7 +199,7 @@
     {% endfor %}
     <tr>
         <td colspan="3" style="text-align: right;"><b>Costo de envío</b></td>
-        <td class="text_to_right">S/{{ transaction.total }}</td>
+        <td class="text_to_right">S/{{ transaction.shipping_cost }}</td>
     </tr>
     <tr>
         <td colspan="3" style="text-align: right;"><b>Total</b></td>
@@ -223,7 +223,7 @@
         </td>
         <td valign="top" colspan="2" style="width: 50%">
             <b>Detalles del pago: </b><br>
-            S/ {{ transaction.total }} a pagar dentro de las próximas 24 horas. <br>
+            S/ {{ transaction.total }} a pagar dentro de las próximas 48 horas. <br>
             <b>Fecha máxima para hacer efectivo su pedido:</b> {{ transaction.deposit_payment_date|date:"d M Y" }}
         </td>
     </tr>

@@ -49,7 +49,7 @@ class Order(models.Model):
         return shipping_date
 
     def deposit_payment_date(self):
-        deposit_payment_date = self.created + datetime.timedelta(days=1)
+        deposit_payment_date = self.created + datetime.timedelta(days=2)
         return deposit_payment_date
 
 

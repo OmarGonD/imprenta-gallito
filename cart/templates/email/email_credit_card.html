@@ -123,6 +123,10 @@
         </tr>
     {% endfor %}
     <tr>
+        <td colspan="3" style="text-align: right;"><b>Costo de envío</b></td>
+        <td class="text_to_right">S/{{ transaction.shipping_cost }}</td>
+    </tr>
+    <tr>
         <td colspan="3" style="text-align: right;"><b>Total</b></td>
         <td class="text_to_right">S/.{{ transaction.total }}</td>
     </tr>
