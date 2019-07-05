@@ -353,6 +353,15 @@ ul > li {
     padding-top: 10%;
 }
 
+.padding-bottom12 {
+    padding-bottom: 12%;
+}
+
+.padding-top12 {
+    padding-top: 12%;
+}
+
+
 .padding-bottom15 {
     padding-bottom: 15%;
 }
@@ -621,3 +630,12 @@ ul.my_products_list li {
 
 
 .hidden { display: none; }
+
+
+.info {
+    color: #3b3b3b;
+}
+
+.info:hover {
+    color: #adadad;
+}
