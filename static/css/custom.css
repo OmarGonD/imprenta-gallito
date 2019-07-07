@@ -3,20 +3,6 @@ body {
     font-family: 'Bree Serif', serif;
 }
 
-
-ul {
-    padding-left: 0%;
-}
-
-ul > li {
-    display: inline-block;
-    /* You can also add some margins here to make it look prettier */
-    zoom:1;
-    *display:inline;
-    /* this fix is needed for IE7- */
-}
-
-
 .help_size {
     width:5% !important;
     height: 5% !important;
@@ -638,4 +624,11 @@ ul.my_products_list li {
 
 .info:hover {
     color: #adadad;
+}
+
+/* cart - métodos de pago */
+
+.tops {
+    margin-bottom: 10px;
+    padding-top: 5%;
 }

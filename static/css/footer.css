@@ -54,3 +54,13 @@ li.footer_nav_links a:focus, li.footer_nav_links a:hover {
 .footer_ul {
     width: 100%;
   }
+
+
+ul.footer_ul > li {
+    display: inline-block;
+    /* You can also add some margins here to make it look prettier */
+    zoom:1;
+    padding-left: 0%;
+    *display:inline;
+    /* this fix is needed for IE7- */
+}

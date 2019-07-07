@@ -97,61 +97,67 @@
 <h1 class="details">Detalles de la compra:</h1>
 <br>
 <table>
-    <tr>
-        <td class="top_row td_text_center"><p class="text_white">Número de orden: </p></td>
-        <td class="top_row td_text_center"><p class="text_white">Fecha: </p></td>
-        <td class="top_row td_text_center" colspan="4"><p class="text_white">Fecha de entrega: </p></td>
-    </tr>
-    <tr>
-        <td class="td_text_center">#{{ transaction.id }}</td>
-        <td class="td_text_center">{{ transaction.created|date:"d M Y" }}</td>
-        <td class="td_text_center" colspan="4"><b class="shipping_date">{{ transaction.shipping_date|date:"d M Y" }}</b></td>
-    </tr>
-    <tr>
-        <td><b>Descripción del producto: </b></td>
-        <td><b>Cantidad: </b></td>
-        <td><b>Precio: </b></td>
-        <td><b>Sub total: </b></td>
-    </tr>
-    {% for item in order_items %}
-
         <tr>
-            <td>{{ item.product }}</td>
-            <td>{{ item.quantity }}</td>
-            <td class="text_to_right">S/.{{ item.price }}</td>
-            <td class="text_to_right">S/.{{ item.sub_total }}</td>
+            <td  colspan="5" class="top_row td_text_center"><p class="text_white">Número de orden: </p></td>
+            <td colspan="5" class="top_row td_text_center"><p class="text_white">Fecha: </p></td>
+            <td colspan="5" class="top_row td_text_center"><p class="text_white">Fecha de entrega: </p></td>
         </tr>
-    {% endfor %}
-    <tr>
-        <td colspan="3" style="text-align: right;"><b>Costo de envío</b></td>
-        <td class="text_to_right">S/{{ transaction.shipping_cost }}</td>
-    </tr>
-    <tr>
-        <td colspan="3" style="text-align: right;"><b>Total</b></td>
-        <td class="text_to_right">S/.{{ transaction.total }}</td>
-    </tr>
-    <tr>
-        <td colspan="3" style="text-align: right;"><b>IGV (18%):</b></td>
-        <td class="text_to_right">S/.{{ transaction.igv }}</td>
-    </tr>
-    <tr>
-        <td colspan="3" style="text-align: right;"><b>Total pagado:</b></td>
-        <td class="text_to_right">S/.{{ transaction.total }}</td>
-    </tr>
-    <tr>
-        <td valign="top" colspan="2" style="width: 50%">
-            <b>Enviar a: </b><br>
-            <b>Dirección:</b> <i>{{ transaction.shipping_address }}</i><br>
-            <b>Distrito:</b> <i>{{ transaction.shipping_district }}</i><br>
-            <b>Provincia:</b> <i>{{ transaction.shipping_province }}</i><br>
-            <b>Departamento:</b><i>{{ transaction.shipping_department }}</i><br>
-        </td>
-        <td valign="top" colspan="2" style="width: 50%">
-            <b>Detalles del pago: </b><br>
-            S/.{{ transaction.total }} se pagaron existosamente via tarjeta de crédito.
-        </td>
-    </tr>
-</table>
+        <tr>
+            <td colspan="5" class="td_text_center">#{{ transaction.id }}</td>
+            <td colspan="5" class="td_text_center">{{ transaction.created|date:"d M Y" }}</td>
+            <td colspan="5" class="td_text_center"><b class="shipping_date"> Se define una vez haga el depósito por su
+                orden.</b>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5"><b>Descripción del producto: </b></td>
+            <td colspan="3"><b>Cantidad: </b></td>
+            <td colspan="3"><b>Tamaño: </b></td>
+            <td colspan="2"><b>Precio: </b></td>
+            <td colspan="2"><b>Sub total: </b></td>
+        </tr>
+        {% for item in order_items %}
+    
+            <tr>
+                <td colspan="5">{{ item.name }}</td>
+                <td colspan="3">{{ item.quantity }}</td>
+                <td colspan="3">{{ item.size }}</td>
+                <td colspan="2" class="text_to_right">S/{{ item.price }}</td>
+                <td colspan="2" class="text_to_right">S/{{ item.sub_total }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="14" style="text-align: right;"><b>Costo stickers:</b></td>
+            <td colspan="1" class="text_to_right">S/{{ revenue }}</td>
+        </tr>
+        <tr>
+            <td colspan="14" style="text-align: right;"><b>Costo de envío</b></td>
+            <td colspan="1" class="text_to_right">S/{{ transaction.shipping_cost }}</td>
+        </tr>
+        <tr>
+            <td colspan="14" style="text-align: right;"><b>IGV</b><i>(18%, incluido en el precio de los stickers):</i></td>
+            <td colspan="1" class="text_to_right">S/{{ transaction.igv }}</td>
+        </tr>
+        <tr>
+            <td colspan="14" style="text-align: right;"><b>Total a pagar:</b></td>
+            <td colspan="1" class="text_to_right">S/{{ transaction.total }}</td>
+        </tr>
+        <tr>
+            <td valign="top" colspan="9" style="width: 50%">
+                <p><b>Enviar a: </b></p>
+                <ul id="shipping_items_list">
+                    <li><b>Dirección:</b> <i>{{ transaction.shipping_address }}</i></li>
+                    <li><b>Distrito:</b> <i>{{ transaction.shipping_district }}</i></li>
+                    <li><b>Provincia:</b> <i>{{ transaction.shipping_province }}</i></li>
+                    <li><b>Departamento:</b><i>{{ transaction.shipping_department }}</i></li>
+                </ul>
+            </td>
+            <td valign="top" colspan="6" style="width: 50%">
+                <p><b>Detalles del pago: </b> S/ {{ transaction.total }} a pagar dentro de las próximas 48 horas.</p>
+                <p><b>Fecha máxima para hacer efectivo su pedido:</b> {{ transaction.deposit_payment_date|date:"d M Y" }}.</p>
+            </td>
+        </tr>
+    </table>
 <center>
     <br>
     <hr style="width: 60%">

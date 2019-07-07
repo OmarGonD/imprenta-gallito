@@ -47,11 +47,20 @@ def thanks_credit_card(request):
 
 def thanks_deposit_payment(request):
 
-    order_number = Order.objects.latest('id').id
-    total = Order.objects.latest('id').total
-    costo_despacho = Order.objects.latest('id').shipping_cost
-    order_items = OrderItem.objects.filter(order=Order.objects.latest('id'))
+    transaction = Order.objects.latest('id')
+    order_items = OrderItem.objects.filter(order=transaction) #get jsonied for Google Analytics, useless in template
+    order_items_for_template = OrderItem.objects.filter(order=transaction)
 
+    
+    '''sending the order to the customer'''
+    subject = 'Stickers Gallito Perú - Nueva orden #{}'.format(transaction.id)
+    to = ['{}'.format(transaction.email), 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
+    from_email = 'stickersgallito@stickersgallito.pe'
+    order_information = {
+        'transaction': transaction,
+        'order_items': order_items
+    }
+    
     revenue = []
     for oi in order_items:
         revenue.append(oi.price)
@@ -76,8 +85,8 @@ def thanks_deposit_payment(request):
     # re-map and re-serialize the items
     order_items = json.dumps(list(map(mapper, order_items_obj)))
 
-    response = render(request, 'thanks_deposit_payment.html', dict(order_number=order_number, total=total, revenue = revenue,
-                                                                   order_items=order_items, costo_despacho=costo_despacho))
+    response = render(request, 'thanks_deposit_payment.html', dict(transaction=transaction, revenue = revenue,
+                                                                   order_items=order_items, order_items_for_template=order_items_for_template))
     return response
 
 

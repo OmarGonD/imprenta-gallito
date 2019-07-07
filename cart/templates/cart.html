@@ -224,7 +224,7 @@ Carrito de compras - Stickers Gallito
                     
                     <tr>
                         <td>
-                            <div class="bg-buttons margin-top3 padding-top6 padding-bottom12">
+                            <div class="bg-buttons margin-top3 padding-top2 padding-bottom10">
 
                                 {% if user.is_authenticated and total > 0 %}
                                 <div class="tops">
@@ -243,7 +243,7 @@ Carrito de compras - Stickers Gallito
                                     </button>
                                     <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCashExplanation"></i>  
                                     </div>
-                                    <div class="margin-top4">
+                                    <div class="">
                                     <a class="btn-seguir-comprando btn-block my_custom_btn margin-top4 width60 display-inline"
                                         href="{% url 'shop:allCat' %}">Seguir comprando</a>
                                         <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#SeguirComprandoExplanation"></i> 
@@ -268,7 +268,7 @@ Carrito de compras - Stickers Gallito
                                     </button>
                                     <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCashExplanation"></i>  
                                     </div>
-                                    <div class="margin-top4">
+                                    <div class="">
                                     <a class="btn-seguir-comprando btn-block my_custom_btn margin-top4 width60 display-inline"
                                         href="{% url 'shop:allCat' %}">Seguir comprando</a>
                                         <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#SeguirComprandoExplanation"></i> 
@@ -295,7 +295,7 @@ Carrito de compras - Stickers Gallito
                                     </button>
                                     <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCashExplanation"></i>  
                                 </div>
-                                <div class="margin-top4">
+                                <div class="">
                                     <a class="btn-seguir-comprando btn-block my_custom_btn width60 display-inline"
                                         href="{% url 'shop:allCat' %}">Seguir comprando</a>
                                         <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#SeguirComprandoExplanation"></i>  
@@ -496,7 +496,7 @@ Carrito de compras - Stickers Gallito
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Regístrate</h5>
+                <h5 class="modal-title my_title" id="exampleModalLabel">Regístrate</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -531,7 +531,7 @@ Carrito de compras - Stickers Gallito
         <p>Cualquier entidad involucrada con la captura, envío y almacenamiento de datos de tarjetas de crédito y débito debe cumplir con la normativa <a href="https://www.pcisecuritystandards.org/pci_security/">PCI DSS Payment Card Industry Data Security Standards</a>. Culqi nos ayuda a simplificar este proceso ofreciéndoles a 
         nuestros clientes una integración 100% segura.</p>
         <p>Los datos de su tarjeta de crédito nunca ingresan a nuestro sistema, la transacción se realiza mediante el navegador web que utilice y su banco, mediante Culqi; quienes
-        actúan como un termediario entre ambos.</p>
+        actúan como un intermediario entre ambos.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -558,7 +558,7 @@ Carrito de compras - Stickers Gallito
         <p>En pantalla se le mostrará: su número de orden, el total a pagar y las cuentas bancarias para hacer el depósito. También
         le enviaremos un correo con estos detalles.</p>
         <p>La fecha de entrega se coordinará con Ud. vía correo electrónico, una vez que cancele su orden.</p>
-        <p>Recuerde que tendrá 48 horas para cancelar su orden, de lo contrario la misma será cancelada en nuestro sistema.</p>
+        <p>Recuerde que tendrá 48 horas para cancelar su orden, de lo contrario la misma será anulada en nuestro sistema.</p>
         <p>Para cualquier duda sobre este método de pago, puede escribirnos a stickersgallito@gmail.com</p>
       </div>
       <div class="modal-footer">

@@ -432,6 +432,7 @@ def send_email_credit_card(order_id):
 def send_email_deposit_payment(order_id):
     transaction = Order.objects.get(id=order_id)
     order_items = OrderItem.objects.filter(order=transaction)
+    revenue = transaction.total - transaction.shipping_cost
     try:
         '''sending the order to the customer'''
         subject = 'Stickers Gallito Perú - Nueva orden #{}'.format(transaction.id)
@@ -439,7 +440,8 @@ def send_email_deposit_payment(order_id):
         from_email = 'stickersgallito@stickersgallito.pe'
         order_information = {
             'transaction': transaction,
-            'order_items': order_items
+            'order_items': order_items,
+            'revenue': revenue
         }
         message = get_template('email/email_deposit_payment.html').render(order_information)
         msg = EmailMessage(subject, message, to=to, from_email=from_email)
