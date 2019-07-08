@@ -63,7 +63,7 @@ def SamplePackPage(request):
 
     # muestras = Product.objects.filter(category__slug=c_slug)
 
-    muestras = Sample.objects.filter(category__slug=c_slug).exclude(slug='sobre-con-muestras')
+    muestras = Sample.objects.filter(category__slug=c_slug).exclude(slug='sobre-con-muestras').exclude(available=False)
 
     return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,
                                                   'muestras': muestras})
