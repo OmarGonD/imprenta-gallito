@@ -14,7 +14,12 @@
             width: 60%;
         }
 
-        table {
+        .table-cuenta-bancaria {
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .table-resumen-orden {
             width: 100%;
             margin: 0 auto;
         }
@@ -142,32 +147,30 @@
 <br>
 <center>
 
-    <table class="table my_custom_table_deposit_payment">
+    <table class="tabla-cuenta-bancaria my_custom_table_deposit_payment">
 
         <tr>
             <td class="my_custom_thead td_text_center"><p class="text-center"><b>BCP</b></p></td>
-            <td class="my_custom_thead td_text_center"><p class="text-center"><b>INTERBANK</b></p></td>
+            <!--<td class="my_custom_thead td_text_center"><p class="text-center"><b>INTERBANK</b></p></td>-->
         </tr>
         <tr>
             <td class="td_text_center">
                 <p class="text-center"><b>CTA. AHORROS:</b><br> 191-93277552-0-47</p>
             </td>
-            <td class="td_text_center">
+            <!--<td class="td_text_center">
                 <p class="text-center"><b>CTA. AHORROS:</b><br> 200‑3001651127</p>
-            </td>
+            </td>-->
         </tr>
 
         <tr>
             <td class="td_text_center">
                 <p class="text-center"><b>CTA. INTERBANCARIA:</b><br> 002-191-193277552047-54</p>
             </td>
-            <td class="td_text_center">
+            <!--<td class="td_text_center">
                 <p class="text-center"><b>CTA. INTERBANCARIA:</b><br> 003-200-003001651127-38</p>
-            </td>
+            </td>-->
         </tr>
-        <tr>
 
-        </tr>
 
     </table>
 
@@ -176,7 +179,7 @@
 <br>
 <h1 class="details">Detalles de la compra:</h1>
 <br>
-<table>
+<table class="table-resumen-orden">
     <tr>
         <td  colspan="5" class="top_row td_text_center"><p class="text_white">Número de orden: </p></td>
         <td colspan="5" class="top_row td_text_center"><p class="text_white">Fecha: </p></td>

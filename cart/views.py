@@ -202,6 +202,8 @@ def cart_charge_deposit_payment(request):
 
     last_name = request.user.last_name
 
+    phone_number = request.user.profile.phone_number
+
     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     shipping_address1 = request.user.profile.shipping_address1
@@ -219,6 +221,7 @@ def cart_charge_deposit_payment(request):
         token='Random',
         first_name=first_name,
         last_name=last_name,
+        phone_number=phone_number,
         email=email,  # Using email entered in Culqi module, NOT user.email. Could be diff.
         total=transaction_amount,
         shipping_cost=shipping_cost,
