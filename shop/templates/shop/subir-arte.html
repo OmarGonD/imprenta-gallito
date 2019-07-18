@@ -13,7 +13,9 @@
 
          <script>
             $(document).ready(function () {
-                $('label[for="id_file"]').hide();
+                $('label[for="id_file_a"]').hide();
+                $('label[for="id_file_b"]').hide();
+                $('label[for="id_comment"]').hide();
             });
         </script>
 
@@ -38,17 +40,23 @@
 
             <div class="col-md-3 mb-4"></div>
             <div class="col-md-6 mb-4">
-                <p class="text-size60 bold-font">Sube tu imagen</p>
+                <p class="text-size60 bold-font">Sube tus diseños</p>
                 <form method="POST" enctype="multipart/form-data" action="">
                     {% csrf_token %}
 
                     <div class="form-group">
 
-                        {{ form.file|as_crispy_field }}
+                        <p><b>Diseño 1:</b></p>
+
+                        {{ form.file_a|as_crispy_field }}
+
+                        <p><b>Diseño 2:</b></p>
+
+                        {{ form.file_b|as_crispy_field }}
 
                         <div id="instrucciones-adicionales" style="display:none">
 
-                            <p class="bold-font"> Instrucciones adicionales (opcional):</p>
+                            <p><b>Instrucciones adicionales (opcional):</b></p>
 
                             {{ form.comment|as_crispy_field }}
 

@@ -71,27 +71,23 @@ Carrito de compras - Stickers Gallito
 
                     {% for cart_item in cart_items %}
 
-
-                    {% if cart_item.file %}
-
+                    {% if cart_item.file_a %}
 
                     <tr>
 
-                        {% if cart_item.file_name|endswith:'.ai' %}
+                        {% if cart_item.file_name_a|endswith:'.ai' %}
 
-                        <td>
-                            <a href="cart_item.product.get_absolute_url"><img
-                                    src="/static/img/admin/adobe_illustrator_file_logo.png" alt=""
-                                    class="float-left rounded" width="90" height="80"></a>
-                        </td>
-
-
+                            <td>
+                                <a href="cart_item.product.get_absolute_url"><img
+                                        src="/static/img/admin/adobe_illustrator_file_logo.png" alt=""
+                                        class="float-left rounded" width="90" height="80"></a>
+                            </td>
 
                         {% else %}
-                        <td>
-                            <a href="cart_item.product.get_absolute_url"><img src="{{ cart_item.file.url }}" alt=""
-                                    class="float-left rounded" width="90" height="90"></a>
-                        </td>
+                            <td>
+                                <a href="cart_item.product.get_absolute_url"><img src="{{ cart_item.file_a.url }}" alt=""
+                                        class="float-left rounded" width="90" height="90"></a>
+                            </td>
 
                         {% endif %}
 
@@ -99,7 +95,8 @@ Carrito de compras - Stickers Gallito
                             <p class="margin-bottom0"><b>{{ cart_item.product.name }}</b></p>
                             <p class="margin-bottom0">Tamaño: {{ cart_item.size }}</p>
                             <p class="margin-bottom0">Cantidad: {{ cart_item.quantity }} stickers</p>
-                            <p class="margin-bottom0"><b>{{ cart_item.file_name }}</b></p>
+                            <p class="margin-bottom0"><b>{{ cart_item.file_name_a }}</b></p>
+                            <p class="margin-bottom0"><b>{{ cart_item.file_name_b }}</b></p>
                         </td>
                         <td>
                             S/{{ cart_item.sub_total }}

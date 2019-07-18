@@ -184,7 +184,8 @@ class StepTwoView(FormView):
         item_id = self.request.COOKIES.get("item_id")
 
         cart_item = CartItem.objects.get(id=item_id)
-        cart_item.file = form.cleaned_data["file"]
+        cart_item.file_a = form.cleaned_data["file_a"]
+        cart_item.file_b = form.cleaned_data["file_b"]
         cart_item.comment = form.cleaned_data["comment"]
         cart_item.step_two_complete = True
         cart_item.save()
@@ -275,7 +276,8 @@ class StepTwoView_Sample(FormView):
         item_id = self.request.COOKIES.get("item_id")
 
         sample_item = SampleItem.objects.get(id=item_id)
-        sample_item.file = form.cleaned_data["file"]
+        sample_item.file_a = form.cleaned_data["file_a"]
+        sample_item.file_b = form.cleaned_data["file_b"]
         sample_item.comment = form.cleaned_data["comment"]
         sample_item.step_two_complete = True
         sample_item.save()

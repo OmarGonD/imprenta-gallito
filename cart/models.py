@@ -27,7 +27,8 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=20, choices=TAMANIOS)
     quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    file = models.FileField(upload_to='files', blank=True, null=True)
+    file_a = models.FileField(upload_to='files', blank=True, null=True)
+    file_b = models.FileField(upload_to='files', blank=True, null=True)
     comment = models.CharField(max_length=100, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     step_two_complete = models.BooleanField(default=False)
@@ -40,12 +41,19 @@ class CartItem(models.Model):
         return int(product_price)
 
 
-@property
-def file_name(self):
-    if self.file:
-        return self.file.url.split('/')[-1]
-    else:
-        return self.product.image.url.split('/')[-1]
+    @property
+    def file_name_a(self):
+        if self.file_a:
+            return self.file_a.url.split('/')[-1]
+        else:
+            return self.product.image.url.split('/')[-1]
+
+    @property
+    def file_name_b(self):
+        if self.file_b:
+            return self.file_b.url.split('/')[-1]
+        else:
+            pass        
 
 
 class SampleItem(models.Model):
@@ -53,7 +61,8 @@ class SampleItem(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     size = models.CharField(max_length=20, choices=TAMANIOS)
     quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    file = models.FileField(upload_to='files', blank=True, null=True)
+    file_a = models.FileField(upload_to='files', blank=True, null=True)
+    file_b = models.FileField(upload_to='files', blank=True, null=True)
     comment = models.CharField(max_length=100, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     step_two_complete = models.BooleanField(default=False)
@@ -67,7 +76,7 @@ class SampleItem(models.Model):
 
     @property
     def file_name(self):
-        if self.file:
-            return self.file.url.split('/')[-1]
+        if self.file_a:
+            return self.file_a.url.split('/')[-1]
         else:
             return self.product.image.url.split('/')[-1]

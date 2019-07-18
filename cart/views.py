@@ -118,7 +118,8 @@ def cart_charge_credit_card(request):
                     quantity=order_item.quantity,
                     size=order_item.size,
                     price=order_item.product.price,
-                    file=order_item.file,
+                    file_a=order_item.file_a,
+                    file_b=order_item.file_b,
                     comment=order_item.comment,
                 )
                 try:
@@ -138,7 +139,8 @@ def cart_charge_credit_card(request):
                     quantity=order_item.quantity,
                     size=order_item.size,
                     price=order_item.sample.price,
-                    file=order_item.file,
+                    file_a=order_item.file_a,
+                    file_b=order_item.file_b,
                     comment=order_item.comment,
 
                 )
@@ -256,7 +258,8 @@ def cart_charge_deposit_payment(request):
                 quantity=order_item.quantity,
                 size=order_item.size,
                 price=order_item.sub_total(),
-                file=order_item.file,
+                file_a=order_item.file_a,
+                file_b=order_item.file_b,
                 comment=order_item.comment,
             )
             try:
@@ -277,7 +280,8 @@ def cart_charge_deposit_payment(request):
                 quantity=order_item.quantity,
                 size=order_item.size,
                 price=order_item.sub_total(),
-                file=order_item.file,
+                file_a=order_item.file_a,
+                file_b=order_item.file_b,
                 comment=order_item.comment,
             )
             try:

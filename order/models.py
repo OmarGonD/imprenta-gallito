@@ -61,25 +61,32 @@ class OrderItem(models.Model):
     quantity = models.CharField(max_length= 200)
     size = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name= 'PEN Price')
-    file = models.FileField(upload_to='files', blank=True, null=True)
+    file_a = models.FileField(upload_to='files', blank=True, null=True)
+    file_b = models.FileField(upload_to='files', blank=True, null=True)
     comment = models.CharField(max_length=200, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "OrderItem"
 
-    def file_thumbnail(self):
-        if self.file:
-           if str(self.file).endswith('.ai'):
+    def file_thumbnail_a(self):
+        if self.file_a:
+           if str(self.file_a).endswith('.ai'):
                return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
            else:
-               return mark_safe(u'<img src="%s" width="200px" height="140px" />' % (self.file.url))
+               return mark_safe(u'<img src="%s" width="200px" height="140px" />' % (self.file_a.url))
 
         else:
             return mark_safe(u'<p> Sin imagen </p>')
 
-
-    file_thumbnail.short_description = 'File Thumbnail'
+    def file_thumbnail_b(self):
+        if self.file_b:
+           if str(self.file_b).endswith('.ai'):
+               return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
+           else:
+               return mark_safe(u'<img src="%s" width="200px" height="140px" />' % (self.file_b.url))
+        else:
+            return mark_safe(u'<p> Sin imagen </p>')        
 
 
     def sub_total(self):

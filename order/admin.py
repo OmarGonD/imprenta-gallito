@@ -18,10 +18,11 @@ class OrderItemAdmin(admin.TabularInline):
         ('Size', {'fields': ['size'], }),
         ('Quantity', {'fields': ['quantity'],}),
         ('Price', {'fields': ['price'], }),
-        ('File', {'fields': ['file'], }),
+        ('File_A', {'fields': ['file_a'], }),
+        ('File_B', {'fields': ['file_b'], }),
         ('File_Thumbnail', {'fields': ['file_thumbnail'], }),
     ]
-    readonly_fields = ['name', 'size', 'quantity', 'price', 'file', 'file_thumbnail']
+    readonly_fields = ['name', 'size', 'quantity', 'price', 'file_a', 'file_thumbnail_a', 'file_b', 'file_thumbnail_b']
     can_delete = False
     max_num = 0
     template = 'admin/order/tabular.html'
