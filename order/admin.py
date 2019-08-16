@@ -20,7 +20,8 @@ class OrderItemAdmin(admin.TabularInline):
         ('Price', {'fields': ['price'], }),
         ('File_A', {'fields': ['file_a'], }),
         ('File_B', {'fields': ['file_b'], }),
-        ('File_Thumbnail', {'fields': ['file_thumbnail'], }),
+        ('File_Thumbnail_A', {'fields': ['file_thumbnail_a'], }),
+        ('File_Thumbnail_B', {'fields': ['file_thumbnail_b'], }),
     ]
     readonly_fields = ['name', 'size', 'quantity', 'price', 'file_a', 'file_thumbnail_a', 'file_b', 'file_thumbnail_b']
     can_delete = False

@@ -74,7 +74,7 @@ class OrderItem(models.Model):
            if str(self.file_a).endswith('.ai'):
                return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
            else:
-               return mark_safe(u'<img src="%s" width="200px" height="140px" />' % (self.file_a.url))
+               return mark_safe(u'<img src="%s" width="80px" height="80px" />' % (self.file_a.url))
 
         else:
             return mark_safe(u'<p> Sin imagen </p>')
@@ -84,7 +84,7 @@ class OrderItem(models.Model):
            if str(self.file_b).endswith('.ai'):
                return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
            else:
-               return mark_safe(u'<img src="%s" width="200px" height="140px" />' % (self.file_b.url))
+               return mark_safe(u'<img src="%s" width="80px" height="80px" />' % (self.file_b.url))
         else:
             return mark_safe(u'<p> Sin imagen </p>')        
 
