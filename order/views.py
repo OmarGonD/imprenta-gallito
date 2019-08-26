@@ -30,7 +30,8 @@ def thanks_credit_card(request):
     # define the target mapping
     def mapper(p):
         return {
-            'id': p['fields']['sku'],
+            'id': p['pk'],
+            'sku': p['fields']['sku'],
             'name': p['fields']['name'],
             'price': p['fields']['price'],
             'size': p['fields']['size'],
@@ -50,6 +51,7 @@ def thanks_deposit_payment(request):
     transaction = Order.objects.latest('id')
     order_items = OrderItem.objects.filter(order=transaction) #get jsonied for Google Analytics, useless in template
     order_items_for_template = OrderItem.objects.filter(order=transaction)
+    order_number = Order.objects.latest('id').id
 
     
     '''sending the order to the customer'''
@@ -67,6 +69,8 @@ def thanks_deposit_payment(request):
 
     revenue = sum(revenue[0:len(revenue)])
 
+    costo_despacho = Order.objects.latest('id').shipping_cost
+
     order_items_serialized = serialize('json', order_items, fields=['id', 'sku', 'name', 'price', 'size', 'quantity'])
 
     # convert the serialized string to a Python object
@@ -75,7 +79,8 @@ def thanks_deposit_payment(request):
     # define the target mapping
     def mapper(p):
         return {
-            'id': p['fields']['sku'],
+            'id': p['pk'],
+            'sku': p['fields']['sku'],
             'name': p['fields']['name'],
             'price': p['fields']['price'],
             'size': p['fields']['size'],
@@ -85,8 +90,9 @@ def thanks_deposit_payment(request):
     # re-map and re-serialize the items
     order_items = json.dumps(list(map(mapper, order_items_obj)))
 
-    response = render(request, 'thanks_deposit_payment.html', dict(transaction=transaction, revenue = revenue,
-                                                                   order_items=order_items, order_items_for_template=order_items_for_template))
+    response = render(request, 'thanks_deposit_payment.html', dict(order_number = order_number, transaction=transaction, revenue = revenue,
+                                                                   order_items=order_items, costo_despacho = costo_despacho,
+                                                                   order_items_for_template=order_items_for_template))
     return response
 
 

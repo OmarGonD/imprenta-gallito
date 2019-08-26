@@ -234,6 +234,7 @@
 
 
                                         <ul class="form-items padding-top4">
+                        
                                             <li>
                                                 <span>
                                                     {{ form.size.1.tag }}
@@ -268,6 +269,22 @@
                                         <legend class="text-size16 bold-font"> {{ form.quantity.label }}</legend>
 
                                         <ul class="form-items padding-top4">
+                                            <li>
+                                                <span class="quantity">
+                                                    {{ form.quantity.0.tag }}
+                                                    {{ form.quantity.0.choice_label }}
+                                                </span>
+                                                    <span class="price"></span>
+                                                    <span class="savings"></span>
+                                            </li>
+                                            <li>
+                                                <span class="quantity">
+                                                    {{ form.quantity.1.tag }}
+                                                    {{ form.quantity.1.choice_label }}
+                                                </span>
+                                                    <span class="price"></span>
+                                                    <span class="savings"></span>
+                                            </li>
                                             <li>
                                             <span class="quantity">
                                                 {{ form.quantity.2.tag }}
@@ -307,14 +324,6 @@
                                             </span>
                                                 <span class="price"></span>
                                                 <span class="savings"></span>
-                                            </li>
-                                            <li>
-                                                <span class="quantity">
-                                                    {{ form.quantity.7.tag }}
-                                                    {{ form.quantity.7.choice_label }}
-                                                </span>
-                                                    <span class="price"></span>
-                                                    <span class="savings"></span>
                                             </li>
                                         </ul>
 
