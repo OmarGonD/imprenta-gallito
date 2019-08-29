@@ -189,9 +189,16 @@ Carrito de compras - Stickers Gallito
                             <div class="row">
                                 <div class="col-6">
                                     Total: S/{{ total }}<br>
+                                    {% if user.is_authenticated %}
                                     Costo de envío: S/{{ costo_despacho }}<br>
                                     Descuento: <span class="savings"><b>S/{{ descuento }}</b></span><br>
                                     A pagar: <strong>S/{{ total_a_pagar }}</strong><br>
+                                    {% else %}
+                                    Costo de envío: <b>Regístrese para poder brindarle el costo de envío.</b><br>
+                                    Descuento: <span class="savings"><b>S/{{ descuento }}</b></span><br>
+                                    A pagar: S/{{ total }} + costo de envío<br>
+                                    {% endif %}
+                                    
                                 </div>
                                 <div class="col-6">
                                     <div class="flex">
@@ -225,13 +232,13 @@ Carrito de compras - Stickers Gallito
 
                                 {% if user.is_authenticated and total > 0 %}
                                 <div class="tops">
-                                    <div class="margin-top4">
+                                    <!-- <div class="margin-top4">
                                     <button id="buyButton"
                                         class="btn-azul btn-block my_custom_btn margin-bottom2 width60 display-inline">Pagar
                                         con Tarjeta
                                     </button>
                                     <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCardExplanation"></i> 
-                                    </div>
+                                    </div> -->
                                     <div class="margin-top4">
                                     <button id="depositButton"
                                         class="btn-naranja btn-block my_custom_btn width60 display-inline" checked>Pagar
@@ -250,13 +257,13 @@ Carrito de compras - Stickers Gallito
                                 {% elif user.is_authenticated and total == 0 %}
 
                                 <div class="tops">
-                                    <div class="margin-top4">
+                                    <!-- <div class="margin-top4">
                                         <button id="EmptyCartButton" data-toggle="modal" data-target="#exampleModal"
                                             class="btn-azul btn-secondary btn-block my_custom_btn margin-bottom2 width60 display-inline">Pagar
                                             con Tarjeta
                                         </button>
                                         <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCardExplanation"></i> 
-                                    </div>
+                                    </div> -->
                                     <div class="margin-top4">
                                     <button id="depositButtonEmptyCart" data-toggle="modal" data-target="#exampleModal"
                                         class="btn-naranja btn-block my_custom_btn width60 display-inline" checked>Pagar
@@ -276,14 +283,14 @@ Carrito de compras - Stickers Gallito
 
                                 <!-- Button trigger modal -->
                                 <div class="tops">
-                                <div class="margin-top4">
+                                <!-- <div class="margin-top4">
                                     <button id="CannotbuyButton"
                                         class="btn-azul btn-secondary btn-block my_custom_btn margin-bottom2 width60 display-inline"
                                         data-toggle="modal" data-target="#CannotbuyButtonModal">
                                         Pagar con Tarjeta
                                     </button>
                                     <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCardExplanation"></i>  
-                                </div>
+                                </div> -->
                                 <div class="margin-top4"></div>
                                     <button id="depositButtonCannotbuy"
                                         class="btn-naranja btn-block my_custom_btn width60 display-inline"
