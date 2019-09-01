@@ -142,7 +142,6 @@ def cart_charge_credit_card(request):
                     file_a=order_item.file_a,
                     file_b=order_item.file_b,
                     comment=order_item.comment,
-
                 )
                 try:
                     oi.save()
@@ -199,6 +198,10 @@ def cart_charge_deposit_payment(request):
 
     last_four = 1111  # No necesario para Pagos con Efectivo, pero si para el Objeto Order
     transaction_amount = amount  # Solo para Culqi se divide entre 100
+    
+    print("### TRANSACTION AMAOUNT")
+    print(transaction_amount)
+    print(type(transaction_amount))
 
     first_name = request.user.first_name
 
@@ -271,6 +274,9 @@ def cart_charge_deposit_payment(request):
         ### Sample ITEMS SAVE
 
         sample_items = SampleItem.objects.filter(cart=cart)
+        for order_item in sample_items:
+            print("Sample item name")
+            print(order_item.sample.name)
 
         for order_item in sample_items:
             oi = OrderItem.objects.create(

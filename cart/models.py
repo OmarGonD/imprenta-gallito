@@ -75,8 +75,17 @@ class SampleItem(models.Model):
         return int(sample_price)
 
     @property
-    def file_name(self):
+    def file_name_a(self):
         if self.file_a:
             return self.file_a.url.split('/')[-1]
         else:
             return self.product.image.url.split('/')[-1]
+
+    @property
+    def file_name_b(self):
+        if self.file_b:
+            return self.file_b.url.split('/')[-1]
+        else:
+            return self.product.image.url.split('/')[-1]        
+
+          

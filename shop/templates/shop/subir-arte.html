@@ -46,6 +46,10 @@
 
                     <div class="form-group">
 
+                        <!-- Solo se permite subir 2 diseños cuando no son muestras -->
+
+                        {% if not "muestras" in request.get_full_path %}
+                        
                         <p><b>Diseño 1:</b></p>
 
                         {{ form.file_a|as_crispy_field }}
@@ -53,6 +57,14 @@
                         <p><b>Diseño 2 (opcional):</b></p>
 
                         {{ form.file_b|as_crispy_field }}
+
+                        {% else %}
+
+                        <p><b>Diseño 1:</b></p>
+
+                        {{ form.file_a|as_crispy_field }}
+
+                        {% endif %}
 
                         <div id="instrucciones-adicionales" style="display:none">
 

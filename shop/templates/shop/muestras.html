@@ -54,16 +54,11 @@
 
         <div class="container">
 
-            <p class="my_samples_subtitle text-center">O también puedes obtener tus muestras con tu diseño
-                personalizado.</p>
-            <h4 class="text-center">Son 10 stickers personalizados a S/15.00 (no incluye costos de envío).</h4>
-            <br>
-            <br>
-
-
+            <p class="my_samples_subtitle text-center">O también puedes obtener tus muestras usando tu ilustración.</p>
+            
             <div class="row">
                 {% for muestra in muestras %}
-                    <div class="col-md-4">
+                    <div class="col-md-4 margin-top3">
                         <div class="text-center">
                             <a href="{% url 'shop:SampleDetail' muestra.slug %}"><img class="my_image_medium"
                                                                                       src="{{ muestra.image.url }}"
@@ -75,8 +70,15 @@
                 {% endfor %}
             </div>
 
-            <br>
-            <br>
+            <div class="row margin-top5 margin-bottom5">
+                <div class="col-md-6">
+                        <img src="{% static 'img/muestras/cocodrilo_m.jpg' %}" width="400px" height="300px">
+                </div>
+                <div class="col-md-6">
+                    <h2>Pruebe nuestro servicio antes de realizar un pedido grande.</h2>
+                    <p>Obtenga un pequeño lote de stickers personalizados en cualquier forma para ver su diseño antes de realizar un pedido grande. Nuestros stickers personalizados se imprimen y cortan con precisión según su diseño, y están fabricadas con un material liviano y duradero, ideal para el exterior.</p>
+                </div>
+            </div>
 
             <div class="row col-md-12">
 

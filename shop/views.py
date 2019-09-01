@@ -91,7 +91,8 @@ def SamplePack(request, c_slug, product_slug):
             sample=sample,
             size="varios",
             quantity="5",
-            file=sample.image,
+            file_a=sample.image,
+            file_b=sample.image,
             comment="",
             step_two_complete=True,
         )
@@ -240,7 +241,7 @@ class StepOneView_Sample(FormView):
             cart_id = cart.id
         item = SampleItem.objects.create(
             size=form.cleaned_data.get('size'),
-            quantity=10,
+            quantity=5,
             sample=Sample.objects.get(
                 # category=self.kwargs['muestras'],
                 slug=self.kwargs['sample_slug']

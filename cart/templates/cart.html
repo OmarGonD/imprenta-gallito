@@ -78,15 +78,15 @@ Carrito de compras - Stickers Gallito
                         {% if cart_item.file_name_a|endswith:'.ai' %}
 
                             <td>
-                                <a href="cart_item.product.get_absolute_url"><img
+                                <img
                                         src="/static/img/admin/adobe_illustrator_file_logo.png" alt=""
-                                        class="float-left rounded" width="90" height="80"></a>
+                                        class="float-left rounded" width="90" height="80">
                             </td>
 
                         {% else %}
                             <td>
-                                <a href="cart_item.product.get_absolute_url"><img src="{{ cart_item.file_a.url }}" alt=""
-                                        class="float-left rounded" width="90" height="90"></a>
+                                <img src="{{ cart_item.file_a.url }}" alt=""
+                                        class="float-left rounded" width="90" height="90">
                             </td>
 
                         {% endif %}
@@ -107,8 +107,8 @@ Carrito de compras - Stickers Gallito
                     {% else %}
                     <tr>
                         <td>
-                            <a href="cart_item.product.get_absolute_url"><img src="{{ cart_item.product.image.url }}"
-                                    alt="" class="float-left rounded" width="90" height="90"></a>
+                            <img src="{{ cart_item.product.image.url }}"
+                                    alt="" class="float-left rounded" width="90" height="90">
                         </td>
                         <td class="text-left">
                             <b>{{ cart_item.product.name }}</b>
@@ -139,10 +139,16 @@ Carrito de compras - Stickers Gallito
 
 
                     <tr>
-                        <td>
-                            <a href="cart_item.product.get_absolute_url"><img src="{{ sample_item.sample.image.url }}"
-                                    alt="" class="float-left rounded" width="90" height="90"></a>
-                        </td>
+                        {% if sample_item.file_a %}
+                            <td>
+                                <img src="{{ sample_item.file_a.url }}" alt="" class="float-left rounded" width="90" height="90">
+                            </td>
+                        {% else %}
+                            <td>
+                                <img src="{{ sample_item.sample.image.url }}" alt="" class="float-left rounded" width="90" height="90">
+                            </td>
+                        {% endif %}
+                       
                         <td class="text-left">
                             <p class="margin-bottom0"><b>{{ sample_item.sample.name }}</b></p>
                             <p class="margin-top0 margin-bottom0">Cantidad: {{ sample_item.quantity }} stickers</p>
