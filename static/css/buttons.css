@@ -97,7 +97,7 @@ a.btn-azul {
   
   a.btn-naranja:hover {
     text-decoration: none;
-    background-color: #e28f11;
+    background-color: rgb(243, 172, 66);
     display: inline-block;
     text-align: center;
     vertical-align: middle;
@@ -280,7 +280,7 @@ button.btn-azul {
   
   button.btn-naranja:hover {
     text-decoration: none;
-    background-color: rgb(255, 193, 100);
+    background-color: rgb(243, 172, 66);
     display: inline-block;
     text-align: center;
     vertical-align: middle;

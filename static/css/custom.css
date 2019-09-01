@@ -639,8 +639,8 @@ ul.my_products_list li {
 .review_title {
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: .2em;
-    font-size: 2em;
+    letter-spacing: .15em;
+    font-size: 1.6em;
 }
 
 
