@@ -253,7 +253,7 @@ button.btn-azul {
   
   button.btn-naranja {
     text-decoration: none;
-    background-color: #ffa31a;
+    background-color: #fda622;
     display: inline-block;
     text-align: center;
     vertical-align: middle;
@@ -280,7 +280,7 @@ button.btn-azul {
   
   button.btn-naranja:hover {
     text-decoration: none;
-    background-color: rgb(228, 143, 15);
+    background-color: rgb(255, 193, 100);
     display: inline-block;
     text-align: center;
     vertical-align: middle;

@@ -632,3 +632,23 @@ ul.my_products_list li {
     margin-bottom: 10px;
     padding-top: 5%;
 }
+
+
+/* Reviews */
+
+.review_title {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    font-size: 2em;
+}
+
+
+/* -- TESTIMONIOS --*/
+
+.testimonios-nombre {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .3em;
+    font-size: 12px;
+}
