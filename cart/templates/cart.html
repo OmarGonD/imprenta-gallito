@@ -469,6 +469,8 @@ Carrito de compras - Stickers Gallito
         $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
             payment_method: 'deposit_payment',
             amount: {{ total_a_pagar }},
+            stickers_price: {{ total }},
+            discount: {{ descuento }},
         currency_code: 'PEN',
         source_id: "10",
         last_four: 1111,

@@ -269,36 +269,32 @@
                         </tr>
                     {% endfor %}
                     <tr>
-                        <td colspan="14" style="text-align: right;"><b>Costo stickers:</b></td>
-                        <td colspan="1" class="text_to_right">S/{{ revenue }}</td>
+                        <td colspan="14" style="text-align: right;"><b>Costo de los productos: (IGV incl.)</b></td>
+                        <td colspan="1" class="text_to_right">S/{{ transaction.stickers_price }}</td>
                     </tr>
                     <tr>
-                        <td colspan="14" style="text-align: right;"><b>Costo de envío:</b></td>
+                        <td colspan="14" style="text-align: right;"><b>Costo de envío</b></td>
                         <td colspan="1" class="text_to_right">S/{{ transaction.shipping_cost }}</td>
                     </tr>
                     <tr>
-                        <td colspan="14" style="text-align: right;"><b>IGV</b><i>(18%, incluido en el precio de los stickers):</i></td>
-                        <td colspan="1" class="text_to_right">S/{{ transaction.igv }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="14" style="text-align: right;"><b>Total:</b></td>
-                        <td colspan="1" class="text_to_right">S/{{ transaction.total }}</td>
+                        <td colspan="14" style="text-align: right;"><b>Descuento:</b></td>
+                        <td colspan="1" class="text_to_right">- S/{{ transaction.discount }}</td>
                     </tr>
                     <tr>
                         <td colspan="14" style="text-align: right;"><b>Total a pagar:</b></td>
                         <td colspan="1" class="text_to_right">S/{{ transaction.total }}</td>
                     </tr>
                     <tr>
-                        <td valign="center" colspan="9" class="padding-top2" style="width: 50%; text-align: left;">
+                        <td valign="top" colspan="9" style="width: 50%">
+                            <p><b>Enviar a: </b></p>
                             <ul id="shipping_items_list">
-                                <li><b>Enviar a: </b></li>
                                 <li><b>Dirección:</b> <i>{{ transaction.shipping_address }}</i></li>
                                 <li><b>Distrito:</b> <i>{{ transaction.shipping_district }}</i></li>
                                 <li><b>Provincia:</b> <i>{{ transaction.shipping_province }}</i></li>
-                                <li><b>Departamento:</b><i> {{ transaction.shipping_department }}</i></li>
+                                <li><b>Departamento:</b><i>{{ transaction.shipping_department }}</i></li>
                             </ul>
                         </td>
-                        <td valign="top" colspan="6" class="padding-top2" style="width: 50%">
+                        <td valign="top" colspan="6" style="width: 50%">
                             <p><b>Detalles del pago: </b> S/ {{ transaction.total }} a pagar dentro de las próximas 48 horas.</p>
                             <p><b>Fecha máxima para hacer efectivo su pedido:</b> {{ transaction.deposit_payment_date|date:"d M Y" }}.</p>
                         </td>

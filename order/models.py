@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.html import mark_safe
 import datetime
+from decimal import Decimal
 
 # Create your models here.
 
@@ -19,6 +20,8 @@ class Order(models.Model):
     last_name = models.CharField(max_length=50, blank=True, null=True)
     phone_number = models.CharField(max_length=30, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    stickers_price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     shipping_cost = models.DecimalField(max_digits=10, decimal_places=2)
     email = models.EmailField(max_length=250, blank = True, verbose_name= 'Correo electrónico')
     last_four = models.CharField(max_length=100, blank=True, null=True)
@@ -31,6 +34,7 @@ class Order(models.Model):
     shipping_district = models.CharField(max_length=100, blank=True, null=True)
     reason = models.CharField(max_length=400, blank=True, null=True, default='')
     status = models.CharField(max_length=20, choices=ORDER_STATUS, default='recibido_pagado')
+    cupon = models.ForeignKey('marketing.Cupons', blank=True, null=True, default=None, on_delete=models.SET_NULL)
 
 
     class Meta:

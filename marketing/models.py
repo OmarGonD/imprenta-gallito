@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from order.models import Order
 
 # Create your models here.
 
@@ -37,14 +39,13 @@ class Cupons(models.Model):
 ### Registra que usuario hizo uso del cupon y cual fue su orden ###
 ### Esto nos servira para evitar que un mismo usuario use el cupon 2 o más veces ###
 
-from order.models import Order
-from django.contrib.auth.models import User
+
 
 
 class used_cupons(models.Model):
-    cupon = models.CharField(max_length=100, blank=False, null=True)
+    cupon = models.ForeignKey(Cupons, on_delete=models.CASCADE)
     user = models.CharField(max_length=100, blank=False, null=True)
-    order = models.CharField(max_length=100, blank=False, null=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

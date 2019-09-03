@@ -36,14 +36,14 @@ class OrderItemAdmin(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     model = Order
-    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'last_four', 'total', 'reason', 'created']
+    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'last_four', 'total', 'discount', 'reason', 'created', 'stickers_price', 'shipping_cost']
     list_editable = ['reason', 'status']
     list_display_links = ('id', 'email')
     search_fields = ['token', 'shipping_department', 'email']
-    readonly_fields = ['id','created', 'total']
+    readonly_fields = ['id','created', 'total', 'stickers_price', 'discount', 'shipping_cost']
 
     fieldsets = [
-        ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'created']}),
+        ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'stickers_price', 'shipping_cost', 'discount', 'created']}),
         # ('BILLING INFORMATION', {'fields': ['billingName', 'billingAddress1', 'billingCity', 'billingPostCode',
         #                                     'billingCountry', 'emailAddress']}),
         ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'phone_number', 'email', 'last_four', 'shipping_address', 'shipping_department', 'shipping_province',

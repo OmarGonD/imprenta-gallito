@@ -170,9 +170,9 @@ def cart_charge_credit_card(request):
             cupon.save()
 
             used_cupon = used_cupons.objects.create(
-                cupon=cupon_name,
+                cupon=cupon,
                 user=request.user.username,
-                order=order_details.id
+                order=order_details
             )
 
             used_cupon.save()
@@ -195,6 +195,8 @@ def cart_charge_deposit_payment(request):
     email = request.user.email
     shipping_address = request.POST.get('shipping_address')
     shipping_cost = request.POST.get('shipping_cost')
+    discount = request.POST.get('discount')
+    stickers_price = request.POST.get('stickers_price')
 
     last_four = 1111  # No necesario para Pagos con Efectivo, pero si para el Objeto Order
     transaction_amount = amount  # Solo para Culqi se divide entre 100
@@ -221,6 +223,25 @@ def cart_charge_deposit_payment(request):
 
     shipping_district = request.user.profile.shipping_district
 
+    
+    
+    ### searching for cupons ###
+
+    try:
+
+        cupon_name = request.COOKIES.get("cupon")
+
+        cupon = Cupons.objects.get(cupon=cupon_name)
+
+        cupon.quantity = cupon.quantity - 1
+
+        cupon.save()
+
+    except:
+        print("No hay cupón, none")
+        cupon = None
+
+    ############################
 
     order_details = Order.objects.create(
         token='Random',
@@ -229,6 +250,8 @@ def cart_charge_deposit_payment(request):
         phone_number=phone_number,
         email=email,  # Using email entered in Culqi module, NOT user.email. Could be diff.
         total=transaction_amount,
+        stickers_price = stickers_price,
+        discount = discount,
         shipping_cost=shipping_cost,
         last_four=last_four,
         created=current_time,
@@ -238,11 +261,25 @@ def cart_charge_deposit_payment(request):
         shipping_department=shipping_department,
         shipping_province=shipping_province,
         shipping_district=shipping_district,
-        status='recibido_no_pagado'
+        status='recibido_no_pagado',
+        cupon=cupon
     )
 
-    order_details.save()
+    #order_details.save(commit=False)
     print("La orden fue creada")
+
+
+    try:
+        used_cupon = used_cupons.objects.create(
+            cupon=cupon,
+            user=request.user.username,
+            order=order_details
+        )
+
+        used_cupon.save()
+    except:
+        print("no se guardó el cupón usado o no hubo cupon")   
+
 
     try:
         cart_id = int(request.COOKIES.get("cart_id"))
@@ -252,6 +289,9 @@ def cart_charge_deposit_payment(request):
             pass
 
         cart_items = CartItem.objects.filter(cart=cart)
+
+        
+
 
         for order_item in cart_items:
             oi = OrderItem.objects.create(
@@ -265,10 +305,10 @@ def cart_charge_deposit_payment(request):
                 file_b=order_item.file_b,
                 comment=order_item.comment,
             )
-            try:
-                oi.save()
-            except oi.DoesNotExist:
-                print("No se creo el Order ITEM")
+        try:
+            oi.save()
+        except oi.DoesNotExist:
+            print("No se creo el Order ITEM")
                 
 
         ### Sample ITEMS SAVE
@@ -294,35 +334,15 @@ def cart_charge_deposit_payment(request):
                 oi.save()
             except oi.DoesNotExist:
                 print("No se creo el Order ITEM")
+        
+
+        order_details.save()    
+
         try:
             '''Calling send_email function'''
             send_email_deposit_payment(order_details.id)
         except IOError as e:
             return e
-
-        try:
-
-            cupon_name = request.COOKIES.get("cupon")
-
-            cupon = Cupons.objects.get(cupon=cupon_name)
-
-            cupon.quantity = cupon.quantity - 1
-
-            cupon.save()
-
-            used_cupon = used_cupons.objects.create(
-                cupon=cupon_name,
-                user=request.user.username,
-                order=order_details.id
-            )
-
-            used_cupon.save()
-
-        except:
-            print("No se detectó cupón o no se pudo guardar cupón usado")
-            pass
-
-
 
 
     except ObjectDoesNotExist:
@@ -331,6 +351,7 @@ def cart_charge_deposit_payment(request):
     response = HttpResponse("Hi")
     response.delete_cookie("cart_id")
     response.delete_cookie("cupon")
+    response.delete_cookie("discount")
 
     return response
 
@@ -399,6 +420,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
         except:
             descuento = 0
 
+        
 
         total_a_pagar = int(total) - descuento + costo_despacho
 

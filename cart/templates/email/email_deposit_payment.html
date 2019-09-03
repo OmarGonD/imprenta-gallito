@@ -209,17 +209,25 @@
             <td colspan="2" class="text_to_right">S/{{ item.sub_total }}</td>
         </tr>
     {% endfor %}
-    <tr>
+    <!--<tr>
         <td colspan="14" style="text-align: right;"><b>Costo stickers:</b></td>
-        <td colspan="1" class="text_to_right">S/{{ revenue }}</td>
+        <td colspan="1" class="text_to_right">S/{{ revenue }} </td>
+    </tr>-->
+    <!--<tr>
+        <td colspan="14" style="text-align: right;"><b>IGV</b><i>(18%, incluido en el precio de los stickers):</i></td>
+        <td colspan="1" class="text_to_right">S/{{ transaction.igv }}</td>
+    </tr>-->
+    <tr>
+        <td colspan="14" style="text-align: right;"><b>Costo de los productos: (IGV incl.)</b></td>
+        <td colspan="1" class="text_to_right">S/{{ transaction.stickers_price }}</td>
     </tr>
     <tr>
         <td colspan="14" style="text-align: right;"><b>Costo de envío</b></td>
         <td colspan="1" class="text_to_right">S/{{ transaction.shipping_cost }}</td>
     </tr>
     <tr>
-        <td colspan="14" style="text-align: right;"><b>IGV</b><i>(18%, incluido en el precio de los stickers):</i></td>
-        <td colspan="1" class="text_to_right">S/{{ transaction.igv }}</td>
+        <td colspan="14" style="text-align: right;"><b>Descuento:</b></td>
+        <td colspan="1" class="text_to_right">- S/{{ transaction.discount }}</td>
     </tr>
     <tr>
         <td colspan="14" style="text-align: right;"><b>Total a pagar:</b></td>
