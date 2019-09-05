@@ -353,6 +353,9 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
+        print("############")
+        print("Enters if of activate function")
+        print("############")
         user.is_active = True
         user.save()
         login(request, user)
