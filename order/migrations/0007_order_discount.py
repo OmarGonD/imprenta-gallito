@@ -7,6 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('marketing', '__first__'),
         ('order', '0006_order_stickers_price'),
     ]
 
