@@ -360,6 +360,10 @@ def activate(request, uidb64, token):
         user.save()
         login(request, user)
         '''send email to admin when a new user has activate his/her account'''
+        print("############")
+        print(user.id)
+        print(type(user.id))
+        print("############")
         send_email_new_registered_user(user.id)
         return redirect('shop:allCat')
     else:
@@ -370,7 +374,7 @@ def activate(request, uidb64, token):
 def send_email_new_registered_user(user_id):
     try:
         print("Enters send_email_new_registed_user try")
-        profile = Profile.objects.get(id=user_id)
+        profile = Profile.objects.latest('id')
         if profile:
             print("Se obtuvo profile")
         '''sending the order to the customer'''
@@ -391,8 +395,8 @@ def send_email_new_registered_user(user_id):
         msg.content_subtype = 'html'
         msg.send()
         print("Se envió msj")
-    except IOError as e:
-        return e        
+    except:
+        pass
 
 
 @transaction.atomic
@@ -479,7 +483,6 @@ def signupView(request):
             email.send()
 
             return redirect('shop:email_confirmation_needed')
-
 
         else:
             pass
