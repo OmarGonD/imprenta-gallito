@@ -103,53 +103,49 @@ def cart_charge_credit_card(request):
 
         try:
             cart_id = int(request.COOKIES.get("cart_id"))
-            try:
-                cart = Cart.objects.get(id=cart_id)
-            except Cart.DoesNotExist:
-                pass
-
-            cart_items = CartItem.objects.filter(cart=cart)
-
-            for order_item in cart_items:
-                oi = OrderItem.objects.create(
-                    order=order_details,
-                    name=order_item.product.name,
-                    sku=order_item.product.sku,
-                    quantity=order_item.quantity,
-                    size=order_item.size,
-                    price=order_item.product.price,
-                    file_a=order_item.file_a,
-                    file_b=order_item.file_b,
-                    comment=order_item.comment,
-                )
-                try:
-                    oi.save()
-                except oi.DoesNotExist:
-                    print("No se creo el Order ITEM")
-
-            ### Sample ITEMS SAVE
-
-            sample_items = SampleItem.objects.filter(cart=cart)
-
-            for order_item in sample_items:
-                oi = OrderItem.objects.create(
-                    order=order_details,
-                    name=order_item.sample.name,
-                    sku=order_item.sample.sku,
-                    quantity=order_item.quantity,
-                    size=order_item.size,
-                    price=order_item.sample.price,
-                    file_a=order_item.file_a,
-                    file_b=order_item.file_b,
-                    comment=order_item.comment,
-                )
-                try:
-                    oi.save()
-                except oi.DoesNotExist:
-                    print("No se creo el Order ITEM")
-
-        except ObjectDoesNotExist:
+            cart = Cart.objects.get(id=cart_id)
+        except Cart.DoesNotExist:
             pass
+
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        for order_item in cart_items:
+            oi = OrderItem.objects.create(
+                order=order_details,
+                name=order_item.product.name,
+                sku=order_item.product.sku,
+                quantity=order_item.quantity,
+                size=order_item.size,
+                price=order_item.product.price,
+                file_a=order_item.file_a,
+                file_b=order_item.file_b,
+                comment=order_item.comment)
+                
+        oi.save()
+        
+        
+        ### Sample ITEMS SAVE
+
+        sample_items = SampleItem.objects.filter(cart=cart)
+
+        for order_item in sample_items:
+            oi = OrderItem.objects.create(
+                order=order_details,
+                name=order_item.sample.name,
+                sku=order_item.sample.sku,
+                quantity=order_item.quantity,
+                size=order_item.size,
+                price=order_item.sample.price,
+                file_a=order_item.file_a,
+                file_b=order_item.file_b,
+                comment=order_item.comment,
+                )
+            try:
+                oi.save()
+            except oi.DoesNotExist:
+                print("No se creo el Order ITEM")
+
+       
 
         try:
             '''Calling send_email function'''
@@ -290,9 +286,7 @@ def cart_charge_deposit_payment(request):
 
         cart_items = CartItem.objects.filter(cart=cart)
 
-        
-
-
+    
         for order_item in cart_items:
             oi = OrderItem.objects.create(
                 order=order_details,
@@ -305,10 +299,10 @@ def cart_charge_deposit_payment(request):
                 file_b=order_item.file_b,
                 comment=order_item.comment,
             )
-        try:
-            oi.save()
-        except oi.DoesNotExist:
-            print("No se creo el Order ITEM")
+            try:
+                oi.save()
+            except oi.DoesNotExist:
+                print("No se creo el Order ITEM")
                 
 
         ### Sample ITEMS SAVE
