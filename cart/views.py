@@ -344,8 +344,12 @@ def cart_charge_deposit_payment(request):
 
 def cart_detail(request, total=0, counter=0, cart_items=None):
     
-    cart = Cart.objects.get(id=request.COOKIES.get("cart_id"))
-        
+    try:
+        cart = Cart.objects.get(id=request.COOKIES.get("cart_id"))
+    except:
+        print("#############")
+        print("No se obtuvo cart_id cookie")    
+
     cart_items = CartItem.objects.filter(cart=cart)
 
     print("leng cart items")
@@ -355,7 +359,11 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     for cart_item in cart_items:
         total += int(cart_item.sub_total())
 
-    sample_items = SampleItem.objects.filter(cart=cart)
+    try:
+        sample_items = SampleItem.objects.filter(cart=cart)
+    except:
+        print("##############")
+        print("No se puedo filtrar los SampleItems por el carrito")    
 
     for sample_item in sample_items:
         total += int(sample_item.sub_total())
