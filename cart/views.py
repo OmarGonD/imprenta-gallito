@@ -343,87 +343,71 @@ def cart_charge_deposit_payment(request):
 
 
 def cart_detail(request, total=0, counter=0, cart_items=None):
-    print("cart_details")
+    
+    cart = Cart.objects.get(id=request.COOKIES.get("cart_id"))
+        
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    print("leng cart items")
+    print(len(cart_items))
+    print("###############")  
+
+    for cart_item in cart_items:
+        total += int(cart_item.sub_total())
+
+    sample_items = SampleItem.objects.filter(cart=cart)
+
+    for sample_item in sample_items:
+        total += int(sample_item.sub_total())
+
+    print("leng sample items")
+    print(len(sample_items))    
+
+    categories = Category.objects.exclude(name='Muestras')
+
+    ### Calcular costo despacho ###
+
     try:
-        print("Entrando al try de Cart_Details")
-        cart = Cart.objects.get(id=request.COOKIES.get("cart_id"))
-        if cart:
-            print("Hay carrito")
-        else:
-            print("No hay carrito")
-        cart_items = CartItem.objects.filter(cart=cart)
 
-        print("len of cart_items")
-        print(len(cart_items))
-
-
-        for cart_item in cart_items:
-            total += int(cart_item.sub_total())
-
-        sample_items = SampleItem.objects.filter(cart=cart)
-
-        for sample_item in sample_items:
-            total += int(sample_item.sub_total())
-
-        categories = Category.objects.exclude(name='Muestras')
-
-        print("Total: ", total)
-        ### Calcular costo despacho ###
-
-        try:
-
-            costo_despacho = Peru.objects.filter(departamento=request.user.profile.shipping_department,
+        costo_despacho = Peru.objects.filter(departamento=request.user.profile.shipping_department,
                                                  provincia=request.user.profile.shipping_province,
                                                  distrito=request.user.profile.shipping_district).values_list(
-                "costo_despacho_con_recojo", flat=True)[0]
+                                                 "costo_despacho_con_recojo", flat=True)[0]
 
-        except:
-            costo_despacho = 15
+    except:
+        costo_despacho = 15
 
-            ### ¿tiene un cupón de descuento? ###
+    ### ¿tiene un cupón de descuento? ###
 
-            # cupon_used_by_user = used_cupons.objects.filter(user = request.user.username)
+    # cupon_used_by_user = used_cupons.objects.filter(user = request.user.username)
 
-        try:
-            cupon = Cupons.objects.get(cupon=request.COOKIES.get("cupon"))
-        except:
-            pass
+    try:
+        cupon = Cupons.objects.get(cupon=request.COOKIES.get("cupon"))
+    except:
+        cupon = None
 
-        try:
-            if cupon.free_shipping:
-                descuento = costo_despacho
-            elif cupon.hard_discount:
-                descuento = int(cupon.hard_discount)
-            elif cupon.percentage:
-                cupon_percentage = int(cupon.percentage) / int(100)
-                descuento = total * cupon_percentage
-            else:
-                descuento = 0
-        except:
-            descuento = 0
-
+    if cupon:
+        if cupon.free_shipping:
+            descuento = costo_despacho
+        elif cupon.hard_discount:
+            descuento = int(cupon.hard_discount)
+        elif cupon.percentage:
+            cupon_percentage = int(cupon.percentage) / int(100)
+            descuento = total * cupon_percentage
+    else:
+        descuento = 0
         
-
-        total_a_pagar = int(total) - descuento + costo_despacho
-
-
-        culqi_my_public_key = settings.CULQI_PUBLISHABLE_KEY  # Es necesario mandar la llave pública para generar un token
-        culqi_total = int(total_a_pagar * 100)  # El total para cualqui debe multiplicarse por 100
+        
+    total_a_pagar = int(total) - descuento + costo_despacho
 
 
-
-        return render(request, 'cart.html',
+    return render(request, 'cart.html',
                       dict(cart_items=cart_items, sample_items=sample_items, total=total, counter=counter,
-                           culqi_total=culqi_total, culqi_my_public_key=culqi_my_public_key,
                            categories=categories, total_a_pagar=total_a_pagar, descuento=descuento,
                            costo_despacho=costo_despacho))
 
 
-    except:
-
-        print("cart_details except")
-        categories = Category.objects.exclude(name='Muestras')
-        return render(request, 'cart.html', {'categories': categories})
+    
 
 
 def send_email_credit_card(order_id):

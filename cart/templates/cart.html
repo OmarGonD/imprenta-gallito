@@ -7,47 +7,25 @@ This is the shopping Cart.
 {% block title %}
 Carrito de compras - Stickers Gallito
 {% endblock %}
+
+
 {% block content %}
 
+<div class="container margin-top10">
 
-
-<script>
-    Culqi.publicKey = '{{ culqi_my_public_key }}';
-</script>
-
-<script>
-    Culqi.settings({
-        title: 'Stickers Gallito Store',
-        currency: 'PEN',
-        description: 'Stickers varios',
-        amount: {{ culqi_total }}
-        });
-</script>
-
-
-
-<!-- {% if not cart_items and not sample_items %}
-
-<div class="margin-top10">
-    <div class="text-center">
-        <br>
-        <h1 class="text-center my_title">
-            El Carrito de compras está vacio
-        </h1>
-        <br>
-        <p>
-            Haga click <a class="text-center" href="{% url 'shop:allCat' %}">aquí</a> para seguir comprando
-        </p>
+    <div class="margin-top10 margin-bottom10">
+        <div class="text-center">
+            <br>
+            <h1 class="text-center my_title margin-top3">
+                El Carrito de compras está vacio
+            </h1>
+            <p>
+                Haga click <a class="text-center" href="{% url 'shop:allCat' %}">aquí</a> para seguir comprando
+            </p>
+        </div>
     </div>
-</div>
 
-
-{% else %} -->
-
-<div class="container margin-top10 margin-bottom5">
-
-
-    <div class="row">
+    <div class="row margin-bottom5">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
             <h1 class="text-center my_title">
                 Tu carrito de compras
@@ -55,9 +33,8 @@ Carrito de compras - Stickers Gallito
         </div>
     </div>
 
-    <br>
-    <br>
-    <div class="row">
+
+    <div class="row margin-bottom5">
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
             <table class="table my_custom_table">
                 <thead class="my_custom_thead">
@@ -321,8 +298,11 @@ Carrito de compras - Stickers Gallito
                                         data-target="#SeguirComprandoExplanation"></i>
                                 </div>
                             </div>
-
                             {% endif %}
+
+                    </tr>
+
+                    
 
         </div>
 
@@ -332,9 +312,9 @@ Carrito de compras - Stickers Gallito
         </table>
     </div>
 </div>
-</div>
 
-<!-- {% endif %} -->
+
+
 
 <script>
     $("#buyButton").hide();
