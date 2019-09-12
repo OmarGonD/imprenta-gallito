@@ -241,7 +241,7 @@ class StepOneView_Sample(FormView):
             cart_id = cart.id
         item = SampleItem.objects.create(
             size=form.cleaned_data.get('size'),
-            quantity=5,
+            quantity=2,
             sample=Sample.objects.get(
                 # category=self.kwargs['muestras'],
                 slug=self.kwargs['sample_slug']

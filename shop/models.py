@@ -110,7 +110,6 @@ class SamplesPricing(models.Model):
 
 ### Reviews ###
 
-
 class Product_Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

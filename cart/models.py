@@ -37,6 +37,14 @@ class CartItem(models.Model):
     #     return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
 
     def sub_total(self):
+        print("### PRODUCTITEM SUBTOTAL ###")
+        print(type(self.product))
+        print(self.product)
+        print(type(self.size))
+        print(self.size)
+        print(type(self.quantity))
+        print(self.quantity)
+        print("############################")
         product_price = ProductsPricing.objects.filter(product=self.product, size=self.size, quantity=self.quantity).values_list("price", flat=True)[0]
         return int(product_price)
 
@@ -68,11 +76,18 @@ class SampleItem(models.Model):
     step_two_complete = models.BooleanField(default=False)
 
     def sub_total(self):
-        sample_price = \
-        SamplesPricing.objects.filter(sample=self.sample, size=self.size, quantity=self.quantity).values_list("price",
-                                                                                                              flat=True)[
-            0]
-        return int(sample_price)
+
+        #sample_price = SamplesPricing.objects.filter(sample=self.sample, size=self.size, quantity=self.quantity).values_list("price", flat=True)[0]
+        #return int(sample_price)
+        print("#######SUB TOTAL - SAMPLEITEM #############")
+        print(type(self.sample))
+        print(self.sample)
+        print(type(self.size))
+        print(self.size)
+        print(type(self.quantity))
+        print(self.quantity)
+        print("####################")
+        return int(5)
 
     @property
     def file_name_a(self):

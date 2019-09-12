@@ -11,20 +11,28 @@ Carrito de compras - Stickers Gallito
 
 {% block content %}
 
-<div class="container margin-top10">
 
-    <div class="margin-top10 margin-bottom10">
+
+{% if not cart_items and not sample_items %}
+
+<div class="container margin-top10">
+    <div class="margin-bottom5">
         <div class="text-center">
-            <br>
-            <h1 class="text-center my_title margin-top3">
+            <h1 class="text-center my_title">
                 El Carrito de compras está vacio
             </h1>
-            <p>
+            <p class="margin-top3">
                 Haga click <a class="text-center" href="{% url 'shop:allCat' %}">aquí</a> para seguir comprando
             </p>
         </div>
     </div>
+</div>
 
+
+{% else %}
+
+
+<div class="container margin-top10">
     <div class="row margin-bottom5">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
             <h1 class="text-center my_title">
@@ -129,7 +137,8 @@ Carrito de compras - Stickers Gallito
 
                         <td class="text-left">
                             <p class="margin-bottom0"><b>{{ sample_item.sample.name }}</b></p>
-                            <p class="margin-top0 margin-bottom0">Cantidad: {{ sample_item.quantity }} stickers</p>
+                            <!--<p class="margin-top0 margin-bottom0">Cantidad: {{ sample_item.quantity }} stickers</p>-->
+                            <p class="margin-top0 margin-bottom0">Cantidad: 02 stickers</p>
                             <p class="margin-top0 margin-bottom0">Tamaño: {{ sample_item.size }}</p>
                         </td>
                         <td>
@@ -302,7 +311,7 @@ Carrito de compras - Stickers Gallito
 
                     </tr>
 
-                    
+
 
         </div>
 
@@ -311,6 +320,10 @@ Carrito de compras - Stickers Gallito
         </tboyd>
         </table>
     </div>
+</div>
+
+{% endif %}
+
 </div>
 
 

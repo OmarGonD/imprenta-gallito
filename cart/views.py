@@ -264,12 +264,11 @@ def cart_charge_deposit_payment(request):
     #order_details.save(commit=False)
     print("La orden fue creada")
     
-    used_cupon = used_cupons.objects.create(
+    try:
+        used_cupon = used_cupons.objects.create(
         cupon=cupon,
         user=request.user.username,
         order=order_details)
-
-    try:
         used_cupon.save()
     except:
         print("no se guardó el cupón usado o no hubo cupon")   
