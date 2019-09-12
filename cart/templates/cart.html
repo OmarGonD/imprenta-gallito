@@ -138,7 +138,11 @@ Carrito de compras - Stickers Gallito
                         <td class="text-left">
                             <p class="margin-bottom0"><b>{{ sample_item.sample.name }}</b></p>
                             <!--<p class="margin-top0 margin-bottom0">Cantidad: {{ sample_item.quantity }} stickers</p>-->
-                            <p class="margin-top0 margin-bottom0">Cantidad: 02 stickers</p>
+                            {% if sample_item.sample.name == 'Sobre con muestras' %}
+                                <p class="margin-top0 margin-bottom0">Cantidad: 05 stickers</p>
+                            {% else %}
+                                <p class="margin-top0 margin-bottom0">Cantidad: 02 stickers</p>
+                            {% endif %}        
                             <p class="margin-top0 margin-bottom0">Tamaño: {{ sample_item.size }}</p>
                         </td>
                         <td>
