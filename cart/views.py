@@ -375,10 +375,12 @@ def cart_charge_deposit_payment(request):
 def cart_detail(request, total=0, counter=0, cart_items=None):
     
     try:
-        cart = Cart.objects.get(id=request.COOKIES.get("cart_id"))
-    except:
-        print("#############")
-        print("No se obtuvo cart_id cookie")    
+        cart_id = self.request.COOKIES.get('cart_id')
+        cart = Cart.objects.get(id=cart_id)
+    except ObjectDoesNotExist:
+        # supplied ID doesn't match a Cart from your BD
+        cart = Cart.objects.create(cart_id="Random")
+      
 
     cart_items = CartItem.objects.filter(cart=cart)
 
