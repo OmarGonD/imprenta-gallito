@@ -210,10 +210,10 @@ def SamplePack(request, c_slug, product_slug):
                 comment="",
                 step_two_complete=True)
 
-        response = redirect('/carrito_de_compras/')
-        response.set_cookie("cart_id", cart_id)
-        response.set_cookie("item_id", pack_item.id)
-        return response    
+            response = redirect('/carrito_de_compras/')
+            response.set_cookie("cart_id", cart_id)
+            response.set_cookie("item_id", pack_item.id)
+            return response    
 
         except Exception as e:
             raise e        
