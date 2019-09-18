@@ -65,7 +65,7 @@ Mira nuestros productos - Stickers Gallito
                 {% for pack in packs %}
                 <tr>
                     <th scope="row">1</th>
-                    <td><img class="my_image_medium" src="{{ pack.image.url }}" alt="{{ pack.name }}"></td>
+                    <td><img class="" src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></td>
                     <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
                     <td>{{ pack.description }}</td>
                     <td><a href="{% url 'shop:PackFun' 'packs' pack.slug %}"
