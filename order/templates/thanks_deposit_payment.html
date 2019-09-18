@@ -285,7 +285,7 @@
                         <td colspan="1" class="text_to_right">S/{{ transaction.total }}</td>
                     </tr>
                     <tr>
-                        <td valign="top" colspan="9" style="width: 50%">
+                        <td class="padding-top3" valign="top" colspan="9" style="width: 50%">
                             <p><b>Enviar a: </b></p>
                             <ul id="shipping_items_list">
                                 <li><b>Dirección:</b> <i>{{ transaction.shipping_address }}</i></li>
@@ -294,7 +294,7 @@
                                 <li><b>Departamento:</b><i>{{ transaction.shipping_department }}</i></li>
                             </ul>
                         </td>
-                        <td valign="top" colspan="6" style="width: 50%">
+                        <td  class="padding-top3" valign="top" colspan="6" style="width: 50%">
                             <p><b>Detalles del pago: </b> S/ {{ transaction.total }} a pagar dentro de las próximas 48 horas.</p>
                             <p><b>Fecha máxima para hacer efectivo su pedido:</b> {{ transaction.deposit_payment_date|date:"d M Y" }}.</p>
                         </td>

@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import Product, Category, Peru
-from .models import Cart, CartItem, SampleItem
+from .models import Cart, CartItem, SampleItem, PackItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from order.models import Order, OrderItem
@@ -29,6 +29,13 @@ def full_remove_sample(request, sample_item_id):
     sample_item.delete()
 
     return redirect('carrito_de_compras:cart_detail')
+
+
+def full_remove_pack(request, pack_item_id):
+    pack_item = PackItem.objects.get(id=pack_item_id)
+    pack_item.delete()
+
+    return redirect('carrito_de_compras:cart_detail')    
 
 
 ### CULQI PAYMENT ###
@@ -299,8 +306,9 @@ def cart_charge_deposit_payment(request):
         except oi.DoesNotExist:
             print("No se creo el Order ITEM")
                 
-
-    ### Sample ITEMS SAVE
+    ####################################################
+    ############### Sample ITEMS SAVE ##################
+    #####################################################
 
     sample_items = SampleItem.objects.filter(cart=cart)
      
@@ -320,6 +328,29 @@ def cart_charge_deposit_payment(request):
         except oi.DoesNotExist:
             print("No se creo el Order ITEM")
         
+
+    ####################################################
+    ############### Packs ITEMS SAVE ##################
+    #####################################################
+
+    pack_items = PackItem.objects.filter(cart=cart)
+     
+    for order_item in pack_items:
+        oi = OrderItem.objects.create(
+            order=order_details,
+            name=order_item.pack.name,
+            sku=order_item.pack.sku,
+            quantity=order_item.quantity,
+            size=order_item.size,
+            price=order_item.sub_total(),
+            file_a=order_item.file_a,
+            file_b=order_item.file_b,
+            comment=order_item.comment)
+        try:
+            oi.save()
+        except oi.DoesNotExist:
+            print("No se creo el Pack Order ITEMs")
+            
 
     order_details.save()    
 
@@ -372,6 +403,11 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     categories = Category.objects.exclude(name='Muestras')
 
+    pack_items = PackItem.objects.filter(cart=cart)
+
+    for pack_item in pack_items:
+        total += int(pack_item.sub_total())
+
     ### Calcular costo despacho ###
 
     try:
@@ -409,7 +445,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
 
     return render(request, 'cart.html',
-                      dict(cart_items=cart_items, sample_items=sample_items, total=total, counter=counter,
+                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items, total=total, counter=counter,
                            categories=categories, total_a_pagar=total_a_pagar, descuento=descuento,
                            costo_despacho=costo_despacho))
 

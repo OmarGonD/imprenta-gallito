@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Profile, Peru, Sample, Product_Review, Sample_Review, ProductsPricing, \
-    SamplesPricing
+from .models import *
 
 # Register your models here.
 
@@ -10,6 +9,15 @@ admin.site.register(Product_Review)
 admin.site.register(Sample_Review)
 
 admin.site.register(Peru)
+
+
+class PackAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    prepopulated_fields = {'slug':('name',)}
+
+
+admin.site.register(Pack, PackAdmin)
+
 
 class SampleAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']

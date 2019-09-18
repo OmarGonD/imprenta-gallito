@@ -1,7 +1,7 @@
 from django.db import models
 from django.http import HttpResponse
 
-from shop.models import Product, Sample, SamplesPricing, ProductsPricing
+from shop.models import Product, Sample, Pack, SamplesPricing, ProductsPricing
 from shop.sizes_and_quantities import TAMANIOS, CANTIDADES
 
 
@@ -104,3 +104,40 @@ class SampleItem(models.Model):
             return self.product.image.url.split('/')[-1]        
 
           
+###################################
+############### PACKITEM ##########
+###################################
+
+
+class PackItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    pack = models.ForeignKey(Pack, on_delete=models.CASCADE)
+    size = models.CharField(max_length=20, blank=True, null=True)
+    quantity = models.CharField(max_length=20, blank=True, null=True)
+    file_a = models.FileField(upload_to='files', blank=True, null=True)
+    file_b = models.FileField(upload_to='files', blank=True, null=True)
+    comment = models.CharField(max_length=100, blank=True, null=True, default='')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    step_two_complete = models.BooleanField(default=False)
+
+    # def __str__(self):
+    #     return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
+
+    def sub_total(self):
+        pack_price = self.pack.price
+        return int(pack_price)
+
+
+    @property
+    def file_name_a(self):
+        if self.file_a:
+            return self.file_a.url.split('/')[-1]
+        else:
+            return self.product.image.url.split('/')[-1]
+
+    @property
+    def file_name_b(self):
+        if self.file_b:
+            return self.file_b.url.split('/')[-1]
+        else:
+            pass  

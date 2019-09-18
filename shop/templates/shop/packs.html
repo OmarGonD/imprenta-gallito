@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block metadescription %}
+{% if category %}
+{{ category.description|truncatewords:155 }}
+{% else %}
+Stickers Gallito Perú
+{% endif %}
+{% endblock %}
+{% block title %}
+{% if category %}
+{{ category.name }} - Stickers Gallito
+{% else %}
+Mira nuestros productos - Stickers Gallito
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+
+
+
+<div class="my_header_categories my_header_bg_color  margin-top3">
+    <div class="container padding-top3">
+        <p class="my_category_title">{{ category.name|title }}</p>
+        {#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star-half-alt"></i>
+        </p>
+    </div>
+</div>
+
+
+
+
+<div class="container margin-top5">
+
+    <h1 class="margin-top5 margin-bottom5">Packs de stickers</h1>
+
+    
+
+    <div class="row margin-bottom5 margin-top3">
+
+        <!--Table-->
+        <table id="tablePreview" class="table">
+            <!--Table head-->
+            <thead>
+                <tr>
+                    <th style="width: 5%">#</th>
+                    <th style="width: 15%"></th>
+                    <th style="width: 25%">Pack</th>
+                    <th style="width: 35%">Descripción</th>
+                    <th style="width: 20%">Agregar al carrito</th>
+
+                </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+                {% for pack in packs %}
+                <tr>
+                    <th scope="row">1</th>
+                    <td><img class="my_image_medium" src="{{ pack.image.url }}" alt="{{ pack.name }}"></td>
+                    <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
+                    <td>{{ pack.description }}</td>
+                    <td><a href="{% url 'shop:PackFun' 'packs' pack.slug %}"
+                            class="btn btn-azul text-white btn-block">Agregar
+                            al carrito</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <!--Table body-->
+        </table>
+        <!--Table-->
+
+       
+
+    </div>
+
+
+
+    
+</div>
+
+
+
+<div class="row margin-bottom3 margin-top3">
+    <div class="col-2 col-md-2"></div>
+    <div class="col-8 col-md-8">
+
+        {% video category.video as my_video %}
+
+        {% video my_video "medium" %}
+        {% endvideo %}
+
+    </div>
+    <div class="col-2 col-md-2"></div>
+</div>
+
+
+
+
+</div>
+
+
+
+{% endblock %}

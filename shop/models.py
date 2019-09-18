@@ -70,6 +70,38 @@ class ProductsPricing(models.Model):
     price = models.IntegerField(default=30)
 
 
+####################################
+#### Packs de productos varios #####
+####################################
+
+''' Every pack should contain it's own price '''
+
+class Pack(models.Model):
+    name = models.CharField(max_length=250, unique=False)
+    slug = models.SlugField(max_length=250, unique=False)
+    sku = models.CharField(max_length=10, unique=True)
+    description = models.TextField(blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subcategory = models.CharField(max_length=20, blank=True, null=True)
+    size = models.CharField(max_length=20, blank=True, null=True)
+    quantity = models.CharField(max_length=20, blank=True, null=True)
+    price = models.IntegerField(default=10)
+    image = models.ImageField(upload_to='pack_images', blank=True, null=True)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'pack'
+        verbose_name_plural = 'packs'
+
+    def __str__(self):
+        return '{}'.format(self.name)
+
+
+
+
 ### Sample Packs ###
 
 class Sample(models.Model):

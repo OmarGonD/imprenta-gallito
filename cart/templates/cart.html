@@ -13,7 +13,7 @@ Carrito de compras - Stickers Gallito
 
 
 
-{% if not cart_items and not sample_items %}
+{% if not cart_items and not sample_items and not pack_items %}
 
 <div class="container margin-top10">
     <div class="margin-bottom5">
@@ -149,6 +149,42 @@ Carrito de compras - Stickers Gallito
                             <p>S/{{ sample_item.sub_total }}
 
                                 <a href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
+                                    class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
+                            </p>
+                        </td>
+                        <td></td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    <!-- PackItems -->
+
+                    {% for pack_item in pack_items %}
+
+
+                    <tr>
+                        {% if pack_item.file_a %}
+                        <td>
+                            <img src="{{ pack_item.file_a.url }}" alt="" class="float-left rounded" width="90"
+                                height="90">
+                        </td>
+                        {% else %}
+                        <td>
+                            <img src="{{ pack_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
+                                height="90">
+                        </td>
+                        {% endif %}
+
+                        <td class="text-left">
+                            <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
+                            <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>      
+                            <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
+                        </td>
+                        <td>
+                            <p>S/{{ pack_item.sub_total }}
+
+                                <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}"
                                     class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
                             </p>
                         </td>

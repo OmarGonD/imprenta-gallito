@@ -8,9 +8,9 @@ from django.shortcuts import redirect, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
 from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile
-from cart.models import Cart, CartItem, SampleItem
+from cart.models import Cart, CartItem, SampleItem, PackItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
-from .models import Category, Product, Peru, Sample
+from .models import Category, Product, Peru, Sample, Pack
 from marketing.forms import EmailSignUpForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -41,15 +41,99 @@ def allCat(request):
 
 
 def ProdCatDetail(request, c_slug):
-    if c_slug is not "muestras":
-
+    print("### INGRESA A PRODCATDETAIL ###")
+    print("c_slug is: ", c_slug)
+    if c_slug not in ["muestras", "packs"]:
+        print("### INGRESA A C_SLUG  ###")
         try:
             category = Category.objects.get(slug=c_slug)
             products = Product.objects.filter(category__slug=c_slug, available=True)
+            print("### RETURN PRODUCTS POR CATEGORÍA  ###")
+            return render(request, 'shop/productos_por_categoria.html', {'category': category, 'products': products})
+
         except Exception as e:
             raise e
+    
+    print("### ANTES DEL ELIF  ###")
+    if c_slug == "packs":
+        categoria = Category.objects.get(slug='packs')
 
-    return render(request, 'shop/productos_por_categoria.html', {'category': category, 'products': products})
+        # Productos que pertenecen a la categoria muestras
+
+        c_slug = 'packs'
+
+        # muestras = Product.objects.filter(category__slug=c_slug)
+
+        packs = Pack.objects.filter(category__slug=c_slug).exclude(available=False)
+        print("### RENDERS PACKS HTML  ###")
+        return render(request, 'shop/packs.html', {'category': categoria, 'packs': packs})
+
+
+   
+
+
+
+#### PACKS PAGE #####
+
+def PacksPage(request):
+    print("### INGRESA A PACKSPAGE ###")
+    # La categoria es necesaria para mostrar el video de c/categoria
+
+    categoria = Category.objects.get(slug='packs')
+
+    # Productos que pertenecen a la categoria muestras
+
+    c_slug = 'packs'
+
+    # muestras = Product.objects.filter(category__slug=c_slug)
+
+    packs = Pack.objects.filter(category__slug=c_slug).exclude(available=False)
+
+    return render(request, 'shop/packs.html', {'category': categoria,
+                                                  'packs': packs})
+
+#### PACKS ####
+
+def PackFun(request, c_slug, pack_slug):
+    cart_id = request.COOKIES.get('cart_id')
+    if cart_id:
+        try:
+            cart = Cart.objects.get(id=cart_id)
+        except ObjectDoesNotExist:
+            # supplied ID doesn't match a Cart from your BD
+            cart = Cart.objects.create(cart_id="Random")
+    else:
+        cart = Cart.objects.create(cart_id="Random")
+        cart_id = cart.id
+    try:
+        pack = Pack.objects.get(
+            category__slug=c_slug,
+            slug=pack_slug,
+        )
+
+        pack_item = PackItem.objects.create(
+            cart=cart,
+            pack=pack,
+            size=pack.size,
+            quantity=pack.quantity,
+            file_a=pack.image,
+            file_b=pack.image,
+            comment="",
+            step_two_complete=True,
+        )
+        response = redirect('/carrito_de_compras/')
+        response.set_cookie("cart_id", cart_id)
+        response.set_cookie("item_id", item.id)
+        return response
+
+    except Exception as e:
+        raise e
+
+    return HttpResponse("Hi")
+
+
+################
+
 
 
 def SamplePackPage(request):
@@ -70,6 +154,10 @@ def SamplePackPage(request):
 
 
 def SamplePack(request, c_slug, product_slug):
+    
+    print("SamplePack def")
+    print(c_slug, "and", product_slug)
+    
     cart_id = request.COOKIES.get('cart_id')
     if cart_id:
         try:
@@ -80,31 +168,63 @@ def SamplePack(request, c_slug, product_slug):
     else:
         cart = Cart.objects.create(cart_id="Random")
         cart_id = cart.id
-    try:
-        sample = Sample.objects.get(
-            category__slug=c_slug,
-            slug=product_slug,
-        )
+    
+    if c_slug == "sample":
+    
+        try:
+            sample = Sample.objects.get(
+                category__slug=c_slug,
+                slug=product_slug)
 
-        item = SampleItem.objects.create(
-            cart=cart,
-            sample=sample,
-            size="varios",
-            quantity="5",
-            file_a=sample.image,
-            file_b=sample.image,
-            comment="",
-            step_two_complete=True,
-        )
-        response = redirect('/carrito_de_compras/')
-        response.set_cookie("cart_id", cart_id)
-        response.set_cookie("item_id", item.id)
-        return response
+            item = SampleItem.objects.create(
+                cart=cart,
+                sample=sample,
+                size="varios",
+                quantity="5",
+                file_a=sample.image,
+                file_b=sample.image,
+                comment="",
+                step_two_complete=True)
 
-    except Exception as e:
-        raise e
+            response = redirect('/carrito_de_compras/')
+            response.set_cookie("cart_id", cart_id)
+            response.set_cookie("item_id", item.id)
+            return response     
 
-    return HttpResponse("Hi")
+        except Exception as e:
+            raise e        
+
+
+
+    elif c_slug == "packs":
+
+        try:
+            pack = Pack.objects.get(
+                category__slug=c_slug,
+                slug=product_slug)
+
+            pack_item = PackItem.objects.create(
+                cart=cart,
+                pack=pack,
+                size=pack.size,
+                quantity=pack.quantity,
+                file_a=pack.image,
+                file_b=pack.image,
+                comment="",
+                step_two_complete=True)
+
+            response = redirect('/carrito_de_compras/')
+            response.set_cookie("cart_id", cart_id)
+            response.set_cookie("item_id", pack_item.id)
+            return response    
+
+        except Exception as e:
+            raise e        
+
+
+    
+
+    #return HttpResponse("Hi")
 
 
 # Tamanos y cantidades
