@@ -154,19 +154,17 @@ def SamplePackPage(request):
 
 
 def SamplePack(request, c_slug, product_slug):
+    print("c_slug:", c_slug)
+    print("product_slug: ", product_slug)
 
     cart_id = request.COOKIES.get('cart_id')
     if cart_id:
-        try:
             cart = Cart.objects.get(id=cart_id)
-        except ObjectDoesNotExist:
-            # supplied ID doesn't match a Cart from your BD
-            cart = Cart.objects.create(cart_id="Random")
     else:
         cart = Cart.objects.create(cart_id="Random")
         cart_id = cart.id
     
-    if c_slug == "sample":
+    if c_slug == "muestras":
     
         try:
             sample = Sample.objects.get(
@@ -191,10 +189,7 @@ def SamplePack(request, c_slug, product_slug):
         except Exception as e:
             raise e        
 
-
-
     elif c_slug == "packs":
-
 
         try:
             pack = Pack.objects.get(
@@ -219,7 +214,9 @@ def SamplePack(request, c_slug, product_slug):
         except Exception as e:
             raise e
 
-    return HttpResponse("Hi")        
+    
+
+           
 
 
  
