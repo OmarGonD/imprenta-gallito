@@ -195,6 +195,7 @@ def SamplePack(request, c_slug, product_slug):
 
     elif c_slug == "packs":
 
+
         try:
             pack = Pack.objects.get(
                 category__slug=c_slug,
@@ -216,7 +217,9 @@ def SamplePack(request, c_slug, product_slug):
             return response    
 
         except Exception as e:
-            raise e        
+            raise e
+
+    return HttpResponse("Hi")        
 
 
  
