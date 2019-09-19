@@ -566,7 +566,7 @@ def signupView(request):
 
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
-            user.is_active = False
+            user.is_active = True
             user.save()
             username = user_form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
@@ -579,25 +579,9 @@ def signupView(request):
                                        instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
             profile_form.save()  # Gracefully save the form
+            login(request, user)
 
-
-            current_site = get_current_site(request)
-            mail_subject = 'Confirmación de correo electrónico'
-            message = render_to_string('accounts/acc_activate_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            to_email = user_form.cleaned_data.get('email')
-            # to_email = 'oma.gonzales@gmail.com'
-            from_email = 'stickersgallito@stickersgallito.pe'
-            email = EmailMessage(
-                mail_subject, message, to=[to_email], from_email=from_email
-            )
-            email.send()
-
-            return redirect('shop:email_confirmation_needed')
+            return redirect('carrito_de_compras:cart_detail')
 
         else:
             pass

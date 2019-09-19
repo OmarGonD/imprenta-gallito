@@ -4,10 +4,8 @@
 
 .footer_text {
     font-size: 14px;
-    font-weight: bold;
+    font-weight: normal;
     letter-spacing: .2em;
-    padding: 0px;
-    margin: 0px;
 }
 
 .footer_text_right {
