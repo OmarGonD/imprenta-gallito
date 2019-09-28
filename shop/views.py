@@ -739,13 +739,21 @@ def make_review_view(request):
 from django.http.response import JsonResponse
 def prices(request):
     size_selected = request.GET.get("size_selected")
-    c_slug = 'stickers'
-    product_slug = 'stickers-transparentes'
+    c_slug = request.GET.get("c_slug")
+    print("CCC C_SLUG")
+    print(c_slug)
+    product_slug = request.GET.get("product_slug")
 
 
     prices = list(ProductsPricing.objects.filter(category=Category.objects.get(slug=c_slug),
                                               product=Product.objects.get(slug=product_slug),
                                               size=size_selected).values_list("price",flat=True))
 
+    print("#####################")
+    print("fun prices: ")
+    print("size_selected: ",size_selected)
+    print("prices: ", prices)
+    print("#####################")
+    
     return JsonResponse({'prices': prices})
 

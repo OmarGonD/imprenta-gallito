@@ -1,2 +1,3 @@
 category,subcategory,pack,slug,sku,size,quantity,price,description,image,available
-Packs,Stickers,Unix stickers Pack 1,unix-stickers-pack-1,PUX1,varios,10,10,"Stickers de tus programas y lenguajes de programación favoritos:  Python, Docker, Visual Code, Bash, Ubuntu, React y más. Son 10 stickers.",,True
+Packs,Stickers,Unix stickers Pack 1,unix-stickers-pack-1,PUX1,varios,10,10,"Incluye: Python, Docker, Visual Code, Bash, Ubuntu, React, Octogato, Debian y Google Cloud.",,True
+Packs,Stickers,Unix stickers Pack 2,unix-stickers-pack-2,PUX2,varios,8,10,"Incluye: GraphQL, Kubernetes, RedHat, Ansible, Angular, Java, IBM Cloud, NodeJS.",,True

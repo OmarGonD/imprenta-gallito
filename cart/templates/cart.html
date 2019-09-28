@@ -15,14 +15,22 @@ Carrito de compras - Stickers Gallito
 
 {% if not cart_items and not sample_items and not pack_items %}
 
+<style>
+    #footer-navbar {
+        background-color: rgb(239, 239, 239);
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
+</style>
 <div class="container margin-top10">
-    <div class="margin-top5 margin-bottom5">
+    <div class="margin-bottom10">
         <div class="text-center">
             <h1 class="text-center my_title">
                 El Carrito de compras está vacio
             </h1>
             <p class="margin-top3">
-                Haga click <a class="text-center" href="{% url 'shop:allCat' %}">aquí</a> para seguir comprando
+                Haga click <a class="text-center" href="/stickers">aquí</a> para seguir comprando
             </p>
         </div>
     </div>
@@ -33,6 +41,7 @@ Carrito de compras - Stickers Gallito
 {% else %}
 
 
+
 <div class="container margin-top10">
     <div class="row margin-bottom5">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
@@ -41,7 +50,6 @@ Carrito de compras - Stickers Gallito
             </h1>
         </div>
     </div>
-
 
     <div class="row margin-bottom5">
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
@@ -57,9 +65,7 @@ Carrito de compras - Stickers Gallito
 
                     {% for cart_item in cart_items %}
 
-                    {% if cart_item.file_a %}
-
-                    <tr>
+                    {% if cart_item.file_a %} <tr>
 
                         {% if cart_item.file_name_a|endswith:'.ai' %}
 
@@ -140,10 +146,10 @@ Carrito de compras - Stickers Gallito
                             <p class="margin-bottom0"><b>{{ sample_item.sample.name }}</b></p>
                             <!--<p class="margin-top0 margin-bottom0">Cantidad: {{ sample_item.quantity }} stickers</p>-->
                             {% if sample_item.sample.name == 'Sobre con muestras' %}
-                                <p class="margin-top0 margin-bottom0">Cantidad: 05 stickers</p>
+                            <p class="margin-top0 margin-bottom0">Cantidad: 05 stickers</p>
                             {% else %}
-                                <p class="margin-top0 margin-bottom0">Cantidad: 02 stickers</p>
-                            {% endif %}        
+                            <p class="margin-top0 margin-bottom0">Cantidad: 02 stickers</p>
+                            {% endif %}
                             <p class="margin-top0 margin-bottom0">Tamaño: {{ sample_item.size }}</p>
                         </td>
                         <td>
@@ -179,7 +185,7 @@ Carrito de compras - Stickers Gallito
 
                         <td class="text-left">
                             <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
-                            <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>      
+                            <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>
                             <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
                         </td>
                         <td>
@@ -443,89 +449,87 @@ Carrito de compras - Stickers Gallito
 
 </script>
 
+// <script>
+//     function getCookie(name) {
+//         var cookieValue = null;
+//         if (document.cookie && document.cookie !== '') {
+//             var cookies = document.cookie.split(';');
+//             for (var i = 0; i < cookies.length; i++) {
+//                 var cookie = jQuery.trim(cookies[i]);
+//                 // Does this cookie string begin with the name we want?
+//                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
+//                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//                     break;
+//                 }
+//             }
+//         }
+//         return cookieValue;
+//     }
+
+//     var csrftoken = getCookie('csrftoken');
+
+//     function csrfSafeMethod(method) {
+//         // these HTTP methods do not require CSRF protection
+//         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+//     }
+
+//     $.ajaxSetup({
+//         beforeSend: function (xhr, settings) {
+//             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//             }
+//         }
+//     });
+
+//     function culqi() {
+
+//         var $container = $('.general-container').addClass("preloader");
+//         var shipping_address = $('#ShippingAddress').val();
+
+//         if (Culqi.token) {
+//             $.post("{% url 'carrito_de_compras:cart_charge_credit_card' %}", {
+//                 payment_method: 'credit_card_payment',
+//                 status: 'aprobado',
+//                 amount: {{ culqi_total }},
+//         currency_code: 'PEN',
+//             email: Culqi.token.email,
+//                 source_id: Culqi.token.id,
+//                     last_four: Culqi.token.last_four,
+//                         shipping_cost: { { costo_despacho } },
+//         shipping_address: shipping_address,
+//                     },
+//                 ).done(function () {
+//             window.location.href = "{% url 'order:thanks_credit_card' %}";
+//         }).fail(function (xhr, status, error) {
+//             window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
+//             alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
+//         });
+//             } else {
+
+//         //
+//     }
+//         }
+// </script>
+
 <script>
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    var csrftoken = getCookie('csrftoken');
-
-    function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
-
-    $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        }
-    });
-
-    function culqi() {
-
-        var $container = $('.general-container').addClass("preloader");
-        var shipping_address = $('#ShippingAddress').val();
-
-        if (Culqi.token) {
-            $.post("{% url 'carrito_de_compras:cart_charge_credit_card' %}", {
-                payment_method: 'credit_card_payment',
-                status: 'aprobado',
-                amount: {{ culqi_total }},
-        currency_code: 'PEN',
-            email: Culqi.token.email,
-                source_id: Culqi.token.id,
-                    last_four: Culqi.token.last_four,
-                        shipping_cost: { { costo_despacho } },
-        shipping_address: shipping_address,
-                    },
-                ).done(function () {
-            window.location.href = "{% url 'order:thanks_credit_card' %}";
-        }).fail(function (xhr, status, error) {
-            window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
-            alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
-        });
-            } else {
-
-        //
-    }
-        }
-</script>
-
-<script>
-
     $('#depositButton').on('click', function (e) {
         // Abre el formulario con la configuración en Culqi.settings
         var shipping_address = $('#ShippingAddress').val()
         $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
             payment_method: 'deposit_payment',
             amount: {{ total_a_pagar }},
-        stickers_price: {{ total }},
-        discount: {{ descuento }},
-        currency_code: 'PEN',
-        source_id: "10",
-        last_four: 1111,
-        shipping_cost: {{ costo_despacho }},
-        shipping_address: shipping_address,
+            stickers_price: {{ total }},
+            discount: {{ descuento }},
+            currency_code: 'PEN',
+            source_id: "10",
+            last_four: 1111,
+            shipping_cost: {{ costo_despacho }},
+            shipping_address: shipping_address
                 },
     ).done(function () {
         window.location.href = "{% url 'order:thanks_deposit_payment' %}";
     })
         });
-
 </script>
 
 

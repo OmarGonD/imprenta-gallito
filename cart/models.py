@@ -46,6 +46,7 @@ class CartItem(models.Model):
         print(self.quantity)
         print("############################")
         product_price = ProductsPricing.objects.filter(product=self.product, size=self.size, quantity=self.quantity).values_list("price", flat=True)[0]
+        print("product_price: ", product_price)
         return int(product_price)
 
 

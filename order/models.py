@@ -14,6 +14,7 @@ class Order(models.Model):
         ('en_proceso', 'En proceso'),
         ('en_camino', 'En camino'),
         ('entregado', 'Entregado'),
+        ('cancelado', 'Cancelado' )
     )
     token = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
@@ -34,6 +35,7 @@ class Order(models.Model):
     shipping_district = models.CharField(max_length=100, blank=True, null=True)
     reason = models.CharField(max_length=400, blank=True, null=True, default='')
     status = models.CharField(max_length=20, choices=ORDER_STATUS, default='recibido_pagado')
+    comments = models.CharField(max_length=400, blank=True, null=True, default='')
     cupon = models.ForeignKey('marketing.Cupons', blank=True, null=True, default=None, on_delete=models.SET_NULL)
 
 
@@ -78,7 +80,7 @@ class OrderItem(models.Model):
            if str(self.file_a).endswith('.ai'):
                return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
            else:
-               return mark_safe(u'<img src="%s" width="80px" height="80px" />' % (self.file_a.url))
+               return mark_safe(u'<a href="%s" target="_blank"><img src="%s" width="80px" height="80px" /></a>' % (self.file_a.url, self.file_a.url))
 
         else:
             return mark_safe(u'<p> Sin imagen </p>')
@@ -88,7 +90,7 @@ class OrderItem(models.Model):
            if str(self.file_b).endswith('.ai'):
                return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
            else:
-               return mark_safe(u'<img src="%s" width="80px" height="80px" />' % (self.file_b.url))
+               return mark_safe(u'<a href="%s" target="_blank"><img src="%s" width="80px" height="80px" /></a>' % (self.file_b.url))
         else:
             return mark_safe(u'<p> Sin imagen </p>')        
 

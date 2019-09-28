@@ -1,15 +1,15 @@
 category,product,size,quantity,price
-Stickers,Stickers transparentes,3cm x 3cm,10,10
-Stickers,Stickers transparentes,3cm x 3cm,20,15
+Stickers,Stickers transparentes,3cm x 3cm,10,15
+Stickers,Stickers transparentes,3cm x 3cm,20,25
 Stickers,Stickers transparentes,3cm x 3cm,50,35
-Stickers,Stickers transparentes,3cm x 3cm,100,65
+Stickers,Stickers transparentes,3cm x 3cm,100,70
 Stickers,Stickers transparentes,3cm x 3cm,200,120
-Stickers,Stickers transparentes,3cm x 3cm,300,180
-Stickers,Stickers transparentes,3cm x 3cm,500,320
-Stickers,Stickers transparentes,3cm x 3cm,1000,600
+Stickers,Stickers transparentes,3cm x 3cm,300,200
+Stickers,Stickers transparentes,3cm x 3cm,500,340
+Stickers,Stickers transparentes,3cm x 3cm,1000,640
 Stickers,Stickers transparentes,3cm x 3cm,2000,1100
-Stickers,Stickers transparentes,5cm x 5cm,10,15
-Stickers,Stickers transparentes,5cm x 5cm,20,25
+Stickers,Stickers transparentes,5cm x 5cm,10,20
+Stickers,Stickers transparentes,5cm x 5cm,20,30
 Stickers,Stickers transparentes,5cm x 5cm,50,60
 Stickers,Stickers transparentes,5cm x 5cm,100,90
 Stickers,Stickers transparentes,5cm x 5cm,200,160
@@ -26,35 +26,44 @@ Stickers,Stickers transparentes,7cm x 7cm,300,280
 Stickers,Stickers transparentes,7cm x 7cm,500,440
 Stickers,Stickers transparentes,7cm x 7cm,1000,800
 Stickers,Stickers transparentes,7cm x 7cm,2000,1500
-Stickers,Stickers transparentes,10cm x 10cm,10,40
-Stickers,Stickers transparentes,10cm x 10cm,20,60
-Stickers,Stickers transparentes,10cm x 10cm,50,120
-Stickers,Stickers transparentes,10cm x 10cm,100,160
-Stickers,Stickers transparentes,10cm x 10cm,200,260
+Stickers,Stickers transparentes,10cm x 10cm,10,50
+Stickers,Stickers transparentes,10cm x 10cm,20,80
+Stickers,Stickers transparentes,10cm x 10cm,50,140
+Stickers,Stickers transparentes,10cm x 10cm,100,220
+Stickers,Stickers transparentes,10cm x 10cm,200,280
 Stickers,Stickers transparentes,10cm x 10cm,300,340
 Stickers,Stickers transparentes,10cm x 10cm,500,480
 Stickers,Stickers transparentes,10cm x 10cm,1000,860
 Stickers,Stickers transparentes,10cm x 10cm,2000,1600
-Stickers,Stickers transparentes,13cm x 13cm,10,50
-Stickers,Stickers transparentes,13cm x 13cm,20,70
-Stickers,Stickers transparentes,13cm x 13cm,50,160
-Stickers,Stickers transparentes,13cm x 13cm,100,220
-Stickers,Stickers transparentes,13cm x 13cm,200,280
+Stickers,Stickers transparentes,13cm x 13cm,10,70
+Stickers,Stickers transparentes,13cm x 13cm,20,95
+Stickers,Stickers transparentes,13cm x 13cm,50,170
+Stickers,Stickers transparentes,13cm x 13cm,100,240
+Stickers,Stickers transparentes,13cm x 13cm,200,300
 Stickers,Stickers transparentes,13cm x 13cm,300,390
-Stickers,Stickers transparentes,13cm x 13cm,500,520
-Stickers,Stickers transparentes,13cm x 13cm,1000,920
-Stickers,Stickers transparentes,13cm x 13cm,2000,1800
-Stickers,Stickers troquelados,3cm x 3cm,10,10
-Stickers,Stickers troquelados,3cm x 3cm,20,15
+Stickers,Stickers transparentes,13cm x 13cm,500,690
+Stickers,Stickers transparentes,13cm x 13cm,1000,1500
+Stickers,Stickers transparentes,13cm x 13cm,2000,2500
+Stickers,Stickers transparentes,15cm x 15cm,10,90
+Stickers,Stickers transparentes,15cm x 15cm,20,140
+Stickers,Stickers transparentes,15cm x 15cm,50,200
+Stickers,Stickers transparentes,15cm x 15cm,100,300
+Stickers,Stickers transparentes,15cm x 15cm,200,360
+Stickers,Stickers transparentes,15cm x 15cm,300,420
+Stickers,Stickers transparentes,15cm x 15cm,500,780
+Stickers,Stickers transparentes,15cm x 15cm,1000,1800
+Stickers,Stickers transparentes,15cm x 15cm,2000,2700
+Stickers,Stickers troquelados,3cm x 3cm,10,15
+Stickers,Stickers troquelados,3cm x 3cm,20,25
 Stickers,Stickers troquelados,3cm x 3cm,50,35
-Stickers,Stickers troquelados,3cm x 3cm,100,65
+Stickers,Stickers troquelados,3cm x 3cm,100,70
 Stickers,Stickers troquelados,3cm x 3cm,200,120
-Stickers,Stickers troquelados,3cm x 3cm,300,180
-Stickers,Stickers troquelados,3cm x 3cm,500,320
-Stickers,Stickers troquelados,3cm x 3cm,1000,600
+Stickers,Stickers troquelados,3cm x 3cm,300,200
+Stickers,Stickers troquelados,3cm x 3cm,500,340
+Stickers,Stickers troquelados,3cm x 3cm,1000,640
 Stickers,Stickers troquelados,3cm x 3cm,2000,1100
-Stickers,Stickers troquelados,5cm x 5cm,10,15
-Stickers,Stickers troquelados,5cm x 5cm,20,25
+Stickers,Stickers troquelados,5cm x 5cm,10,20
+Stickers,Stickers troquelados,5cm x 5cm,20,30
 Stickers,Stickers troquelados,5cm x 5cm,50,60
 Stickers,Stickers troquelados,5cm x 5cm,100,90
 Stickers,Stickers troquelados,5cm x 5cm,200,160
@@ -80,26 +89,35 @@ Stickers,Stickers troquelados,10cm x 10cm,300,340
 Stickers,Stickers troquelados,10cm x 10cm,500,480
 Stickers,Stickers troquelados,10cm x 10cm,1000,860
 Stickers,Stickers troquelados,10cm x 10cm,2000,1600
-Stickers,Stickers troquelados,13cm x 13cm,10,50
-Stickers,Stickers troquelados,13cm x 13cm,20,70
-Stickers,Stickers troquelados,13cm x 13cm,50,160
-Stickers,Stickers troquelados,13cm x 13cm,100,220
-Stickers,Stickers troquelados,13cm x 13cm,200,280
+Stickers,Stickers troquelados,13cm x 13cm,10,70
+Stickers,Stickers troquelados,13cm x 13cm,20,95
+Stickers,Stickers troquelados,13cm x 13cm,50,170
+Stickers,Stickers troquelados,13cm x 13cm,100,240
+Stickers,Stickers troquelados,13cm x 13cm,200,300
 Stickers,Stickers troquelados,13cm x 13cm,300,390
-Stickers,Stickers troquelados,13cm x 13cm,500,520
-Stickers,Stickers troquelados,13cm x 13cm,1000,920
-Stickers,Stickers troquelados,13cm x 13cm,2000,1800
-Stickers,Stickers semitroquelados,3cm x 3cm,10,10
-Stickers,Stickers semitroquelados,3cm x 3cm,20,15
+Stickers,Stickers troquelados,13cm x 13cm,500,690
+Stickers,Stickers troquelados,13cm x 13cm,1000,1500
+Stickers,Stickers troquelados,13cm x 13cm,2000,2500
+Stickers,Stickers troquelados,15cm x 15cm,10,90
+Stickers,Stickers troquelados,15cm x 15cm,20,140
+Stickers,Stickers troquelados,15cm x 15cm,50,200
+Stickers,Stickers troquelados,15cm x 15cm,100,300
+Stickers,Stickers troquelados,15cm x 15cm,200,360
+Stickers,Stickers troquelados,15cm x 15cm,300,420
+Stickers,Stickers troquelados,15cm x 15cm,500,780
+Stickers,Stickers troquelados,15cm x 15cm,1000,1800
+Stickers,Stickers troquelados,15cm x 15cm,2000,2700
+Stickers,Stickers semitroquelados,3cm x 3cm,10,15
+Stickers,Stickers semitroquelados,3cm x 3cm,20,25
 Stickers,Stickers semitroquelados,3cm x 3cm,50,35
-Stickers,Stickers semitroquelados,3cm x 3cm,100,65
+Stickers,Stickers semitroquelados,3cm x 3cm,100,70
 Stickers,Stickers semitroquelados,3cm x 3cm,200,120
-Stickers,Stickers semitroquelados,3cm x 3cm,300,180
-Stickers,Stickers semitroquelados,3cm x 3cm,500,320
-Stickers,Stickers semitroquelados,3cm x 3cm,1000,600
+Stickers,Stickers semitroquelados,3cm x 3cm,300,200
+Stickers,Stickers semitroquelados,3cm x 3cm,500,340
+Stickers,Stickers semitroquelados,3cm x 3cm,1000,640
 Stickers,Stickers semitroquelados,3cm x 3cm,2000,1100
-Stickers,Stickers semitroquelados,5cm x 5cm,10,15
-Stickers,Stickers semitroquelados,5cm x 5cm,20,25
+Stickers,Stickers semitroquelados,5cm x 5cm,10,20
+Stickers,Stickers semitroquelados,5cm x 5cm,20,30
 Stickers,Stickers semitroquelados,5cm x 5cm,50,60
 Stickers,Stickers semitroquelados,5cm x 5cm,100,90
 Stickers,Stickers semitroquelados,5cm x 5cm,200,160
@@ -125,26 +143,35 @@ Stickers,Stickers semitroquelados,10cm x 10cm,300,340
 Stickers,Stickers semitroquelados,10cm x 10cm,500,480
 Stickers,Stickers semitroquelados,10cm x 10cm,1000,860
 Stickers,Stickers semitroquelados,10cm x 10cm,2000,1600
-Stickers,Stickers semitroquelados,13cm x 13cm,10,50
-Stickers,Stickers semitroquelados,13cm x 13cm,20,70
-Stickers,Stickers semitroquelados,13cm x 13cm,50,160
-Stickers,Stickers semitroquelados,13cm x 13cm,100,220
-Stickers,Stickers semitroquelados,13cm x 13cm,200,280
+Stickers,Stickers semitroquelados,13cm x 13cm,10,70
+Stickers,Stickers semitroquelados,13cm x 13cm,20,95
+Stickers,Stickers semitroquelados,13cm x 13cm,50,170
+Stickers,Stickers semitroquelados,13cm x 13cm,100,240
+Stickers,Stickers semitroquelados,13cm x 13cm,200,300
 Stickers,Stickers semitroquelados,13cm x 13cm,300,390
-Stickers,Stickers semitroquelados,13cm x 13cm,500,520
-Stickers,Stickers semitroquelados,13cm x 13cm,1000,920
-Stickers,Stickers semitroquelados,13cm x 13cm,2000,1800
-Stickers,Stickers redondeados,3cm x 3cm,10,10
-Stickers,Stickers redondeados,3cm x 3cm,20,15
+Stickers,Stickers semitroquelados,13cm x 13cm,500,690
+Stickers,Stickers semitroquelados,13cm x 13cm,1000,1500
+Stickers,Stickers semitroquelados,13cm x 13cm,2000,2500
+Stickers,Stickers semitroquelados,15cm x 15cm,10,90
+Stickers,Stickers semitroquelados,15cm x 15cm,20,140
+Stickers,Stickers semitroquelados,15cm x 15cm,50,200
+Stickers,Stickers semitroquelados,15cm x 15cm,100,300
+Stickers,Stickers semitroquelados,15cm x 15cm,200,360
+Stickers,Stickers semitroquelados,15cm x 15cm,300,420
+Stickers,Stickers semitroquelados,15cm x 15cm,500,780
+Stickers,Stickers semitroquelados,15cm x 15cm,1000,1800
+Stickers,Stickers semitroquelados,15cm x 15cm,2000,2700
+Stickers,Stickers redondeados,3cm x 3cm,10,15
+Stickers,Stickers redondeados,3cm x 3cm,20,25
 Stickers,Stickers redondeados,3cm x 3cm,50,35
-Stickers,Stickers redondeados,3cm x 3cm,100,65
+Stickers,Stickers redondeados,3cm x 3cm,100,70
 Stickers,Stickers redondeados,3cm x 3cm,200,120
-Stickers,Stickers redondeados,3cm x 3cm,300,180
-Stickers,Stickers redondeados,3cm x 3cm,500,320
-Stickers,Stickers redondeados,3cm x 3cm,1000,600
+Stickers,Stickers redondeados,3cm x 3cm,300,200
+Stickers,Stickers redondeados,3cm x 3cm,500,340
+Stickers,Stickers redondeados,3cm x 3cm,1000,640
 Stickers,Stickers redondeados,3cm x 3cm,2000,1100
-Stickers,Stickers redondeados,5cm x 5cm,10,15
-Stickers,Stickers redondeados,5cm x 5cm,20,25
+Stickers,Stickers redondeados,5cm x 5cm,10,20
+Stickers,Stickers redondeados,5cm x 5cm,20,30
 Stickers,Stickers redondeados,5cm x 5cm,50,60
 Stickers,Stickers redondeados,5cm x 5cm,100,90
 Stickers,Stickers redondeados,5cm x 5cm,200,160
@@ -170,26 +197,143 @@ Stickers,Stickers redondeados,10cm x 10cm,300,340
 Stickers,Stickers redondeados,10cm x 10cm,500,480
 Stickers,Stickers redondeados,10cm x 10cm,1000,860
 Stickers,Stickers redondeados,10cm x 10cm,2000,1600
-Stickers,Stickers redondeados,13cm x 13cm,10,50
-Stickers,Stickers redondeados,13cm x 13cm,20,70
-Stickers,Stickers redondeados,13cm x 13cm,50,160
-Stickers,Stickers redondeados,13cm x 13cm,100,220
-Stickers,Stickers redondeados,13cm x 13cm,200,280
+Stickers,Stickers redondeados,13cm x 13cm,10,70
+Stickers,Stickers redondeados,13cm x 13cm,20,95
+Stickers,Stickers redondeados,13cm x 13cm,50,170
+Stickers,Stickers redondeados,13cm x 13cm,100,240
+Stickers,Stickers redondeados,13cm x 13cm,200,300
 Stickers,Stickers redondeados,13cm x 13cm,300,390
-Stickers,Stickers redondeados,13cm x 13cm,500,520
-Stickers,Stickers redondeados,13cm x 13cm,1000,920
-Stickers,Stickers redondeados,13cm x 13cm,2000,1800
-Stickers,Stickers cuadrados,3cm x 3cm,10,10
-Stickers,Stickers cuadrados,3cm x 3cm,20,15
+Stickers,Stickers redondeados,13cm x 13cm,500,690
+Stickers,Stickers redondeados,13cm x 13cm,1000,1500
+Stickers,Stickers redondeados,13cm x 13cm,2000,2500
+Stickers,Stickers redondeados,15cm x 15cm,10,90
+Stickers,Stickers redondeados,15cm x 15cm,20,140
+Stickers,Stickers redondeados,15cm x 15cm,50,200
+Stickers,Stickers redondeados,15cm x 15cm,100,300
+Stickers,Stickers redondeados,15cm x 15cm,200,360
+Stickers,Stickers redondeados,15cm x 15cm,300,420
+Stickers,Stickers redondeados,15cm x 15cm,500,780
+Stickers,Stickers redondeados,15cm x 15cm,1000,1800
+Stickers,Stickers redondeados,15cm x 15cm,2000,2700
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,10,15
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,20,25
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,50,35
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,100,70
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,200,120
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,300,200
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,500,340
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,1000,640
+Stickers,Stickers con esquinas redondeadas,3cm x 3cm,2000,1100
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,10,20
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,20,30
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,50,60
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,100,90
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,200,160
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,300,240
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,500,380
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,1000,700
+Stickers,Stickers con esquinas redondeadas,5cm x 5cm,2000,1400
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,10,25
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,20,35
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,50,80
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,100,130
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,200,220
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,300,280
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,500,440
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,1000,800
+Stickers,Stickers con esquinas redondeadas,7cm x 7cm,2000,1500
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,10,50
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,20,80
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,50,140
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,100,220
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,200,280
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,300,340
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,500,480
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,1000,860
+Stickers,Stickers con esquinas redondeadas,10cm x 10cm,2000,1600
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,10,70
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,20,95
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,50,170
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,100,240
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,200,300
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,300,390
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,500,690
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,1000,1500
+Stickers,Stickers con esquinas redondeadas,13cm x 13cm,2000,2500
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,10,90
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,20,140
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,50,200
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,100,300
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,200,360
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,300,420
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,500,780
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,1000,1800
+Stickers,Stickers con esquinas redondeadas,15cm x 15cm,2000,2700
+Stickers,Stickers rectangulares,3cm x 3cm,10,15
+Stickers,Stickers rectangulares,3cm x 3cm,20,25
+Stickers,Stickers rectangulares,3cm x 3cm,50,35
+Stickers,Stickers rectangulares,3cm x 3cm,100,70
+Stickers,Stickers rectangulares,3cm x 3cm,200,120
+Stickers,Stickers rectangulares,3cm x 3cm,300,200
+Stickers,Stickers rectangulares,3cm x 3cm,500,340
+Stickers,Stickers rectangulares,3cm x 3cm,1000,640
+Stickers,Stickers rectangulares,3cm x 3cm,2000,1100
+Stickers,Stickers rectangulares,5cm x 5cm,10,20
+Stickers,Stickers rectangulares,5cm x 5cm,20,30
+Stickers,Stickers rectangulares,5cm x 5cm,50,60
+Stickers,Stickers rectangulares,5cm x 5cm,100,90
+Stickers,Stickers rectangulares,5cm x 5cm,200,160
+Stickers,Stickers rectangulares,5cm x 5cm,300,240
+Stickers,Stickers rectangulares,5cm x 5cm,500,380
+Stickers,Stickers rectangulares,5cm x 5cm,1000,700
+Stickers,Stickers rectangulares,5cm x 5cm,2000,1400
+Stickers,Stickers rectangulares,7cm x 7cm,10,25
+Stickers,Stickers rectangulares,7cm x 7cm,20,35
+Stickers,Stickers rectangulares,7cm x 7cm,50,80
+Stickers,Stickers rectangulares,7cm x 7cm,100,130
+Stickers,Stickers rectangulares,7cm x 7cm,200,220
+Stickers,Stickers rectangulares,7cm x 7cm,300,280
+Stickers,Stickers rectangulares,7cm x 7cm,500,440
+Stickers,Stickers rectangulares,7cm x 7cm,1000,800
+Stickers,Stickers rectangulares,7cm x 7cm,2000,1500
+Stickers,Stickers rectangulares,10cm x 10cm,10,50
+Stickers,Stickers rectangulares,10cm x 10cm,20,80
+Stickers,Stickers rectangulares,10cm x 10cm,50,140
+Stickers,Stickers rectangulares,10cm x 10cm,100,220
+Stickers,Stickers rectangulares,10cm x 10cm,200,280
+Stickers,Stickers rectangulares,10cm x 10cm,300,340
+Stickers,Stickers rectangulares,10cm x 10cm,500,480
+Stickers,Stickers rectangulares,10cm x 10cm,1000,860
+Stickers,Stickers rectangulares,10cm x 10cm,2000,1600
+Stickers,Stickers rectangulares,13cm x 13cm,10,70
+Stickers,Stickers rectangulares,13cm x 13cm,20,95
+Stickers,Stickers rectangulares,13cm x 13cm,50,170
+Stickers,Stickers rectangulares,13cm x 13cm,100,240
+Stickers,Stickers rectangulares,13cm x 13cm,200,300
+Stickers,Stickers rectangulares,13cm x 13cm,300,390
+Stickers,Stickers rectangulares,13cm x 13cm,500,690
+Stickers,Stickers rectangulares,13cm x 13cm,1000,1500
+Stickers,Stickers rectangulares,13cm x 13cm,2000,2500
+Stickers,Stickers rectangulares,15cm x 15cm,10,90
+Stickers,Stickers rectangulares,15cm x 15cm,20,140
+Stickers,Stickers rectangulares,15cm x 15cm,50,200
+Stickers,Stickers rectangulares,15cm x 15cm,100,300
+Stickers,Stickers rectangulares,15cm x 15cm,200,360
+Stickers,Stickers rectangulares,15cm x 15cm,300,420
+Stickers,Stickers rectangulares,15cm x 15cm,500,780
+Stickers,Stickers rectangulares,15cm x 15cm,1000,1800
+Stickers,Stickers rectangulares,15cm x 15cm,2000,2700
+Stickers,Stickers cuadrados,3cm x 3cm,10,15
+Stickers,Stickers cuadrados,3cm x 3cm,20,25
 Stickers,Stickers cuadrados,3cm x 3cm,50,35
-Stickers,Stickers cuadrados,3cm x 3cm,100,65
+Stickers,Stickers cuadrados,3cm x 3cm,100,70
 Stickers,Stickers cuadrados,3cm x 3cm,200,120
-Stickers,Stickers cuadrados,3cm x 3cm,300,180
-Stickers,Stickers cuadrados,3cm x 3cm,500,320
-Stickers,Stickers cuadrados,3cm x 3cm,1000,600
+Stickers,Stickers cuadrados,3cm x 3cm,300,200
+Stickers,Stickers cuadrados,3cm x 3cm,500,340
+Stickers,Stickers cuadrados,3cm x 3cm,1000,640
 Stickers,Stickers cuadrados,3cm x 3cm,2000,1100
-Stickers,Stickers cuadrados,5cm x 5cm,10,15
-Stickers,Stickers cuadrados,5cm x 5cm,20,25
+Stickers,Stickers cuadrados,5cm x 5cm,10,20
+Stickers,Stickers cuadrados,5cm x 5cm,20,30
 Stickers,Stickers cuadrados,5cm x 5cm,50,60
 Stickers,Stickers cuadrados,5cm x 5cm,100,90
 Stickers,Stickers cuadrados,5cm x 5cm,200,160
@@ -215,26 +359,35 @@ Stickers,Stickers cuadrados,10cm x 10cm,300,340
 Stickers,Stickers cuadrados,10cm x 10cm,500,480
 Stickers,Stickers cuadrados,10cm x 10cm,1000,860
 Stickers,Stickers cuadrados,10cm x 10cm,2000,1600
-Stickers,Stickers cuadrados,13cm x 13cm,10,50
-Stickers,Stickers cuadrados,13cm x 13cm,20,70
-Stickers,Stickers cuadrados,13cm x 13cm,50,160
-Stickers,Stickers cuadrados,13cm x 13cm,100,220
-Stickers,Stickers cuadrados,13cm x 13cm,200,280
+Stickers,Stickers cuadrados,13cm x 13cm,10,70
+Stickers,Stickers cuadrados,13cm x 13cm,20,95
+Stickers,Stickers cuadrados,13cm x 13cm,50,170
+Stickers,Stickers cuadrados,13cm x 13cm,100,240
+Stickers,Stickers cuadrados,13cm x 13cm,200,300
 Stickers,Stickers cuadrados,13cm x 13cm,300,390
-Stickers,Stickers cuadrados,13cm x 13cm,500,520
-Stickers,Stickers cuadrados,13cm x 13cm,1000,920
-Stickers,Stickers cuadrados,13cm x 13cm,2000,1800
-Stickers,Stickers circulares,3cm x 3cm,10,10
-Stickers,Stickers circulares,3cm x 3cm,20,15
+Stickers,Stickers cuadrados,13cm x 13cm,500,690
+Stickers,Stickers cuadrados,13cm x 13cm,1000,1500
+Stickers,Stickers cuadrados,13cm x 13cm,2000,2500
+Stickers,Stickers cuadrados,15cm x 15cm,10,90
+Stickers,Stickers cuadrados,15cm x 15cm,20,140
+Stickers,Stickers cuadrados,15cm x 15cm,50,200
+Stickers,Stickers cuadrados,15cm x 15cm,100,300
+Stickers,Stickers cuadrados,15cm x 15cm,200,360
+Stickers,Stickers cuadrados,15cm x 15cm,300,420
+Stickers,Stickers cuadrados,15cm x 15cm,500,780
+Stickers,Stickers cuadrados,15cm x 15cm,1000,1800
+Stickers,Stickers cuadrados,15cm x 15cm,2000,2700
+Stickers,Stickers circulares,3cm x 3cm,10,15
+Stickers,Stickers circulares,3cm x 3cm,20,25
 Stickers,Stickers circulares,3cm x 3cm,50,35
-Stickers,Stickers circulares,3cm x 3cm,100,65
+Stickers,Stickers circulares,3cm x 3cm,100,70
 Stickers,Stickers circulares,3cm x 3cm,200,120
-Stickers,Stickers circulares,3cm x 3cm,300,180
-Stickers,Stickers circulares,3cm x 3cm,500,320
-Stickers,Stickers circulares,3cm x 3cm,1000,600
+Stickers,Stickers circulares,3cm x 3cm,300,200
+Stickers,Stickers circulares,3cm x 3cm,500,340
+Stickers,Stickers circulares,3cm x 3cm,1000,640
 Stickers,Stickers circulares,3cm x 3cm,2000,1100
-Stickers,Stickers circulares,5cm x 5cm,10,15
-Stickers,Stickers circulares,5cm x 5cm,20,25
+Stickers,Stickers circulares,5cm x 5cm,10,20
+Stickers,Stickers circulares,5cm x 5cm,20,30
 Stickers,Stickers circulares,5cm x 5cm,50,60
 Stickers,Stickers circulares,5cm x 5cm,100,90
 Stickers,Stickers circulares,5cm x 5cm,200,160
@@ -260,12 +413,21 @@ Stickers,Stickers circulares,10cm x 10cm,300,340
 Stickers,Stickers circulares,10cm x 10cm,500,480
 Stickers,Stickers circulares,10cm x 10cm,1000,860
 Stickers,Stickers circulares,10cm x 10cm,2000,1600
-Stickers,Stickers circulares,13cm x 13cm,10,50
-Stickers,Stickers circulares,13cm x 13cm,20,70
-Stickers,Stickers circulares,13cm x 13cm,50,160
-Stickers,Stickers circulares,13cm x 13cm,100,220
-Stickers,Stickers circulares,13cm x 13cm,200,280
+Stickers,Stickers circulares,13cm x 13cm,10,70
+Stickers,Stickers circulares,13cm x 13cm,20,95
+Stickers,Stickers circulares,13cm x 13cm,50,170
+Stickers,Stickers circulares,13cm x 13cm,100,240
+Stickers,Stickers circulares,13cm x 13cm,200,300
 Stickers,Stickers circulares,13cm x 13cm,300,390
-Stickers,Stickers circulares,13cm x 13cm,500,520
-Stickers,Stickers circulares,13cm x 13cm,1000,920
-Stickers,Stickers circulares,13cm x 13cm,2000,1800
+Stickers,Stickers circulares,13cm x 13cm,500,690
+Stickers,Stickers circulares,13cm x 13cm,1000,1500
+Stickers,Stickers circulares,13cm x 13cm,2000,2500
+Stickers,Stickers circulares,15cm x 15cm,10,90
+Stickers,Stickers circulares,15cm x 15cm,20,140
+Stickers,Stickers circulares,15cm x 15cm,50,200
+Stickers,Stickers circulares,15cm x 15cm,100,300
+Stickers,Stickers circulares,15cm x 15cm,200,360
+Stickers,Stickers circulares,15cm x 15cm,300,420
+Stickers,Stickers circulares,15cm x 15cm,500,780
+Stickers,Stickers circulares,15cm x 15cm,1000,1800
+Stickers,Stickers circulares,15cm x 15cm,2000,2700

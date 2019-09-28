@@ -18,12 +18,11 @@ class OrderItemAdmin(admin.TabularInline):
         ('Size', {'fields': ['size'], }),
         ('Quantity', {'fields': ['quantity'],}),
         ('Price', {'fields': ['price'], }),
-        ('File_A', {'fields': ['file_a'], }),
-        ('File_B', {'fields': ['file_b'], }),
         ('File_Thumbnail_A', {'fields': ['file_thumbnail_a'], }),
         ('File_Thumbnail_B', {'fields': ['file_thumbnail_b'], }),
+        ('Comment', {'fields': ['comment'], })
     ]
-    readonly_fields = ['name', 'size', 'quantity', 'price', 'file_a', 'file_thumbnail_a', 'file_b', 'file_thumbnail_b']
+    readonly_fields = ['name', 'size', 'quantity', 'price', 'file_thumbnail_a', 'file_thumbnail_b', 'comment']
     can_delete = False
     max_num = 0
     template = 'admin/order/tabular.html'
@@ -36,14 +35,14 @@ class OrderItemAdmin(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     model = Order
-    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'last_four', 'total', 'discount', 'reason', 'created', 'stickers_price', 'shipping_cost']
+    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'last_four', 'total', 'discount', 'reason', 'created', 'stickers_price', 'shipping_cost', 'comments']
     list_editable = ['reason', 'status']
     list_display_links = ('id', 'email')
     search_fields = ['token', 'shipping_department', 'email']
-    readonly_fields = ['id','created', 'total', 'stickers_price', 'discount', 'shipping_cost']
+    readonly_fields = ['id','created', 'total', 'stickers_price', 'discount', 'shipping_cost', 'comments']
 
     fieldsets = [
-        ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'stickers_price', 'shipping_cost', 'discount', 'created']}),
+        ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'stickers_price', 'shipping_cost', 'discount', 'comments', 'created']}),
         # ('BILLING INFORMATION', {'fields': ['billingName', 'billingAddress1', 'billingCity', 'billingPostCode',
         #                                     'billingCountry', 'emailAddress']}),
         ('SHIPPING INFORMATION', {'fields': ['first_name', 'last_name', 'phone_number', 'email', 'last_four', 'shipping_address', 'shipping_department', 'shipping_province',

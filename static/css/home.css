@@ -99,6 +99,7 @@
 .my_home_banner_left {
     margin-left: 10px;
     z-index: 100;
+    margin-top: 20%;
 }
 
 .stickers_referenciales {
@@ -254,7 +255,7 @@
         z-index: 100;
         padding-bottom: 30px;
         padding-left: 40px;
-        padding-top: 10px;
+        padding-top: 20%;
     }
 
 }

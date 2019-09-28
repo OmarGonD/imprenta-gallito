@@ -200,6 +200,9 @@ def cart_charge_deposit_payment(request):
     shipping_cost = request.POST.get('shipping_cost')
     discount = request.POST.get('discount')
     stickers_price = request.POST.get('stickers_price')
+    comments = request.POST.get('comments')
+    print("### COMMENTSSS CART_PAYMENT ###")
+    print(comments)
 
     last_four = 1111  # No necesario para Pagos con Efectivo, pero si para el Objeto Order
     transaction_amount = amount  # Solo para Culqi se divide entre 100
@@ -265,7 +268,8 @@ def cart_charge_deposit_payment(request):
         shipping_province=shipping_province,
         shipping_district=shipping_district,
         status='recibido_no_pagado',
-        cupon=cupon
+        cupon=cupon,
+        comments=comments
     )
 
     #order_details.save(commit=False)
@@ -382,12 +386,12 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
       
     cart_items = CartItem.objects.filter(cart=cart)
 
-    print("leng cart items")
-    print(len(cart_items))
-    print("###############")  
-
+    
     for cart_item in cart_items:
         total += int(cart_item.sub_total())
+        all_comments.append(cart_item.comment)
+
+
 
     try:
         sample_items = SampleItem.objects.filter(cart=cart)
@@ -395,11 +399,10 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
         print("##############")
         print("No se puedo filtrar los SampleItems por el carrito")    
 
+    
     for sample_item in sample_items:
         total += int(sample_item.sub_total())
-
-    print("leng sample items")
-    print(len(sample_items))    
+        
 
     categories = Category.objects.exclude(name='Muestras')
 
@@ -407,6 +410,8 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     for pack_item in pack_items:
         total += int(pack_item.sub_total())
+       
+
 
     ### Calcular costo despacho ###
 
