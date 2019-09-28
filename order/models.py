@@ -14,7 +14,7 @@ class Order(models.Model):
         ('en_proceso', 'En proceso'),
         ('en_camino', 'En camino'),
         ('entregado', 'Entregado'),
-        ('cancelado', 'Cancelado' )
+        ('cancelado', 'Cancelado por no pagar' )
     )
     token = models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
