@@ -90,7 +90,7 @@ class OrderItem(models.Model):
            if str(self.file_b).endswith('.ai'):
                return mark_safe(u'<img src="%s" width="60px" height="50px" />' % ('/static/img/admin/adobe_illustrator_file_logo.png'))
            else:
-               return mark_safe(u'<a href="%s" target="_blank"><img src="%s" width="80px" height="80px" /></a>' % (self.file_b.url))
+               return mark_safe(u'<a href="%s" target="_blank"><img src="%s" width="80px" height="80px" /></a>' % (self.file_b.url, self.file_b.url))
         else:
             return mark_safe(u'<p> Sin imagen </p>')        
 
