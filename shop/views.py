@@ -579,6 +579,7 @@ def signupView(request):
                                        instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
             profile_form.save()  # Gracefully save the form
+            send_email_new_registered_user(user.id) # send email to admin when a new user registers himself
             login(request, user)
 
             return redirect('carrito_de_compras:cart_detail')

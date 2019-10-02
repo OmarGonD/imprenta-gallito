@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block metadescription %}
+{% if category %}
+{{ category.description|truncatewords:155 }}
+{% else %}
+¡Bienvenidos a Stickers Gallito Perú!
+{% endif %}
+{% endblock %}
+{% block title %}
+{% if category %}
+{{ category.name }}
+{% else %}
+Stickers personalizados y más
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid margin-bottom5 margin-top5">
+    <div class="container">
+        <h1 class="text-center">El Revenue (sin shipping): S/ {{ revenue }}</h1>
+    </div>
+</div>
+
+{% endblock %}

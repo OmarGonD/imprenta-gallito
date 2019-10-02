@@ -54,7 +54,8 @@ Mira nuestros productos - Stickers Gallito
                     <th style="width: 5%">#</th>
                     <th style="width: 15%"></th>
                     <th style="width: 25%">Pack</th>
-                    <th style="width: 35%">Descripción</th>
+                    <th style="width: 25%">Descripción</th>
+                    <th style="width: 10%">Precio</th>
                     <th style="width: 20%">Agregar al carrito</th>
 
                 </tr>
@@ -68,6 +69,7 @@ Mira nuestros productos - Stickers Gallito
                     <td><img class="" src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></td>
                     <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
                     <td>{{ pack.description }}</td>
+                    <td>S/ {{ pack.price }}</td>
                     <td><a href="{% url 'shop:PackFun' 'packs' pack.slug %}"
                             class="btn btn-azul text-white btn-block">Agregar
                             al carrito</a></td>

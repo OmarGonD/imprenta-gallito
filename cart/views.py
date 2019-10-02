@@ -389,7 +389,6 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     
     for cart_item in cart_items:
         total += int(cart_item.sub_total())
-        all_comments.append(cart_item.comment)
 
 
 

@@ -35,8 +35,8 @@ class OrderItemAdmin(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     model = Order
-    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'last_four', 'total', 'discount', 'reason', 'created', 'stickers_price', 'shipping_cost', 'comments']
-    list_editable = ['reason', 'status']
+    list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'total', 'discount', 'created', 'shipping_cost', 'comments']
+    list_editable = ['status']
     list_display_links = ('id', 'email')
     search_fields = ['token', 'shipping_department', 'email']
     readonly_fields = ['id','created', 'total', 'stickers_price', 'discount', 'shipping_cost', 'comments']

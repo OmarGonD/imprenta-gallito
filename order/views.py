@@ -123,3 +123,21 @@ def viewOrder(request, order_id):
                                                        'order_items': order_items})
 
 
+def revenue(request, year, month):
+    orders = Order.objects.all()
+    orders_revenue_by_month = Order.objects.all().filter()
+    orders_set = Order.objects.filter(created__month=9).filter(status == 'recibido_pagado')
+
+    revenue = 0
+
+    for order in order_set:
+        revenue += order.total - order.shipping_cost
+    ### Así se filtra una fecha ###
+    #Order.objects.filter(created__date=datetime.date(2019,9,27)) 
+    ## POr año:
+    #Order.objects.filter(created__year=2019) 
+    ### Por mes y año:
+    ###Order.objects.filter(created__month=9)
+    return render(request, 'order/revenue.html', {'revenue': revenue})
+
+
