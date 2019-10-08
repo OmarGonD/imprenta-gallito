@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block metadescription %}
+{% if category %}
+{{ category.description|truncatewords:155 }}
+{% else %}
+Stickers Gallito Perú
+{% endif %}
+{% endblock %}
+{% block title %}
+{% if category %}
+{{ category.name }} - Stickers Gallito
+{% else %}
+Mira nuestros productos - Stickers Gallito
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+
+
+
+<div class="my_header_categories my_header_bg_color  margin-top3">
+    <div class="container padding-top3">
+        <p class="my_category_title">{{ category.name|title }}</p>
+        {#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star"></i>
+        <i class="gold-star fas fa-star-half-alt"></i>
+        </p>
+    </div>
+</div>
+
+
+
+
+<div class="container margin-top5">
+
+    <h1 class="margin-top5 margin-bottom5">Catálogo de Stickers</h1>
+
+    <!--### Filter ###-->
+
+    <div class="row margin-top3 margin-bottom5 ">
+
+        <form method="get" action="{% url 'shop:catalogo' %}">
+            <!-- <p>Filter: <input type="text" value={{filter}} name="filter" /></p> -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Categorías</label>
+                </div>
+                <select class="custom-select" searchable="Search here.." value={{filter}} name="filter">
+                    <option value="" disabled selected>Seleccionar categoría</option>
+                    <option value="Celulares">Celulares</option>
+                    <option value="Programación">Programación</option>
+                </select>
+            </div>
+            <p class="margin-top5">order_by: <input type="text" value={{orderby}} name="orderby" /></p>
+            <p><input class="btn btn-outline-secondary" type="submit" name="submit" value="Buscar" /></p>
+        </form>
+
+    </div>
+
+    <!--### Filter ###-->
+
+
+
+    <!-- ENDS NEW ROWS-->
+
+    <div class="container-fluid mt-3">
+        <div class="row justify-content-center">
+            {% for unitary_product in object_list %}
+            <div class="col-auto mb-3">
+                <div class="card" style="width: 18rem;">
+                    <a class="btn" data-toggle="modal" href="#FullImage{{ unitary_product.slug }}">
+                        <img class="card-img-top" src="{{ unitary_product.image.url }}" alt="Card image cap" width="100"
+                            height="200">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ unitary_product.name }}</h5>
+                        <p class="card-text">Tamaño: {{ unitary_product.size }}</p>
+                        <p class="card-text"><b>Precio unitario: S/ {{ unitary_product.price }}</b></p>
+                        <label for="tentacles"><b>Cantidad: </b></label>
+                        <input type="number" class="unitary_product_quantity_for_{{ unitary_product.sku }}"
+                            name="unitary_product_quantity_for_{{ unitary_product.sku }}" value="1">
+                        <a
+                            class="margin-top10 btn text-white btn-block agregar-unitary-product-btn-for-{{ unitary_product.sku }}">Agregar
+                            al carrito</a>
+
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">Creado el: {{ unitary_product.created }}</small>
+                    </div>
+                </div>
+                <!-- ### AJAX TO SEND QUANTITY -->
+
+
+
+                <script>
+                   
+                    $(".agregar-unitary-product-btn-for-{{ unitary_product.sku }}").click(function () {
+
+                        var unitary_product_quantity_for_{{ unitary_product.sku }} = $('.unitary_product_quantity_for_{{ unitary_product.sku }}').val();
+                        var cart_items_counter_bg = $("#shopping-cart").css('background'); // stores original background
+                        $.post("{% url 'shop:AddUnitaryProduct' %}", {
+                            c_slug: "{{ unitary_product.category.slug }}",
+                            product_slug: "{{ unitary_product.slug }}",
+                            quantity: unitary_product_quantity_for_{{ unitary_product.sku }},
+                        }).done(function(response) {
+                            $("span.cart_items_counter").text( response.cart_items_counter );
+                            
+                            $("#shopping-cart").toggleClass('highlighted', 800);
+
+                            setTimeout(function() {
+                                $('#shopping-cart').removeClass('highlighted');
+                                },1800);
+                            });
+                       
+                    });
+
+                </script>
+
+
+                <!-- #########################  -->
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="FullImage{{ unitary_product.slug }}" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <!-- <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div> -->
+                        <div class="modal-body">
+                            <img class="card-img-top" src="{{ unitary_product.image.url }}" alt="Card image cap">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ends Modal -->
+            {% endfor %}
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+<div class="row margin-bottom3 margin-top3">
+    <div class="col-2 col-md-2"></div>
+    <div class="col-8 col-md-8">
+
+        {% video category.video as my_video %}
+
+        {% video my_video "medium" %}
+        {% endvideo %}
+
+    </div>
+    <div class="col-2 col-md-2"></div>
+</div>
+
+
+
+
+</div>
+
+
+
+{% endblock %}

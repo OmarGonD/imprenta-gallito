@@ -13,7 +13,7 @@ Carrito de compras - Stickers Gallito
 
 
 
-{% if not cart_items and not sample_items and not pack_items %}
+{% if not cart_items and not sample_items and not pack_items and not unitary_product_items %}
 
 <style>
     #footer-navbar {
@@ -62,7 +62,7 @@ Carrito de compras - Stickers Gallito
                     </tr>
                 </thead>
                 <tbody>
-
+                    
                     {% for cart_item in cart_items %}
 
                     {% if cart_item.file_a %} <tr>
@@ -201,6 +201,44 @@ Carrito de compras - Stickers Gallito
 
                     {% endfor %}
 
+
+                     <!-- PackItems -->
+
+                     {% for unitary_product_item in unitary_product_items %}
+
+
+                     <tr>
+                         {% if unitary_product_item.file_a %}
+                         <td>
+                             <img src="{{ unitary_product_item.file_a.url }}" alt="" class="float-left rounded" width="90"
+                                 height="60">
+                         </td>
+                         {% else %}
+                         <td>
+                             <img src="{{ unitary_product_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
+                                 height="60">
+                         </td>
+                         {% endif %}
+ 
+                         <td class="text-left">
+                             <p class="margin-bottom0"><b>{{ unitary_product_item.unitaryproduct.name }}</b></p>
+                             <p class="margin-top0 margin-bottom0">Cantidad: {{ unitary_product_item.quantity }}</p>
+                             <p class="margin-top0 margin-bottom0">Tamaño: {{ unitary_product_item.size }}</p>
+                             <p class="margin-top0 margin-bottom0"><b>Precio unitario: S/ {{ unitary_product_item.unitaryproduct.price }}</b></p>
+                         </td>
+                         <td>
+                             <p>S/{{ unitary_product_item.sub_total }}
+ 
+                                 <a href="{% url 'carrito_de_compras:full_remove_unitary_product' unitary_product_item.id %}"
+                                     class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
+                             </p>
+                         </td>
+                         <td></td>
+ 
+                     </tr>
+ 
+                     {% endfor %}
+
                 </tbody>
             </table>
         </div>
@@ -272,13 +310,7 @@ Carrito de compras - Stickers Gallito
 
                                 {% if user.is_authenticated and total > 0 %}
                                 <div class="tops">
-                                    <!-- <div class="margin-top4">
-                                    <button id="buyButton"
-                                        class="btn-azul btn-block my_custom_btn margin-bottom2 width60 display-inline">Pagar
-                                        con Tarjeta
-                                    </button>
-                                    <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCardExplanation"></i> 
-                                    </div> -->
+                                    
                                     <div class="margin-top4">
                                         <button id="depositButton"
                                             class="btn-naranja btn-block my_custom_btn width60 display-inline"
@@ -300,13 +332,6 @@ Carrito de compras - Stickers Gallito
                                 {% elif user.is_authenticated and total == 0 %}
 
                                 <div class="tops">
-                                    <!-- <div class="margin-top4">
-                                        <button id="EmptyCartButton" data-toggle="modal" data-target="#exampleModal"
-                                            class="btn-azul btn-secondary btn-block my_custom_btn margin-bottom2 width60 display-inline">Pagar
-                                            con Tarjeta
-                                        </button>
-                                        <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCardExplanation"></i> 
-                                    </div> -->
                                     <div class="margin-top4">
                                         <button id="depositButtonEmptyCart" data-toggle="modal"
                                             data-target="#exampleModal"
@@ -330,14 +355,6 @@ Carrito de compras - Stickers Gallito
 
                                 <!-- Button trigger modal -->
                                 <div class="tops">
-                                    <!-- <div class="margin-top4">
-                                    <button id="CannotbuyButton"
-                                        class="btn-azul btn-secondary btn-block my_custom_btn margin-bottom2 width60 display-inline"
-                                        data-toggle="modal" data-target="#CannotbuyButtonModal">
-                                        Pagar con Tarjeta
-                                    </button>
-                                    <i class="fas fa-exclamation-circle info" data-toggle="modal" data-target="#PayWithCardExplanation"></i>  
-                                </div> -->
                                     <div class="margin-top4"></div>
                                     <button id="depositButtonCannotbuy"
                                         class="btn-naranja btn-block my_custom_btn width60 display-inline"
@@ -403,7 +420,6 @@ Carrito de compras - Stickers Gallito
 
     $(function () {
         {
-            #$('input[type="radio"]').click(function () { # }
             $("input.pago-deposito[type='radio']").click(function () {
                 if ($(this).is(':checked')) {
 

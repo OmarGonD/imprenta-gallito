@@ -2,9 +2,10 @@
 
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-bg">
-    <a class="navbar-brand" href="/">&emsp;&emsp;<img src="{% static 'img/stickers_gallito_logo.png' %}" width="20px" height="30px"></a>
+    <a class="navbar-brand" href="/">&emsp;&emsp;<img src="{% static 'img/stickers_gallito_logo.png' %}" width="20px"
+            height="30px"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -15,55 +16,47 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/packs">Packs <span class="sr-only">(current)</span></a>
             </li>
-{#            <li class="nav-item disabled">#}
-{#                <a class="nav-link" href="/">Etiquetas</a>#}
-{#            </li>#}
-{#            <li class="nav-item disabled">#}
-{#                <a class="nav-link" href="/">Imanes</a>#}
-{#            </li>#}
-{#            <li class="nav-item disabled">#}
-{#                <a class="nav-link" href="/">Botones</a>#}
-{#            </li>#}
-{#            <li class="nav-item disabled">#}
-{#                <a class="nav-link" href="/">Empaques</a>#}
-{#            </li>#}
+            <li class="nav-item active">
+                <a class="nav-link" href="/catalogo">Catálogo <span class="sr-only">(current)</span></a>
+            </li>
         </ul>
 
         <ul class="navbar-nav ml-auto">
             {% if request.user.is_authenticated %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
-                                                    style="color:white !important;"></i> ( {{ cart_items_counter }})</a>
+            <li id="shopping-cart" class="nav-item active">
+                <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
+                        style="color:white !important;"></i> ( <span
+                        class="cart_items_counter">{{ cart_items_counter }}</span> )</a>
 
-                </li>
+            </li>
 
-                <li class="nav-item active">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"><i class="fas fa-user-circle"></i> {{ request.user }}</a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>
-                    </div>
+            <li class="nav-item active">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                        class="fas fa-user-circle"></i> {{ request.user }}</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>
+                </div>
 
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>
-                </li>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>
+            </li>
             {% else %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
-                                                    style="color:white !important;"></i> ( {{ cart_items_counter }} )</a>
+            <li id="shopping-cart" class="nav-item cart_items_li active">
+                <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
+                        style="color:white !important;"></i> ( <span
+                        class="cart_items_counter">{{ cart_items_counter }}</span> )</a>
 
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'signin' %}">Ingresar <i class="fas fa-sign-in-alt"></i></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'signup' %}">Registrarse <i class="fas fa-user-plus"></i></a>
-                </li>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'signin' %}">Ingresar <i class="fas fa-sign-in-alt"></i></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'signup' %}">Registrarse <i class="fas fa-user-plus"></i></a>
+            </li>
 
 
             {% endif %}
         </ul>
     </div>
 </nav>
-

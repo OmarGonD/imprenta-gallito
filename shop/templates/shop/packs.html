@@ -70,7 +70,7 @@ Mira nuestros productos - Stickers Gallito
                     <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
                     <td>{{ pack.description }}</td>
                     <td>S/ {{ pack.price }}</td>
-                    <td><a href="{% url 'shop:PackFun' 'packs' pack.slug %}"
+                    <td><a href="{% url 'shop:AddProduct' 'packs' pack.slug %}"
                             class="btn btn-azul text-white btn-block">Agregar
                             al carrito</a></td>
                 </tr>

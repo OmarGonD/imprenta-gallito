@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import Product, Category, Peru
-from .models import Cart, CartItem, SampleItem, PackItem
+from .models import Cart, CartItem, SampleItem, PackItem, UnitaryProductItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from order.models import Order, OrderItem
@@ -36,6 +36,14 @@ def full_remove_pack(request, pack_item_id):
     pack_item.delete()
 
     return redirect('carrito_de_compras:cart_detail')    
+
+
+
+def full_remove_unitary_product(request, unitary_product_item_id):
+    unitary_product_item = UnitaryProductItem.objects.get(id=unitary_product_item_id)
+    unitary_product_item.delete()
+
+    return redirect('carrito_de_compras:cart_detail')        
 
 
 ### CULQI PAYMENT ###
@@ -354,6 +362,28 @@ def cart_charge_deposit_payment(request):
             oi.save()
         except oi.DoesNotExist:
             print("No se creo el Pack Order ITEMs")
+
+    ########################################################
+    ############### Unitary Products - ITEMS SAVE ##########
+    ########################################################
+
+    unitary_product_items = UnitaryProductItem.objects.filter(cart=cart)
+     
+    for order_item in unitary_product_items:
+        oi = OrderItem.objects.create(
+            order=order_details,
+            name=order_item.unitaryproduct.name,
+            sku=order_item.unitaryproduct.sku,
+            quantity=order_item.quantity,
+            size=order_item.size,
+            price=order_item.sub_total(),
+            file_a=order_item.file_a,
+            file_b=order_item.file_b,
+            comment=order_item.comment)
+        try:
+            oi.save()
+        except oi.DoesNotExist:
+            print("No se creo el Unitary Product Order ITEMs")
             
 
     order_details.save()    
@@ -411,6 +441,10 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
         total += int(pack_item.sub_total())
        
 
+    unitary_product_items = UnitaryProductItem.objects.filter(cart=cart)
+
+    for unitary_product in unitary_product_items:
+        total += int(unitary_product.sub_total())
 
     ### Calcular costo despacho ###
 
@@ -449,9 +483,9 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
 
     return render(request, 'cart.html',
-                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items, total=total, counter=counter,
-                           categories=categories, total_a_pagar=total_a_pagar, descuento=descuento,
-                           costo_despacho=costo_despacho))
+                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items,
+                       unitary_product_items = unitary_product_items, total=total,
+                       counter=counter, categories=categories, total_a_pagar=total_a_pagar, descuento=descuento, costo_despacho=costo_despacho))
 
 
     

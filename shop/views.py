@@ -7,10 +7,10 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
-from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile
-from cart.models import Cart, CartItem, SampleItem, PackItem
+from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile, UnitaryProduct
+from cart.models import Cart, CartItem, SampleItem, PackItem, UnitaryProductItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
-from .models import Category, Product, Peru, Sample, Pack
+from .models import *
 from marketing.forms import EmailSignUpForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -23,6 +23,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
+from django.views.generic.list import ListView
 
 
 
@@ -139,13 +140,11 @@ def PackFun(request, c_slug, pack_slug):
 def SamplePackPage(request):
     # La categoria es necesaria para mostrar el video de c/categoria
 
-    categoria_muestras = Category.objects.get(slug='muestras')
-
-    # Productos que pertenecen a la categoria muestras
-
     c_slug = 'muestras'
 
-    # muestras = Product.objects.filter(category__slug=c_slug)
+    categoria_muestras = Category.objects.get(slug=c_slug)
+
+    # Productos que pertenecen a la categoria muestras
 
     muestras = Sample.objects.filter(category__slug=c_slug).exclude(slug='sobre-con-muestras').exclude(available=False)
 
@@ -153,9 +152,55 @@ def SamplePackPage(request):
                                                   'muestras': muestras})
 
 
-def SamplePack(request, c_slug, product_slug):
-    print("c_slug:", c_slug)
-    print("product_slug: ", product_slug)
+
+@csrf_exempt
+def AddUnitaryProduct(request):
+
+    cart_id = request.COOKIES.get('cart_id')
+    if cart_id:
+            cart = Cart.objects.get(id=cart_id)
+    else:
+        cart = Cart.objects.create(cart_id="Random")
+        cart_id = cart.id
+
+    c_slug = request.POST.get('c_slug')
+    product_slug = request.POST.get('product_slug')
+    quantity = request.POST.get('quantity')
+ 
+    try:
+
+        unitary_product = UnitaryProduct.objects.get(
+            category__slug=c_slug,
+            slug=product_slug)
+
+        unitary_product_item = UnitaryProductItem.objects.create(
+            cart=cart,
+            unitaryproduct=unitary_product,
+            size=unitary_product.size,
+            quantity=quantity,
+            file_a=unitary_product.image,
+            file_b=unitary_product.image,
+            comment="",
+            step_two_complete=True)
+       
+        cart_items_count = CartItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+        sample_items_count = SampleItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+        pack_items_count = PackItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+        unitary_product_items_count = UnitaryProductItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+
+        total_items = cart_items_count + sample_items_count + pack_items_count + unitary_product_items_count
+
+        response = JsonResponse({'cart_items_counter':total_items})
+        response.set_cookie("cart_id", cart_id)
+        response.set_cookie("item_id", unitary_product_item.id)
+
+        return response
+
+    except Exception as e:
+        raise e
+
+
+def AddProduct(request, c_slug, product_slug):
 
     cart_id = request.COOKIES.get('cart_id')
     if cart_id:
@@ -165,7 +210,7 @@ def SamplePack(request, c_slug, product_slug):
         cart_id = cart.id
     
     if c_slug == "muestras":
-    
+        
         try:
             sample = Sample.objects.get(
                 category__slug=c_slug,
@@ -190,7 +235,7 @@ def SamplePack(request, c_slug, product_slug):
             raise e        
 
     elif c_slug == "packs":
-
+        
         try:
             pack = Pack.objects.get(
                 category__slug=c_slug,
@@ -206,7 +251,7 @@ def SamplePack(request, c_slug, product_slug):
                 comment="",
                 step_two_complete=True)
 
-            response = redirect('/carrito_de_compras/')
+            response = HttpResponseRedirect('/carrito_de_compras/')
             response.set_cookie("cart_id", cart_id)
             response.set_cookie("item_id", pack_item.id)
             return response    
@@ -214,12 +259,8 @@ def SamplePack(request, c_slug, product_slug):
         except Exception as e:
             raise e
 
-    
-
+   
            
-
-
- 
 
 
 # Tamanos y cantidades
@@ -757,4 +798,35 @@ def prices(request):
     print("#####################")
     
     return JsonResponse({'prices': prices})
+
+
+#####################
+### Catalogo View ###
+#####################
+
+class CatalogoListView(ListView):
+
+    model = UnitaryProduct
+    template_name = "shop/catalogo.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        filter_val = self.request.GET.get('filter', 'all')
+        order = self.request.GET.get('orderby', 'id')
+        if filter_val == "all":
+            context = UnitaryProduct.objects.all()
+            return context
+        else:    
+            context = UnitaryProduct.objects.filter(
+                subcategory1=filter_val,
+            )
+            return context
+
+    def get_context_data(self, **kwargs):
+        context = super(CatalogoListView, self).get_context_data(**kwargs)
+        context['filter'] = self.request.GET.get('filter', 'kubernetes-logo')
+        context['orderby'] = self.request.GET.get('orderby', 'id')
+        return context
+
+
 

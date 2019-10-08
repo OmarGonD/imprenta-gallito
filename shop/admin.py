@@ -10,6 +10,8 @@ admin.site.register(Sample_Review)
 
 admin.site.register(Peru)
 
+admin.site.register(UnitaryProduct)
+
 
 class PackAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug']
