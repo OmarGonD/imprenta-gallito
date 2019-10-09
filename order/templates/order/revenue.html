@@ -21,6 +21,28 @@ Stickers personalizados y más
     <div class="container">
         <h1 class="text-center">El Revenue (sin shipping): S/ {{ revenue }}</h1>
     </div>
+     <!--### Filter ###-->
+     <div class="row margin-top5 margin-bottom5 ">
+        <form method="get" action="{% url 'order:ingresos' %}">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Categorías</label>
+                </div>
+                <select class="custom-select" searchable="Search here.." value={{filtro}} name="filtro">
+                    <option value="todas" disabled selected>Seleccionar categoría</option>
+                    <option value="todas">Todas</option>
+                    <option value="celulares">Celulares</option>
+                    <option value="programacion">Programación</option>
+                </select>
+                <div class="input-group-append">
+                    <input class="btn btn-outline-secondary" type="submit" name="buscar" value="Buscar" style="margin-bottom: 0px;" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <!--### Filter ###-->
 </div>
 
 {% endblock %}

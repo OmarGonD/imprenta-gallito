@@ -3,6 +3,7 @@ from .models import Order, OrderItem
 from django.contrib.auth.decorators import login_required
 import json
 from django.core.serializers import serialize
+from django.views.generic.list import ListView
 
 # Create your views here.
 
@@ -141,3 +142,29 @@ def revenue(request, year, month):
     return render(request, 'order/revenue.html', {'revenue': revenue})
 
 
+#####################
+### Catalogo View ###
+#####################
+
+class OrdersListView(ListView):
+
+    model = Order
+    template_name = "order/revenue.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        filter_month = self.request.GET.get('filtro_mes', 'todas')
+        order = self.request.GET.get('orderby', 'created')
+        if filter_month == "todas":
+            context = Order.objects.all().order_by('-created')
+            return context
+        else:    
+            context = Order.objects.filter(created__month=filter_month)
+            return context
+
+    def get_context_data(self, **kwargs):
+        context = super(OrdersListView, self).get_context_data(**kwargs)
+        context['filtro'] = self.request.GET.get('filtro', 'todas')
+        context['orderby'] = self.request.GET.get('orderby', 'created')
+        context['category'] = "catalogo"
+        return context

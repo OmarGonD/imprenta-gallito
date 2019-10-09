@@ -13,6 +13,7 @@ import datetime
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from marketing.models import Cupons
+from decimal import Decimal
 
 
 # Create your views here.
@@ -418,7 +419,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     
     for cart_item in cart_items:
-        total += int(cart_item.sub_total())
+        total += Decimal(cart_item.sub_total())
 
 
 
@@ -430,7 +431,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     
     for sample_item in sample_items:
-        total += int(sample_item.sub_total())
+        total += Decimal(sample_item.sub_total())
         
 
     categories = Category.objects.exclude(name='Muestras')
@@ -438,13 +439,13 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     pack_items = PackItem.objects.filter(cart=cart)
 
     for pack_item in pack_items:
-        total += int(pack_item.sub_total())
+        total += Decimal(pack_item.sub_total())
        
 
     unitary_product_items = UnitaryProductItem.objects.filter(cart=cart)
 
     for unitary_product in unitary_product_items:
-        total += int(unitary_product.sub_total())
+        total += Decimal(unitary_product.sub_total())
 
     ### Calcular costo despacho ###
 
@@ -479,7 +480,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
         descuento = 0
         
         
-    total_a_pagar = int(total) - descuento + costo_despacho
+    total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
 
 
     return render(request, 'cart.html',

@@ -652,3 +652,33 @@ ul.my_products_list li {
     letter-spacing: .3em;
     font-size: 12px;
 }
+
+
+
+/* Added to Cart Modal Text */
+
+.added-to-cart-check {
+    /*font-weight: bold;*/
+    color: green;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-size: 1.2em;
+}
+
+
+.added-to-cart-titles {
+    font-weight: bold;
+    color:black;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    font-size: .8em;
+}
+
+
+.added-to-cart-text {
+    font-weight: normal;
+    color:black;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    font-size: .8em;
+}

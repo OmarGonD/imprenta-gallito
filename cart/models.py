@@ -167,8 +167,8 @@ class UnitaryProductItem(models.Model):
     #     return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
 
     def sub_total(self):
-        unitaryproduct_price = self.unitaryproduct.price * Decimal(self.quantity)
-        return int(unitaryproduct_price)
+        unitaryproduct_price = Decimal(self.unitaryproduct.price) * Decimal(self.quantity)
+        return Decimal(unitaryproduct_price)
 
     @property
     def file_name_a(self):

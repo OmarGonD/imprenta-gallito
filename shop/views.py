@@ -811,21 +811,23 @@ class CatalogoListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        filter_val = self.request.GET.get('filter', 'all')
-        order = self.request.GET.get('orderby', 'id')
-        if filter_val == "all":
-            context = UnitaryProduct.objects.all()
+        filter_val = self.request.GET.get('filtro', 'todas')
+        order = self.request.GET.get('orderby', 'created')
+        if filter_val == "todas":
+            context = UnitaryProduct.objects.all().order_by('-created')
             return context
         else:    
             context = UnitaryProduct.objects.filter(
-                subcategory1=filter_val,
-            )
+                subcategory2=filter_val,
+            ).order_by('-created')
+            
             return context
 
     def get_context_data(self, **kwargs):
         context = super(CatalogoListView, self).get_context_data(**kwargs)
-        context['filter'] = self.request.GET.get('filter', 'kubernetes-logo')
-        context['orderby'] = self.request.GET.get('orderby', 'id')
+        context['filtro'] = self.request.GET.get('filtro', 'todas')
+        context['orderby'] = self.request.GET.get('orderby', 'created')
+        context['category'] = Category.objects.get(slug="catalogo")
         return context
 
 
