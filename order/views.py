@@ -171,7 +171,7 @@ class OrdersListView(ListView):
             revenue += order.total - order.shipping_cost 
             revenue_no_shipping += order.total - order.shipping_cost 
         context['revenue'] = revenue
-        context['revenue-no-shipping'] = revenue_no_shipping
+        context['revenue_no_shipping'] = revenue_no_shipping
         context['filtromes'] = self.request.GET.get('filtromes', '0')
         context['orderby'] = self.request.GET.get('orderby', 'created')
         context['category'] = "catalogo"
