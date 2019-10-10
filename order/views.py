@@ -153,18 +153,26 @@ class OrdersListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        filter_month = self.request.GET.get('filtro_mes', 'todas')
-        order = self.request.GET.get('orderby', 'created')
-        if filter_month == "todas":
-            context = Order.objects.all().order_by('-created')
-            return context
-        else:    
-            context = Order.objects.filter(created__month=filter_month)
-            return context
+        filter_month = self.request.GET.get('filtromes', '0')
+        if filter_month == "0":
+            return Order.objects.filter(status = 'recibido_pagado')
+        else:
+            return (Order.objects
+                .filter(created__month=filter_month, status = 'recibido_pagado'))
 
     def get_context_data(self, **kwargs):
         context = super(OrdersListView, self).get_context_data(**kwargs)
-        context['filtro'] = self.request.GET.get('filtro', 'todas')
+        qs = kwargs.pop('object_list', self.object_list)
+        order = self.request.GET.get('orderby', 'created')
+        context = {}
+        revenue = 0
+        revenue_no_shipping = 0
+        for order in qs:
+            revenue += order.total - order.shipping_cost 
+            revenue_no_shipping += order.total - order.shipping_cost 
+        context['revenue'] = revenue
+        context['revenue-no-shipping'] = revenue_no_shipping
+        context['filtromes'] = self.request.GET.get('filtromes', '0')
         context['orderby'] = self.request.GET.get('orderby', 'created')
         context['category'] = "catalogo"
         return context

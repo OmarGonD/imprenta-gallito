@@ -17,7 +17,7 @@ Stickers personalizados y más
 
 {% block content %}
 
-<div class="container-fluid margin-bottom5 margin-top5">
+<div class="container margin-bottom5 margin-top5">
     <div class="container">
         <h1 class="text-center">El Revenue (sin shipping): S/ {{ revenue }}</h1>
     </div>
@@ -26,14 +26,23 @@ Stickers personalizados y más
         <form method="get" action="{% url 'order:ingresos' %}">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Categorías</label>
+                    <label class="input-group-text" for="inputGroupSelect01">Mes</label>
                 </div>
-                <select class="custom-select" searchable="Search here.." value={{filtro}} name="filtro">
-                    <option value="todas" disabled selected>Seleccionar categoría</option>
-                    <option value="todas">Todas</option>
-                    <option value="celulares">Celulares</option>
-                    <option value="programacion">Programación</option>
-                </select>
+                <select class="custom-select" searchable="Search here.." value={{filtromes}} name="filtromes">
+                    <option value="0" disabled>Elegir mes</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                    </select>
                 <div class="input-group-append">
                     <input class="btn btn-outline-secondary" type="submit" name="buscar" value="Buscar" style="margin-bottom: 0px;" />
                 </div>
@@ -43,6 +52,13 @@ Stickers personalizados y más
 
 
     <!--### Filter ###-->
+
+    <h1>Ordenes recibidas y pagadas:</h1>
+    <p> {{ revenue }}</p>
+
+    <h1>Ordenes recibidas y pgadas (no shipping)</h1>
+    <p> {{ revenue-no-shipping }}</p>
+
 </div>
 
 {% endblock %}
