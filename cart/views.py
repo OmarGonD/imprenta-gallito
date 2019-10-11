@@ -479,8 +479,19 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     else:
         descuento = 0
         
-        
-    total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
+    #Monto mínimo para FreeShipping
+    free_shipping_min_amount = 50
+
+    if descuento:    
+        #Si hay descuento, se cobra shipping
+        total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
+    elif not descuento and total >= free_shipping_min_amount:
+        #Si NO hay descuento y total > free_shipping_min_amount: no se cobra despacho
+        total_a_pagar = Decimal(total) - Decimal(descuento)
+        costo_despacho = 0
+    else:
+        total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)    
+
 
 
     return render(request, 'cart.html',

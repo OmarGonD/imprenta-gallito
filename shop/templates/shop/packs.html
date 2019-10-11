@@ -42,7 +42,7 @@ Mira nuestros productos - Stickers Gallito
 
     <h1 class="margin-top5 margin-bottom5">Packs de stickers</h1>
 
-    
+
 
     <div class="row margin-bottom5 margin-top3">
 
@@ -66,7 +66,7 @@ Mira nuestros productos - Stickers Gallito
                 {% for pack in packs %}
                 <tr>
                     <th scope="row">1</th>
-                    <td><img class="" src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></td>
+                    <td> <a class="btn" data-toggle="modal" href="#PackFullImage{{ pack.sku }}"><img class="" src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></a></td>
                     <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
                     <td>{{ pack.description }}</td>
                     <td>S/ {{ pack.price }}</td>
@@ -74,19 +74,35 @@ Mira nuestros productos - Stickers Gallito
                             class="btn btn-azul text-white btn-block">Agregar
                             al carrito</a></td>
                 </tr>
+                <!-- Modal Image -->
+                <div class="modal fade" id="PackFullImage{{ pack.sku }}" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <img class="card-img-top" src="{{ pack.image.url }}" alt="Card image cap">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ends Modal -->
                 {% endfor %}
             </tbody>
             <!--Table body-->
         </table>
         <!--Table-->
 
-       
+
 
     </div>
 
 
 
-    
+
 </div>
 
 

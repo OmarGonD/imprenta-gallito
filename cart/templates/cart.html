@@ -268,7 +268,11 @@ Carrito de compras - Stickers Gallito
                                 <div class="col-6">
                                     Total: S/{{ total }}<br>
                                     {% if user.is_authenticated %}
-                                    Costo de envío: S/{{ costo_despacho }}<br>
+                                        {% if costo_despacho == 0 %}
+                                            Costo de envío: ¡ENVÍO GRATIS!<br>
+                                        {% else %}
+                                            Costo de envío: S/{{ costo_despacho }}<br>
+                                        {% endif %}        
                                     Descuento: <span class="savings"><b>S/{{ descuento }}</b></span><br>
                                     A pagar: <strong>S/{{ total_a_pagar }}</strong><br>
                                     {% else %}

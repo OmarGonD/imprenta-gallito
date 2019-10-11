@@ -25,7 +25,7 @@ Mira nuestros productos - Stickers Gallito
 <div class="my_header_categories my_header_bg_color  margin-top3">
     <div class="container padding-top3">
         <p class="my_category_title">{{ category.name|title }}</p>
-        <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>
+        <p>192 reviews
             <i class="gold-star fas fa-star"></i>
             <i class="gold-star fas fa-star"></i>
             <i class="gold-star fas fa-star"></i>
@@ -52,6 +52,11 @@ Mira nuestros productos - Stickers Gallito
                     <option value="todas">Todas</option>
                     <option value="celulares">Celulares</option>
                     <option value="programacion">Programación</option>
+                    <option value="videojuegos">Videojuegos</option>
+                    <option value="cine">Cine</option>
+                    <option value="series">Series de TV</option>
+                    <option value="anime">Anime</option>
+                    <option value="musica">Música</option>
                 </select>
                 <div class="input-group-append">
                     <input class="btn btn-outline-secondary" type="submit" name="buscar" value="Buscar" style="margin-bottom: 0px;" />
@@ -73,8 +78,7 @@ Mira nuestros productos - Stickers Gallito
             <div class="col-auto mb-3">
                 <div class="card" style="width: 18rem;">
                     <a class="btn" data-toggle="modal" href="#FullImage{{ unitary_product.sku }}">
-                        <img class="card-img-top" src="{{ unitary_product.image.url }}" alt="Card image cap" width="100"
-                            height="200">
+                        <img class="card-img-top" src="{{ unitary_product.image.url }}" alt="Card image cap">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ unitary_product.name }}</h5>

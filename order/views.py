@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.core.serializers import serialize
 from django.views.generic.list import ListView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 # Create your views here.
 
@@ -146,9 +147,12 @@ def revenue(request, year, month):
 ### Catalogo View ###
 #####################
 
-class OrdersListView(ListView):
+from django.db.models import F, Sum
+
+class OrdersListView(PermissionRequiredMixin,ListView):
 
     model = Order
+    permission_required = 'is_staff'
     template_name = "order/revenue.html"
     paginate_by = 10
 
@@ -165,11 +169,10 @@ class OrdersListView(ListView):
         qs = kwargs.pop('object_list', self.object_list)
         order = self.request.GET.get('orderby', 'created')
         context = {}
-        revenue = 0
-        revenue_no_shipping = 0
-        for order in qs:
-            revenue += order.total - order.shipping_cost 
-            revenue_no_shipping += order.total - order.shipping_cost 
+        revenue = qs.aggregate(revenue=Sum('total'))
+        revenue_no_shipping = qs.aggregate(revenue_no_shipping=Sum(F('total') - F('shipping_cost')))
+        revenue = float(revenue['revenue']) #necessary to properly render in template / not as Decimal
+        revenue_no_shipping = float(revenue_no_shipping['revenue_no_shipping']) #necessary to properly render in template / not as Decimal
         context['revenue'] = revenue
         context['revenue_no_shipping'] = revenue_no_shipping
         context['filtromes'] = self.request.GET.get('filtromes', '0')
