@@ -1,0 +1,11 @@
+category,subcategory1,subcategory2,name,slug,sku,size,quantity,price,image,description,available
+Catálogo,stickers,programacion,Angular,angular,angular1,5cm x 4cm,1,2,unitaryproducts/angular_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Arduino,arduino,arduino1,3cm x 3cm,1,1.5,unitaryproducts/arduino_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Rasberrypi,rasberrypi,rsbrrypi1,5cm x 4cm,1,2.5,unitaryproducts/piberry_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Docker,docker,docker1,7cm x 2cm,1,2.5,unitaryproducts/docker_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Pytorch,pytorch,pytorch1,6cm x 2.5cm,1,2,unitaryproducts/pytorch_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Tensorflow,tensorflow,tsrflow1,8cm x 2cm,1,3,unitaryproducts/tensorflow_500x500.jpg,,True
+Catálogo,stickers,programacion,Red Hat,red-hat,redhat1,4cm x 4cm,1,2,unitaryproducts/red-hat_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Kubernetes,kubernetes,kbrnetes1,3cm x 3cm,1,1.5,unitaryproducts/kubernetes_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Java,java,java1,4cm x 2cm,1,2,unitaryproducts/java_1000x1000.jpg,,True
+Catálogo,stickers,programacion,Stackoverflow - Máster en Ciencia de la Computación,stackoverflow-master-en-ciencia-de-la-computacion,so1,4cm x 2cm,1,2,,,True

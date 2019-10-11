@@ -814,12 +814,12 @@ class CatalogoListView(ListView):
         filter_val = self.request.GET.get('filtro', 'todas')
         order = self.request.GET.get('orderby', 'created')
         if filter_val == "todas":
-            context = UnitaryProduct.objects.all().order_by('-created')
+            context = UnitaryProduct.objects.all().filter(available=True).order_by('-created')
             return context
         else:    
             context = UnitaryProduct.objects.filter(
                 subcategory2=filter_val,
-            ).order_by('-created')
+            ).filter(available=True).order_by('-created')
             
             return context
 

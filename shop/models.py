@@ -106,15 +106,15 @@ class Pack(models.Model):
 ########################
 
 class UnitaryProduct(models.Model):
-    name = models.CharField(max_length=250, unique=False)
-    slug = models.SlugField(max_length=250, unique=False)
-    sku = models.CharField(max_length=10, unique=True)
-    description = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory1 = models.CharField(max_length=20, blank=True, null=True)
     subcategory2 = models.CharField(max_length=20, blank=True, null=True)
+    name = models.CharField(max_length=250, unique=False)
+    slug = models.SlugField(max_length=250, unique=False)
+    sku = models.CharField(max_length=14, unique=True)
+    description = models.TextField(blank=True)
     size = models.CharField(max_length=20, blank=True, null=True)
-    quantity = models.CharField(max_length=20, blank=True, null=True)
+    quantity = models.CharField(default=1, max_length=20, blank=True, null=True)
     price = models.DecimalField(default=10, decimal_places=2, max_digits=4)
     image = models.ImageField(upload_to='unitaryproducts', blank=True, null=True)
     available = models.BooleanField(default=True)
