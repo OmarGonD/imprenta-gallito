@@ -534,25 +534,21 @@ Carrito de compras - Stickers Gallito
 <script>
     $('#depositButton').on('click', function (e) {
 
-        if ({{ total }} > 10) {
-            var shipping_address = $('#ShippingAddress').val()
-            $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
-                payment_method: 'deposit_payment',
-                amount: {{ total_a_pagar }},
-                stickers_price: {{ total }},
-                discount: {{ descuento }},
-                currency_code: 'PEN',
-                source_id: "10",
-                last_four: 1111,
-                shipping_cost: {{ costo_despacho }},
-                shipping_address: shipping_address
-                    },
-            ).done(function () {
-                window.location.href = "{% url 'order:thanks_deposit_payment' %}";
-            })
-        } else {
-            $("#MontoMinimo10").modal('show');
-        }
+        var shipping_address = $('#ShippingAddress').val()
+        $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
+            payment_method: 'deposit_payment',
+            amount: {{ total_a_pagar }},
+            stickers_price: {{ total }},
+            discount: {{ descuento }},
+            currency_code: 'PEN',
+            source_id: "10",
+            last_four: 1111,
+            shipping_cost: {{ costo_despacho }},
+            shipping_address: shipping_address
+                },
+        ).done(function () {
+            window.location.href = "{% url 'order:thanks_deposit_payment' %}";
+        });
     });
 </script>
 
@@ -597,20 +593,20 @@ Carrito de compras - Stickers Gallito
 </div>
 
 
-<!--Mensaje "El monto debe ser mayor a los S/10 soles" -->
-<div class="modal fade" id="MontoMinimo10" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!--Mensaje "El monto debe ser mayor a MontoMinimo soles" -->
+<div class="modal fade" id="MontoMinimo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title my_title" id="exampleModalLongTitle">Monto inferior a los S/10.00</h5>
+                <h5 class="modal-title my_title" id="exampleModalLongTitle">Monto inferior a los S/{{free_shipping_min_amount}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <p>Por favor, añada un producto más a su carrito de compras. El monto de la compra debe
-                ser igual o superior a S/10.00 (sin considerar el costo de envío).</p>
+                ser igual o superior a S/{{free_shipping_min_amount}} (sin considerar el costo de envío).</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

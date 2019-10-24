@@ -136,7 +136,7 @@ def revenue(request, year, month):
         revenue += order.total - order.shipping_cost
     ### Así se filtra una fecha ###
     #Order.objects.filter(created__date=datetime.date(2019,9,27)) 
-    ## POr año:
+    ## Por año:
     #Order.objects.filter(created__year=2019) 
     ### Por mes y año:
     ###Order.objects.filter(created__month=9)
@@ -179,3 +179,13 @@ class OrdersListView(PermissionRequiredMixin,ListView):
         context['orderby'] = self.request.GET.get('orderby', 'created')
         context['category'] = "catalogo"
         return context
+
+
+# View for Ordenes/Ingresos
+# O se puede manejar con la lista de arriba 
+
+# class IngresosPorOrdenes(ListView):
+
+#     model = Order
+#     template_name = "shop/catalogo.html"
+#     paginate_by = 10        

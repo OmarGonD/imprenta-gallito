@@ -1,9 +1,9 @@
 category,product,slug,sku,description,image,available
-Stickers,Stickers ovalados,stickers-ovalados,S1,Stickers ovalados de alta calidad,,True
-Stickers,Stickers troquelados,stickers-troquelados,S2,Stickers troquelados de alta calidad,,True
-Stickers,Stickers semitroquelados,stickers-semitroquelados,S3,Stickers semitroquelados de alta calidad,,True
-Stickers,Stickers transparentes,stickers-transparentes,S4,Stickers transparentes de alta calidad,,True
-Stickers,Stickers cuadrados,stickers-cuadrados,S5,Stickers cuadrados de alta calidad,,True
-Stickers,Stickers circulares,stickers-circulares,S6,Stickers circulares de alta calidad,,True
-Stickers,Stickers rectangulares,stickers-rectangulares,S7,Stickers rectangulares de alta calidad,,True
-Stickers,Stickers con esquinas redondeadas,stickers-con-esquinas-redondeadas,S8,Stickers con esquinas redondeadas de alta calidad,,True
+Stickers,Stickers ovalados,stickers-ovalados,S1,Stickers ovalados de alta calidad,product_images/Artboard_1_copy_3_PNG.png,True
+Stickers,Stickers troquelados,stickers-troquelados,S2,Stickers troquelados de alta calidad,product_images/Artboard_1_PNG.png,True
+Stickers,Stickers semitroquelados,stickers-semitroquelados,S3,Stickers semitroquelados de alta calidad,product_images/Artboard_1_copy_5_PNG.png,True
+Stickers,Stickers transparentes,stickers-transparentes,S4,Stickers transparentes de alta calidad,product_images/Artboard_1_copy_8_PNG.png,True
+Stickers,Stickers cuadrados,stickers-cuadrados,S5,Stickers cuadrados de alta calidad,product_images/Artboard_1_copy_2_PNG.png,True
+Stickers,Stickers circulares,stickers-circulares,S6,Stickers circulares de alta calidad,product_images/Artboard_1_copy_PNG.png,True
+Stickers,Stickers rectangulares,stickers-rectangulares,S7,Stickers rectangulares de alta calidad,product_images/rectangulares.png,True
+Stickers,Stickers con esquinas redondeadas,stickers-con-esquinas-redondeadas,S8,Stickers con esquinas redondeadas de alta calidad,product_images/Artboard_1_copy_7_PNG.png,True

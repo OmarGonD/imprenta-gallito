@@ -480,7 +480,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
         descuento = 0
         
     #Monto mínimo para FreeShipping
-    free_shipping_min_amount = 50
+    free_shipping_min_amount = 200
 
     if descuento:    
         #Si hay descuento, se cobra shipping
@@ -496,7 +496,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     return render(request, 'cart.html',
                       dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items,
-                       unitary_product_items = unitary_product_items, total=total,
+                       unitary_product_items = unitary_product_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
                        counter=counter, categories=categories, total_a_pagar=total_a_pagar, descuento=descuento, costo_despacho=costo_despacho))
 
 

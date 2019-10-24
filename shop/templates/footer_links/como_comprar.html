@@ -4,52 +4,45 @@
 
 {% block content %}
 
-    <br>
-    <br>
-    <br>
+   
 
-    <div class="container">
+    <div class="container margin-top10">
 
 
         <h1>¿Cómo comprar?</h1>
-        <br>
+        
 
-        <h3><u>Paso 1</u>: Regístrate</h3>
-        <p>
-
-
-            <br>
-            par al momento de registrarte podrás ingresar la dirección a donde debemos enviar tus pedidos.
+        <h3 class="margin-top5"><u>Paso 1</u>: Regístrate</h3>
+        
+        <p class="margin-top3">Regístrate para saber a donde debemos enviar los stickers. Los datos que solicitamos son datos básicos que nos servirán posteriormente
 
         </p>
 
-        <h3><u>Paso 2</u>: Elige el producto que deseas</h3>
-        <br>
-        <p>Elige el tipo de producto que deseas ordenar, en qué tamaño quieres que imprimamos tu diseño y qué
+        <h3 class="margin-top5"><u>Paso 2</u>: Elige el producto que deseas</h3>
+        
+        <p class="margin-top3">Elige el tipo de producto que deseas ordenar, en qué tamaño quieres que imprimamos tu diseño y qué
             cantidad quieres recibir.
         </p>
 
-        <h3><u>Paso 3</u>: Elige el método de pago</h3>
-        <br>
+        <h3 class="margin-top5"><u>Paso 3</u>: Elige el método de pago</h3>
+        
 
-        <ul>
-            <li>3.1.- <b>Depósito en efectivo:</b><br>
-                <br>
-                Debe seleccionar la opción Pago en Efectivo al momento de pagar. <br>
-                Luego su orden se generará y en la página de gracias por la compra le aparecerá el monto que debe
-                cancelar en las siguientes 24 horas después de haber realizado su compra.<br>
-                <br>
-                Actualmente contamos con 2 cuentas para que realice el deposito por su orden:
-                BCP e Interbank.
-                <br>
-                <br>
-                <br>
+        <ul class="margin-top3">
+            <li>
+                <p>3.1.- <b>Depósito en efectivo:</b></p>
+                
+                <p>Debe seleccionar la opción Pago en Efectivo al momento de pagar.</p>
+                <p>Luego su orden se generará y en la página de gracias por la compra le aparecerá el monto que debe
+                cancelar en las siguientes 24 horas después de haber realizado su compra.</p>
+                
+                <p><b>Cuenta BCP para el depósito:</b></p>
+                
 
-                <div class="row">
+                <div class="row margin-top5">
 
-
+                    <div class="col-md-3"></div>
                     <!-- BCP -->
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                    <div class="col-12 col-sm-12 col-md-7 col-lg-7 text-center">
                         <table class="table my_custom_table_deposit_payment">
 
                             <thead class="my_custom_thead">
@@ -77,55 +70,23 @@
                         </table>
                     </div>
 
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                        <!-- INTERBANK -->
+                    <div class="col-md-2"></div>
 
-
-                        <table class="table my_custom_table_deposit_payment">
-
-                            <thead class="my_custom_thead">
-
-                            <tr>
-                                <th>
-                                    INTERBANK
-                                </th>
-                            </tr>
-                            </thead>
-                            <tboyd>
-
-                                <tr>
-                                    <td class="text-left">
-                                        <p class="text-center"><b>CTA. AHORROS:</b> 200‑3001651127</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">
-                                        <p class="text-center"><b>CTA. INTERBANCARIA:</b> 003-200-003001651127-38</p>
-                                    </td>
-                                </tr>
-
-                            </tboyd>
-                        </table>
-                    </div>
                 </div>
             </li>
-            <br>
-            <li>3.2.- <b>Tarjeta de Crédito o Débito:</b> <br>
+            
+            <!-- <li>3.2.- <b>Tarjeta de Crédito o Débito:</b> <br>
                 <br>
                 <p>Paga con Tarjeta de Crédito o Débito:</p>
                 <img src="{% static 'img/credit_card_images/logos_tarjetas_de_credito.png' %}" width="450px" height="100px">
-            </li>
-            <br>
+            </li> -->
+           
 
         </ul>
-
-
-        </p>
     </div>
 
-    </div>
+   
 
-    <br>
 
 
 {% endblock %}

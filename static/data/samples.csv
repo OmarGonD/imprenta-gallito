@@ -1,10 +1,10 @@
 category,sample,slug,sku,description,image,available
-Muestras,Sobre con muestras,sobre-con-muestras,M1,Sobre con 05 stickers de muestra,,True
-Muestras,Stickers ovalados de muestra,stickers-ovalados-de-muestra,M2,Sobre con 02 stickers redondeados de muestra de alta calidad,,True
-Muestras,Stickers troquelados de muestra,stickers-troquelados-de-muestra,M3,Sobre con 02 stickers troquelados de muestra de alta calidad,,True
-Muestras,Stickers semitroquelados de muestra,stickers-semitroquelados-de-muestra,M4,Sobre con 02 stickers semitroquelados de muestra de alta calidad,,True
-Muestras,Stickers transparentes de muestra,stickers-transparentes-de-muestra,M5,Sobre con 02 stickers transparentes de muestra de alta calidad,,True
-Muestras,Stickers cuadrados de muestra,stickers-cuadrados-de-muestra,M6,Sobre con 02 stickers cuadrados de muestra de alta calidad,,True
-Muestras,Stickers circulares de muestra,stickers-circulares-de-muestra,M7,Sobre con 02 stickers circulares de muestra de alta calidad,,True
-Muestras,Stickers rectangulares de muestra,stickers-rectangulares-de-muestra,M8,Sobre con 02 stickers rectangulares de muestra de alta calidad,,True
-Muestras,Stickers con esquinas redondeadas de muestra,stickers-con-esquinas-redondeadas-de-muestra,M9,Sobre con 02 stickers con esquinas redondeadas de muestra de alta calidad,,True
+Muestras,Sobre con muestras,sobre-con-muestras,M1,Sobre con 05 stickers de muestra,sample_images/Artboard_1.png,True
+Muestras,Stickers ovalados de muestra,stickers-ovalados-de-muestra,M2,Sobre con 02 stickers redondeados de muestra de alta calidad,sample_images/Artboard_1_copy_3_PNG.png,True
+Muestras,Stickers troquelados de muestra,stickers-troquelados-de-muestra,M3,Sobre con 02 stickers troquelados de muestra de alta calidad,sample_images/Artboard_1_PNG.png,True
+Muestras,Stickers semitroquelados de muestra,stickers-semitroquelados-de-muestra,M4,Sobre con 02 stickers semitroquelados de muestra de alta calidad,sample_images/Artboard_1_copy_5_PNG.png,True
+Muestras,Stickers transparentes de muestra,stickers-transparentes-de-muestra,M5,Sobre con 02 stickers transparentes de muestra de alta calidad,sample_images/Artboard_1_copy_8_PNG.png,True
+Muestras,Stickers cuadrados de muestra,stickers-cuadrados-de-muestra,M6,Sobre con 02 stickers cuadrados de muestra de alta calidad,sample_images/Artboard_1_copy_2_PNG.png,True
+Muestras,Stickers circulares de muestra,stickers-circulares-de-muestra,M7,Sobre con 02 stickers circulares de muestra de alta calidad,sample_images/Artboard_1_copy_PNG.png,True
+Muestras,Stickers rectangulares de muestra,stickers-rectangulares-de-muestra,M8,Sobre con 02 stickers rectangulares de muestra de alta calidad,sample_images/Artboard_1_copy_2_PNG.png,True
+Muestras,Stickers con esquinas redondeadas de muestra,stickers-con-esquinas-redondeadas-de-muestra,M9,Sobre con 02 stickers con esquinas redondeadas de muestra de alta calidad,sample_images/Artboard_1_copy_7_PNG.png,True
