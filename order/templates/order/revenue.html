@@ -30,19 +30,19 @@ Stickers personalizados y más
                 </div>
                 <select class="custom-select" searchable="Search here.." value={{filtromes}} name="filtromes">
                     <option value="0" disabled>Elegir mes</option>
-                    <option value="1">Enero</option>
-                    <option value="2">Febrero</option>
-                    <option value="3">Marzo</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Mayo</option>
-                    <option value="6">Junio</option>
-                    <option value="7">Julio</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Setiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                    </select>
+                    <option value="1" {% if filtromes == "1" %}selected{% endif %} >Enero</option>
+                    <option value="2" {% if filtromes == "2" %}selected{% endif %} >Febrero</option>
+                    <option value="3" {% if filtromes == "3" %}selected{% endif %} >Marzo</option>
+                    <option value="4" {% if filtromes == "4" %}selected{% endif %} >Abril</option>
+                    <option value="5" {% if filtromes == "5" %}selected{% endif %} >Mayo</option>
+                    <option value="6" {% if filtromes == "6" %}selected{% endif %} >Junio</option>
+                    <option value="7" {% if filtromes == "7" %}selected{% endif %} >Julio</option>
+                    <option value="8" {% if filtromes == "8" %}selected{% endif %} >Agosto</option>
+                    <option value="9" {% if filtromes == "9" %}selected{% endif %} >Setiembre</option>
+                    <option value="10" {% if filtromes == "10" %}selected{% endif %} >Octubre</option>
+                    <option value="11" {% if filtromes == "11" %}selected{% endif %} >Noviembre</option>
+                    <option value="12" {% if filtromes == "12" %}selected{% endif %} >Diciembre</option>
+                </select>
                 <div class="input-group-append">
                     <input class="btn btn-outline-secondary" type="submit" name="buscar" value="Buscar" style="margin-bottom: 0px;" />
                 </div>
