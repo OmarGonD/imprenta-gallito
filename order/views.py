@@ -170,9 +170,15 @@ class OrdersListView(PermissionRequiredMixin,ListView):
         order = self.request.GET.get('orderby', 'created')
         context = {}
         revenue = qs.aggregate(revenue=Sum('total'))
+        if revenue is None:
+            revenue = 0
+        else:
+            revenue = float(revenue['revenue']) #necessary to properly render in template / not as Decimal    
         revenue_no_shipping = qs.aggregate(revenue_no_shipping=Sum(F('total') - F('shipping_cost')))
-        revenue = float(revenue['revenue']) #necessary to properly render in template / not as Decimal
-        revenue_no_shipping = float(revenue_no_shipping['revenue_no_shipping']) #necessary to properly render in template / not as Decimal
+        if revenue_no_shipping is None:
+            revenue_no_shipping = 0
+        else:
+            revenue_no_shipping = float(revenue_no_shipping['revenue_no_shipping']) #necessary to properly render in template / not as Decimal
         context['revenue'] = revenue
         context['revenue_no_shipping'] = revenue_no_shipping
         context['filtromes'] = self.request.GET.get('filtromes', '0')
