@@ -1,5 +1,5 @@
 
-# Stickers Gallito Perú <img src="/static/img/stickers_gallito_logo.png' %}" align="right" width="120" />
+# Stickers Gallito Perú <img src="/static/img/stickers_gallito_logo.png" align="right" width="120" />
 
 [![Travis Build
 Status](https://travis-ci.org/tidyverse/ggplot2.svg?branch=master)](https://travis-ci.org/tidyverse/ggplot2)
