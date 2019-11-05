@@ -1,115 +1,116 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block metadescription %}
-    {% if category %}
-        {{ category.description|truncatewords:155 }}
-    {% else %}
-        ¡Bienvenidos a Stickers Gallito Perú!
-    {% endif %}
+{% if category %}
+{{ category.description|truncatewords:155 }}
+{% else %}
+¡Bienvenidos a Stickers Gallito Perú!
+{% endif %}
 {% endblock %}
 {% block title %}
-    {% if category %}
-        {{ category.name }}
-    {% else %}
-        Stickers personalizados y más
-    {% endif %}
+{% if category %}
+{{ category.name }}
+{% else %}
+Stickers personalizados y más
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
-    <div class="container-fluid margin-bottom5 margin-top5">
-        <div class="container">
+<div class="container-fluid margin-bottom5 margin-top5">
+    <div class="container">
 
-            <h1 class="text-center">Envíos a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}"
-                                                                     width="40px" height="40px"></h1>
-            <br>
-            <p class="text-center">Stickers Gallito es la forma más rápida y fácil de comprar stickers, pines publicitarios, etiquetas,
-                pines, gigantografías y empaques personalizados.
-                Envíamos tu orden a cualquier parte del Perú.</p>
+        <div class="row margin-top5">
+            <div class="col-md-12">
+                <h1 class="text-center">Envíos a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}"
+                        width="40px" height="40px"></h1>
 
-
-            <p class="text-center">Solo elige qué tipo de producto deseas: sticker transparente, stickers cuadrados,
-                stickers troquelados. Luego indica el tamaño y
-                la cantidad de stickers. Haz el pago de tu pedido con tarjetas de crédito o débito, o paga con efectivo
-                haciendo un depósito a nuestras cuentas bancarias.</p>
-
-
-            <br>
-            <br>
-
-
-            <div class="productos_finales_home text-center">
-                <div class="row">
-                    <div class="col-md-12">
-                        <p>¡Suscríbete y recibe nuestras ofertas!</p>
-                    </div>
-                </div>
-                <div class="row">
-
-                    <div class="col-md-12">
-                        {% csrf_token %}
-                        <form action="{% url 'marketing:email_signup_form' %}" method="post">
-                            {{ email_signup_form }}
-                            <button type="submit" class="btn">Suscribirse</button>
-                        </form>
-                    </div>
-                </div>
-
-                <br>
-                <br>
-
-                <p class="my_title">Stickers, pines, etiquetas, y más</p>
-
-                <br>
-                <br>
-                <div class="row">
-
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" width="150px" height="150px">
-                    </div>
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/cats/cat-1.jpg' %}" width="150px" height="150px">
-                    </div>
-                    <div class="col-md-3">
-                        <img src="{% static 'img/pines/fantasmas.jpg' %}" width="150px" height="150px">
-                    </div>
-
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/dogs/dog-2.jpg.png' %}" width="150px" height="150px">
-                    </div>
-
-                </div>
-
-                <br>
-                <br>
-
-                <div class="row">
-
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
-                    </div>
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
-                    </div>
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
-                    </div>
-
-                    <div class="col-md-3">
-                        <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
-                    </div>
-
-                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 0%;">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 margin-top3">
+                <ol style="text-align: left; list-style-position: inside;">
+                    <li>Elige qué tipo de producto deseas: stickers transparentes, stickers cuadrados,
+                    stickers troquelados, etc.</li>
+                    <li>Luego indica el tamaño y la cantidad de stickers que deseas.</li>
+                    <li>Sube tu diseño en nuestra web.</li>
+                    <li>Haz el depósito por tu orden de stickers a nuestra cuenta bancaria (te enviaremos un correo con la cuenta, una vez que hayas hecho tu pedido en nuestra web).</li> 
+                    <li>En unos días enviaremos tus stickers a cualquier parte del Perú en la que te encuentres.</li>
+                </ol>    
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        
+    </div>
 
 
-                <br>
-                <br>
+
+    <div class="text-center" style="margin-top: 2%;">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="my_title">¡Suscríbete y recibe nuestras ofertas!</p>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-12">
+                {% csrf_token %}
+                <form action="{% url 'marketing:email_signup_form' %}" method="post">
+                    {{ email_signup_form }}
+                    <button type="submit" class="btn">Suscribirse</button>
+                </form>
+            </div>
+        </div>
 
 
+        <div class="row margin-top3">
+            <div class="col-md-12">
+                <p class="my_title">Stickers personalizados en 100% vinyl y laminados para mayor protección.</p>
+            </div>
+        </div>
+
+        <div class="row margin-top3">
+
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" width="150px" height="150px">
+            </div>
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cats/cat-1.jpg' %}" width="150px" height="150px">
+            </div>
+            <div class="col-md-3">
+                <img src="{% static 'img/pines/fantasmas.jpg' %}" width="150px" height="150px">
+            </div>
+
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/dogs/dog-2.jpg.png' %}" width="150px" height="150px">
             </div>
 
         </div>
+
+
+
+        <div class="row margin-top5">
+
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
+            </div>
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
+            </div>
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
+            </div>
+
+            <div class="col-md-3">
+                <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
+            </div>
+
+        </div>
+
     </div>
 
-{% endblock %}
+</div>
+</div>
 
+{% endblock %}

@@ -176,7 +176,7 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 90%;
+        width: 70%;
     }
 
 
@@ -207,6 +207,7 @@
     .my_home_banner_lef_text {
         margin-left: 10px;
         z-index: 100;
+        margin-top: 10%;
     }
 
 }
@@ -228,7 +229,7 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 80%;
+        width: 70%;
     }
 
 
@@ -280,7 +281,7 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 80%;
+        width: 70%;
     }
 
 
@@ -341,7 +342,7 @@
         right: -0px;
         bottom: 0;
         z-index: 0;
-        width: 90%;
+        width: 70%;
     }
 
     .my_home_banner_title {
