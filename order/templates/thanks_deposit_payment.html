@@ -1,31 +1,31 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}
-    Gracias por su compra - Stickers Gallito
+Gracias por su compra - Stickers Gallito
 {% endblock %}
 
 {% block data_layer %}
 
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            event: 'eec.purchase',
-            ecommerce: {
-                currencyCode: 'PEN',
-                purchase: {
-                    actionField: {
-                        id: {{ order_number }},
-                        affiliation: 'Stickers Gallito E-Commerce',
-                        revenue: {{ revenue }},
-                        shipping: {{ costo_despacho }},
-                        coupon: ''
+<script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event: 'eec.purchase',
+        ecommerce: {
+            currencyCode: 'PEN',
+            purchase: {
+                actionField: {
+                    id: {{ order_number }},
+        affiliation: 'Stickers Gallito E-Commerce',
+        revenue: {{ revenue }},
+        shipping: {{ costo_despacho }},
+        coupon: ''
                     },
-                    products: JSON.parse('{{ order_items | safe }}')
+        products: JSON.parse('{{ order_items | safe }}')
                 },
 
             }
         });
-    </script>
+</script>
 
 
 
@@ -33,8 +33,6 @@
 {% block content %}
 
 <style>
-   
-
     table {
         margin: 0 auto;
     }
@@ -44,10 +42,10 @@
     }
 
     .table-cuenta-bancaria {
-    width: 60% !important;
-    max-width: 100% !important;
-    margin-bottom: 1rem !important;
-    background-color: transparent !important;
+        width: 60% !important;
+        max-width: 100% !important;
+        margin-bottom: 1rem !important;
+        background-color: transparent !important;
     }
 
 
@@ -129,7 +127,7 @@
 
     .my_custom_table_deposit_payment {
         min-width: 300px;
-        font-size: 12px;
+        font-size: 1e;
     }
 
     .my_custom_thead {
@@ -138,72 +136,71 @@
         text-transform: uppercase;
         letter-spacing: .2em;
         background-color: #f8f9fa !important;
-
     }
 
-    #shipping_items_list > li {
+    #shipping_items_list>li {
         list-style-type: none;
         list-style: none;
     }
-
-
 </style>
 
-    <div class="container margin-top5 margin-bottom10">
-        <div class="row">
-            <div class="col-md-12 col-lg-12 text-center">
-                <br>
-                <br>
-                <br>
-                <h1 class="text-center my_title">
-                    ¡Gracias por confiar en Stickers Gallito!
-                </h1>
-                <br>
-                <p>El número de su orden es: <b>#{{ transaction.id }}</b></p>
+<div class="container margin-top5 margin-bottom10">
+    <div class="row">
+        <div class="col-md-12 col-lg-12 text-center">
+            <br>
+            <br>
+            <br>
+            <h1 class="text-center my_title">
+                ¡Gracias por confiar en Stickers Gallito!
+            </h1>
+            <br>
+            <p>El número de su orden es: <b>#{{ transaction.id }}</b></p>
 
-                <p><b>El total de su pedido es: S/{{ transaction.total }}</b></p>
+            <p><b>El total de su pedido es: S/{{ transaction.total }}</b></p>
 
-                <p><i>Costo de los stickers: S/ {{ revenue }} + Costo del envío: S/ {{ transaction.shipping_cost }}</i></p>
-            
-
-                <p>(A pagar en las siguientes 48 horas para hacer efectivo su pedido).</p>
-                <p class="text-center"><b>  También le hemos enviado un correo electrónico con los detalles de su orden :).</b></p>
-                
-                <p class="text-center my_title margin-top6">Cuenta bancaria a donde hacer el depósito:</p>
-
-                <div class="row margin-top3">
+            <p><i>Costo de los stickers: S/ {{ revenue }} + Costo del envío: S/ {{ transaction.shipping_cost }}</i></p>
 
 
-                    <!-- BCP -->
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                        <table class="table-cuenta-bancaria my_custom_table_deposit_payment">
-        
-                            <thead class="my_custom_thead margin-bottom2">
-        
+            <p>(A pagar en las siguientes 48 horas para hacer efectivo su pedido).</p>
+            <p class="text-center"><b> También le hemos enviado un correo electrónico con los detalles de su orden
+                    :).</b></p>
+
+            <p class="text-center my_title margin-top6">Cuenta bancaria a donde hacer el depósito:</p>
+
+            <div class="row margin-top3">
+
+
+                <!-- BCP -->
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                    <table class="table-cuenta-bancaria my_custom_table_deposit_payment">
+
+                        <thead class="my_custom_thead margin-bottom2">
+
                             <tr>
                                 <th class="padding3">
                                     BANCO DE CRÉDITO DEL PERÚ (BCP)
                                 </th>
                             </tr>
-                            </thead>
-                            <tboyd>
-        
-                                <tr>
-                                    <td class=" padding2 text-left">
-                                        <p class="text-center padding-top2"><b>CTA. AHORROS:</b> 191-93277552-0-47</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="padding2 text-left">
-                                        <p class="text-center padding-top2"><b>CTA. INTERBANCARIA:</b> 002-191-193277552047-54</p>
-                                    </td>
-                                </tr>
-        
-                            </tboyd>
-                        </table>
-                    </div>
-        
-                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
+                        </thead>
+                        <tboyd>
+
+                            <tr>
+                                <td class=" padding2 text-left">
+                                    <p class="text-center padding-top2"><b>CTA. AHORROS:</b> 191-93277552-0-47</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="padding2 text-left">
+                                    <p class="text-center padding-top2"><b>CTA. INTERBANCARIA:</b>
+                                        002-191-193277552047-54</p>
+                                </td>
+                            </tr>
+
+                        </tboyd>
+                    </table>
+                </div>
+
+                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
                         INTERBANK
         
         
@@ -233,81 +230,91 @@
                             </tboyd>
                         </table>
                     </div> -->
-                </div>
-        
-                <hr>
-                <p class="text-center my_title margin-top6">Detalles de la compra:</p>
-                <br>
-                <table>
-                    <tr>
-                        <td  colspan="5" class="top_row td_text_center padding-top2"><p class="text_white">Número de orden: </p></td>
-                        <td colspan="5" class="top_row td_text_center padding-top2"><p class="text_white">Fecha: </p></td>
-                        <td colspan="5" class="top_row td_text_center padding-top2"><p class="text_white">Fecha de entrega: </p></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" class="td_text_center padding-top2 padding-bottom2">#{{ transaction.id }}</td>
-                        <td colspan="5" class="td_text_center padding-top2 padding-bottom2">{{ transaction.created|date:"d M Y" }}</td>
-                        <td colspan="5" class="td_text_center padding-top2 padding-bottom2"><b class="shipping_date"> Se define una vez haga el depósito por su
+            </div>
+
+            <hr>
+            <p class="text-center my_title margin-top6">Detalles de la compra:</p>
+            <br>
+            <table>
+                <tr>
+                    <td colspan="5" class="top_row td_text_center padding-top2">
+                        <p class="text_white">Número de orden: </p>
+                    </td>
+                    <td colspan="5" class="top_row td_text_center padding-top2">
+                        <p class="text_white">Fecha: </p>
+                    </td>
+                    <td colspan="5" class="top_row td_text_center padding-top2">
+                        <p class="text_white">Fecha de entrega: </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="td_text_center padding-top2 padding-bottom2">#{{ transaction.id }}</td>
+                    <td colspan="5" class="td_text_center padding-top2 padding-bottom2">
+                        {{ transaction.created|date:"d M Y" }}</td>
+                    <td colspan="5" class="td_text_center padding-top2 padding-bottom2"><b class="shipping_date"> Se
+                            define una vez haga el depósito por su
                             orden.</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="5"><b>Descripción del producto: </b></td>
-                        <td colspan="4"><b>Cantidad: </b></td>
-                        <td colspan="3"><b>Tamaño: </b></td>
-                        <td colspan="2"><b>Precio: </b></td>
-                        <td colspan="1"><b>Sub total: </b></td>
-                    </tr>
-                    {% for item in order_items_for_template %}
-                
-                        <tr>
-                            <td colspan="5">{{ item.name }}</td>
-                            <td colspan="4">{{ item.quantity }}</td>
-                            <td colspan="3">{{ item.size }}</td>
-                            <td colspan="2" class="text_to_right">S/{{ item.price }}</td>
-                            <td colspan="1" class="text_to_right">S/{{ item.sub_total }}</td>
-                        </tr>
-                    {% endfor %}
-                    <tr>
-                        <td colspan="14" style="text-align: right;"><b>Costo de los productos: (IGV incl.)</b></td>
-                        <td colspan="1" class="text_to_right">S/{{ transaction.stickers_price }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="14" style="text-align: right;"><b>Costo de envío</b></td>
-                        <td colspan="1" class="text_to_right">S/{{ transaction.shipping_cost }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="14" style="text-align: right;"><b>Descuento:</b></td>
-                        <td colspan="1" class="text_to_right">- S/{{ transaction.discount }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="14" style="text-align: right;"><b>Total a pagar:</b></td>
-                        <td colspan="1" class="text_to_right">S/{{ transaction.total }}</td>
-                    </tr>
-                    <tr>
-                        <td class="padding-top3" valign="top" colspan="9" style="width: 50%">
-                            <p><b>Enviar a: </b></p>
-                            <ul id="shipping_items_list">
-                                <li><b>Dirección:</b> <i>{{ transaction.shipping_address }}</i></li>
-                                <li><b>Distrito:</b> <i>{{ transaction.shipping_district }}</i></li>
-                                <li><b>Provincia:</b> <i>{{ transaction.shipping_province }}</i></li>
-                                <li><b>Departamento:</b><i>{{ transaction.shipping_department }}</i></li>
-                                <li><b>Celular:</b><i>{{ transaction.phone_number }}</i></li>
-                            </ul>
-                        </td>
-                        <td  class="padding-top3" valign="top" colspan="6" style="width: 50%">
-                            <p><b>Detalles del pago: </b> S/ {{ transaction.total }} a pagar dentro de las próximas 48 horas.</p>
-                            <p><b>Fecha máxima para hacer efectivo su pedido:</b> {{ transaction.deposit_payment_date|date:"d M Y" }}.</p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5"><b>Descripción del producto: </b></td>
+                    <td colspan="4"><b>Cantidad: </b></td>
+                    <td colspan="3"><b>Tamaño: </b></td>
+                    <td colspan="2"><b>Precio: </b></td>
+                    <td colspan="1"><b>Sub total: </b></td>
+                </tr>
+                {% for item in order_items_for_template %}
+
+                <tr>
+                    <td colspan="5">{{ item.name }}</td>
+                    <td colspan="4">{{ item.quantity }}</td>
+                    <td colspan="3">{{ item.size }}</td>
+                    <td colspan="2" class="text_to_right">S/{{ item.price }}</td>
+                    <td colspan="1" class="text_to_right">S/{{ item.sub_total }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="14" style="text-align: right;"><b>Costo de los productos: (IGV incl.)</b></td>
+                    <td colspan="1" class="text_to_right">S/{{ transaction.stickers_price }}</td>
+                </tr>
+                <tr>
+                    <td colspan="14" style="text-align: right;"><b>Costo de envío</b></td>
+                    <td colspan="1" class="text_to_right">S/{{ transaction.shipping_cost }}</td>
+                </tr>
+                <tr>
+                    <td colspan="14" style="text-align: right;"><b>Descuento:</b></td>
+                    <td colspan="1" class="text_to_right">- S/{{ transaction.discount }}</td>
+                </tr>
+                <tr>
+                    <td colspan="14" style="text-align: right;"><b>Total a pagar:</b></td>
+                    <td colspan="1" class="text_to_right">S/{{ transaction.total }}</td>
+                </tr>
+                <tr>
+                    <td class="padding-top3" valign="top" colspan="9" style="width: 50%">
+                        <p><b>Enviar a:</b>{{ transaction.first_name }} {{ transaction.last_name }}</p>
+                        <ul id="shipping_items_list">
+                            <li><b>Dirección:</b> <i>{{ transaction.shipping_address }}</i></li>
+                            <li><b>Distrito:</b> <i>{{ transaction.shipping_district }}</i></li>
+                            <li><b>Provincia:</b> <i>{{ transaction.shipping_province }}</i></li>
+                            <li><b>Departamento:</b><i>{{ transaction.shipping_department }}</i></li>
+                            <li><b>Celular:</b><i>{{ transaction.phone_number }}</i></li>
+                        </ul>
+                    </td>
+                    <td class="padding-top3" valign="top" colspan="6" style="width: 50%">
+                        <p><b>Detalles del pago: </b> S/ {{ transaction.total }} a pagar dentro de las próximas 48
+                            horas.</p>
+                        <p><b>Fecha máxima para hacer efectivo su pedido:</b>
+                            {{ transaction.deposit_payment_date|date:"d M Y" }}.</p>
+                    </td>
+                </tr>
+            </table>
         </div>
-
-
-            </div>
     </div>
- 
+
+
+</div>
+</div>
+
 
 
 {% endblock %}

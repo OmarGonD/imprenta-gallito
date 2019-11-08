@@ -24,6 +24,7 @@ urlpatterns = [
     path('<slug:c_slug>/<slug:product_slug>/medida-y-cantidad', views.StepOneView.as_view(), name='ProdDetail'),
     path('<slug:c_slug>/<slug:product_slug>/subir-arte', views.StepTwoView.as_view(), name='UploadArt'),
     path('<slug:c_slug>/<slug:product_slug>', views.AddProduct, name='AddProduct'),
+    path('agregar-pack/', views.AddPack, name='AddPack'),
     path('stickers-por-unidad/', views.AddUnitaryProduct, name='AddUnitaryProduct'),
     path('<slug:c_slug>', views.ProdCatDetail, name='ProdCatDetail'),
     path('make_review/', views.make_review_view, name='make_review_view'),

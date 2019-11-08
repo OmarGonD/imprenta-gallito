@@ -52,7 +52,7 @@ Mira nuestros productos - Stickers Gallito
             <thead>
                 <tr>
                     <th style="width: 5%">#</th>
-                    <th style="width: 15%"></th>
+                    <th style="width: 20%"></th>
                     <th style="width: 25%">Pack</th>
                     <th style="width: 25%">Descripción</th>
                     <th style="width: 10%">Precio</th>
@@ -66,13 +66,13 @@ Mira nuestros productos - Stickers Gallito
                 {% for pack in packs %}
                 <tr>
                     <th scope="row">{{ pack.id }}</th>
-                    <td> <a class="btn" data-toggle="modal" href="#PackFullImage{{ pack.sku }}"><img class="" src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></a></td>
+                    <td> <a class="btn" data-toggle="modal" href="#PackFullImage{{ pack.sku }}"><img class=""
+                                src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></a></td>
                     <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
                     <td>{{ pack.description }}</td>
                     <td>S/ {{ pack.price }}</td>
-                    <td><a href="{% url 'shop:AddProduct' 'packs' pack.slug %}"
-                            class="btn btn-azul text-white btn-block">Agregar
-                            al carrito</a></td>
+                    <td><a class="btn btn-azul text-white btn-block AddPackBtn-{{ pack.sku }}">Agregar al carrito</a>
+                    </td>
                 </tr>
                 <!-- Modal Image -->
                 <div class="modal fade" id="PackFullImage{{ pack.sku }}" tabindex="-1" role="dialog"
@@ -90,6 +90,70 @@ Mira nuestros productos - Stickers Gallito
                 </div>
 
                 <!-- Ends Modal -->
+
+                <!--- NEW MODALS -->
+                
+                <!-- New Pack Added Modal-->
+
+                <div id="AddedPack{{ pack.sku }}" class="modal fade bs-example-modal-lg hide" tabindex="-1" role="dialog" aria-labelledby="classInfo" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                               
+                          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                                <h5 class="card-title added-to-cart-check margin-bottom5 margin-left5"><i
+                                    class="fas fa-check margin-right3"></i>Se agregó el pack a tu carrito de compras</h5>  
+                          <div class="row">
+                                <div class="col-md-6" style="padding-left: 10%; padding-bottom: 0%;">
+                                    <h6 class="my_title">Pack: {{ pack.name }}</h6>
+                                    <span><span class="my_title">Cantidad de stickers:</span> {{ pack.quantity }}</span><br>
+                                    <span><span class="my_title">Precio:</span> S/ {{ pack.price }}</span>
+                                </div>  
+                            <div class="col-md-6" style="padding-right: 10%; padding-bottom: 0%; height: 100%; width: 100%;">
+                                <img class="card-img-top" src="{{ pack.image.url }}" width="100%" height="100%">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Cerrar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                <!-- Ends Modal -->
+
+                <!-- AJAX Call to Add Pack -->
+                <script>
+
+                    $(".AddPackBtn-{{ pack.sku }}").click(function () {
+                        var cart_items_counter_bg = $("#shopping-cart").css('background'); // stores original background
+                        $.post("{% url 'shop:AddPack' %}", {
+                            c_slug: "{{ pack.category.slug }}",
+                            pack_slug: "{{ pack.slug }}",
+                        }).done(function (response) {
+                            $("span.cart_items_counter").text(response.cart_items_counter);
+                            $("#shopping-cart").toggleClass('highlighted', 800);
+                            setTimeout(function () {
+                                $('#shopping-cart').removeClass('highlighted');
+                            }, 2600);
+                        });
+
+                        $("#AddedPack{{ pack.sku }}").modal('show');
+
+                    });
+
+                </script>
+
+                <!-- End of AJAX Call -->
+
                 {% endfor %}
             </tbody>
             <!--Table body-->

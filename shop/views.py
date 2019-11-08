@@ -200,6 +200,58 @@ def AddUnitaryProduct(request):
         raise e
 
 
+
+### Add Pack ###
+
+@csrf_exempt
+def AddPack(request):
+
+    cart_id = request.COOKIES.get('cart_id')
+    if cart_id:
+            cart = Cart.objects.get(id=cart_id)
+    else:
+        cart = Cart.objects.create(cart_id="Random")
+        cart_id = cart.id
+
+    c_slug = request.POST.get('c_slug')
+    pack_slug = request.POST.get('pack_slug')
+    
+    try:
+
+        pack = Pack.objects.get(
+                category__slug=c_slug,
+                slug=pack_slug)
+
+        pack_item = PackItem.objects.create(
+                cart=cart,
+                pack=pack,
+                size=pack.size,
+                quantity=pack.quantity,
+                file_a=pack.image,
+                file_b=pack.image,
+                comment="",
+                step_two_complete=True)
+
+        
+        cart_items_count = CartItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+        sample_items_count = SampleItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+        pack_items_count = PackItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+        unitary_product_items_count = UnitaryProductItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+
+        total_items = cart_items_count + sample_items_count + pack_items_count + unitary_product_items_count
+
+        response = JsonResponse({'cart_items_counter':total_items}) #To update items counter
+        response.set_cookie("cart_id", cart_id)
+        response.set_cookie("item_id", pack_item.id)
+
+        return response
+
+    except Exception as e:
+        raise e
+
+################
+
+
 def AddProduct(request, c_slug, product_slug):
 
     cart_id = request.COOKIES.get('cart_id')
@@ -701,22 +753,14 @@ def preguntas_frecuentes(request):
 def make_review_view(request):
     user = request.user
     category_slug = request.POST.get('category_slug')
-    print("Category Slug:")
-    print(category_slug)
     product_slug = request.POST.get("product_slug")
 
     sample_slug = request.POST.get("sample_slug")
-    print(sample_slug)
-
     review = request.POST.get("review")
     stars = float(request.POST.get("stars"))
-    print("Stars Type")
-    print(stars)
-    print(type(stars))
-
+    
     if category_slug == 'muestras':
 
-        print("Enters if of Samples")
         try:
 
             category = Category.objects.get(
@@ -739,8 +783,6 @@ def make_review_view(request):
                 print("No se creó Review Object")
             else:
                 review.save()
-                print("Se guardo el Review")
-
         except Sample_Review.DoesNotExist:
             print("No se creo el Review")
 
@@ -767,9 +809,7 @@ def make_review_view(request):
             if not review:
                 print("No se creó Review Object")
             else:
-                review.save()
-                print("Se guardo el Review")
-
+                review.save()      
         except Product_Review.DoesNotExist:
             print("No se creo el Review")
 
@@ -782,20 +822,12 @@ from django.http.response import JsonResponse
 def prices(request):
     size_selected = request.GET.get("size_selected")
     c_slug = request.GET.get("c_slug")
-    print("CCC C_SLUG")
-    print(c_slug)
     product_slug = request.GET.get("product_slug")
 
 
     prices = list(ProductsPricing.objects.filter(category=Category.objects.get(slug=c_slug),
                                               product=Product.objects.get(slug=product_slug),
                                               size=size_selected).values_list("price",flat=True))
-
-    print("#####################")
-    print("fun prices: ")
-    print("size_selected: ",size_selected)
-    print("prices: ", prices)
-    print("#####################")
     
     return JsonResponse({'prices': prices})
 

@@ -28,18 +28,24 @@ Stickers personalizados y más
             </div>
         </div>
         <div class="row" style="margin-bottom: 0%;">
-            <div class="col-md-2"></div>
-            <div class="col-md-8 margin-top3">
+            <div class="col-md-12 margin-top3">
                 <ol style="text-align: left; list-style-position: inside;">
+                    <h2>¿Cómo adquiero mis stickers?</h2>
+                    <div class="margin-top3">
                     <li>Elige qué tipo de producto deseas: stickers transparentes, stickers cuadrados,
                     stickers troquelados, etc.</li>
                     <li>Luego indica el tamaño y la cantidad de stickers que deseas.</li>
                     <li>Sube tu diseño en nuestra web.</li>
-                    <li>Haz el depósito por tu orden de stickers a nuestra cuenta bancaria (te enviaremos un correo con la cuenta, una vez que hayas hecho tu pedido en nuestra web).</li> 
+                    <li>Haz el depósito por tu orden de stickers a nuestra cuenta bancaria:</li> 
+                        <ul>
+                            <li><b>BCP - CTA. AHORROS:</b> 191-93277552-0-47</li>
+                            <li><b>BCP - CTA. INTERBANCARIA:</b> 002-191-193277552047-54</li>
+                        </ul>
                     <li>En unos días enviaremos tus stickers a cualquier parte del Perú en la que te encuentres.</li>
+                    </div>
                 </ol>    
             </div>
-            <div class="col-md-2"></div>
+            <!-- <div class="col-md-1"></div> -->
         </div>
         
     </div>
@@ -70,47 +76,59 @@ Stickers personalizados y más
             </div>
         </div>
 
-        <div class="row margin-top3">
+        <div class="row margin-bottom5 margin-top3">
 
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" width="150px" height="150px">
-            </div>
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cats/cat-1.jpg' %}" width="150px" height="150px">
-            </div>
-            <div class="col-md-3">
-                <img src="{% static 'img/pines/fantasmas.jpg' %}" width="150px" height="150px">
-            </div>
-
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/dogs/dog-2.jpg.png' %}" width="150px" height="150px">
-            </div>
-
+                <div class="text-center col-md-4">
+                    <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
+                </div>
+                <div class="col-md-4">
+                        <img src="{% static 'img/stickers/dogs/cute_dog.jpg' %}" width="240px" height="220px">
+                </div>
+                <div class="text-center col-md-4">
+                    <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
+                </div>
+    
         </div>
 
+        <div class="row margin-bottom5 margin-top3 margin-bottom5">
 
-
-        <div class="row margin-top5">
-
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/dogs/dog-2 (2).jpg' %}" width="150px" height="150px">
-            </div>
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cats/black-cat.jpg' %}" width="150px" height="150px">
-            </div>
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cartoons/kids.jpg' %}" width="150px" height="150px">
-            </div>
-
-            <div class="col-md-3">
-                <img src="{% static 'img/stickers/cartoons/kids-2.jpg' %}" width="150px" height="150px">
-            </div>
-
+                <div class="text-center col-md-4">
+                    <img src="{% static 'img/clientes/armamento.jpg' %}" width="240px" height="220px">
+                </div>
+                <div class="text-center col-md-4">
+                    <img src="{% static 'img/clientes/gustavo.jpg' %}" width="240px" height="220px">
+                </div>
+                <div class="text-center col-md-4">
+                    <img src="{% static 'img/clientes/unicornio.jpg' %}" width="240px" height="220px">
+                </div>
+    
         </div>
+
 
     </div>
 
 </div>
 </div>
+
+<!-- Modal Image -->
+<div class="modal fade" id="StickersClientes-dog-1" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <img class="card-img-top" src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" alt="Card image cap">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $(".dog-1").click(function () {
+        $("#StickersClientes-dog-1").modal('show');
+    });
+</script>
 
 {% endblock %}

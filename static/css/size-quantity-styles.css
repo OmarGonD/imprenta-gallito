@@ -13,13 +13,13 @@
 
 
 .semi-transparent {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 20px
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 30px
 }
 
 .padded {
     padding: 20px;
-    padding: .2rem;
+    padding: .4rem;
 }
 
 .bg-white {
@@ -58,12 +58,16 @@ form ul {
 form ul li {
     display: flex;
     justify-content: space-between;
-    width: 200px;
     text-align: left;
+    font-size: 1.4em;
 }
 
 #quantity .form-items li {
     display: table;
+    width: 100%;
+}
+
+#size .form-items li {
     width: 100%;
 }
 
@@ -74,7 +78,7 @@ form ul li {
 
 .savings {
     color: #28a745;
-    font-size: 12px;
+    font-size: 0.9em;
 }
 
 
