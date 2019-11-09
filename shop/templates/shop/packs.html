@@ -51,7 +51,7 @@ Mira nuestros productos - Stickers Gallito
             <!--Table head-->
             <thead>
                 <tr>
-                    <th style="width: 5%">#</th>
+                    <!-- <th style="width: 5%">#</th> -->
                     <th style="width: 20%"></th>
                     <th style="width: 25%">Pack</th>
                     <th style="width: 25%">Descripción</th>
@@ -65,7 +65,7 @@ Mira nuestros productos - Stickers Gallito
             <tbody>
                 {% for pack in packs %}
                 <tr>
-                    <th scope="row">{{ pack.id }}</th>
+                    <!-- <th scope="row">{{ pack.id }}</th> -->
                     <td> <a class="btn" data-toggle="modal" href="#PackFullImage{{ pack.sku }}"><img class=""
                                 src="{{ pack.image.url }}" alt="{{ pack.name }}" width="90px" height="60px"></a></td>
                     <td><b>{{ pack.name }}</b><br><b>Cantidad:</b> {{ pack.quantity }} <br> <b>Tamaño:</b> varios</td>
