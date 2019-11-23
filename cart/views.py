@@ -472,27 +472,34 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
         if cupon.free_shipping:
             descuento = costo_despacho
         elif cupon.hard_discount:
-            descuento = int(cupon.hard_discount)
+            descuento = round(Decimal(cupon.hard_discount),2)
         elif cupon.percentage:
             cupon_percentage = int(cupon.percentage) / int(100)
-            descuento = total * cupon_percentage
+            print(cupon_percentage)
+            descuento = round(total * Decimal(cupon_percentage),2)
     else:
         descuento = 0
         
+    
+    ###############################
     #Monto mínimo para FreeShipping
-    free_shipping_min_amount = 200
+    ###############################
 
-    if descuento:    
-        #Si hay descuento, se cobra shipping
-        total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
-    elif not descuento and total >= free_shipping_min_amount:
-        #Si NO hay descuento y total > free_shipping_min_amount: no se cobra despacho
-        total_a_pagar = Decimal(total) - Decimal(descuento)
-        costo_despacho = 0
-    else:
-        total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)    
+    free_shipping_min_amount = 2000 # Un número muy alto.
 
+    # if descuento:    
+    #     #Si hay descuento, se cobra shipping
+    #     total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
+    # elif not descuento and total >= free_shipping_min_amount:
+    #     #Si NO hay descuento y total > free_shipping_min_amount: no se cobra despacho
+    #     total_a_pagar = Decimal(total) - Decimal(descuento)
+    #     costo_despacho = 0
+    # else:
+    #     total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)    
 
+    ################################
+
+    total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
 
     return render(request, 'cart.html',
                       dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items,

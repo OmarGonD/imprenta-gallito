@@ -78,13 +78,13 @@ Stickers personalizados y más
 
         <div class="row margin-bottom5 margin-top3">
 
-                <div class="text-center col-md-4">
+                <div class="text-center col-md-4 djnaoki">
                     <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 cutedog">
                         <img src="{% static 'img/clientes/cute_dog.jpg' %}" width="240px" height="220px">
                 </div>
-                <div class="text-center col-md-4">
+                <div class="text-center col-md-4 cocodrilo">
                     <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
                 </div>
     
@@ -92,13 +92,13 @@ Stickers personalizados y más
 
         <div class="row margin-bottom5 margin-top3 margin-bottom5">
 
-                <div class="text-center col-md-4">
+                <div class="text-center col-md-4 armamento">
                     <img src="{% static 'img/clientes/armamento.jpg' %}" width="240px" height="220px">
                 </div>
-                <div class="text-center col-md-4">
+                <div class="text-center col-md-4 gustavo">
                     <img src="{% static 'img/clientes/gustavo.jpg' %}" width="240px" height="220px">
                 </div>
-                <div class="text-center col-md-4">
+                <div class="text-center col-md-4 unicornio">
                     <img src="{% static 'img/clientes/unicornio.jpg' %}" width="240px" height="220px">
                 </div>
     
@@ -110,13 +110,16 @@ Stickers personalizados y más
 </div>
 </div>
 
+<!-- ######## -->
+<!--DJ  NAOKI -->
+
 <!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-dog-1" tabindex="-1" role="dialog"
+<div class="modal fade" id="StickersClientes-DJNaoki" tabindex="-1" role="dialog"
 aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/stickers/dogs/dog-1-sticker.jpg' %}" alt="Card image cap">
+            <img class="card-img-top" src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" alt="Card image cap">
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -126,8 +129,129 @@ aria-labelledby="exampleModalLongTitle" aria-hidden="true">
 </div>
 
 <script>
-    $(".dog-1").click(function () {
-        $("#StickersClientes-dog-1").modal('show');
+    $(".djnaoki").click(function () {
+        $("#StickersClientes-DJNaoki").modal('show');
+    });
+</script>
+
+<!-- ######## -->
+<!-- CUTE DOG -->
+<!-- Modal Image -->
+<div class="modal fade" id="StickersClientes-CuteDog" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <img class="card-img-top" src="{% static 'img/clientes/cute_dog.jpg' %}" alt="Card image cap">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $(".cutedog").click(function () {
+        $("#StickersClientes-CuteDog").modal('show');
+    });
+</script>
+
+<!-- ######### -->
+<!-- COCODRILO -->
+
+<!-- Modal Image -->
+<div class="modal fade" id="StickersClientes-Cocodrilo" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <img class="card-img-top" src="{% static 'img/clientes/cocodrilo_m.JPG' %}" alt="Card image cap">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $(".cocodrilo").click(function () {
+        $("#StickersClientes-Cocodrilo").modal('show');
+    });
+</script>
+
+<!-- ######### -->
+<!-- ARMAMENTO -->
+
+<!-- Modal Image -->
+<div class="modal fade" id="StickersClientes-Armamento" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <img class="card-img-top" src="{% static 'img/clientes/armamento.jpg' %}" alt="Card image cap">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $(".armamento").click(function () {
+        $("#StickersClientes-Armamento").modal('show');
+    });
+</script>
+
+<!-- ######### -->
+<!-- GUSTAVO   -->
+
+<!-- Modal Image -->
+<div class="modal fade" id="StickersClientes-Gustavo" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <img class="card-img-top" src="{% static 'img/clientes/gustavo.jpg' %}" alt="Card image cap">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $(".gustavo").click(function () {
+        $("#StickersClientes-Gustavo").modal('show');
+    });
+</script>
+
+
+
+<!-- ######### -->
+<!-- UNICORNIO -->
+
+<!-- Modal Image -->
+<div class="modal fade" id="StickersClientes-Unicornio" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <img class="card-img-top" src="{% static 'img/clientes/unicornio.jpg' %}" alt="Card image cap">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    $(".unicornio").click(function () {
+        $("#StickersClientes-Unicornio").modal('show');
     });
 </script>
 

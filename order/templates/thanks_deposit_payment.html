@@ -158,7 +158,11 @@ Gracias por su compra - Stickers Gallito
 
             <p><b>El total de su pedido es: S/{{ transaction.total }}</b></p>
 
+            {% if transaction.discount %}
+                <p><i>Costo de los stickers: S/ {{ revenue }} - Descuento: S/ {{ transaction.discount }} + Costo del envío: S/ {{ transaction.shipping_cost }}</i></p>
+            {% else %}
             <p><i>Costo de los stickers: S/ {{ revenue }} + Costo del envío: S/ {{ transaction.shipping_cost }}</i></p>
+            {% endif %}    
 
 
             <p>(A pagar en las siguientes 48 horas para hacer efectivo su pedido).</p>
@@ -291,13 +295,13 @@ Gracias por su compra - Stickers Gallito
                 </tr>
                 <tr>
                     <td class="padding-top3" valign="top" colspan="9" style="width: 50%">
-                        <p><b>Enviar a:</b>{{ transaction.first_name }} {{ transaction.last_name }}</p>
+                        <p><b>Enviar a: </b>{{ transaction.first_name }} {{ transaction.last_name }}</p>
                         <ul id="shipping_items_list">
-                            <li><b>Dirección:</b> <i>{{ transaction.shipping_address }}</i></li>
-                            <li><b>Distrito:</b> <i>{{ transaction.shipping_district }}</i></li>
-                            <li><b>Provincia:</b> <i>{{ transaction.shipping_province }}</i></li>
-                            <li><b>Departamento:</b><i>{{ transaction.shipping_department }}</i></li>
-                            <li><b>Celular:</b><i>{{ transaction.phone_number }}</i></li>
+                            <li><b>Dirección: </b> <i>{{ transaction.shipping_address }}</i></li>
+                            <li><b>Distrito: </b> <i>{{ transaction.shipping_district }}</i></li>
+                            <li><b>Provincia: </b> <i>{{ transaction.shipping_province }}</i></li>
+                            <li><b>Departamento: </b><i>{{ transaction.shipping_department }}</i></li>
+                            <li><b>Celular: </b><i>{{ transaction.phone_number }}</i></li>
                         </ul>
                     </td>
                     <td class="padding-top3" valign="top" colspan="6" style="width: 50%">
