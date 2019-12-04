@@ -844,10 +844,11 @@ class CatalogoListView(ListView):
 
     model = UnitaryProduct
     template_name = "shop/catalogo.html"
-    paginate_by = 10
+    paginate_by = 9
 
     def get_queryset(self):
         filter_val = self.request.GET.get('filtro', 'todas')
+        filter_val = filter_val.lower()
         order = self.request.GET.get('orderby', 'created')
         if filter_val == "todas":
             context = UnitaryProduct.objects.all().filter(available=True).order_by('-created')
@@ -856,7 +857,6 @@ class CatalogoListView(ListView):
             context = UnitaryProduct.objects.filter(
                 subcategory2=filter_val,
             ).filter(available=True).order_by('-created')
-            
             return context
 
     def get_context_data(self, **kwargs):
@@ -864,6 +864,9 @@ class CatalogoListView(ListView):
         context['filtro'] = self.request.GET.get('filtro', 'todas')
         context['orderby'] = self.request.GET.get('orderby', 'created')
         context['category'] = Category.objects.get(slug="catalogo")
+        context['total_stickers'] = UnitaryProduct.objects.all().count()
+        context['product_count'] = self.get_queryset().count()
+        
         return context
 
 

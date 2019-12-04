@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load embed_video_tags %}
+{% load range %}
 {% block metadescription %}
 {% if category %}
 {{ category.description|truncatewords:155 }}
@@ -20,8 +21,6 @@ Mira nuestros productos - Stickers Gallito
 
 
 
-
-
 <div class="my_header_categories my_header_bg_color  margin-top3">
     <div class="container padding-top3">
         <p class="my_category_title">{{ category.name|title }}</p>
@@ -36,37 +35,76 @@ Mira nuestros productos - Stickers Gallito
 </div>
 
 
-
-
 <div class="container margin-top5">
-
-    <!--### Filter ###-->
-    <div class="row margin-top5 margin-bottom5 ">
-        <form method="get" action="{% url 'shop:catalogo' %}">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Categorías</label>
-                </div>
-                <select class="custom-select" searchable="Search here.." value={{filtro}} name="filtro">
-                    <option value="todas" disabled selected>Seleccionar categoría</option>
-                    <option value="todas">Todas</option>
-                    <option value="celulares">Celulares</option>
-                    <option value="programacion">Programación</option>
-                    <option value="videojuegos">Videojuegos</option>
-                    <option value="cine">Cine</option>
-                    <option value="series">Series de TV</option>
-                    <option value="anime">Anime</option>
-                    <option value="musica">Música</option>
-                </select>
-                <div class="input-group-append">
-                    <input class="btn btn-outline-secondary" type="submit" name="buscar" value="Buscar" style="margin-bottom: 0px;" />
-                </div>
-            </div>
-        </form>
+    <div class="margin-bottom5">
+        <h2> Actualmente contamos con {{ total_stickers }} stickers en nuestro catálogo</h2>
+        <span>Revisa todos utilizando nuestro filtro por categoría y la páginación del lado derecho.</span>
+        <p>Agrega todos los que quieras a tu carrito de compras que nosotros los enviaremos hasta tu domicilio
+            &#128513;.</p>
+        {% if product_count == 1 %}
+            <h3>En esta categoría tenemos: {{ product_count }} sticker.</h3>
+        {% else %}
+            <h3>En esta categoría tenemos: {{ product_count }} stickers.</h3>
+        {% endif %}
     </div>
 
+    <!--### Filter ###-->
+    <!-- <div class="row margin-top5 margin-bottom5 "> -->
+    <div class="d-flex justify-content-between margin-bottom5">
+        <div class="">
+            <form method="get" action="{% url 'shop:catalogo' %}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Categorías</label>
+                    </div>
+                    <select class="custom-select" searchable="Search here.." value={{filtro}} name="filtro">
+                        <option value="todas" disabled selected>Seleccionar categoría</option>
+                        <option value="todas">Todas</option>
+                        <option value="celulares">Celulares</option>
+                        <option value="programacion">Programación</option>
+                        <option value="videojuegos">Videojuegos</option>
+                        <option value="cine">Cine</option>
+                        <option value="series">Series de TV</option>
+                        <option value="anime">Anime</option>
+                        <option value="musica">Música</option>
+                    </select>
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" name="buscar" value="Buscar"
+                            style="margin-bottom: 0px;" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="">
+            {% if is_paginated %}
+            <nav>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}"><span class="page-link">Anterior</span></a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a href="catalogo?page={{ i }}"><span class="page-link">{{ i }}</span></a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a href="catalogo?page={{ page_obj.next_page_number }}"><span class="page-link">Siguiente</span></a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                {% endif %}
+            </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+    <!-- </div> -->
 
     <!--### Filter ###-->
+
 
 
 
@@ -113,8 +151,8 @@ Mira nuestros productos - Stickers Gallito
 
                     $(".agregar-unitary-product-btn-for-{{ unitary_product.sku }}").click(function () {
 
-                        var unitary_product_quantity_for_{{ unitary_product.sku }} = $('.unitary_product_quantity_for_{{ unitary_product.sku }}').val();
-                        var cart_items_counter_bg = $("#shopping-cart").css('background'); // stores original background
+                    var unitary_product_quantity_for_{{ unitary_product.sku }} = $('.unitary_product_quantity_for_{{ unitary_product.sku }}').val();
+                    var cart_items_counter_bg = $("#shopping-cart").css('background'); // stores original background
                     $.post("{% url 'shop:AddUnitaryProduct' %}", {
                         c_slug: "{{ unitary_product.category.slug }}",
                         product_slug: "{{ unitary_product.slug }}",

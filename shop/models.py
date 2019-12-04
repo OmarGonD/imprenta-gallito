@@ -115,7 +115,7 @@ class UnitaryProduct(models.Model):
     description = models.TextField(blank=True)
     size = models.CharField(max_length=20, blank=True, null=True)
     quantity = models.CharField(default=1, max_length=20, blank=True, null=True)
-    price = models.DecimalField(default=10, decimal_places=2, max_digits=4)
+    price = models.DecimalField(default=2, decimal_places=2, max_digits=4)
     image = models.ImageField(upload_to='unitaryproducts', blank=True, null=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

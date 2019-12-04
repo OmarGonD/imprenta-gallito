@@ -150,13 +150,13 @@ Gracias por su compra - Stickers Gallito
             <br>
             <br>
             <br>
-            <h1 class="text-center my_title">
+            <h1 class="text-center thank_you_title">
                 ¡Gracias por confiar en Stickers Gallito!
             </h1>
             <br>
-            <p>El número de su orden es: <b>#{{ transaction.id }}</b></p>
+            <h2 class="margin-bottom3">El número de su orden es: <b>#{{ transaction.id }}</b></h2>
 
-            <p><b>El total de su pedido es: S/{{ transaction.total }}</b></p>
+            <p>El total de su pedido es: <b></b>S/{{ transaction.total }}</b></p>
 
             {% if transaction.discount %}
                 <p><i>Costo de los stickers: S/ {{ revenue }} - Descuento: S/ {{ transaction.discount }} + Costo del envío: S/ {{ transaction.shipping_cost }}</i></p>
@@ -169,7 +169,7 @@ Gracias por su compra - Stickers Gallito
             <p class="text-center"><b> También le hemos enviado un correo electrónico con los detalles de su orden
                     :).</b></p>
 
-            <p class="text-center my_title margin-top6">Cuenta bancaria a donde hacer el depósito:</p>
+            <p class="text-center my_title margin-top5">Cuenta bancaria a donde hacer el depósito:</p>
 
             <div class="row margin-top3">
 
@@ -203,43 +203,11 @@ Gracias por su compra - Stickers Gallito
                         </tboyd>
                     </table>
                 </div>
-
-                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-                        INTERBANK
-        
-        
-                       <table class="table my_custom_table_deposit_payment">
-        
-                            <thead class="my_custom_thead">
-        
-                            <tr>
-                                <th>
-                                    INTERBANK
-                                </th>
-                            </tr>
-                            </thead>
-                            <tboyd>
-        
-                                <tr>
-                                    <td class="text-left">
-                                        <p class="text-center"><b>CTA. AHORROS:</b> 200‑3001651127</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">
-                                        <p class="text-center"><b>CTA. INTERBANCARIA:</b> 003-200-003001651127-38</p>
-                                    </td>
-                                </tr>
-        
-                            </tboyd>
-                        </table>
-                    </div> -->
             </div>
 
-            <hr>
+            <h5 class="margin-top3 margin-bottom3">Recuerda que también puedes <b>Yapéarnos</b> a este número: +51963305265</h5>
             <p class="text-center my_title margin-top6">Detalles de la compra:</p>
-            <br>
-            <table>
+            <table class="margin-top5">
                 <tr>
                     <td colspan="5" class="top_row td_text_center padding-top2">
                         <p class="text_white">Número de orden: </p>
