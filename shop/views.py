@@ -864,7 +864,7 @@ class CatalogoListView(ListView):
         context['filtro'] = self.request.GET.get('filtro', 'todas')
         context['orderby'] = self.request.GET.get('orderby', 'created')
         context['category'] = Category.objects.get(slug="catalogo")
-        context['total_stickers'] = UnitaryProduct.objects.all().count()
+        context['total_stickers'] = UnitaryProduct.objects.filter(available=True).count()
         context['product_count'] = self.get_queryset().count()
         
         return context
