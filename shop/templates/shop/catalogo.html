@@ -80,7 +80,7 @@ Mira nuestros productos - Stickers Gallito
             <nav>
             <ul class="pagination">
                 {% if page_obj.has_previous %}
-                <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}"><span class="page-link">Anterior</span></a></li>
+                <li class="page-item"><a href="catalogo?filtro={{ filtro }}&Buscar&page={{ page_obj.previous_page_number }}"><span class="page-link">Anterior</span></a></li>
                 {% else %}
                 <li class="page-item disabled"><span class="page-link">Anterior</span></li>
                 {% endif %}
@@ -88,11 +88,11 @@ Mira nuestros productos - Stickers Gallito
                     {% if page_obj.number == i %}
                     <li class="page-item active"><span class="page-link">{{ i }}</span></li>
                     {% else %}
-                    <li class="page-item"><a href="catalogo?page={{ i }}"><span class="page-link">{{ i }}</span></a></li>
-                    {% endif %}
+                    <li class="page-item"><a href="catalogo?filtro={{ filtro }}&Buscar&page={{ i }}"><span class="page-link">{{ i }}</span></a></li>
+                    {% endif %}   
                 {% endfor %}
                 {% if page_obj.has_next %}
-                <li class="page-item"><a href="catalogo?page={{ page_obj.next_page_number }}"><span class="page-link">Siguiente</span></a></li>
+                <li class="page-item"><a href="catalogo?filtro={{ filtro }}&Buscar&page={{ page_obj.next_page_number }}"><span class="page-link">Siguiente</span></a></li>
                 {% else %}
                 <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
                 {% endif %}
