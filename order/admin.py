@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, OrderSummary
+from django.db.models import Sum, Count, F
+
 
 
 
@@ -38,8 +40,10 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'status', 'first_name', 'last_name', 'phone_number', 'email', 'total', 'discount', 'created', 'shipping_cost', 'comments']
     list_editable = ['status']
     list_display_links = ('id', 'email')
+    list_filter = ('status', )
     search_fields = ['token', 'shipping_department', 'email']
     readonly_fields = ['id','created', 'total', 'stickers_price', 'discount', 'shipping_cost', 'comments']
+    date_hierarchy = 'created'
 
     fieldsets = [
         ('ORDER INFORMATION', {'fields': ['id','status', 'total', 'stickers_price', 'shipping_cost', 'discount', 'comments', 'created']}),
@@ -59,22 +63,52 @@ class OrderAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+      
+
 
 
 
 
 #####################
+from django.db.models import Func
 
+class Round(Func):
+  function = 'ROUND'
+  arity = 2
 
-# class OrderAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'email', 'total', 'reason', 'created']
-#     list_editable = ['reason',]
-#
-#     readonly_fields = ('id',)
-#     class Meta:
-#         ordering = ('id',)
-#         verbose_name = 'Order'
-#         verbose_name_plural = 'Orders'
-#
-#
-# admin.site.register(Order, OrderAdmin)
+@admin.register(OrderSummary)
+class OrderSummaryAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/order_summary_change_list.html'
+    date_hierarchy = 'created'
+
+    def changelist_view(self, request, extra_context=None):
+        response = super().changelist_view(
+            request,
+            extra_context=extra_context,
+        )
+        try:
+            qs = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+        
+        metrics = {
+            'num': Count('id'),
+            'total_sales': Round(Sum('total'),2),
+            'total_shipping_cost': Round(Sum('shipping_cost'), 2),
+            'total_no_shipping_cost': Round(Sum(F('total') - F('shipping_cost')),2),
+        }
+
+        response.context_data['summary'] = list(
+            qs
+            .values('id','total', 'shipping_cost')
+            .annotate(**metrics)
+            .order_by('-created')
+        )
+
+        response.context_data['summary_total'] = dict(
+            qs.aggregate(**metrics)
+        )
+       
+        return response
+
+       

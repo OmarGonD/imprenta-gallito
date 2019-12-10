@@ -35,6 +35,11 @@ class Cupons(models.Model):
         return self.cupon + " - " + str(self.active)
 
 
+class Promotions(models.Model):
+    packs_3x2 = models.BooleanField(default=False, blank=True, null=True)
+    stickers_unitarios_3x2 = models.BooleanField(default=False, blank=True, null=True)
+
+
 
 ### Registra que usuario hizo uso del cupon y cual fue su orden ###
 ### Esto nos servira para evitar que un mismo usuario use el cupon 2 o más veces ###

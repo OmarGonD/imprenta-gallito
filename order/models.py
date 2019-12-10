@@ -109,3 +109,10 @@ class OrderItem(models.Model):
 
 
 
+## ORDERS SUMMARY
+
+class OrderSummary(Order): #Extends funcs of model without creating a table in DB
+    class Meta:
+        proxy = True #important A proxy model extends the functionality of another model without creating an actual table in the database
+        verbose_name = 'Order Summary'
+        verbose_name_plural = 'Orders Summary'

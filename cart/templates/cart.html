@@ -169,35 +169,68 @@ Carrito de compras - Stickers Gallito
 
                     {% for pack_item in pack_items %}
 
+                        {% if pack_item in packs_with_min_prices %} <!--Adds free class when 3X2 is active-->
 
-                    <tr>
-                        {% if pack_item.file_a %}
-                        <td>
-                            <img src="{{ pack_item.file_a.url }}" alt="" class="float-left rounded" width="90"
-                                height="60">
-                        </td>
+                            <tr bgcolor="#6EEECB">
+                                {% if pack_item.file_a %}
+                                <td>
+                                    <img src="{{ pack_item.file_a.url }}" alt="" class="float-left rounded" width="90"
+                                        height="60">
+                                </td>
+                                {% else %}
+                                <td>
+                                    <img src="{{ pack_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
+                                        height="60">
+                                </td>
+                                {% endif %}
+
+                                <td class="text-left">
+                                    <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
+                                    <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>
+                                    <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
+                                </td>
+                                <td>
+                                    <p>S/{{ pack_item.sub_total }}
+
+                                        <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}"
+                                            class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
+                                    </p>
+                                </td>
+                                <td></td>
+
+                            </tr>
+
                         {% else %}
-                        <td>
-                            <img src="{{ pack_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
-                                height="60">
-                        </td>
+
+                            <tr>
+                                    {% if pack_item.file_a %}
+                                    <td>
+                                        <img src="{{ pack_item.file_a.url }}" alt="" class="float-left rounded" width="90"
+                                            height="60">
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <img src="{{ pack_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
+                                            height="60">
+                                    </td>
+                                    {% endif %}
+
+                                        <td class="text-left">
+                                            <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
+                                            <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>
+                                            <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
+                                        </td>
+                                        <td>
+                                            <p>S/{{ pack_item.sub_total }}
+
+                                                <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}"
+                                                    class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
+                                            </p>
+                                        </td>
+                                        <td></td>
+                            </tr>
+
                         {% endif %}
-
-                        <td class="text-left">
-                            <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
-                            <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>
-                            <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
-                        </td>
-                        <td>
-                            <p>S/{{ pack_item.sub_total }}
-
-                                <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}"
-                                    class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-                            </p>
-                        </td>
-                        <td></td>
-
-                    </tr>
 
                     {% endfor %}
 
@@ -266,20 +299,27 @@ Carrito de compras - Stickers Gallito
                         <td class="text-left">
                             <div class="row">
                                 <div class="col-6">
-                                    Total: <b>S/{{ total }}</b><br>
+                                    Total: <b>S/ {{ total }}</b><br>
                                     {% if user.is_authenticated %}
                                         {% if costo_despacho == 0 %}
                                             Costo de envío: ¡ENVÍO GRATIS!<br>
                                         {% else %}
-                                            Costo de envío: S/{{ costo_despacho }}<br>
+                                            Costo de envío: S/ {{ costo_despacho }}<br>
                                         {% endif %}        
-                                    Descuento: <span class="savings"><b> - S/{{ descuento }}</b></span><br>
+                                    Descuento por cupón: <span class="savings"><b> - S/ {{ descuento }}</b></span><br>
+                                    {% if packs_with_min_prices %}
+                                    Packs 3x2 descuento: <span class="savings"><b>- S/ {{ discount_packs_promo_3x2 }}</b></span><br>
+                                    {% endif %}
                                     <hr>
-                                    A pagar: <strong>S/{{ total_a_pagar }}</strong><br>
+                                   
+                                    A pagar: <strong>S/ {{ total_a_pagar }}</strong><br>
                                     {% else %}
-                                    Costo de envío: <b>Regístrese para poder brindarle el costo de envío.</b><br>
-                                    Descuento: <span class="savings"><b>S/{{ descuento }}</b></span><br>
-                                    A pagar: S/{{ total }} + costo de envío<br>
+                                        Costo de envío: <b>Regístrese para poder brindarle el costo de envío.</b><br>
+                                        Descuento por cupón: <span class="savings"><b>S/ {{ descuento }}</b></span><br>
+                                        {% if packs_with_min_prices %}
+                                            Packs 3x2 descuento: <span class="savings"><b>- S/ {{ discount_packs_promo_3x2 }}</b></span><br>
+                                        {% endif %}
+                                    A pagar: S/ {{ total }} + costo de envío<br>
                                     {% endif %}
 
                                 </div>

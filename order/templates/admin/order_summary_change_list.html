@@ -1,0 +1,69 @@
+{% extends "admin/change_list.html" %}
+{% load humanize %}
+{% load percentof %}
+
+{% block content_title %}
+    <h1> Sales Summary </h1>
+{% endblock %}
+{% block result_list %}
+<div class=”results”>
+    <table>
+        
+    <thead>
+      <tr>
+        <th>
+          <div class=”text”>
+            <a href=”#”># ÓRDENES</a>
+          </div>
+        </th>
+        <th>
+          <div class=”text”>
+            <a href=”#”>TOTAL VENTAS</a>
+          </div>
+        </th>
+        <th>
+            <div class=”text”>
+              <a href=”#”>
+                <strong>TOTAL NO SHIPPING</strong>
+              </a>
+            </div>
+          </th>
+        <th>
+          <div class=”text”>
+            <a href=”#”>
+              <strong>SHIPPING COST</strong>
+            </a>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for row in summary %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+          <td> {{ row.id }}  </td>
+          <td> {{ row.total | intcomma }} </td>
+          <td> S/ {{ row.total_no_shipping_cost | default:0 | intcomma }} </td>
+          <td> S/ {{ row.shipping_cost | default:0 | intcomma }} </td>
+          <td> {{ row.total_no_shipping_cost | percentof:summary_total.total_no_shipping_cost }} %</td>
+        </tr>
+
+        {% endfor %}
+        <tr style="font-weight:bold; border-top:2px solid #DDDDDD;">
+            <td> # {{ summary_total.num | intcomma }} </td>
+            <td> S/ {{ summary_total.total_sales | intcomma }} </td>
+            <td> S/ {{ summary_total.total_no_shipping_cost | default:0 }} </td>
+            <td> S/ {{ summary_total.total_shipping_cost | default:0 }} </td>
+            <td>  
+                <strong>
+                100%
+                </strong> 
+            </td>
+        </tr>
+      </tbody>
+
+      
+    
+  </table>
+</div>
+{% endblock %}
+{% block pagination %}{% endblock %}

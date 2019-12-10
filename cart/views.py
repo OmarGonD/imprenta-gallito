@@ -14,6 +14,7 @@ from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from marketing.models import Cupons
 from decimal import Decimal
+import itertools
 
 
 # Create your views here.
@@ -405,7 +406,14 @@ def cart_charge_deposit_payment(request):
 
 ###############################################
 ###############################################
+def grouper(iterable, n, fillvalue=None):
+    args = [iter(iterable)] * n
+    return zip(*args)
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]    
 
 def cart_detail(request, total=0, counter=0, cart_items=None):
     
@@ -436,11 +444,47 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     categories = Category.objects.exclude(name='Muestras')
 
+    ################################
+    ### PACK ITEMS PROMOTION 3X2 ###
+    ################################
+    
     pack_items = PackItem.objects.filter(cart=cart)
 
-    for pack_item in pack_items:
-        total += Decimal(pack_item.sub_total())
-       
+    ### Make it condition of 3X2 variable ###
+
+    from django.conf import settings
+
+    
+    if settings.PACKS3X2:
+    
+        pack_items_grouped_by_3 = chunks(pack_items, 3)
+        
+        packs_with_min_prices = list()
+        
+        for e in pack_items_grouped_by_3: #e is a chunk of 3 objects
+            if len(e) == 3:
+                pack_with_min_price = min(e, key=lambda pack: pack.pack.price)
+                packs_with_min_prices.append(pack_with_min_price)
+
+        
+        discount_packs_promo_3x2 = 0
+        for pack_promo in packs_with_min_prices:
+            discount_packs_promo_3x2 += pack_promo.sub_total()         
+
+        for pack_item in pack_items:
+            if pack_item not in packs_with_min_prices:
+                total += Decimal(pack_item.sub_total())
+
+    else:
+
+        packs_with_min_prices = list()
+        discount_packs_promo_3x2 = 0
+        for pack_item in pack_items:
+            total += Decimal(pack_item.sub_total())
+
+
+    ###############################
+
 
     unitary_product_items = UnitaryProductItem.objects.filter(cart=cart)
 
@@ -502,8 +546,8 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
 
     return render(request, 'cart.html',
-                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items,
-                       unitary_product_items = unitary_product_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
+                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items, packs_with_min_prices = packs_with_min_prices,
+                       discount_packs_promo_3x2 = discount_packs_promo_3x2, unitary_product_items = unitary_product_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
                        counter=counter, categories=categories, total_a_pagar=total_a_pagar, descuento=descuento, costo_despacho=costo_despacho))
 
 
