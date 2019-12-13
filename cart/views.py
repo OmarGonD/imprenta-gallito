@@ -448,13 +448,16 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     ### PACK ITEMS PROMOTION 3X2 ###
     ################################
     
+    descuento = 0
+    
     pack_items = PackItem.objects.filter(cart=cart)
 
     ### Make it condition of 3X2 variable ###
 
     from django.conf import settings
 
-    
+    descuento_packs_3x2 = 0
+
     if settings.PACKS3X2:
     
         pack_items_grouped_by_3 = chunks(pack_items, 3)
@@ -466,19 +469,16 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
                 pack_with_min_price = min(e, key=lambda pack: pack.pack.price)
                 packs_with_min_prices.append(pack_with_min_price)
 
-        
-        discount_packs_promo_3x2 = 0
+
         for pack_promo in packs_with_min_prices:
-            discount_packs_promo_3x2 += pack_promo.sub_total()         
+            descuento_packs_3x2 += pack_promo.sub_total()
+            descuento += pack_promo.sub_total()
 
         for pack_item in pack_items:
-            if pack_item not in packs_with_min_prices:
-                total += Decimal(pack_item.sub_total())
+            total += Decimal(pack_item.sub_total())             
 
     else:
 
-        packs_with_min_prices = list()
-        discount_packs_promo_3x2 = 0
         for pack_item in pack_items:
             total += Decimal(pack_item.sub_total())
 
@@ -507,6 +507,8 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     # cupon_used_by_user = used_cupons.objects.filter(user = request.user.username)
 
+    descuento_por_cupon = 0
+
     try:
         cupon = Cupons.objects.get(cupon=request.COOKIES.get("cupon"))
     except:
@@ -514,15 +516,17 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     if cupon:
         if cupon.free_shipping:
-            descuento = costo_despacho
+            descuento_por_cupon += costo_despacho
+            descuento += costo_despacho
         elif cupon.hard_discount:
-            descuento = round(Decimal(cupon.hard_discount),2)
+            descuento_por_cupon += round(Decimal(cupon.hard_discount),2)
+            descuento += round(Decimal(cupon.hard_discount),2)
         elif cupon.percentage:
             cupon_percentage = int(cupon.percentage) / int(100)
             print(cupon_percentage)
-            descuento = round(total * Decimal(cupon_percentage),2)
-    else:
-        descuento = 0
+            descuento_por_cupon += round(total * Decimal(cupon_percentage),2)
+            descuento += round(total * Decimal(cupon_percentage),2)
+   
         
     
     ###############################
@@ -531,24 +535,14 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     free_shipping_min_amount = 2000 # Un número muy alto.
 
-    # if descuento:    
-    #     #Si hay descuento, se cobra shipping
-    #     total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
-    # elif not descuento and total >= free_shipping_min_amount:
-    #     #Si NO hay descuento y total > free_shipping_min_amount: no se cobra despacho
-    #     total_a_pagar = Decimal(total) - Decimal(descuento)
-    #     costo_despacho = 0
-    # else:
-    #     total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)    
+    
 
-    ################################
-
-    total_a_pagar = Decimal(total) - Decimal(descuento) + Decimal(costo_despacho)
+    total_a_pagar = Decimal(total) + Decimal(costo_despacho) - Decimal(descuento_por_cupon) - Decimal(descuento_packs_3x2)
 
     return render(request, 'cart.html',
-                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items, packs_with_min_prices = packs_with_min_prices,
-                       discount_packs_promo_3x2 = discount_packs_promo_3x2, unitary_product_items = unitary_product_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
-                       counter=counter, categories=categories, total_a_pagar=total_a_pagar, descuento=descuento, costo_despacho=costo_despacho))
+                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items, packs_with_min_prices = packs_with_min_prices, descuento = descuento,
+                       descuento_packs_3x2 = descuento_packs_3x2, unitary_product_items = unitary_product_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
+                       counter=counter, categories=categories, total_a_pagar=total_a_pagar, descuento_por_cupon=descuento_por_cupon, costo_despacho=costo_despacho))
 
 
     

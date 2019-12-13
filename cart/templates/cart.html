@@ -299,23 +299,23 @@ Carrito de compras - Stickers Gallito
                         <td class="text-left">
                             <div class="row">
                                 <div class="col-6">
-                                    Total: <b>S/ {{ total }}</b><br>
+                                    Costo stickers: <b>S/ {{ total }}</b><br>
                                     {% if user.is_authenticated %}
                                         {% if costo_despacho == 0 %}
                                             Costo de envío: ¡ENVÍO GRATIS!<br>
                                         {% else %}
                                             Costo de envío: S/ {{ costo_despacho }}<br>
                                         {% endif %}        
-                                    Descuento por cupón: <span class="savings"><b> - S/ {{ descuento }}</b></span><br>
+                                    Descuento por cupón: <span class="savings"><b> - S/ {{ descuento_por_cupon }}</b></span><br>
                                     {% if packs_with_min_prices %}
-                                    Packs 3x2 descuento: <span class="savings"><b>- S/ {{ discount_packs_promo_3x2 }}</b></span><br>
+                                    Packs 3x2 descuento: <span class="savings"><b>- S/ {{ descuento_packs_3x2 }}</b></span><br>
                                     {% endif %}
                                     <hr>
                                    
                                     A pagar: <strong>S/ {{ total_a_pagar }}</strong><br>
                                     {% else %}
                                         Costo de envío: <b>Regístrese para poder brindarle el costo de envío.</b><br>
-                                        Descuento por cupón: <span class="savings"><b>S/ {{ descuento }}</b></span><br>
+                                        Descuento por cupón: <span class="savings"><b>S/ {{ descuento_por_cupon }}</b></span><br>
                                         {% if packs_with_min_prices %}
                                             Packs 3x2 descuento: <span class="savings"><b>- S/ {{ discount_packs_promo_3x2 }}</b></span><br>
                                         {% endif %}
