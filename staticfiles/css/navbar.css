@@ -1,0 +1,47 @@
+/*!* === NavBar === *!*/
+
+
+.navbar-bg {
+    background-color: black;
+}
+
+
+.nav-item {
+    letter-spacing: .1em;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+
+
+nav.navbar{padding: 0 1rem;}
+
+nav.navbar .nav-item {padding:0.2rem 0.2rem}
+
+
+li.nav-item a:hover {
+    color: white;
+}
+
+
+
+li.nav-item:hover {
+  background-color: #585858;
+}
+
+
+/* Highlight ShoppingCart when product is added */
+
+#shopping-cart {
+    background-color:black;
+    -webkit-transition: background 0.5s linear;
+    -moz-transition: background 0.5s linear;
+    -ms-transition: background 0.5s linear;
+    -o-transition: background 0.5s linear;
+    transition: background 0.5s linear;
+  }
+  
+  #shopping-cart.highlighted {
+    background-color:#585858;
+  }

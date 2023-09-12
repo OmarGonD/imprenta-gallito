@@ -1,0 +1,374 @@
+
+.bg-buttons {
+    background-color: rgb(239, 239, 239);
+    border-radius: 10px;
+}
+
+/* BOTONES JUMBOTRON */
+
+a.btn-azul {
+    text-decoration: none;
+    background-color: #5ba4e6;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
+    font-size: 1.4rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border:none;
+  }
+  
+  a.btn-azul:focus {
+      outline:none;
+  }
+  
+  
+  a.btn-azul:hover {
+    text-decoration: none;
+    background-color: #7ab6eb;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
+    font-size: 1.4rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border:none;
+  }
+  
+  
+  a.btn-naranja {
+    text-decoration: none;
+    background-color: #ffa31a;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    background-image: linear-gradient(to bottom,rgba(255,255,250,.09) 0%,rgba(0,0,0,.09) 100%);
+    font-size: 1.4rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border:none;
+  }
+  
+  a.btn-naranja:focus {
+      outline:none;
+  }
+  
+  
+  a.btn-naranja:hover {
+    text-decoration: none;
+    background-color: rgb(221, 133, 1);
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
+    font-size: 1.4rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border:none;
+  }
+  
+  /*seguir comprando a element*/
+  
+  a.btn-seguir-comprando {
+    text-decoration: none;
+    background-color: #616161;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    background-image: linear-gradient(to bottom,rgba(255,255,250,.09) 0%,rgba(0,0,0,.09) 100%);
+    font-size: 1.2rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border:none;
+  }
+  
+  a.btn-seguir-comprando:focus {
+      outline:none;
+  }
+  
+  
+  a.btn-seguir-comprando:hover {
+    text-decoration: none;
+    background-color: rgb(34, 34, 34);
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+    background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
+    font-size: 1.2rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border:none;
+  }
+
+
+
+  /* ==================== */
+  
+  .btn-xlarge {
+      padding: 18px 28px;
+      font-size: 22px;
+      line-height: normal;
+      -webkit-border-radius: 8px;
+         -moz-border-radius: 8px;
+              border-radius: 8px;
+      }
+  
+
+
+/* BOTONES */
+
+
+button.btn-azul {
+    text-decoration: none;
+    background-color: #5ba4e6;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .09) 0%, rgba(0, 0, 0, .09) 100%);
+    font-size: 1.2rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border: none;
+  }
+  
+  
+  button.btn-azul:hover {
+    text-decoration: none;
+    background-color: rgb(35, 114, 184);
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .09) 0%, rgba(0, 0, 0, .09) 100%);
+    font-size: 1.2rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border: none;
+  }
+  
+  button.btn-naranja {
+    text-decoration: none;
+    background-color: #fda622;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    margin-top: -10px;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .09) 0%, rgba(0, 0, 0, .09) 100%);
+    font-size: 1.2rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border: none;
+  }
+  
+  button.btn-naranja:hover {
+    text-decoration: none;
+    background-color: rgb(243, 172, 66);
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+    letter-spacing: 0;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -ms-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -moz-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    -o-box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .09) 0%, rgba(0, 0, 0, .09) 100%);
+    font-size: 1.2rem;
+    padding: 22px 30px;
+    border-radius: 6px;
+    border: none;
+  }
+
+  button.btn:focus {
+    outline: none;
+  }
+  
+
+
+
+  /* Botón Agregar al Carrito */
+
+
+
+a.btn-add-to-cart {
+  text-decoration: none;
+  background-color: #5ba4e6;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 700;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  letter-spacing: 0;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
+  font-size: 1.2rem;
+  padding: 18px 26px;
+  border-radius: 6px;
+  border:none;
+}
+
+a.btn-add-to-cart:focus {
+    outline:none;
+}
+
+
+a.btn-add-to-cart:hover {
+  text-decoration: none;
+  background-color: #7ab6eb;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 700;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  letter-spacing: 0;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -webkit-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  -ms-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  -moz-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  -o-box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.15);
+  background-image: linear-gradient(to bottom,rgba(255,255,255,.09) 0%,rgba(0,0,0,.09) 100%);
+  font-size: 1.2rem;
+  padding: 18px 26px;
+  border-radius: 6px;
+  border:none;
+}
+

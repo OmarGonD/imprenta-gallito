@@ -42,6 +42,8 @@ def allCat(request):
 
 
 def ProdCatDetail(request, c_slug):
+    ### Para mostrar una sección de la página, primero se debe crear su categoría.
+    ### Dependiendo de la categoría, se mostrará la sección: para Comprar, se debe crear la categoría: "stickers", para "muestras", la categoría "muestras".
     print("### INGRESA A PRODCATDETAIL ###")
     print("c_slug is: ", c_slug)
     if c_slug not in ["muestras", "packs"]:

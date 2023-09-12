@@ -573,20 +573,29 @@ def send_email_deposit_payment(order_id):
     order_items = OrderItem.objects.filter(order=transaction)
     revenue = transaction.total - transaction.shipping_cost
     try:
+        print("#Entra a send_email_deposti")
         '''sending the order to the customer'''
         subject = 'Stickers Gallito Perú - Nueva orden #{}'.format(transaction.id)
+        print("###subject")
+        print(subject)
         to = ['{}'.format(transaction.email), 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
+        print("###to")
+        print(to)
         from_email = 'stickersgallito@stickersgallito.pe'
         order_information = {
             'transaction': transaction,
             'order_items': order_items,
             'revenue': revenue
         }
+        print("###order information")
+        print(order_information)
         message = get_template('email/email_deposit_payment.html').render(order_information)
         msg = EmailMessage(subject, message, to=to, from_email=from_email)
         msg.content_subtype = 'html'
         msg.send()
     except IOError as e:
+        print("#Va al except a send_email_deposti")
+        print(e)
         return e
 
 
