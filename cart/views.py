@@ -7,7 +7,6 @@ from django.conf import settings
 from order.models import Order, OrderItem
 from marketing.models import used_cupons
 import uuid
-import culqipy
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 from django.template.loader import get_template

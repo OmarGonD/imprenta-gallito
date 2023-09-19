@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
-{% load embed_video_tags %}
+{% load static %}
 {% block metadescription %}
     {% if category %}
         {{ category.description|truncatewords:155 }}
@@ -83,11 +82,6 @@
             <div class="row col-md-12">
 
                 <p class="text-center">
-
-                    {% video categoria_muestras.video as my_video %}
-
-                    {% video my_video "medium" %}
-                    {% endvideo %}
 
                 </p>
 

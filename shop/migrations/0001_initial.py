@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import embed_video.fields
+
 
 
 class Migration(migrations.Migration):
@@ -23,7 +23,6 @@ class Migration(migrations.Migration):
                 ('slug', models.SlugField(max_length=250, unique=True)),
                 ('description', models.TextField(blank=True)),
                 ('image', models.ImageField(blank=True, null=True, upload_to='category')),
-                ('video', embed_video.fields.EmbedVideoField(blank=True, null=True)),
             ],
             options={
                 'verbose_name': 'category',

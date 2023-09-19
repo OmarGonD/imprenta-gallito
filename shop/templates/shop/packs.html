@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
-{% load embed_video_tags %}
+{% load static %}
 {% block metadescription %}
 {% if category %}
 {{ category.description|truncatewords:155 }}
@@ -175,10 +174,6 @@ Mira nuestros productos - Stickers Gallito
     <div class="col-2 col-md-2"></div>
     <div class="col-8 col-md-8">
 
-        {% video category.video as my_video %}
-
-        {% video my_video "medium" %}
-        {% endvideo %}
 
     </div>
     <div class="col-2 col-md-2"></div>
