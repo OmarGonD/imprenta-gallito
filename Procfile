@@ -1,1 +1,1 @@
-LCA_20092
+web: gunicorn myproject.wsgi
