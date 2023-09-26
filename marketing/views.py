@@ -12,32 +12,6 @@ from django.contrib.auth.models import User
 
 
 
-# Create your views here.
-
-MAILCHIMP_API_KEY = settings.MAILCHIMP_API_KEY
-MAILCHIMP_DATA_CENTER = settings.MAILCHIMP_DATA_CENTER
-MAILCHIMP_EMAIL_LIST_ID = settings.MAILCHIMP_EMAIL_LIST_ID
-
-api_url = f'https://{MAILCHIMP_DATA_CENTER}.api.mailchimp.com/3.0'
-
-members_endpoint = f'{api_url}/lists/{MAILCHIMP_EMAIL_LIST_ID}/members'
-
-
-def subscribe(email):
-    data = {
-        'email_address': email,
-        'status': 'subscribed'
-    }
-    r = requests.post(
-        members_endpoint,
-        auth=HTTPBasicAuth("", MAILCHIMP_API_KEY),
-        data=json.dumps(data)
-    )
-    print(r.status_code)
-    print(r.json())
-    print("Members EndPoint: ",members_endpoint)
-    return r.status_code, r.json()
-
 @csrf_exempt
 def email_signup_form(request):
     form = EmailSignUpForm(request.POST or None)
