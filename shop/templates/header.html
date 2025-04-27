@@ -1,31 +1,38 @@
 {% load static %}
 
-
-<div class="container-fluid my_home_banner my_header_bg_color">
-    <div class="row my_home_banner_content">
-      <div class="col-md-6 my_home_banner-left">
-        <div class="my_home_banner_left">
-          <div class="my_home_banner_lef_text">
-            <p class="my_home_banner_title stickers-word">Stickers</p>
-            <p class="my_home_banner_title personalizados-word">Personalizados</p>
-            <p class="my_home_banner_subtitle my_title"><b>Fáciles de ordenar por internet.</b><br><b>Envíos a todo el Perú.</b></p>
-          </div>
-          <div class="row ">
-            <div class="col-md-6">
-              <a href="stickers" class="my_home_buttons btn btn-azul text-white btn-block">Comprar</a>
+<div id="main-hero-banner" class="container-fluid my_home_banner my_header_bg_color">
+    <div class="row my_home_banner_content" style="position: relative; min-height: 320px;">
+        <div class="col-md-6 my_home_banner-left">
+            <div class="my_home_banner_left">
+                <div class="my_home_banner_lef_text" style="margin-bottom: 32px;">
+                    <p class="my_home_banner_title stickers-word" style="margin-bottom: 8px; font-size:clamp(2rem,5vw,3rem); font-weight:700;">
+                        Stickers
+                    </p>
+                    <p class="my_home_banner_title personalizados-word" style="margin-bottom: 24px; margin-top: 0; font-size:clamp(2rem,5vw,3rem); font-weight:700;">
+                        Personalizados
+                    </p>
+                    <p class="my_home_banner_subtitle my_title" style="margin-bottom: 0; font-size:clamp(1.1rem,2.5vw,1.5rem); line-height:1.5;">
+                        <b>Fáciles de ordenar por internet.</b>
+                        <br>
+                        <b>Envíos a todo el Perú.</b>
+                    </p>
+                </div>
+                <div class="row ">
+                    <div class="col-md-6">
+                        <a href="stickers" class="my_home_buttons btn btn-azul text-white btn-block">Comprar</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/muestras/" class="my_home_buttons btn btn-naranja text-white btn-block">Muestras</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-              <a href="{% url 'shop:SamplePackPage' %}" class="my_home_buttons btn btn-naranja text-white btn-block">Muestras</a>
-            </div>
-          </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <picture>
-          <source media="(max-width: 480px)" srcset="{% static 'img/home/banner_home_mobiles.png' %}">
-          <source media="(max-width: 2056px)" srcset="{% static 'img/home/banner_home_fox.png' %}">
-          <img class="my_home_banner_image" src="{% static 'img/home/banner_home_fox.png' %}">
-        </picture>
-      </div>
+        <div class="col-md-6 d-flex align-items-end justify-content-end" style="min-height: 320px;">
+            <picture class="w-100">
+                <source media="(max-width: 480px)" srcset="{% static 'img/home/banner_home_mobiles.png' %}">
+                <source media="(max-width: 2056px)" srcset="{% static 'img/home/banner_home_fox.png' %}">
+                <img class="my_home_banner_image" src="{% static 'img/home/banner_home_fox.png' %}" style="max-height:220px; width:auto;">
+            </picture>
+        </div>
     </div>
-  </div>
+</div>

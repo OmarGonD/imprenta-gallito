@@ -17,13 +17,8 @@
 
 {% block content %}
 
-
-
-
-
     <div class="my_header_samples">
-
-        <div class="container margin-top3 margin-bottom10">
+        <div class="container margin-bottom10"><!-- removed margin-top3 -->
            <div class="padding-top5">
             <p class="my_samples_title">Sobre con muestras a S/ 5.00</p>
             <p>Cada sobre contiene 5 stickers.</p>
@@ -59,10 +54,13 @@
                 {% for muestra in muestras %}
                     <div class="col-md-4 margin-top3">
                         <div class="text-center">
-                            <a href="{% url 'shop:SampleDetail' muestra.slug %}"><img class="my_image_medium"
-                                                                                      src="{{ muestra.image.url }}"
-                                                                                      alt="{{ muestra.name }}"></a>
-
+                            <a href="{% url 'shop:SampleDetail' muestra.slug %}">
+                                {% if muestra.image %}
+                                    <img class="my_image_medium"
+                                         src="{{ muestra.image.url }}"
+                                         alt="{{ muestra.name }}">
+                                {% endif %}
+                            </a>
                         </div>
                         <p class="text-center"><b>{{ muestra.name }}</b></p>
                     </div>

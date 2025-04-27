@@ -1,0 +1,23 @@
+.my_home_banner_image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+@media (min-width: 3440px) {
+    .my_home_banner_image {
+        max-height: 1440px;
+    }
+}
+
+@media (max-width: 1920px) {
+    .my_home_banner_image {
+        max-height: 1080px;
+    }
+}
+
+@media (max-width: 1366px) {
+    .my_home_banner_image {
+        max-height: 768px;
+    }
+}

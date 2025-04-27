@@ -17,99 +17,73 @@ Stickers personalizados y más
 
 {% block content %}
 
-<div class="container-fluid margin-bottom5 margin-top5">
+<!-- Hero Section -->
+<div id="home-hero" class="container-fluid margin-bottom5 margin-top5">
     <div class="container">
-
         <div class="row margin-top5">
             <div class="col-md-12">
-                <h1 class="text-center">Envíos a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}"
-                        width="40px" height="40px"></h1>
-
+                <h1 class="text-center">Envíos a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}" width="40px" height="40px"></h1>
             </div>
         </div>
         <div class="row" style="margin-bottom: 0%;">
             <div class="col-md-12 margin-top3">
-                <ol style="text-align: left; list-style-position: inside;">
-                    <h2>¿Cómo adquiero mis stickers?</h2>
-                    <div class="margin-top3">
-                    <li>Elige qué tipo de producto deseas: stickers transparentes, stickers cuadrados,
-                    stickers troquelados, etc.</li>
-                    <li>Luego indica el tamaño y la cantidad de stickers que deseas.</li>
-                    <li>Sube tu diseño en nuestra web.</li>
-                    <li>Haz el depósito por tu orden de stickers a nuestra cuenta bancaria:</li> 
-                        <ul>
-                            <li><b>BCP - CTA. AHORROS:</b> 191-93277552-0-47</li>
-                            <li><b>BCP - CTA. INTERBANCARIA:</b> 002-191-193277552047-54</li>
-                        </ul>
-                    <li>O <b>Yapéanos</b> a este número: +51963305265</li>
-                    <li>Para confirmar tu orden deberás enviarnos el voucher o una captura de pantalla del yapeo a nuestro correo: stickersgallito@gmail.com</li>    
-                    <li>En unos días enviaremos tus stickers a cualquier parte del Perú en la que te encuentres.</li>
+                <div class="my_home_banner_left" style="display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="font-size:clamp(1.5rem,3vw,2.2rem); font-weight:700; margin-bottom: 18px; margin-top: 0; letter-spacing: .02em;">
+                        ¿Cómo adquiero mis stickers?
+                    </h2>
+                    <ol style="text-align: left; list-style-position: inside; max-width: 650px; font-size:clamp(1rem,2.5vw,1.15rem); color:#222; line-height:1.7; padding-left:1.2em;">
+                        <li style="margin-bottom: 10px;">Elige qué tipo de producto deseas: stickers transparentes, stickers cuadrados, stickers troquelados, etc.</li>
+                        <li style="margin-bottom: 10px;">Luego indica el tamaño y la cantidad de stickers que deseas.</li>
+                        <li style="margin-bottom: 10px;">Sube tu diseño en nuestra web.</li>
+                        <li style="margin-bottom: 10px;">Haz el depósito por tu orden de stickers a nuestra cuenta bancaria:
+                            <ul style="font-size:0.98em; color:#008965; margin-top: 6px;">
+                                <li><b>BCP - CTA. AHORROS:</b> 191-93277552-0-47</li>
+                                <li><b>BCP - CTA. INTERBANCARIA:</b> 002-191-193277552047-54</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 10px;">O <b>Yapéanos</b> a este número: <span style="color:#FFD700;">+51963305265</span></li>
+                        <li style="margin-bottom: 10px;">Para confirmar tu orden deberás enviarnos el voucher o una captura de pantalla del yapeo a nuestro correo: <span style="color:#008965;">stickersgallito@gmail.com</span></li>
+                        <li style="margin-bottom: 0;">En unos días enviaremos tus stickers a cualquier parte del Perú en la que te encuentres.</li>
+                    </ol>
                 </div>
-                </ol>    
             </div>
-            <!-- <div class="col-md-1"></div> -->
         </div>
-        
     </div>
-
-
-
-    <div class="text-center" style="margin-top: 2%;">
-        <div class="row">
-            <div class="col-md-12">
-                <p class="my_title">¡Suscríbete y recibe nuestras ofertas!</p>
-            </div>
-        </div>
-        <div class="row">
-
-            <div class="col-md-12">
-                {% csrf_token %}
-                <form action="{% url 'marketing:email_signup_form' %}" method="post">
-                    {{ email_signup_form }}
-                    <button type="submit" class="btn">Suscribirse</button>
-                </form>
-            </div>
-        </div>
-
-
-        <div class="row margin-top3">
-            <div class="col-md-12">
-                <p class="my_title">Stickers personalizados en 100% vinyl y laminados para mayor protección.</p>
-            </div>
-        </div>
-
-        <div class="row margin-bottom5 margin-top3">
-
-                <div class="text-center col-md-4 djnaoki">
-                    <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
-                </div>
-                <div class="col-md-4 cutedog">
-                        <img src="{% static 'img/clientes/cute_dog.jpg' %}" width="240px" height="220px">
-                </div>
-                <div class="text-center col-md-4 cocodrilo">
-                    <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
-                </div>
-    
-        </div>
-
-        <div class="row margin-bottom5 margin-top3 margin-bottom5">
-
-                <div class="text-center col-md-4 armamento">
-                    <img src="{% static 'img/clientes/armamento.jpg' %}" width="240px" height="220px">
-                </div>
-                <div class="text-center col-md-4 gustavo">
-                    <img src="{% static 'img/clientes/gustavo.jpg' %}" width="240px" height="220px">
-                </div>
-                <div class="text-center col-md-4 unicornio">
-                    <img src="{% static 'img/clientes/unicornio.jpg' %}" width="240px" height="220px">
-                </div>
-    
-        </div>
-
-
-    </div>
-
 </div>
+
+<!-- Features Section -->
+<div id="home-features" class="container margin-bottom5">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <p class="my_title">Stickers personalizados en 100% vinyl y laminados para mayor protección.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Clientes Section -->
+<div id="home-clientes" class="container margin-bottom5">
+    <div class="row margin-bottom5 margin-top3">
+        <div class="text-center col-md-4 djnaoki">
+            <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
+        </div>
+        <div class="col-md-4 cutedog">
+            <img src="{% static 'img/clientes/cute_dog.jpg' %}" width="240px" height="220px">
+        </div>
+        <div class="text-center col-md-4 cocodrilo">
+            <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
+        </div>
+    </div>
+    <div class="row margin-bottom5 margin-top3">
+        <div class="text-center col-md-4 armamento">
+            <img src="{% static 'img/clientes/armamento.jpg' %}" width="240px" height="220px">
+        </div>
+        <div class="text-center col-md-4 gustavo">
+            <img src="{% static 'img/clientes/gustavo.jpg' %}" width="240px" height="220px">
+        </div>
+        <div class="text-center col-md-4 unicornio">
+            <img src="{% static 'img/clientes/unicornio.jpg' %}" width="240px" height="220px">
+        </div>
+    </div>
 </div>
 
 <!-- ######## -->

@@ -376,6 +376,24 @@
     }
 }
 
+@media (min-width: 1800px) {
+    .my_home_banner_image {
+        position: relative;
+        right: 0;
+        top: 0;
+        margin-top: 40px; /* Push image below navbar */
+        margin-left: auto;
+        margin-right: 0;
+        width: 60%;
+        max-width: 900px;
+        display: block;
+        z-index: 1;
+    }
+    .my_home_banner_content {
+        align-items: center;
+        padding-top: 40px;
+    }
+}
 
 .center-video {
     margin: 0 auto;

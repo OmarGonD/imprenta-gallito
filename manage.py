@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 import os
 import sys
-
-import dotenv
-
+from decouple import AutoConfig  # Use AutoConfig for simplicity
 
 if __name__ == '__main__':
-    dotenv.read_dotenv()
+    config = AutoConfig()  # Automatically loads the .env file
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stickers_gallito.settings')
     try:
         from django.core.management import execute_from_command_line
