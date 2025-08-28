@@ -5,7 +5,7 @@ from decouple import AutoConfig  # Use AutoConfig for simplicity
 
 if __name__ == '__main__':
     config = AutoConfig()  # Automatically loads the .env file
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stickers_gallito.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'imprenta_gallito.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

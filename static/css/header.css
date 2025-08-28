@@ -30,3 +30,22 @@
     margin-top: 0;
     line-height: 1.1;
 }
+
+/* Reduce main-hero-banner height */
+#main-hero-banner,
+.my_home_banner,
+.my_home_banner_content {
+    min-height: 200px !important; /* was 320px, now shorter */
+}
+
+/* Adjust image height for proportionality */
+.my_home_banner_image {
+    max-height: 140px !important; /* was 220px, now shorter */
+}
+
+/* Adjust left section padding for balance */
+.my_home_banner_left,
+.my_home_banner-left {
+    padding-top: 5% !important;
+    padding-bottom: 16px !important;
+}

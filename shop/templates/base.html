@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Stickers Gallito Perú">
+    <meta name="description" content="Imprenta Gallito Perú">
     <meta name="google-site-verification" content="fGkwUY2RcijkVzB6DiwIuAToP1y5xw8ECXQQabRAOIM"/>
     <link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -22,6 +22,10 @@
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/gallito_favicon.png' %}"/>
 
+    <!-- Add Baskerville font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+
     <script
             src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -32,7 +36,56 @@
 
     <!-- Incluyendo Culqi Checkout -->
     <script src="https://checkout.culqi.com/js/v3"></script>
-    <title>Stickers Gallito</title>
+    <title>Imprenta Gallito</title>
+
+    <style>
+        html, body {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+        body, html {
+            font-family: 'Libre Baskerville', Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, Times New Roman, serif !important;
+        }
+        .navbar,
+        #main-hero-banner,
+        .imprenta-gallito-title,
+        #promotional-banner,
+        .promo-banner,
+        .my_header_bg_color,
+        .my_header_categories {
+            font-family: 'Bree Serif', serif !important;
+        }
+        /* Also ensure .imprenta-gallito-title uses its original font */
+        .imprenta-gallito-title {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        /* Main section now occupies full width */
+        .main-section {
+            width: 100vw;
+            max-width: 100vw;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        @media (max-width: 1200px) {
+            .main-section {
+                width: 100vw;
+                max-width: 100vw;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        @media (max-width: 767px) {
+            .main-section {
+                width: 100vw;
+                max-width: 100vw;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    </style>
 
     {% block data_layer %}{% endblock %}
     <!-- Google Tag Manager -->
@@ -62,40 +115,34 @@
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<div class="general-container">
 
-</div>
+<!-- Top Menu -->
+<nav class="navbar navbar-expand-md navbar-dark navbar-bg top-menu" style="margin-bottom:0;">
+    <div class="container">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Sign Up</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+    </div>
+</nav>
 
+{% if has_shop_in_url %}
+    {% include 'header.html' %}
+{% endif %}
 
 {% include 'navbar.html' %}
 
-{% if has_shop_in_url %}
-
-    {% include 'header.html' %}
-
-{% endif %}
-
-{#        {% if "/shop/$" in request.path %}#}
-{#            {% include 'header.html' %}#}
-{#        {% endif %}#}
-
-
-
+<div class="main-section">
 {% block content %}
 {% endblock %}
-
-
-
+</div>
 
 {% include 'footer.html' %}
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-{#    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>#}
-
-
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
 
 </body>
 </html>

@@ -1,12 +1,10 @@
-from django.contrib import admin
 from django.urls import path, re_path
 
 from . import views
 
-app_name = 'shop'
+app_name = "shop"
 
 urlpatterns = [
-    path('admin', admin.site.urls),
     path('', views.allCat, name='allCat'),
     path('packs/', views.PacksPage, name='PacksPage'), #Todos los packs
     path('catalogo', views.CatalogoListView.as_view(), name='catalogo'), #Todos los productos unitarios
@@ -31,5 +29,17 @@ urlpatterns = [
     path('prices/', views.prices, name='prices'),
     path('email_confirmation_needed/', views.email_confirmation_needed, name='email_confirmation_needed'),
     re_path(r'^confirmacion-de-correo-electronico/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        views.activate, name='activate')
+        views.activate, name='activate'),
+    path('tarjetas-de-presentacion/', views.TarjetasPresentacionListView.as_view(), name='tarjetas_presentacion'),
+    path('publicidad-impresa/', views.publicidad_impresa, name='publicidad_impresa'),
+    path('banners-posters/', views.banners_posters, name='banners_posters'),
+    path('etiquetas-stickers/', views.etiquetas_stickers, name='etiquetas_stickers'),
+    path('ropa-bolsos/', views.ropa_bolsos, name='ropa_bolsos'),
+    path('productos-promocionales/', views.productos_promocionales, name='productos_promocionales'),
+    path('empaques/', views.EmpaquesListView.as_view(), name='empaques-list'),
+    path('folletoss/', views.FolletosListView.as_view(), name='folletos-list'),
+    path('posters/', views.PostersListView.as_view(), name='posters'),
+    path('invitaciones-regalos/', views.invitaciones_regalos, name='invitaciones_regalos'),
+    path('bodas/', views.bodas, name='bodas'),
+    path('servicios-diseno/', views.servicios_diseno, name='servicios_diseno'),
 ]

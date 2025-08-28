@@ -4,26 +4,23 @@
     {% if category %}
         {{ category.description|truncatewords:155 }}
     {% else %}
-        Bienvenido a Stickers Gallito Perú
+        Bienvenido a Imprenta Gallito Perú
     {% endif %}
 {% endblock %}
 {% block title %}
     {% if category %}
-        {{ category.name }} - Stickers Gallito
+        {{ category.name }} - Imprenta Gallito
     {% else %}
-        Mira nuestros productos - Stickers Gallito
+        Mira nuestros productos - Imprenta Gallito
     {% endif %}
 {% endblock %}
 
 {% block content %}
 
-
-
-
-
     <div class="my_header_categories my_header_bg_color  margin-top3">
         <div class="container padding-top3">
             <p class="my_category_title">{{ category.name|title }}</p>
+            <p class="text-center text-muted" style="font-size:1.1em;">{{ category.description }}</p>
             {#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
             <i class="gold-star fas fa-star"></i>
             <i class="gold-star fas fa-star"></i>
@@ -34,56 +31,50 @@
         </div>
     </div>
 
-   
-
-
     <div class="container">
 
         <div class="row margin-bottom5 margin-top3">
             {% for product in products %}
-
                 <div class="col-md-3 padding-top3">
                     <div class="text-center my_products_icons">
-                        <a href="{{ product.get_url }}"><img class="my_image_medium"
-                                                             src="{{ product.image.url }}"
-                                                             alt="{{ product.name }}"></a>
+                        <a href="{{ product.get_url }}">
+                            <img class="my_image_medium"
+                                 src="{{ product.image.url }}"
+                                 alt="{{ product.name }}">
+                        </a>
                         <p class="text-center"><b>{{ product.name }}</b></p>
+                        <p class="text-center text-muted" style="font-size:0.98em;">{{ product.description }}</p>
                     </div>
-
                 </div>
-
-
-
             {% endfor %}
         </div>
         
-
-
         <div class="row margin-bottom3 margin-top3">
             <div class="col-2 col-md-2"></div>
             <div class="col-8 col-md-8">
-
             </div>
             <div class="col-2 col-md-2"></div>
         </div>
 
-        <div class="row margin-bottom5 margin-top3">
-
+        <div id="texto-producto" class="row margin-bottom5 margin-top3">
             <div class="col-md-12 col-lg-12 margin-bottom3">
-                <h2 class="review_title text-center">Stickers de nuestros clientes</h2>
+                <h2 class="review_title text-center">
+                    Nuestros clientes de {{ category.name|lower }}
+                </h2>
             </div>
-
             <div class="col-md-12 testimonios">
-                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Para el precio de los stickers, diría que están muy bien hechos, muy buenos y se pegan bien incluso si los vuelves a pegar en otra superficie"</i> <span class="testimonios-nombre"> - Samanta.</span></p>
-                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Los stickers son de muy buena calidad, pude revelar la parte adhesiva sin que se dañaran. Los coloqué en mi laptop y en mi auto. Los colores son precisos y muy vibrantes"</i><span class="testimonios-nombre"> - Rodrigo.</span></p>
-                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Compré 5 stickers, son realmente hermosos. Los colores son exactamente como la imagen que envié. Uno de mis diseños tenía forma irregular pero lograron cortarlo a la perfección
-                 Lo que no sabía era que tan bien se podían volver a pegar, tuve que reacomodarlos un par de veces y cada vez se pegaron tan bien como la primera vez. ¡Definitivamente volveré a comprar más stickers!"</i><span class="testimonios-nombre"> - Erika.</span></p>
+                <p class="margin-left5 margin-right5 margin-bottom3">
+                    <i>
+                        Descubre lo que opinan nuestros clientes sobre nuestros productos de {{ category.name|lower }}. Nos esforzamos por ofrecer la mejor calidad y personalización en cada pedido.
+                    </i>
+                </p>
+                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Para el precio, la calidad es excelente y el resultado superó mis expectativas."</i> <span class="testimonios-nombre"> - Samanta.</span></p>
+                <p class="margin-left5 margin-right5 margin-bottom3"><i>"El pedido llegó rápido y el acabado de los productos de {{ category.name|lower }} es muy profesional."</i><span class="testimonios-nombre"> - Rodrigo.</span></p>
+                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Me encantó la atención y la personalización. Definitivamente volveré a comprar más de {{ category.name|lower }}."</i><span class="testimonios-nombre"> - Erika.</span></p>
             </div>
-
         </div> 
         
         <div class="row margin-bottom5 margin-top3">
-
             <div class="text-center col-md-4">
                 <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
             </div>
@@ -93,12 +84,8 @@
             <div class="text-center col-md-4">
                 <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
             </div>
-
         </div>
 
-
     </div>
-
-
 
 {% endblock %}

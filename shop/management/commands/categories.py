@@ -16,7 +16,8 @@ class Command(BaseCommand):
             Category(
                 name=row['category'],
                 slug=row['slug'],
-                description=row['description']
+                description=row['description'],
+                image=row['image']
         )
             for _, row in tmp_data_categories.iterrows()
         ]

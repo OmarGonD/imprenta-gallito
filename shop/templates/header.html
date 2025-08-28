@@ -1,38 +1,61 @@
 {% load static %}
+<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+<style>
+    #main-hero-banner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 120px;
+        width: 80vw;
+        max-width: 1700px;
+        margin-left: 10vw;
+        margin-right: 10vw;
+    }
+    #main-hero-banner .col-md-4 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .search-group {
+        width: 66.66%;
+    }
+    .right-links {
+        gap: 24px;
+    }
+    .imprenta-gallito-title {
+        font-family: 'Poppins', sans-serif;
+    }
+    @media (max-width: 767px) {
+        #main-hero-banner {
+            width: 100vw;
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+</style>
 
-<div id="main-hero-banner" class="container-fluid my_home_banner my_header_bg_color">
-    <div class="row my_home_banner_content" style="position: relative; min-height: 320px;">
-        <div class="col-md-6 my_home_banner-left">
-            <div class="my_home_banner_left">
-                <div class="my_home_banner_lef_text" style="margin-bottom: 32px;">
-                    <p class="my_home_banner_title stickers-word" style="margin-bottom: 8px; font-size:clamp(2rem,5vw,3rem); font-weight:700;">
-                        Stickers
-                    </p>
-                    <p class="my_home_banner_title personalizados-word" style="margin-bottom: 24px; margin-top: 0; font-size:clamp(2rem,5vw,3rem); font-weight:700;">
-                        Personalizados
-                    </p>
-                    <p class="my_home_banner_subtitle my_title" style="margin-bottom: 0; font-size:clamp(1.1rem,2.5vw,1.5rem); line-height:1.5;">
-                        <b>Fáciles de ordenar por internet.</b>
-                        <br>
-                        <b>Envíos a todo el Perú.</b>
-                    </p>
-                </div>
-                <div class="row ">
-                    <div class="col-md-6">
-                        <a href="stickers" class="my_home_buttons btn btn-azul text-white btn-block">Comprar</a>
-                    </div>
-                    <div class="col-md-6">
-                        <a href="/muestras/" class="my_home_buttons btn btn-naranja text-white btn-block">Muestras</a>
-                    </div>
-                </div>
+<div id="main-hero-banner" class="my_home_banner row align-items-center justify-content-center text-center">
+    <div class="col-md-3">
+        <span class="imprenta-gallito-title" style="font-size: 2rem; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+            <img src="{% static 'img/stickers_gallito_logo.png' %}" alt="Gallito Logo" style="height: 38px; width: 28px; margin-right: 2px;">
+            Imprenta Gallito
+        </span>
+    </div>
+    <div class="col-md-6">
+        <form class="search-group mx-auto">
+            <div class="input-group w-100">
+                <input type="text" class="form-control" placeholder="Buscar...">
+                <span class="input-group-text bg-white border-start-0">
+                    <i class="fa fa-search"></i>
+                </span>
             </div>
-        </div>
-        <div class="col-md-6 d-flex align-items-end justify-content-end" style="min-height: 320px;">
-            <picture class="w-100">
-                <source media="(max-width: 480px)" srcset="{% static 'img/home/banner_home_mobiles.png' %}">
-                <source media="(max-width: 2056px)" srcset="{% static 'img/home/banner_home_fox.png' %}">
-                <img class="my_home_banner_image" src="{% static 'img/home/banner_home_fox.png' %}" style="max-height:220px; width:auto;">
-            </picture>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex right-links align-items-center justify-content-center">
+            <a href="#">¿Ayuda?</a>
+            <a href="#">Mis proyectos</a>
+            <a href="#">Mis favoritos</a>
         </div>
     </div>
 </div>

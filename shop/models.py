@@ -27,7 +27,8 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     def get_url(self):
-        return reverse('shop:allCat', args=[self.slug])
+        # Use the correct named URL for category detail
+        return reverse('shop:ProdCatDetail', args=[self.slug])
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -243,5 +244,71 @@ class Peru(models.Model):
 
     def __str__(self):
         return self.departamento + " - " + self.provincia + " - " + self.distrito + '-' + str(self.dias_despacho)
+
+
+class TarjetaPresentacion(models.Model):
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='tarjetas_presentacion', blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Folleto(models.Model):
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='folletos', blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Poster(models.Model):
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='posters', blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Etiqueta(models.Model):
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='etiquetas', blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Empaque(models.Model):
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250, unique=True)
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='empaques', blank=True, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
 
 

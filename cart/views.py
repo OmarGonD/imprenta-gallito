@@ -552,9 +552,9 @@ def send_email_credit_card(order_id):
     order_items = OrderItem.objects.filter(order=transaction)
     try:
         '''sending the order to the customer'''
-        subject = 'Stickers Gallito Perú - Nueva orden #{}'.format(transaction.id)
-        to = ['{}'.format(transaction.email), 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
-        from_email = 'stickersgallito@stickersgallito.pe'
+        subject = 'Imprenta Gallito Perú - Nueva orden #{}'.format(transaction.id)
+        to = ['{}'.format(transaction.email), 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
+        from_email = 'imprentagallito@imprentagallito.pe'
         order_information = {
             'transaction': transaction,
             'order_items': order_items
@@ -574,13 +574,13 @@ def send_email_deposit_payment(order_id):
     try:
         print("#Entra a send_email_deposti")
         '''sending the order to the customer'''
-        subject = 'Stickers Gallito Perú - Nueva orden #{}'.format(transaction.id)
+        subject = 'Imprenta Gallito Perú - Nueva orden #{}'.format(transaction.id)
         print("###subject")
         print(subject)
-        to = ['{}'.format(transaction.email), 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
+        to = ['{}'.format(transaction.email), 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
         print("###to")
         print(to)
-        from_email = 'stickersgallito@stickersgallito.pe'
+        from_email = 'imprentagallito@imprentagallito.pe'
         order_information = {
             'transaction': transaction,
             'order_items': order_items,

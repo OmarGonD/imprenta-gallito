@@ -57,9 +57,9 @@ def thanks_deposit_payment(request):
 
     
     '''sending the order to the customer'''
-    subject = 'Stickers Gallito Perú - Nueva orden #{}'.format(transaction.id)
-    to = ['{}'.format(transaction.email), 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
-    from_email = 'stickersgallito@stickersgallito.pe'
+    subject = 'Imprenta Gallito Perú - Nueva orden #{}'.format(transaction.id)
+    to = ['{}'.format(transaction.email), 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
+    from_email = 'imprentagallito@imprentagallito.pe'
     order_information = {
         'transaction': transaction,
         'order_items': order_items

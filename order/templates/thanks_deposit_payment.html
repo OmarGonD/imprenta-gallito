@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-Gracias por su compra - Stickers Gallito
+Gracias por su compra - Imprenta Gallito
 {% endblock %}
 
 {% block data_layer %}
@@ -15,7 +15,7 @@ Gracias por su compra - Stickers Gallito
             purchase: {
                 actionField: {
                     id: {{ order_number }},
-        affiliation: 'Stickers Gallito E-Commerce',
+        affiliation: 'Imprenta Gallito E-Commerce',
         revenue: {{ revenue }},
         shipping: {{ costo_despacho }},
         coupon: ''
@@ -151,7 +151,7 @@ Gracias por su compra - Stickers Gallito
             <br>
             <br>
             <h1 class="text-center thank_you_title">
-                ¡Gracias por confiar en Stickers Gallito!
+                ¡Gracias por confiar en Imprenta Gallito!
             </h1>
             <br>
             <h2 class="margin-bottom3">El número de su orden es: <b>#{{ transaction.id }}</b></h2>

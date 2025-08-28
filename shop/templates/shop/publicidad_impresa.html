@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Tarjetas de Presentación{% endblock %}
+{% block content %}
+<div class="container margin-top5 margin-bottom5">
+    <h1 class="my_title">Tarjetas de Presentación</h1>
+    <div class="row">
+        {% for tarjeta in tarjetas %}
+        <div class="col-md-4 margin-bottom5">
+            <div class="card">
+                {% if tarjeta.image %}
+                <img src="{{ tarjeta.image.url }}" class="card-img-top" alt="{{ tarjeta.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ tarjeta.name }}</h5>
+                    <p class="card-text">{{ tarjeta.description }}</p>
+                    <p class="card-text"><b>Precio:</b> S/ {{ tarjeta.price }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -4,26 +4,43 @@ from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.http import HttpResponse
-from django.shortcuts import redirect, HttpResponseRedirect
+from django.shortcuts import redirect, HttpResponseRedirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
 from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile, UnitaryProduct
 from cart.models import Cart, CartItem, SampleItem, PackItem, UnitaryProductItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
-from .models import *
+from .models import TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque
+from .models import Product, Category, Pack
+
+from django.views.generic import ListView
 from marketing.forms import EmailSignUpForm
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from .tokens import account_activation_token
-from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
-from django.template.loader import get_template
-from django.views.generic.list import ListView
+
+
+class TarjetasPresentacionListView(ListView):
+    model = TarjetaPresentacion
+    template_name = 'shop/tarjetas_presentacion.html'
+    context_object_name = 'tarjetas'
+
+class FolletosListView(ListView):
+    model = Folleto
+    template_name = 'shop/folletos.html'
+    context_object_name = 'folletos-list'
+
+class PostersListView(ListView):
+    model = Poster
+    template_name = 'shop/posters.html'
+    context_object_name = 'posters'
+
+class EtiquetasListView(ListView):
+    model = Etiqueta
+    template_name = 'shop/etiquetas.html'
+    context_object_name = 'etiquetas'
+
+class EmpaquesListView(ListView):
+    model = Empaque
+    template_name = 'shop/empaques.html'
+    context_object_name = 'empaques'
 
 
 
@@ -37,8 +54,11 @@ def allCat(request):
     categories = Category.objects.exclude(name='Muestras')
     email_signup_form = EmailSignUpForm()
 
-    # return render(request, 'shop/index.html', {'categories': categories}, context_instance=RequestContext(request))
-    return render(request, 'shop/index.html', {'categories': categories, 'email_signup_form': email_signup_form})
+    # Fix: use the correct template path
+    return render(request, 'shop/index.html', {
+        'categories': categories,
+        'email_signup_form': email_signup_form
+    })
 
 
 def ProdCatDetail(request, c_slug):
@@ -588,9 +608,9 @@ def send_email_new_registered_user(user_id):
         if profile:
             print("Se obtuvo profile")
         '''sending the order to the customer'''
-        subject = f"Stickers Gallito Perú - Nuevo usuario registrado #{profile.id}"
-        to = [f'{profile.user.email}', 'stickersgallito@gmail.com', 'oma.gonzales@gmail.com']
-        from_email = 'stickersgallito@stickersgallito.pe'
+        subject = f"Imprenta Gallito Perú - Nuevo usuario registrado #{profile.id}"
+        to = [f'{profile.user.email}', 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
+        from_email = 'imprentagallito@imprentagallito.pe'
         user_information = {
             'user_id': profile.user.id,
             'user_name': profile.user.username,
@@ -870,6 +890,39 @@ class CatalogoListView(ListView):
         context['product_count'] = self.get_queryset().count()
         
         return context
+
+def tarjetas_presentacion(request):
+    return render(request, 'shop/tarjetas_presentacion.html')
+
+def postales(request):
+    return render(request, 'shop/postales.html')
+
+def publicidad_impresa(request):
+    return render(request, 'shop/publicidad_impresa.html')
+
+def banners_posters(request):
+    return render(request, 'shop/banners_posters.html')
+
+def etiquetas_stickers(request):
+    return render(request, 'shop/etiquetas_stickers.html')
+
+def ropa_bolsos(request):
+    return render(request, 'shop/ropa_bolsos.html')
+
+def productos_promocionales(request):
+    return render(request, 'shop/productos_promocionales.html')
+
+def empaques(request):
+    return render(request, 'shop/empaques.html')
+
+def invitaciones_regalos(request):
+    return render(request, 'shop/invitaciones_regalos.html')
+
+def bodas(request):
+    return render(request, 'shop/bodas.html')
+
+def servicios_diseno(request):
+    return render(request, 'shop/servicios_diseno.html')
 
 
 

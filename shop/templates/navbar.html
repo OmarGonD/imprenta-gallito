@@ -1,23 +1,432 @@
 {% load static %}
+<link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
 
-
-<nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-bg">
-    <a class="navbar-brand" href="/">&emsp;&emsp;<img src="{% static 'img/stickers_gallito_logo.png' %}" width="20px"
-            height="30px"></a>
+<nav class="navbar navbar-expand-md navbar-dark navbar-bg">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/stickers">Stickers <span class="sr-only">(current)</span></a>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:tarjetas_presentacion' %}" id="nav-tarjetas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tarjetas de presentación
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-tarjetas">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/packs">Packs <span class="sr-only">(current)</span></a>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:publicidad_impresa' %}" id="nav-publicidad" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Publicidad impresa
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-publicidad">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/catalogo">Catálogo <span class="sr-only">(current)</span></a>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:banners_posters' %}" id="nav-banners" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Banners y posters
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-banners">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:ropa_bolsos' %}" id="nav-ropa" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Ropa y bolsos
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-ropa">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:productos_promocionales' %}" id="nav-productos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Productos promocionales
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-productos">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:empaques-list' %}" id="nav-empaques" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Empaques
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-empaques">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:invitaciones_regalos' %}" id="nav-invitaciones" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Invitaciones y regalos
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-invitaciones">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:bodas' %}" id="nav-bodas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Bodas
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-bodas">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="/stickers" id="nav-stickers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Stickers <span class="sr-only">(current)</span>
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-stickers">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:servicios_diseno' %}" id="nav-servicios" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Servicios de diseño
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-servicios">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:folletos-list' %}" id="nav-folletos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Folletos
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-folletos">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown position-static">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:posters' %}" id="nav-posters" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Posters
+                </a>
+                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-posters">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 1</div>
+                                <a class="dropdown-item" href="#">Subelemento 1</a>
+                                <a class="dropdown-item" href="#">Subelemento 2</a>
+                                <a class="dropdown-item" href="#">Subelemento 3</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 2</div>
+                                <a class="dropdown-item" href="#">Subelemento 4</a>
+                                <a class="dropdown-item" href="#">Subelemento 5</a>
+                                <a class="dropdown-item" href="#">Subelemento 6</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 3</div>
+                                <a class="dropdown-item" href="#">Subelemento 7</a>
+                                <a class="dropdown-item" href="#">Subelemento 8</a>
+                                <a class="dropdown-item" href="#">Subelemento 9</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mega-menu-title mb-2">Título 4</div>
+                                <a class="dropdown-item" href="#">Subelemento 10</a>
+                                <a class="dropdown-item" href="#">Subelemento 11</a>
+                                <a class="dropdown-item" href="#">Subelemento 12</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
         </ul>
 
@@ -27,16 +436,13 @@
                 <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
                         style="color:white !important;"></i> ( <span
                         class="cart_items_counter">{{ cart_items_counter }}</span> )</a>
-
             </li>
-
             <li class="nav-item active">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                         class="fas fa-user-circle"></i> {{ request.user }}</a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>
                 </div>
-
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>
@@ -46,7 +452,6 @@
                 <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
                         style="color:white !important;"></i> ( <span
                         class="cart_items_counter">{{ cart_items_counter }}</span> )</a>
-
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'signin' %}">Ingresar <i class="fas fa-sign-in-alt"></i></a>
@@ -54,9 +459,63 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'signup' %}">Registrarse <i class="fas fa-user-plus"></i></a>
             </li>
-
-
             {% endif %}
         </ul>
     </div>
 </nav>
+
+
+
+<style>
+/* Mega menu styles */
+.mega-menu {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    top: 100%;
+    display: none;
+    position: absolute;
+    background: #fff;
+    z-index: 1000;
+}
+.nav-item.dropdown:hover > .mega-menu,
+.nav-item.dropdown:focus-within > .mega-menu {
+    display: block;
+}
+.nav-item.dropdown {
+    position: static;
+}
+.mega-menu-title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    padding-left: 1rem;
+}
+.dropdown-menu .dropdown-item {
+    font-family: 'Raleway', sans-serif;
+    transition: color 0.2s;
+}
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: transparent;
+    color: #3da9fc;
+}
+</style>
+<script>
+    // Ensure dropdowns open on hover for desktop
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdowns = document.querySelectorAll('.navbar .dropdown');
+        dropdowns.forEach(function (dropdown) {
+            dropdown.addEventListener('mouseenter', function () {
+                var menu = dropdown.querySelector('.dropdown-menu');
+                if (menu) menu.classList.add('show');
+            });
+            dropdown.addEventListener('mouseleave', function () {
+                var menu = dropdown.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            });
+        });
+    });
+</script>
