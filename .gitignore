@@ -392,3 +392,20 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Certificate and key files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.cer
+*.der
+certificado*
+certificate*
