@@ -1,12 +1,12 @@
 category;product;slug;sku;description;image;available
-Stickers;Stickers ovalados;stickers-ovalados;S1;Stickers ovalados de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_ovalados/stickers_ovalados.png;True
-Stickers;Stickers troquelados;stickers-troquelados;S2;Stickers troquelados de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_troquelados/stickers_troquelados.png;True
-Stickers;Stickers semitroquelados;stickers-semitroquelados;S3;Stickers semitroquelados de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_semitroquelados/stickers_semitroquelados.png;True
-Stickers;Stickers transparentes;stickers-transparentes;S4;Stickers transparentes de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_transparentes/stickers_transparentes.png;True
-Stickers;Stickers cuadrados;stickers-cuadrados;S5;Stickers cuadrados de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_cuadrados/stickers_cuadrados.png;True
-Stickers;Stickers circulares;stickers-circulares;S6;Stickers circulares de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_circulares/stickers_circulares.png;True
-Stickers;Stickers rectangulares;stickers-rectangulares;S7;Stickers rectangulares de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_rectangulares/stickers_rectangulares.png;True
-Stickers;Stickers con esquinas redondeadas;stickers-con-esquinas-redondeadas;S8;Stickers con esquinas redondeadas de alta calidad;product_images/icons_stickers_gallito/custom_stickers/stickers_esquinas_redondeadas/stickers_esquinas_redondeadas.png;True
+Stickers;Stickers ovalados;stickers-ovalados;S1;Stickers ovalados de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_ovalados/stickers_ovalados.png;True
+Stickers;Stickers troquelados;stickers-troquelados;S2;Stickers troquelados de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_troquelados/stickers_troquelados.png;True
+Stickers;Stickers semitroquelados;stickers-semitroquelados;S3;Stickers semitroquelados de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_semitroquelados/stickers_semitroquelados.png;True
+Stickers;Stickers transparentes;stickers-transparentes;S4;Stickers transparentes de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_transparentes/stickers_transparentes.png;True
+Stickers;Stickers cuadrados;stickers-cuadrados;S5;Stickers cuadrados de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_cuadrados/stickers_cuadrados.png;True
+Stickers;Stickers circulares;stickers-circulares;S6;Stickers circulares de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_circulares/stickers_circulares.png;True
+Stickers;Stickers rectangulares;stickers-rectangulares;S7;Stickers rectangulares de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_rectangulares/stickers_rectangulares.png;True
+Stickers;Stickers con esquinas redondeadas;stickers-con-esquinas-redondeadas;S8;Stickers con esquinas redondeadas de alta calidad;product_images/icons_imprenta_gallito/custom_stickers/stickers_esquinas_redondeadas/stickers_esquinas_redondeadas.png;True
 Empaques;Cajas y sobres de envío;cajas-sobres-para-envios;PKG-CAJAS-001;Cajas de cartón y sobres diseñados para proteger productos durante el transporte;product_images/icons_packaging/cajas_y_sobres_de_envio/cajas_y_sobres_de_envio.png;True
 Empaques;Bolsas para compras y regalos;bolsas-para-compras-regalos;PKG-BOLSAS-002;Bolsas de papel o plástico para llevar compras o presentar regalos;product_images/icons_packaging/bolsas_para_compras_y_regalos/bolsas_para_compras_y_regalos.png;True
 Empaques;Bolsas personalizadas;bolsas-personalizadas-empaque;PKG-POUCH-003;Bolsas flexibles con diseños personalizados para productos específicos;product_images/icons_packaging/bolsas_personalizadas/bolsas_personalizadas.png;True

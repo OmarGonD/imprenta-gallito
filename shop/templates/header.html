@@ -1,61 +1,768 @@
 {% load static %}
-<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-<style>
-    #main-hero-banner {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 120px;
-        width: 80vw;
-        max-width: 1700px;
-        margin-left: 10vw;
-        margin-right: 10vw;
-    }
-    #main-hero-banner .col-md-4 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .search-group {
-        width: 66.66%;
-    }
-    .right-links {
-        gap: 24px;
-    }
-    .imprenta-gallito-title {
-        font-family: 'Poppins', sans-serif;
-    }
-    @media (max-width: 767px) {
-        #main-hero-banner {
-            width: 100vw;
-            margin-left: 0;
-            margin-right: 0;
-        }
-    }
-</style>
+<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<div id="main-hero-banner" class="my_home_banner row align-items-center justify-content-center text-center">
-    <div class="col-md-3">
-        <span class="imprenta-gallito-title" style="font-size: 2rem; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-            <img src="{% static 'img/stickers_gallito_logo.png' %}" alt="Gallito Logo" style="height: 38px; width: 28px; margin-right: 2px;">
-            Imprenta Gallito
-        </span>
-    </div>
-    <div class="col-md-6">
-        <form class="search-group mx-auto">
-            <div class="input-group w-100">
-                <input type="text" class="form-control" placeholder="Buscar...">
-                <span class="input-group-text bg-white border-start-0">
-                    <i class="fa fa-search"></i>
-                </span>
+<!-- Visaprint-Style Header -->
+<header class="main-header">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="top-links">
+                        <a href="#" class="top-link">Precio corporativo</a>
+                        <a href="#" class="top-link">Para revendedores</a>
+                        <a href="#" class="top-link">Para artistas</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="top-actions">
+                        <a href="#" class="top-action-link">
+                            <i class="fa fa-globe"></i>
+                            <span>ES</span>
+                        </a>
+                        <a href="#" class="top-action-link">
+                            <i class="fa fa-user"></i>
+                            <span>Cuenta</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
-    <div class="col-md-3">
-        <div class="d-flex right-links align-items-center justify-content-center">
-            <a href="#">¿Ayuda?</a>
-            <a href="#">Mis proyectos</a>
-            <a href="#">Mis favoritos</a>
         </div>
     </div>
-</div>
+
+    <!-- Main Header Bar -->
+    <div class="main-header-bar">
+        <div class="container-fluid">
+            <!-- Logo Row -->
+            <div class="row align-items-center">
+                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                <div class="col-lg-3 col-md-3 col-sm-4">
+                    <div class="logo-container">
+                        <a href="/" class="logo-link">
+                            <img src="{% static 'img/imprenta_gallito_logo.png' %}" alt="Imprenta Gallito" class="main-logo">
+                            <span class="logo-text">Imprenta Gallito</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Centered Search Row -->
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="search-container">
+                        <form class="search-form" method="GET">
+                            <div class="search-input-group">
+                                <input type="text" name="q" class="search-input" placeholder="Buscar productos, stickers, empaques..." autocomplete="off">
+                                <button type="submit" class="search-btn">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-8 text-end">
+                    <div class="header-actions">
+                        <!-- Contact Info -->
+                        <div class="contact-info">
+                            <i class="fa fa-phone"></i>
+                            <div class="contact-details">
+                                <span class="contact-label">Llámanos</span>
+                                <span class="contact-number">964 601 601</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Links -->
+                        <div class="action-links">
+                            <a href="#" class="action-link" title="Mis Proyectos">
+                                <i class="fa fa-folder"></i>
+                                <span class="d-none d-lg-inline">Mis Proyectos</span>
+                            </a>
+                            <a href="#" class="action-link" title="Favoritos">
+                                <i class="fa fa-heart"></i>
+                                <span class="d-none d-lg-inline">Favoritos</span>
+                            </a>
+                            <a href="#" class="action-link" title="Ingresar">
+                                <i class="fa fa-user"></i>
+                                <span class="d-none d-lg-inline">Ingresar</span>
+                            </a>
+                            <a href="#" class="action-link cart-link" title="Carrito">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span class="cart-count">0</span>
+                                <span class="d-none d-lg-inline">Carrito</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-3 col-sm-4"></div>
+                
+            </div>  
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="main-navigation">
+        <div class="container-fluid">
+            <div class="nav-container">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Stickers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Etiquetas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Empaques</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Papelería</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Promocionales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Personalizados</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Header Styles -->
+<style>
+/* ===== VISAPRINT-STYLE HEADER ===== */
+
+/* Main Header Container */
+.main-header {
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Top Bar */
+.top-bar {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 8px 0;
+    font-size: 0.875rem;
+}
+
+.top-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.top-link {
+    color: #6c757d;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.top-link:hover {
+    color: #00AD80;
+    text-decoration: none;
+}
+
+.top-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.top-action-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #6c757d;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.top-action-link:hover {
+    color: #00AD80;
+    text-decoration: none;
+}
+
+/* Main Header Bar */
+.main-header-bar {
+    background-color: #ffffff;
+    padding: 16px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.main-header-bar .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* First row - Logo and Actions */
+.main-header-bar .row:first-child {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* Second row - Centered Search */
+.main-header-bar .row:nth-child(2) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Header Bar Columns */
+.main-header-bar .col-lg-2,
+.main-header-bar .col-md-3,
+.main-header-bar .col-sm-4 {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+}
+
+.main-header-bar .col-lg-10,
+.main-header-bar .col-md-9,
+.main-header-bar .col-sm-8 {
+    flex: 0 0 auto;
+    width: auto;
+    text-align: right;
+}
+
+/* Centered Search Column */
+.main-header-bar .col-lg-6,
+.main-header-bar .col-md-8,
+.main-header-bar .col-sm-12 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #212529;
+}
+
+.main-logo {
+    height: 48px;
+    width: 40px;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00AD80;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Search Container */
+.search-container {
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.search-form {
+    position: relative;
+}
+
+.search-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.search-input-group:focus-within {
+    border-color: #00AD80;
+    box-shadow: 0 0 0 3px rgba(0, 173, 128, 0.1);
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    background: transparent;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-input::placeholder {
+    color: #6c757d;
+}
+
+.search-btn {
+    background-color: #00AD80;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover {
+    background-color: #009B6B;
+}
+
+.search-btn i {
+    font-size: 1rem;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #495057;
+}
+
+.contact-info i {
+    color: #00AD80;
+    font-size: 1.2rem;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.contact-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.contact-number {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #212529;
+}
+
+.action-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.action-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.action-link:hover {
+    color: #00AD80;
+    background-color: #f8f9fa;
+    text-decoration: none;
+}
+
+.action-link i {
+    font-size: 1.1rem;
+}
+
+.cart-link {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Navigation */
+.main-navigation {
+    background-color: #ffffff;
+    border-bottom: 2px solid #00AD80;
+    position: relative;
+}
+
+.nav-container {
+    padding: 0;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 20px;
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #00AD80;
+    background-color: #f8f9fa;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background-color: #00AD80;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 0;
+    padding: 8px 0;
+}
+
+.dropdown-item {
+    padding: 12px 24px;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #00AD80;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 1200px) {
+    .logo-text {
+        font-size: 1.25rem;
+    }
+
+    .search-input {
+        padding: 10px 16px;
+    }
+
+    .search-btn {
+        padding: 10px 16px;
+    }
+}
+
+@media (max-width: 992px) {
+    .search-container {
+        max-width: 400px;
+    }
+
+    .top-links {
+        gap: 16px;
+    }
+
+    .header-actions {
+        gap: 16px;
+    }
+
+    .action-links {
+        gap: 12px;
+    }
+
+    .nav-link {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile only - allow wrapping */
+@media (max-width: 768px) {
+    .main-header-bar .row {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 10px;
+    }
+
+    .main-header-bar .col-lg-2,
+    .main-header-bar .col-md-3,
+    .main-header-bar .col-sm-4,
+    .main-header-bar .col-lg-5,
+    .main-header-bar .col-md-6,
+    .main-header-bar .col-sm-8,
+    .main-header-bar .col-lg-5:last-child,
+    .main-header-bar .col-md-3:last-child,
+    .main-header-bar .col-sm-12:last-child {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        text-align: center;
+    }
+
+    .top-bar {
+        padding: 6px 0;
+    }
+
+    .top-links {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .main-header-bar {
+        padding: 12px 0;
+    }
+
+    .logo-text {
+        display: none;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .contact-info {
+        order: 2;
+    }
+
+    .action-links {
+        order: 1;
+        gap: 8px;
+    }
+
+    .action-link span {
+        display: none !important;
+    }
+
+    .action-link {
+        padding: 8px;
+        min-width: 40px;
+        justify-content: center;
+    }
+
+    .nav-list {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-link {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile only - allow wrapping */
+@media (max-width: 768px) {
+    .main-header-bar .row:first-child {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .main-header-bar .row:nth-child(2) {
+        margin-top: 10px;
+    }
+
+    .main-header-bar .col-lg-2,
+    .main-header-bar .col-md-3,
+    .main-header-bar .col-sm-4,
+    .main-header-bar .col-lg-10,
+    .main-header-bar .col-md-9,
+    .main-header-bar .col-sm-8,
+    .main-header-bar .col-lg-6,
+    .main-header-bar .col-md-8,
+    .main-header-bar .col-sm-12 {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        text-align: center;
+    }
+
+    .top-bar {
+        padding: 6px 0;
+    }
+
+    .top-links {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .main-header-bar {
+        padding: 12px 0;
+    }
+
+    .logo-text {
+        display: none;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    .contact-info {
+        order: 2;
+    }
+
+    .action-links {
+        order: 1;
+        gap: 8px;
+    }
+
+    .action-link span {
+        display: none !important;
+    }
+
+    .action-link {
+        padding: 8px;
+        min-width: 40px;
+        justify-content: center;
+    }
+
+    .nav-list {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-link {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-container {
+        max-width: 100%;
+    }
+
+    .top-links {
+        display: none;
+    }
+
+    .top-actions {
+        justify-content: center;
+    }
+
+    .main-logo {
+        height: 40px;
+        width: 32px;
+    }
+
+    .search-input-group {
+        border-radius: 20px;
+    }
+
+    .search-input {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .search-btn {
+        padding: 8px 16px;
+        border-radius: 0 20px 20px 0;
+    }
+
+    .contact-label {
+        display: none;
+    }
+
+    .nav-list {
+        justify-content: space-between;
+    }
+
+    .nav-link {
+        padding: 8px 8px;
+        font-size: 0.8rem;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-header {
+    animation: fadeInDown 0.5s ease-out;
+}
+
+/* Hover effects for better UX */
+.action-link:hover i {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.nav-link:hover i {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+</style>

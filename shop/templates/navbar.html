@@ -1,521 +1,658 @@
 {% load static %}
-<link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
 
-<nav class="navbar navbar-expand-md navbar-dark navbar-bg">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:tarjetas_presentacion' %}" id="nav-tarjetas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Tarjetas de presentación
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-tarjetas">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:publicidad_impresa' %}" id="nav-publicidad" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Publicidad impresa
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-publicidad">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:banners_posters' %}" id="nav-banners" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Banners y posters
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-banners">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:ropa_bolsos' %}" id="nav-ropa" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Ropa y bolsos
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-ropa">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:productos_promocionales' %}" id="nav-productos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Productos promocionales
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-productos">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:empaques-list' %}" id="nav-empaques" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Empaques
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-empaques">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:invitaciones_regalos' %}" id="nav-invitaciones" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Invitaciones y regalos
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-invitaciones">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:bodas' %}" id="nav-bodas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bodas
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-bodas">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="/stickers" id="nav-stickers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Stickers <span class="sr-only">(current)</span>
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-stickers">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:servicios_diseno' %}" id="nav-servicios" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Servicios de diseño
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-servicios">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:folletos-list' %}" id="nav-folletos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Folletos
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-folletos">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="{% url 'shop:posters' %}" id="nav-posters" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Posters
-                </a>
-                <div class="dropdown-menu mega-menu p-4" aria-labelledby="nav-posters">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 1</div>
-                                <a class="dropdown-item" href="#">Subelemento 1</a>
-                                <a class="dropdown-item" href="#">Subelemento 2</a>
-                                <a class="dropdown-item" href="#">Subelemento 3</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 2</div>
-                                <a class="dropdown-item" href="#">Subelemento 4</a>
-                                <a class="dropdown-item" href="#">Subelemento 5</a>
-                                <a class="dropdown-item" href="#">Subelemento 6</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 3</div>
-                                <a class="dropdown-item" href="#">Subelemento 7</a>
-                                <a class="dropdown-item" href="#">Subelemento 8</a>
-                                <a class="dropdown-item" href="#">Subelemento 9</a>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mega-menu-title mb-2">Título 4</div>
-                                <a class="dropdown-item" href="#">Subelemento 10</a>
-                                <a class="dropdown-item" href="#">Subelemento 11</a>
-                                <a class="dropdown-item" href="#">Subelemento 12</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
+<!-- Navigation Bar - Complementario al Header Principal -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container-fluid">
+        <!-- Mobile menu button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <ul class="navbar-nav ml-auto">
-            {% if request.user.is_authenticated %}
-            <li id="shopping-cart" class="nav-item active">
-                <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
-                        style="color:white !important;"></i> ( <span
-                        class="cart_items_counter">{{ cart_items_counter }}</span> )</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                        class="fas fa-user-circle"></i> {{ request.user }}</a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a href="{% url 'order:order_history' %}" class="dropdown-item">Historial de compras</a>
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'signout' %}">Salir <i class="fas fa-sign-out-alt"></i></a>
-            </li>
-            {% else %}
-            <li id="shopping-cart" class="nav-item cart_items_li active">
-                <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}"><i class="fas fa-shopping-cart"
-                        style="color:white !important;"></i> ( <span
-                        class="cart_items_counter">{{ cart_items_counter }}</span> )</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'signin' %}">Ingresar <i class="fas fa-sign-in-alt"></i></a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'signup' %}">Registrarse <i class="fas fa-user-plus"></i></a>
-            </li>
-            {% endif %}
-        </ul>
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Productos -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-print me-1"></i>Productos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="productosDropdown">
+                        <li><a class="dropdown-item" href="#">Stickers Personalizados</a></li>
+                        <li><a class="dropdown-item" href="#">Etiquetas</a></li>
+                        <li><a class="dropdown-item" href="#">Empaques</a></li>
+                        <li><a class="dropdown-item" href="#">Tarjetas de Presentación</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Ver Todos los Productos</a></li>
+                    </ul>
+                </li>
+
+                <!-- Material Publicitario -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="materialDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bullhorn me-1"></i>Material Publicitario
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="materialDropdown">
+                        <li><a class="dropdown-item" href="#">Etiquetas para Ropa</a></li>
+                        <li><a class="dropdown-item" href="#">Etiquetas Adhesivas</a></li>
+                        <li><a class="dropdown-item" href="#">Etiquetas Personalizadas</a></li>
+                        <li><a class="dropdown-item" href="#">Folletos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Ver Todo el Material</a></li>
+                    </ul>
+                </li>
+
+                <!-- Servicios de Impresión -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="serviciosDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cogs me-1"></i>Servicios de Impresión
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="serviciosDropdown">
+                        <li><a class="dropdown-item" href="#">Impresión Digital</a></li>
+                        <li><a class="dropdown-item" href="#">Impresión Offset</a></li>
+                        <li><a class="dropdown-item" href="#">Diseño Gráfico</a></li>
+                        <li><a class="dropdown-item" href="#">Acabados Especiales</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Ver Todos los Servicios</a></li>
+                    </ul>
+                </li>
+
+                <!-- Papelería -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="papeleriaDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-file-alt me-1"></i>Papelería
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="papeleriaDropdown">
+                        <li><a class="dropdown-item" href="#">Tarjetas de Presentación</a></li>
+                        <li><a class="dropdown-item" href="#">Folletos</a></li>
+                        <li><a class="dropdown-item" href="#">Volantes</a></li>
+                        <li><a class="dropdown-item" href="#">Facturas</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Ver Toda la Papelería</a></li>
+                    </ul>
+                </li>
+
+                <!-- Promocionales -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="promocionalesDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-gift me-1"></i>Promocionales
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="promocionalesDropdown">
+                        <li><a class="dropdown-item" href="#">Stickers</a></li>
+                        <li><a class="dropdown-item" href="#">Etiquetas</a></li>
+                        <li><a class="dropdown-item" href="#">Empaques</a></li>
+                        <li><a class="dropdown-item" href="#">Llaveros</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Ver Todos los Promocionales</a></li>
+                    </ul>
+                </li>
+
+                <!-- Personalizados -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fa fa-palette me-1"></i>Diseños Personalizados
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right side links -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fa fa-question-circle me-1"></i>Ayuda
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fa fa-phone me-1"></i>964 601 601
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
-
-
+<!-- Additional CSS for the navbar -->
 <style>
-/* Mega menu styles */
-.mega-menu {
-    left: 0 !important;
-    right: 0 !important;
-    width: 100vw;
-    max-width: none;
-    border-radius: 0;
+/* Navbar Styles */
+.navbar-light .navbar-nav .nav-link {
+    color: #495057;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #00AD80;
+}
+
+.navbar-light .navbar-nav .nav-link i {
+    font-size: 0.9rem;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
     border: none;
-    top: 100%;
-    display: none;
-    position: absolute;
-    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 0;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    font-weight: 400;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #00AD80;
+}
+
+/* Mobile Styles */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .navbar-nav .nav-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .navbar-collapse {
+        border-top: 1px solid #e9ecef;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+}
+
+/* Active/Hover States */
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #00AD80 !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:hover {
+    background-color: #00AD80;
+    color: white;
+}
+
+/* ===========================================
+   VISAPRINT-STYLE HEADER STYLES
+   =========================================== */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Header Container */
+.header-container {
+    width: 100%;
+    position: relative;
     z-index: 1000;
 }
-.nav-item.dropdown:hover > .mega-menu,
-.nav-item.dropdown:focus-within > .mega-menu {
+
+/* Top Bar */
+.top-bar {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    padding: 8px 0;
+    font-size: 0.875rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top-bar .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.top-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.top-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.top-bar-link {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: opacity 0.3s ease;
+}
+
+.top-bar-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.top-bar-link i {
+    font-size: 0.875rem;
+}
+
+/* Main Header */
+.main-header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.main-header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.main-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo i {
+    color: #3b82f6;
+    font-size: 2rem;
+}
+
+.logo-text {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 400;
+}
+
+/* Navigation */
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    position: relative;
+}
+
+.nav-link {
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.nav-link:hover {
+    color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.nav-link i {
+    font-size: 0.875rem;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 220px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: 1px solid #e5e7eb;
+    margin-top: 5px;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu .nav-link {
+    padding: 12px 20px;
+    color: #374151;
     display: block;
+    width: 100%;
+    border-radius: 0;
 }
-.nav-item.dropdown {
-    position: static;
+
+.dropdown-menu .nav-link:hover {
+    background-color: #f8fafc;
+    color: #3b82f6;
 }
-.mega-menu-title {
-    font-family: 'Raleway', sans-serif;
-    font-weight: bold;
-    padding-left: 1rem;
+
+/* Search and Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
-.dropdown-menu .dropdown-item {
-    font-family: 'Raleway', sans-serif;
-    transition: color 0.2s;
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
-.dropdown-menu .dropdown-item:hover,
-.dropdown-menu .dropdown-item:focus {
-    background-color: transparent;
-    color: #3da9fc;
+
+.search-input {
+    padding: 8px 40px 8px 15px;
+    border: 2px solid #e5e7eb;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    width: 250px;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+.action-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.action-btn.secondary {
+    background: white;
+    color: #374151;
+    border: 2px solid #e5e7eb;
+}
+
+.action-btn.secondary:hover {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #374151;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-nav {
+        gap: 20px;
+    }
+
+    .nav-menu {
+        gap: 15px;
+    }
+
+    .search-input {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .top-bar-left,
+    .top-bar-right {
+        justify-content: center;
+    }
+
+    .main-header-content {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 0;
+    }
+
+    .logo-section {
+        justify-content: center;
+    }
+
+    .main-nav {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .header-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .search-input {
+        width: 180px;
+    }
+
+    .action-btn {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar {
+        font-size: 0.8rem;
+        padding: 6px 0;
+    }
+
+    .top-bar-left,
+    .top-bar-right {
+        gap: 10px;
+    }
+
+    .main-header-content {
+        padding: 15px 0;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .logo i {
+        font-size: 1.75rem;
+    }
+
+    .search-input {
+        width: 150px;
+        font-size: 0.8rem;
+    }
+
+    .header-actions {
+        gap: 10px;
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-header {
+    animation: fadeInDown 0.6s ease-out;
+}
+
+/* Focus States */
+.nav-link:focus,
+.action-btn:focus,
+.search-input:focus,
+.mobile-menu-toggle:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .top-bar,
+    .main-header {
+        display: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .nav-link:hover {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .action-btn {
+        border: 2px solid;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 </style>
-<script>
-    // Ensure dropdowns open on hover for desktop
-    document.addEventListener('DOMContentLoaded', function () {
-        var dropdowns = document.querySelectorAll('.navbar .dropdown');
-        dropdowns.forEach(function (dropdown) {
-            dropdown.addEventListener('mouseenter', function () {
-                var menu = dropdown.querySelector('.dropdown-menu');
-                if (menu) menu.classList.add('show');
-            });
-            dropdown.addEventListener('mouseleave', function () {
-                var menu = dropdown.querySelector('.dropdown-menu');
-                if (menu) menu.classList.remove('show');
-            });
-        });
-    });
-</script>
+
+</body>
+</html>
