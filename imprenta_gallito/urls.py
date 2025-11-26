@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ordenes/', include('order.urls')),
+    path('categorias/', include('shop.catalog_urls')),  # Sistema de categorías personalizable
     path('', include('shop.urls')),
     path('carrito_de_compras/', include('cart.urls')),
     path('marketing/', include('marketing.urls')),
@@ -35,4 +36,3 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

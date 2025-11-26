@@ -1,684 +1,134 @@
 {% load static %}
 
-<!-- Navigation Bar - Complementario al Header Principal -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-    <div class="container-fluid">
-        <!-- Mobile menu button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<!-- VistaPrint-Style Navigation Bar -->
+<nav class="vistaprint-navbar">
+    <div class="navbar-container">
+        <!-- Logo Section -->
+        <div class="navbar-logo">
+            <a href="{% url 'shop:allProdCat' %}" class="logo-link">
+                <img src="{% static 'img/imprenta_gallito_logo_navbar.png' %}" alt="Imprenta Gallito" class="logo-img">
+            </a>
+        </div>
 
-        <!-- Navigation Links -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <!-- Productos -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-print me-1"></i>Productos
+        <!-- Main Navigation Menu -->
+        <div class="navbar-menu" id="navbarMenu">
+            <ul class="nav-list">
+                {% for category in categories %}
+                <li class="nav-item {% if category.subcategories.all %}has-dropdown{% endif %}">
+                    <a href="{% url 'catalog:home' %}#category-{{ category.slug }}" class="nav-link">
+                        {{ category.name }}
+                        {% if category.subcategories.all %}
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                        {% endif %}
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="productosDropdown">
-                        <li><a class="dropdown-item" href="#">Stickers Personalizados</a></li>
-                        <li><a class="dropdown-item" href="#">Etiquetas</a></li>
-                        <li><a class="dropdown-item" href="#">Empaques</a></li>
-                        <li><a class="dropdown-item" href="#">Tarjetas de Presentación</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Ver Todos los Productos</a></li>
-                    </ul>
+                    
+                    {% if category.subcategories.all %}
+                    <div class="mega-dropdown">
+                        <div class="mega-dropdown-inner">
+                            {% for subcategory in category.subcategories.all %}
+                            <div class="dropdown-column">
+                                <h3 class="dropdown-title">
+                                    <a href="{% url 'catalog:subcategory' category.slug subcategory.slug %}">{{ subcategory.name }}</a>
+                                </h3>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
                 </li>
-
-                <!-- Material Publicitario -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="materialDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-bullhorn me-1"></i>Material Publicitario
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="materialDropdown">
-                        <li><a class="dropdown-item" href="#">Etiquetas para Ropa</a></li>
-                        <li><a class="dropdown-item" href="#">Etiquetas Adhesivas</a></li>
-                        <li><a class="dropdown-item" href="#">Etiquetas Personalizadas</a></li>
-                        <li><a class="dropdown-item" href="#">Folletos</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Ver Todo el Material</a></li>
-                    </ul>
-                </li>
-
-                <!-- Servicios de Impresión -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="serviciosDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-cogs me-1"></i>Servicios de Impresión
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="serviciosDropdown">
-                        <li><a class="dropdown-item" href="#">Impresión Digital</a></li>
-                        <li><a class="dropdown-item" href="#">Impresión Offset</a></li>
-                        <li><a class="dropdown-item" href="#">Diseño Gráfico</a></li>
-                        <li><a class="dropdown-item" href="#">Acabados Especiales</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Ver Todos los Servicios</a></li>
-                    </ul>
-                </li>
-
-                <!-- Papelería -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="papeleriaDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-file-alt me-1"></i>Papelería
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="papeleriaDropdown">
-                        <li><a class="dropdown-item" href="#">Tarjetas de Presentación</a></li>
-                        <li><a class="dropdown-item" href="#">Folletos</a></li>
-                        <li><a class="dropdown-item" href="#">Volantes</a></li>
-                        <li><a class="dropdown-item" href="#">Facturas</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Ver Toda la Papelería</a></li>
-                    </ul>
-                </li>
-
-                <!-- Promocionales -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="promocionalesDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-gift me-1"></i>Promocionales
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="promocionalesDropdown">
-                        <li><a class="dropdown-item" href="#">Stickers</a></li>
-                        <li><a class="dropdown-item" href="#">Etiquetas</a></li>
-                        <li><a class="dropdown-item" href="#">Empaques</a></li>
-                        <li><a class="dropdown-item" href="#">Llaveros</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Ver Todos los Promocionales</a></li>
-                    </ul>
-                </li>
-
-                <!-- Personalizados -->
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fa fa-palette me-1"></i>Diseños Personalizados
-                    </a>
-                </li>
+                {% endfor %}
             </ul>
+        </div>
 
-            <!-- Right side links -->
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fa fa-question-circle me-1"></i>Ayuda
+        <!-- Right Section: Search & Cart -->
+        <div class="navbar-actions">
+            <!-- Search Bar -->
+            <div class="search-box">
+                <form action="{% url 'search_app:searchResult' %}" method="get" class="search-form">
+                    <input type="text" name="q" placeholder="Search products..." class="search-input" autocomplete="off">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- User Account -->
+            {% if user.is_authenticated %}
+            <div class="account-dropdown">
+                <a href="#" class="account-link">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+                <div class="account-menu">
+                    <a href="{% url 'shop:profile' %}" class="account-item">
+                        <i class="fas fa-user"></i> Mi Perfil
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fa fa-phone me-1"></i>964 601 601
+                    <a href="{% url 'shop:profile_edit' %}" class="account-item">
+                        <i class="fas fa-edit"></i> Editar Perfil
                     </a>
-                </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="cuentaDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-user me-1"></i>Cuenta
+                    <hr class="account-divider">
+                    <a href="{% url 'signout' %}" class="account-item">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cuentaDropdown">
-                        <li><a class="dropdown-item" href="{% url 'shop:profile' %}">
-                            <i class="fa fa-user-circle me-2"></i>Mi Perfil
-                        </a></li>
-                        <li><a class="dropdown-item" href="{% url 'shop:profile_edit' %}">
-                            <i class="fa fa-edit me-2"></i>Editar Perfil
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'signout' %}">
-                            <i class="fa fa-sign-out-alt me-2"></i>Cerrar Sesión
-                        </a></li>
-                    </ul>
-                </li>
+                </div>
+            </div>
+            {% else %}
+            <a href="{% url 'signin' %}" class="account-link">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            {% endif %}
+
+            <!-- Cart -->
+            <a href="{% url 'carrito_de_compras:cart_detail' %}" class="cart-link">
+                <i class="fas fa-shopping-cart"></i>
+                {% if cart_items_counter > 0 %}
+                <span class="cart-badge">{{ cart_items_counter }}</span>
                 {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}">
-                        <i class="fa fa-shopping-cart me-1"></i>Carrito 
-                        <span class="badge bg-primary">{{ cart_items_counter }}</span>
-                    </a>
-                </li>
-            </ul>
+            </a>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h3>Menu</h3>
+            <button class="mobile-close" id="mobileClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-content">
+            {% for category in categories %}
+            <div class="mobile-category">
+                <div class="mobile-category-header">
+                    <a href="{% url 'catalog:home' %}#category-{{ category.slug }}">{{ category.name }}</a>
+                    {% if category.subcategories.all %}
+                    <button class="mobile-expand" data-target="mobile-{{ category.slug }}">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    {% endif %}
+                </div>
+                {% if category.subcategories.all %}
+                <div class="mobile-submenu" id="mobile-{{ category.slug }}">
+                    {% for subcategory in category.subcategories.all %}
+                    <div class="mobile-subcategory">
+                        <a href="{% url 'catalog:subcategory' category.slug subcategory.slug %}" class="mobile-subcat-link">
+                            {{ subcategory.name }}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
         </div>
     </div>
 </nav>
 
-<!-- Additional CSS for the navbar -->
-<style>
-/* Navbar Styles */
-.navbar-light .navbar-nav .nav-link {
-    color: #495057;
-    font-weight: 500;
-    padding: 0.75rem 1rem;
-    transition: color 0.3s ease;
-}
-
-.navbar-light .navbar-nav .nav-link:hover {
-    color: #00AD80;
-}
-
-.navbar-light .navbar-nav .nav-link i {
-    font-size: 0.9rem;
-}
-
-/* Dropdown Styles */
-.dropdown-menu {
-    border: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-top: 0;
-}
-
-.dropdown-item {
-    padding: 0.75rem 1.5rem;
-    font-weight: 400;
-    transition: all 0.3s ease;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #00AD80;
-}
-
-/* Mobile Styles */
-@media (max-width: 991.98px) {
-    .navbar-nav {
-        text-align: center;
-        margin-top: 1rem;
-    }
-
-    .navbar-nav .nav-item {
-        margin-bottom: 0.5rem;
-    }
-
-    .navbar-collapse {
-        border-top: 1px solid #e9ecef;
-        margin-top: 1rem;
-        padding-top: 1rem;
-    }
-}
-
-/* Active/Hover States */
-.navbar-light .navbar-nav .nav-link.active,
-.navbar-light .navbar-nav .nav-link:hover {
-    color: #00AD80 !important;
-}
-
-.dropdown-item.active,
-.dropdown-item:hover {
-    background-color: #00AD80;
-    color: white;
-}
-
-/* ===========================================
-   VISAPRINT-STYLE HEADER STYLES
-   =========================================== */
-
-/* Reset and Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: #333;
-}
-
-/* Header Container */
-.header-container {
-    width: 100%;
-    position: relative;
-    z-index: 1000;
-}
-
-/* Top Bar */
-.top-bar {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-    color: white;
-    padding: 8px 0;
-    font-size: 0.875rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.top-bar .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.top-bar-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.top-bar-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.top-bar-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.top-bar-link {
-    color: white;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: opacity 0.3s ease;
-}
-
-.top-bar-link:hover {
-    opacity: 0.8;
-    text-decoration: underline;
-}
-
-.top-bar-link i {
-    font-size: 0.875rem;
-}
-
-/* Main Header */
-.main-header {
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-.main-header .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.main-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #1e3a8a;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo i {
-    color: #3b82f6;
-    font-size: 2rem;
-}
-
-.logo-text {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.tagline {
-    font-size: 0.875rem;
-    color: #6b7280;
-    font-weight: 400;
-}
-
-/* Navigation */
-.main-nav {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.nav-menu {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-menu li {
-    position: relative;
-}
-
-.nav-link {
-    color: #374151;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.nav-link:hover {
-    color: #3b82f6;
-    background-color: rgba(59, 130, 246, 0.1);
-}
-
-.nav-link i {
-    font-size: 0.875rem;
-}
-
-/* Dropdown Menu */
-.dropdown {
-    position: relative;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    min-width: 220px;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    z-index: 1000;
-    border: 1px solid #e5e7eb;
-    margin-top: 5px;
-}
-
-.dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-menu li {
-    border-bottom: 1px solid #f3f4f6;
-}
-
-.dropdown-menu li:last-child {
-    border-bottom: none;
-}
-
-.dropdown-menu .nav-link {
-    padding: 12px 20px;
-    color: #374151;
-    display: block;
-    width: 100%;
-    border-radius: 0;
-}
-
-.dropdown-menu .nav-link:hover {
-    background-color: #f8fafc;
-    color: #3b82f6;
-}
-
-/* Search and Actions */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.search-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-input {
-    padding: 8px 40px 8px 15px;
-    border: 2px solid #e5e7eb;
-    border-radius: 25px;
-    font-size: 0.875rem;
-    width: 250px;
-    transition: all 0.3s ease;
-    outline: none;
-}
-
-.search-input:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.search-btn {
-    position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #6b7280;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.search-btn:hover {
-    color: #3b82f6;
-    background-color: rgba(59, 130, 246, 0.1);
-}
-
-.action-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.action-btn:hover {
-    background: #2563eb;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.action-btn.secondary {
-    background: white;
-    color: #374151;
-    border: 2px solid #e5e7eb;
-}
-
-.action-btn.secondary:hover {
-    background: #f8fafc;
-    border-color: #3b82f6;
-    color: #3b82f6;
-}
-
-/* Mobile Menu Toggle */
-.mobile-menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #374151;
-    font-size: 1.25rem;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.mobile-menu-toggle:hover {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .main-nav {
-        gap: 20px;
-    }
-
-    .nav-menu {
-        gap: 15px;
-    }
-
-    .search-input {
-        width: 200px;
-    }
-}
-
-@media (max-width: 768px) {
-    .top-bar-content {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
-
-    .top-bar-left,
-    .top-bar-right {
-        justify-content: center;
-    }
-
-    .main-header-content {
-        flex-direction: column;
-        gap: 15px;
-        padding: 20px 0;
-    }
-
-    .logo-section {
-        justify-content: center;
-    }
-
-    .main-nav {
-        display: none;
-    }
-
-    .mobile-menu-toggle {
-        display: block;
-    }
-
-    .header-actions {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .search-input {
-        width: 180px;
-    }
-
-    .action-btn {
-        padding: 8px 16px;
-        font-size: 0.875rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .top-bar {
-        font-size: 0.8rem;
-        padding: 6px 0;
-    }
-
-    .top-bar-left,
-    .top-bar-right {
-        gap: 10px;
-    }
-
-    .main-header-content {
-        padding: 15px 0;
-    }
-
-    .logo {
-        font-size: 1.5rem;
-    }
-
-    .logo i {
-        font-size: 1.75rem;
-    }
-
-    .search-input {
-        width: 150px;
-        font-size: 0.8rem;
-    }
-
-    .header-actions {
-        gap: 10px;
-    }
-
-    .action-btn {
-        padding: 6px 12px;
-        font-size: 0.8rem;
-    }
-}
-
-/* Animations */
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.main-header {
-    animation: fadeInDown 0.6s ease-out;
-}
-
-/* Focus States */
-.nav-link:focus,
-.action-btn:focus,
-.search-input:focus,
-.mobile-menu-toggle:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-}
-
-/* Print Styles */
-@media print {
-    .top-bar,
-    .main-header {
-        display: none;
-    }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-    .nav-link:hover {
-        background-color: #000;
-        color: #fff;
-    }
-
-    .action-btn {
-        border: 2px solid;
-    }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-</style>
-
-</body>
-</html>
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+<script src="{% static 'js/navbar.js' %}"></script>

@@ -5,10 +5,8 @@ from . import views
 app_name = "shop"
 
 urlpatterns = [
-    path('', views.allCat, name='allCat'),
-    path('packs/', views.PacksPage, name='PacksPage'), #Todos los packs
-    path('catalogo', views.CatalogoListView.as_view(), name='catalogo'), #Todos los productos unitarios
-    path('muestras/', views.SamplePackPage, name='SamplePackPage'), #Todas las muestras
+    path('', views.Home, name='home'),
+    path('catalogo', views.CategoryListView.as_view(), name='catalogo'), #Todos los productos unitarios
     path('province/', views.get_province, name='province'),
     path('district/', views.get_district, name='district'),
     path('quienes-somos/', views.quienes_somos, name='quienes_somos'),
@@ -24,7 +22,7 @@ urlpatterns = [
     path('<slug:c_slug>/<slug:product_slug>', views.AddProduct, name='AddProduct'),
     path('agregar-pack/', views.AddPack, name='AddPack'),
     path('stickers-por-unidad/', views.AddUnitaryProduct, name='AddUnitaryProduct'),
-    path('<slug:c_slug>', views.ProdCatDetail, name='ProdCatDetail'),
+    #path('<slug:c_slug>', views.ProdCatDetail, name='ProdCatDetail'),
     path('make_review/', views.make_review_view, name='make_review_view'),
     path('prices/', views.prices, name='prices'),
     path('email_confirmation_needed/', views.email_confirmation_needed, name='email_confirmation_needed'),

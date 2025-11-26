@@ -1,204 +1,324 @@
+"""
+Shop Models
+============
+This file contains all models for the shop application.
+
+MIGRATION NOTE (2024):
+- CatalogCategory has been renamed to Category
+- CatalogSubcategory has been renamed to Subcategory
+- The old models in catalog_models.py are deprecated and will be removed
+- The legacy Category model (for Product, Pack, Sample) has been renamed to LegacyCategory
+"""
 from django.db import models
 from django.urls import reverse
-from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from decimal import Decimal
 from .sizes_and_quantities import TAMANIOS, CANTIDADES
 
-#Variables
 
-
-
-# Create your models here.
-# EmbedVideoField Optional
-
+# ============================================================================
+# CATALOG SYSTEM MODELS (Migrated from catalog_models.py)
+# These are the primary models for the new catalog/product system
+# ============================================================================
 
 class Category(models.Model):
-    name = models.CharField(max_length=250, unique=True)
-    slug = models.SlugField(max_length=250, unique=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='category', blank=True, null=True)
-    #video = EmbedVideoField(null=True, blank=True)
+    """
+    Categorías principales del catálogo personalizable
+    Migrated from CatalogCategory - this is the primary category model for the catalog system
+    """
+    slug = models.SlugField(max_length=250, unique=True, primary_key=True, 
+                           help_text="Identificador único de la categoría")
+    name = models.CharField(max_length=250, verbose_name="Nombre")
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    image_url = models.CharField(max_length=500, blank=True, verbose_name="URL de imagen")
+    display_order = models.IntegerField(default=0, verbose_name="Orden de visualización",
+                                       help_text="Menor número aparece primero")
+    status = models.CharField(max_length=20, default='active',
+                             choices=[('active', 'Activo'), ('seasonal', 'Temporal')],
+                             verbose_name="Estado")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
-
-    def get_url(self):
-        # Use the correct named URL for category detail
-        return reverse('shop:ProdCatDetail', args=[self.slug])
+        db_table = 'categories'
+        ordering = ['display_order', 'name']
+        verbose_name = 'Categoría'
+        verbose_name_plural = 'Categorías'
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['display_order']),
+        ]
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('catalog:categories', args=[self.slug])
+
+    def get_active_products_count(self):
+        """Retorna el número de productos activos en esta categoría"""
+        return self.catalog_products.filter(status='active').count()
+
+
+class Subcategory(models.Model):
+    """
+    Subcategorías del catálogo personalizable
+    Migrated from CatalogSubcategory
+    """
+    slug = models.SlugField(max_length=250, unique=True, primary_key=True,
+                           help_text="Identificador único de la subcategoría")
+    name = models.CharField(max_length=250, verbose_name="Nombre")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 related_name='subcategories',
+                                 verbose_name="Categoría")
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    image_url = models.CharField(max_length=500, blank=True, verbose_name="URL de imagen")
+    display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'catalog_subcategory'
+        ordering = ['display_order', 'name']
+        verbose_name = 'Subcategoría'
+        verbose_name_plural = 'Subcategorías'
+        indexes = [
+            models.Index(fields=['category', 'display_order']),
+        ]
+
+    def __str__(self):
+        return f"{self.category.name} > {self.name}"
+
+    def get_absolute_url(self):
+        return reverse('catalog:subcategory', args=[self.category.slug, self.slug])
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=250, unique=False)
-    slug = models.SlugField(max_length=250, unique=False)
-    sku = models.CharField(max_length=10, unique=True)
-    description = models.TextField(blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images', blank=True, null=True)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    """Producto personalizable del catálogo"""
+    slug = models.SlugField(max_length=250, primary_key=True,
+                           help_text="Identificador único del producto")
+    name = models.CharField(max_length=250, verbose_name="Nombre del Producto")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 related_name='catalog_products',
+                                 verbose_name="Categoría")
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL,
+                                    null=True, blank=True,
+                                    related_name='catalog_products',
+                                    verbose_name="Subcategoría")
+    sku = models.CharField(max_length=50, unique=True, verbose_name="SKU",
+                          help_text="Código único del producto")
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    base_image_url = models.CharField(max_length=500, blank=True,
+                                      verbose_name="URL de imagen base")
+    status = models.CharField(max_length=20, default='active',
+                             choices=[('active', 'Activo'), ('seasonal', 'Temporal')],
+                             verbose_name="Estado")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'product'
-        verbose_name_plural = 'products'
-
-    def get_url(self):
-            return reverse('shop:ProdDetail', args=[self.category.slug, self.slug])
+        db_table = 'catalog_product'
+        ordering = ['name']
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
+        indexes = [
+            models.Index(fields=['category', 'status']),
+            models.Index(fields=['subcategory', 'status']),
+            models.Index(fields=['sku']),
+        ]
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('shop:catalog_product_detail', 
+                      args=[self.category.slug, self.slug])
+
+    def get_base_price(self, quantity=1):
+        """
+        Retorna el precio base para una cantidad específica
+        
+        Args:
+            quantity: Cantidad de unidades
+            
+        Returns:
+            Decimal: Precio unitario base según tier de cantidad
+        """
+        tier = self.price_tiers.filter(
+            min_quantity__lte=quantity,
+            max_quantity__gte=quantity
+        ).first()
+        
+        if tier:
+            return tier.unit_price
+        
+        # Si no hay tier, buscar el primer tier disponible
+        first_tier = self.price_tiers.order_by('min_quantity').first()
+        return first_tier.unit_price if first_tier else Decimal('0.00')
+
+    def get_price_range(self):
+        """Retorna el rango de precios (min, max)"""
+        tiers = self.price_tiers.all()
+        if not tiers:
+            return (Decimal('0.00'), Decimal('0.00'))
+        
+        prices = [tier.unit_price for tier in tiers]
+        return (min(prices), max(prices))
+
+    def get_available_variant_types(self):
+        """Retorna los tipos de variantes disponibles para este producto"""
+        return VariantType.objects.filter(
+            product_variant_types__product=self
+        ).order_by('display_order')
 
 
-
-##############################
-### COSTO DE LOS PRODUCTOS ###
-##############################
-
-
-class ProductsPricing(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    size = models.CharField(max_length=20, choices=TAMANIOS)
-    quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    price = models.IntegerField(default=30)
-
-
-####################################
-#### Packs de productos varios #####
-####################################
-
-''' Every pack should contain it's own price '''
-
-class Pack(models.Model):
-    name = models.CharField(max_length=250, unique=False)
-    slug = models.SlugField(max_length=250, unique=False)
-    sku = models.CharField(max_length=10, unique=True)
-    description = models.TextField(blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    subcategory = models.CharField(max_length=20, blank=True, null=True)
-    size = models.CharField(max_length=20, blank=True, null=True)
-    quantity = models.CharField(max_length=20, blank=True, null=True)
-    price = models.IntegerField(default=10)
-    image = models.ImageField(upload_to='pack_images', blank=True, null=True)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+class VariantType(models.Model):
+    """
+    Tipo de variante (forma, material, talla, color, etc.)
+    Define las características personalizables de los productos
+    """
+    slug = models.SlugField(max_length=250, unique=True, primary_key=True,
+                           help_text="Identificador único del tipo de variante")
+    name = models.CharField(max_length=250, verbose_name="Nombre")
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    is_required = models.BooleanField(default=False, verbose_name="Es requerido",
+                                      help_text="Si es true, el usuario debe seleccionar una opción")
+    allows_multiple = models.BooleanField(default=False, verbose_name="Permite múltiples",
+                                         help_text="Si permite seleccionar múltiples opciones")
+    display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
+    applies_to = models.CharField(max_length=100, blank=True, null=True,
+                                  verbose_name="Aplica a",
+                                  help_text="Categorías o tipos de productos a los que aplica")
 
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'pack'
-        verbose_name_plural = 'packs'
+        db_table = 'variant_type'
+        ordering = ['display_order', 'name']
+        verbose_name = 'Tipo de Variante'
+        verbose_name_plural = 'Tipos de Variantes'
+        indexes = [
+            models.Index(fields=['display_order']),
+        ]
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return self.name
+
+    def get_options_count(self):
+        """Retorna el número de opciones disponibles"""
+        return self.options.count()
 
 
-
-########################
-### Unitary Products ###
-########################
-
-class UnitaryProduct(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    subcategory1 = models.CharField(max_length=20, blank=True, null=True)
-    subcategory2 = models.CharField(max_length=20, blank=True, null=True)
-    name = models.CharField(max_length=250, unique=False)
-    slug = models.SlugField(max_length=250, unique=False)
-    sku = models.CharField(max_length=14, unique=True)
-    description = models.TextField(blank=True)
-    size = models.CharField(max_length=20, blank=True, null=True)
-    quantity = models.CharField(default=1, max_length=20, blank=True, null=True)
-    price = models.DecimalField(default=2, decimal_places=2, max_digits=4)
-    image = models.ImageField(upload_to='unitaryproducts', blank=True, null=True)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+class VariantOption(models.Model):
+    """
+    Opción específica de una variante
+    Ejemplo: Para el tipo 'color', opciones serían 'rojo', 'azul', etc.
+    """
+    slug = models.SlugField(max_length=250, primary_key=True,
+                           help_text="Identificador único de la opción")
+    variant_type = models.ForeignKey(VariantType, on_delete=models.CASCADE,
+                                     related_name='options',
+                                     verbose_name="Tipo de Variante")
+    name = models.CharField(max_length=250, verbose_name="Nombre")
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    additional_price = models.DecimalField(max_digits=10, decimal_places=2,
+                                          default=Decimal('0.00'),
+                                          verbose_name="Precio adicional",
+                                          help_text="Costo extra por seleccionar esta opción")
+    image_url = models.CharField(max_length=500, blank=True, null=True,
+                                verbose_name="URL de imagen")
+    display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
 
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'unitary product'
-        verbose_name_plural = 'unitary products'
+        db_table = 'variant_option'
+        ordering = ['variant_type', 'display_order', 'name']
+        verbose_name = 'Opción de Variante'
+        verbose_name_plural = 'Opciones de Variantes'
+        indexes = [
+            models.Index(fields=['variant_type', 'display_order']),
+        ]
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return f"{self.variant_type.name}: {self.name}"
+
+    def has_additional_cost(self):
+        """Verifica si esta opción tiene costo adicional"""
+        return self.additional_price > 0
 
 
-### Sample Packs ###
-
-class Sample(models.Model):
-    name = models.CharField(max_length=250, unique=True)
-    slug = models.SlugField(max_length=250, unique=True)
-    sku = models.CharField(max_length=10, unique=True)
-    description = models.TextField(blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='sample_images', blank=True)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+class ProductVariantType(models.Model):
+    """
+    Tabla intermedia que relaciona productos con tipos de variantes
+    Define qué variantes están disponibles para cada producto
+    """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                related_name='product_variant_types',
+                                verbose_name="Producto")
+    variant_type = models.ForeignKey(VariantType, on_delete=models.CASCADE,
+                                     related_name='product_variant_types',
+                                     verbose_name="Tipo de Variante")
 
     class Meta:
-        ordering = ('name',)
-        verbose_name = 'sample'
-        verbose_name_plural = 'samples'
-
-    def get_url(self):
-        return reverse('shop:SampleCatDetail', args=[self.category.slug, self.slug])
-        # return reverse('shop:SampleDetail', args=[self.slug])
-
-    def __str__(self):
-        return '{}'.format(self.name)
-
-
-##############################
-### COSTO DE LAS MUESTRAS ###
-##############################
-
-
-class SamplesPricing(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    size = models.CharField(max_length=20, choices=TAMANIOS)
-    quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    price = models.IntegerField(default=30)
-
-### Reviews ###
-
-class Product_Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    review = models.CharField(max_length=250, unique=True)
-    stars = models.DecimalField(max_digits=4, decimal_places=2)
-    created = models.DateTimeField(auto_now_add=True)
+        db_table = 'product_variant_type'
+        unique_together = ['product', 'variant_type']
+        verbose_name = 'Variante de Producto'
+        verbose_name_plural = 'Variantes de Productos'
+        indexes = [
+            models.Index(fields=['product']),
+            models.Index(fields=['variant_type']),
+        ]
 
     def __str__(self):
-        return str(self.user.username) + ": " + str(self.product.name) + " | Estrellas: " + str(self.stars)
+        return f"{self.product.name} - {self.variant_type.name}"
 
 
+class PriceTier(models.Model):
+    """
+    Tier de precios por volumen
+    Define precios diferentes según la cantidad comprada
+    """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                related_name='price_tiers',
+                                verbose_name="Producto")
+    min_quantity = models.IntegerField(verbose_name="Cantidad mínima",
+                                       help_text="Cantidad mínima para este precio")
+    max_quantity = models.IntegerField(verbose_name="Cantidad máxima",
+                                       help_text="Cantidad máxima para este precio")
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2,
+                                     verbose_name="Precio unitario",
+                                     help_text="Precio por unidad en este rango")
+    discount_percentage = models.IntegerField(default=0,
+                                             verbose_name="Porcentaje de descuento",
+                                             help_text="Descuento aplicado respecto al precio base")
 
-
-class Sample_Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    review = models.CharField(max_length=250, unique=True)
-    stars = models.DecimalField(max_digits=4, decimal_places=2)
-    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        db_table = 'price_tier'
+        ordering = ['product', 'min_quantity']
+        unique_together = ['product', 'min_quantity']
+        verbose_name = 'Nivel de Precio'
+        verbose_name_plural = 'Niveles de Precios'
+        indexes = [
+            models.Index(fields=['product', 'min_quantity']),
+        ]
 
     def __str__(self):
-        return str(self.user.username) + ": " + str(self.sample.name) + " | Estrellas: " + str(self.stars)
+        return f"{self.product.name}: {self.min_quantity}-{self.max_quantity} @ S/{self.unit_price}"
 
+    def get_range_display(self):
+        """Retorna un string amigable del rango de cantidades"""
+        if self.max_quantity >= 999999:
+            return f"{self.min_quantity}+"
+        return f"{self.min_quantity}-{self.max_quantity}"
 
+    def get_total_for_quantity(self, quantity):
+        """Calcula el total para una cantidad específica"""
+        if self.min_quantity <= quantity <= self.max_quantity:
+            return self.unit_price * quantity
+        return None
 
-
+    def is_quantity_in_range(self, quantity):
+        """Verifica si una cantidad está dentro del rango de este tier"""
+        return self.min_quantity <= quantity <= self.max_quantity
 
 
 
@@ -220,13 +340,11 @@ class Profile(models.Model):
         return str(self.user.first_name) + "'s profile"
 
 
-
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
-
 
 
 #####################################################################
@@ -259,6 +377,7 @@ class TarjetaPresentacion(models.Model):
     def __str__(self):
         return self.name
 
+
 class Folleto(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique=True)
@@ -271,6 +390,7 @@ class Folleto(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Poster(models.Model):
     name = models.CharField(max_length=250)
@@ -285,6 +405,7 @@ class Poster(models.Model):
     def __str__(self):
         return self.name
 
+
 class Etiqueta(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique=True)
@@ -297,6 +418,7 @@ class Etiqueta(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Empaque(models.Model):
     name = models.CharField(max_length=250)
@@ -340,7 +462,7 @@ class ClothingCategory(models.Model):
 
 class ClothingSubCategory(models.Model):
     """Sub-categories: Viseras, Gorras de Camionero, etc."""
-    category = models.ForeignKey(ClothingCategory, on_delete=models.CASCADE, related_name='subcategories')
+    category = models.ForeignKey(ClothingCategory, on_delete=models.CASCADE, related_name='clothing_subcategories')
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
     description = models.TextField(blank=True)

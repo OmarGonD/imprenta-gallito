@@ -117,65 +117,32 @@
                 </button>
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="{% url 'shop:allCat' %}" class="nav-link">
+                        <a href="{% url 'shop:home' %}" class="nav-link">
                             <i class="fas fa-home"></i>
                             Inicio
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-id-card"></i>
-                            Tarjetas de Presentación
+                    {% for category in categories %}
+                    <li class="nav-item {% if category.subcategories.all %}has-dropdown{% endif %}">
+                        <a href="{{ category.get_url }}" class="nav-link">
+                            {{ category.name }}
+                            {% if category.subcategories.all %}
+                            <i class="fas fa-chevron-down"></i>
+                            {% endif %}
                         </a>
+                        {% if category.subcategories.all %}
+                        <div class="dropdown-menu">
+                            {% for subcategory in category.subcategories.all %}
+                            {% if subcategory.is_active %}
+                            <a href="{{ subcategory.get_url }}" class="dropdown-item">
+                                {{ subcategory.name }}
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-tags"></i>
-                            Stickers y Etiquetas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-flag"></i>
-                            Letreros, Banners y Posters
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'shop:ropa_bolsas' %}" class="nav-link">
-                            <i class="fas fa-tshirt"></i>
-                            Ropa y Bolsas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-gift"></i>
-                            Productos Promocionales
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-box"></i>
-                            Empaques
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-envelope"></i>
-                            Invitaciones y Regalos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-mail-bulk"></i>
-                            Postales y Publicidad Impresa
-                        </a>
-                    </li>
-                    <li class="nav-item nav-special">
-                        <a href="#" class="nav-link-special">
-                            <i class="fas fa-percent"></i>
-                            Ofertas
-                        </a>
-                    </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

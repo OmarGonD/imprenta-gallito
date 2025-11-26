@@ -1,0 +1,14 @@
+category_slug,category_name,description,image_url,display_order,status
+tarjetas-presentacion,Tarjetas de Presentación,Tarjetas de visita profesionales personalizadas,/images/categories/tarjetas-presentacion.jpg,1,active
+postales-publicidad,Postales y Publicidad Impresa,Material publicitario impreso y postales promocionales,/images/categories/postales-publicidad.jpg,2,active
+letreros-banners,Letreros Banners y Pósters,Señalización y material publicitario de gran formato,/images/categories/letreros-banners.jpg,3,active
+stickers-etiquetas,Stickers y Etiquetas,Stickers personalizados y etiquetas adhesivas,/images/categories/stickers-etiquetas.jpg,4,active
+ropa-bolsas,Ropa y Bolsas,Prendas y accesorios personalizados,/images/categories/ropa-bolsas.jpg,5,active
+productos-promocionales,Productos Promocionales,Artículos promocionales personalizados para marketing,/images/categories/productos-promocionales.jpg,6,active
+embalaje,Embalaje,Soluciones de empaque y packaging personalizado,/images/categories/embalaje.jpg,7,active
+invitaciones-papeleria,Invitaciones Papelería y Bodas,Invitaciones y papelería para eventos especiales,/images/categories/invitaciones-papeleria.jpg,8,active
+logo-web-social,Logo Sitios Web y Redes Sociales,Diseño de identidad corporativa y presencia digital,/images/categories/logo-web-social.jpg,9,active
+servicios-diseno,Servicios de Diseño,Servicios profesionales de diseño gráfico,/images/categories/servicios-diseno.jpg,10,active
+black-friday,Venta de Black Friday,Ofertas y descuentos especiales durante Black Friday,/images/categories/black-friday.jpg,11,seasonal
+tarjetas-navidad,Tarjetas de Navidad y Festividades,Tarjetas personalizadas para Navidad y celebraciones,/images/categories/tarjetas-navidad.jpg,12,seasonal
+calendarios-regalos,Calendarios y Regalos,Calendarios personalizados y artículos de regalo,/images/categories/calendarios-regalos.jpg,13,active

@@ -14,7 +14,7 @@
     <nav class="breadcrumb-nav">
         <div class="container">
             <ol class="breadcrumb">
-                <li><a href="{% url 'shop:allCat' %}">Inicio</a></li>
+                <li><a href="{% url 'shop:home' %}">Inicio</a></li>
                 <li><a href="{% url 'shop:ropa_bolsas' %}">Ropa y Bolsas</a></li>
                 <li><a href="{% url 'shop:clothing_category' category.slug %}">{{ category.name }}</a></li>
                 <li class="active">{{ product.name }}</li>

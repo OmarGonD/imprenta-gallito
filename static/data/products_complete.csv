@@ -1,0 +1,113 @@
+product_slug,product_name,category_slug,subcategory_slug,sku,description,base_image_url,status
+tarjeta-plastico-frosted,Tarjeta Plástico Frosted,tarjetas-presentacion,deluxe,TP-DEL-001,Tarjeta de presentación en plástico transparente esmerilado,/images/products/tarjeta-plastico-frosted.jpg,active
+tarjeta-plastico-blanco,Tarjeta Plástico Blanco,tarjetas-presentacion,deluxe,TP-DEL-002,Tarjeta de presentación en plástico blanco,/images/products/tarjeta-plastico-blanco.jpg,active
+tarjeta-metal,Tarjeta Metal,tarjetas-presentacion,deluxe,TP-DEL-003,Tarjeta de presentación en metal grabado,/images/products/tarjeta-metal.jpg,active
+tarjeta-estandar,Tarjeta Estándar,tarjetas-presentacion,estandar,TP-EST-001,Tarjeta de presentación en cartulina premium,/images/products/tarjeta-estandar.jpg,active
+tarjeta-mate,Tarjeta Mate,tarjetas-presentacion,estandar,TP-EST-002,Tarjeta con acabado mate elegante,/images/products/tarjeta-mate.jpg,active
+tarjeta-reciclada,Tarjeta Reciclada,tarjetas-presentacion,ecologicas,TP-ECO-001,Tarjeta en material 100% reciclado,/images/products/tarjeta-reciclada.jpg,active
+tarjeta-semilla,Tarjeta Semilla,tarjetas-presentacion,ecologicas,TP-ECO-002,Tarjeta plantable con semillas,/images/products/tarjeta-semilla.jpg,active
+postal-estandar-4x6,Postal Estándar 4x6,postales-publicidad,postales-estandar,PO-EST-001,Postal tamaño estándar 4x6 pulgadas,/images/products/postal-4x6.jpg,active
+postal-estandar-5x7,Postal Estándar 5x7,postales-publicidad,postales-estandar,PO-EST-002,Postal tamaño 5x7 pulgadas,/images/products/postal-5x7.jpg,active
+postal-panoramica,Postal Panorámica,postales-publicidad,postales-panoramicas,PO-PAN-001,Postal en formato panorámico alargado,/images/products/postal-panoramica.jpg,active
+flyer-carta,Flyer Tamaño Carta,postales-publicidad,flyers,FL-001,Volante publicitario tamaño carta,/images/products/flyer-carta.jpg,active
+flyer-media-carta,Flyer Media Carta,postales-publicidad,flyers,FL-002,Volante publicitario media carta,/images/products/flyer-media-carta.jpg,active
+folleto-a4,Folleto A4,postales-publicidad,folletos,FO-001,Folleto informativo tamaño A4,/images/products/folleto-a4.jpg,active
+triptico-carta,Tríptico Carta,postales-publicidad,tripticos,TR-001,Folleto doblado en tres partes tamaño carta,/images/products/triptico.jpg,active
+diptico-carta,Díptico Carta,postales-publicidad,dipticos,DI-001,Folleto doblado por la mitad tamaño carta,/images/products/diptico.jpg,active
+catalogo-grapado,Catálogo Grapado,postales-publicidad,catalogos,CA-001,Catálogo de productos con grapa central,/images/products/catalogo-grapado.jpg,active
+catalogo-anillado,Catálogo Anillado,postales-publicidad,catalogos,CA-002,Catálogo con anillado espiral,/images/products/catalogo-anillado.jpg,active
+banner-vinil-1x2,Banner Vinílico 1x2m,letreros-banners,banners-vinilicos,BV-001,Banner de vinilo 1x2 metros,/images/products/banner-1x2.jpg,active
+banner-vinil-2x3,Banner Vinílico 2x3m,letreros-banners,banners-vinilicos,BV-002,Banner de vinilo 2x3 metros,/images/products/banner-2x3.jpg,active
+banner-vinil-personalizado,Banner Vinílico Personalizado,letreros-banners,banners-vinilicos,BV-003,Banner de vinilo tamaño personalizado,/images/products/banner-personalizado.jpg,active
+poster-a3,Póster A3,letreros-banners,posters-impresos,POS-001,Póster impreso tamaño A3,/images/products/poster-a3.jpg,active
+poster-a2,Póster A2,letreros-banners,posters-impresos,POS-002,Póster impreso tamaño A2,/images/products/poster-a2.jpg,active
+poster-a1,Póster A1,letreros-banners,posters-impresos,POS-003,Póster impreso tamaño A1,/images/products/poster-a1.jpg,active
+letrero-forex,Letrero en Forex,letreros-banners,letreros-rigidos,LE-FOR-001,Letrero en PVC forex rígido,/images/products/letrero-forex.jpg,active
+letrero-acrilico,Letrero Acrílico,letreros-banners,letreros-rigidos,LE-ACR-001,Letrero en acrílico transparente,/images/products/letrero-acrilico.jpg,active
+display-retractil-80,Display Retráctil 80cm,letreros-banners,displays-retractiles,DR-001,Roll-up banner 80cm ancho,/images/products/display-80.jpg,active
+display-retractil-100,Display Retráctil 100cm,letreros-banners,displays-retractiles,DR-002,Roll-up banner 100cm ancho,/images/products/display-100.jpg,active
+letrero-aluminio,Letrero Aluminio Exterior,letreros-banners,senalizacion-exterior,LE-EXT-001,Señalización para exteriores en aluminio,/images/products/letrero-aluminio.jpg,active
+bandera-pluma,Bandera Pluma,letreros-banners,banderas-publicitarias,BA-001,Bandera publicitaria tipo pluma,/images/products/bandera-pluma.jpg,active
+bandera-gota,Bandera Gota,letreros-banners,banderas-publicitarias,BA-002,Bandera publicitaria tipo gota,/images/products/bandera-gota.jpg,active
+marco-a4,Marco para Póster A4,letreros-banners,marcos-displays,MA-001,Marco porta póster tamaño A4,/images/products/marco-a4.jpg,active
+display-mesa,Display de Mesa,letreros-banners,marcos-displays,DM-001,Display promocional para mesa,/images/products/display-mesa.jpg,active
+stickers-personalizados,Stickers Personalizados,stickers-etiquetas,stickers-individuales,ST-IND-001,Stickers con diseño personalizado,/images/products/stickers-personalizados.jpg,active
+plancha-stickers-a4,Plancha de Stickers A4,stickers-etiquetas,plancha-stickers,ST-PLA-001,Plancha completa de stickers tamaño A4,/images/products/plancha-stickers-a4.jpg,active
+rollo-stickers-1000,Rollo de Stickers 1000 unidades,stickers-etiquetas,rollo-stickers,ST-ROL-001,Rollo con 1000 stickers,/images/products/rollo-1000.jpg,active
+etiqueta-producto-circular,Etiqueta Circular,stickers-etiquetas,etiquetas-productos,ET-PRO-001,Etiqueta circular para productos,/images/products/etiqueta-circular.jpg,active
+etiqueta-producto-rectangular,Etiqueta Rectangular,stickers-etiquetas,etiquetas-productos,ET-PRO-002,Etiqueta rectangular para productos,/images/products/etiqueta-rectangular.jpg,active
+calcomanias-auto,Calcomanías para Auto,stickers-etiquetas,calcomanias-vehiculos,CA-VEH-001,Stickers de gran formato para vehículos,/images/products/calcomanias-auto.jpg,active
+polo-basico,Polo Básico,ropa-bolsas,polos,POL-001,Polo de algodón personalizable,/images/products/polo-basico.jpg,active
+polo-con-cuello,Polo con Cuello,ropa-bolsas,polos-cuello,POL-CUE-001,Polo estilo polo con cuello y botones,/images/products/polo-cuello.jpg,active
+sweatshirt,Sweatshirt,ropa-bolsas,sudaderas,SWE-001,Sudadera sin capucha personalizable,/images/products/sweatshirt.jpg,active
+hoodie,Hoodie,ropa-bolsas,sudaderas,HOO-001,Sudadera con capucha personalizable,/images/products/hoodie.jpg,active
+casaca-basica,Casaca Básica,ropa-bolsas,casacas,CAS-001,Casaca clásica personalizable,/images/products/casaca.jpg,active
+cortaviento-basico,Cortaviento,ropa-bolsas,cortaviento,COR-001,Chaqueta cortaviento impermeable,/images/products/cortaviento.jpg,active
+camisa-casual,Camisa Casual,ropa-bolsas,camisas,CAM-CAS-001,Camisa casual personalizable,/images/products/camisa-casual.jpg,active
+camisa-formal,Camisa Formal,ropa-bolsas,camisas,CAM-FOR-001,Camisa formal para trabajo,/images/products/camisa-formal.jpg,active
+gorra-personalizada,Gorra Personalizada,ropa-bolsas,gorros,GOR-001,Gorra totalmente personalizable,/images/products/gorra-base.jpg,active
+short-deportivo,Short Deportivo,ropa-bolsas,shorts,SHO-DEP-001,Short para actividades deportivas,/images/products/short-deportivo.jpg,active
+short-casual,Short Casual,ropa-bolsas,shorts,SHO-CAS-001,Short para uso casual,/images/products/short-casual.jpg,active
+mandil-cocina,Mandil de Cocina,ropa-bolsas,mandiles,MAN-COC-001,Delantal para cocina personalizable,/images/products/mandil-cocina.jpg,active
+mandil-trabajo,Mandil de Trabajo,ropa-bolsas,mandiles,MAN-TRA-001,Mandil industrial personalizable,/images/products/mandil-trabajo.jpg,active
+bolso-tote,Bolso Tote,ropa-bolsas,bolsos,BOL-TOT-001,Bolso tote de lona personalizable,/images/products/bolso-tote.jpg,active
+mochila-basica,Mochila Básica,ropa-bolsas,bolsos,BOL-MOC-001,Mochila personalizable,/images/products/mochila.jpg,active
+bolso-gym,Bolso Deportivo,ropa-bolsas,bolsos,BOL-GYM-001,Bolso para gimnasio personalizable,/images/products/bolso-gym.jpg,active
+taza-ceramica,Taza de Cerámica,productos-promocionales,tazas-vasos,TAZ-001,Taza de cerámica 11oz personalizable,/images/products/taza-ceramica.jpg,active
+taza-magica,Taza Mágica,productos-promocionales,tazas-vasos,TAZ-002,Taza que cambia con temperatura,/images/products/taza-magica.jpg,active
+vaso-termico,Vaso Térmico,productos-promocionales,tazas-vasos,VAS-001,Vaso térmico para bebidas,/images/products/vaso-termico.jpg,active
+llavero-acrilico,Llavero Acrílico,productos-promocionales,llaveros,LLA-001,Llavero en acrílico personalizado,/images/products/llavero-acrilico.jpg,active
+llavero-metal,Llavero Metal,productos-promocionales,llaveros,LLA-002,Llavero de metal grabado,/images/products/llavero-metal.jpg,active
+boligrafo-plastico,Bolígrafo Plástico,productos-promocionales,plumas-boligrafos,BOL-001,Bolígrafo plástico con logo,/images/products/boligrafo-plastico.jpg,active
+boligrafo-metal,Bolígrafo Metal,productos-promocionales,plumas-boligrafos,BOL-002,Bolígrafo de metal premium,/images/products/boligrafo-metal.jpg,active
+usb-8gb,USB 8GB,productos-promocionales,usb-tecnologia,USB-001,Memoria USB 8GB personalizada,/images/products/usb-8gb.jpg,active
+usb-16gb,USB 16GB,productos-promocionales,usb-tecnologia,USB-002,Memoria USB 16GB personalizada,/images/products/usb-16gb.jpg,active
+mousepad,Mousepad,productos-promocionales,articulos-escritorio,ESC-001,Pad para mouse personalizado,/images/products/mousepad.jpg,active
+libreta-notas,Libreta de Notas,productos-promocionales,articulos-escritorio,ESC-002,Libreta con logo corporativo,/images/products/libreta-notas.jpg,active
+termo-acero,Termo Acero Inoxidable,productos-promocionales,termos-botellas,TER-001,Termo térmico de acero 500ml,/images/products/termo-acero.jpg,active
+botella-plastico,Botella Plástica,productos-promocionales,termos-botellas,BOT-001,Botella deportiva 750ml,/images/products/botella-plastico.jpg,active
+toalla-microfibra,Toalla Microfibra,productos-promocionales,articulos-deportivos,DEP-001,Toalla de microfibra personalizada,/images/products/toalla-microfibra.jpg,active
+balon-futbol,Balón de Fútbol,productos-promocionales,articulos-deportivos,DEP-002,Balón de fútbol con logo,/images/products/balon-futbol.jpg,active
+peluche-oso,Peluche Oso,productos-promocionales,juguetes-peluches,JUG-001,Oso de peluche personalizable,/images/products/peluche-oso.jpg,active
+caja-carton-pequena,Caja Pequeña,embalaje,cajas-personalizadas,CAJ-001,Caja de cartón personalizada pequeña,/images/products/caja-pequena.jpg,active
+caja-carton-mediana,Caja Mediana,embalaje,cajas-personalizadas,CAJ-002,Caja de cartón personalizada mediana,/images/products/caja-mediana.jpg,active
+caja-carton-grande,Caja Grande,embalaje,cajas-personalizadas,CAJ-003,Caja de cartón personalizada grande,/images/products/caja-grande.jpg,active
+bolsa-papel-kraft,Bolsa Kraft,embalaje,bolsas-papel,BPA-001,Bolsa de papel kraft con asa,/images/products/bolsa-kraft.jpg,active
+etiqueta-packaging,Etiqueta para Packaging,embalaje,etiquetas-packaging,ETP-001,Etiqueta adhesiva para empaques,/images/products/etiqueta-packaging.jpg,active
+tape-logo,Tape con Logo,embalaje,tape-personalizado,TAP-001,Cinta adhesiva personalizada,/images/products/tape-logo.jpg,active
+papel-seda-colores,Papel Seda,embalaje,papel-seda,PSE-001,Papel de seda para envolver,/images/products/papel-seda.jpg,active
+sobre-c5,Sobre C5,embalaje,sobres-personalizados,SOB-001,Sobre tamaño C5 personalizado,/images/products/sobre-c5.jpg,active
+invitacion-boda-clasica,Invitación Boda Clásica,invitaciones-papeleria,invitaciones-boda,INV-BOD-001,Invitación elegante para bodas,/images/products/invitacion-boda-clasica.jpg,active
+invitacion-boda-moderna,Invitación Boda Moderna,invitaciones-papeleria,invitaciones-boda,INV-BOD-002,Invitación de boda con diseño moderno,/images/products/invitacion-boda-moderna.jpg,active
+save-date-postal,Save the Date Postal,invitaciones-papeleria,save-the-date,STD-001,Postal save the date para bodas,/images/products/save-date.jpg,active
+programa-boda,Programa de Boda,invitaciones-papeleria,programas-evento,PRO-001,Programa impreso para ceremonia,/images/products/programa-boda.jpg,active
+menu-boda,Menú de Boda,invitaciones-papeleria,menus-personalizados,MEN-001,Menú personalizado para evento,/images/products/menu-boda.jpg,active
+tarjeta-gracias,Tarjeta de Agradecimiento,invitaciones-papeleria,tarjetas-agradecimiento,TAG-001,Thank you card personalizada,/images/products/tarjeta-gracias.jpg,active
+invitacion-cumpleanos-infantil,Invitación Cumpleaños Infantil,invitaciones-papeleria,invitaciones-cumpleanos,INV-CUM-001,Invitación para fiesta infantil,/images/products/invitacion-cumple-nino.jpg,active
+invitacion-cumpleanos-adulto,Invitación Cumpleaños Adulto,invitaciones-papeleria,invitaciones-cumpleanos,INV-CUM-002,Invitación elegante para adultos,/images/products/invitacion-cumple-adulto.jpg,active
+membreteado,Hoja Membretada,invitaciones-papeleria,papeleria-corporativa,PAP-001,Papel membretado corporativo,/images/products/membreteado.jpg,active
+logo-basico,Diseño de Logo Básico,logo-web-social,diseno-logo,LOG-001,Diseño de logotipo profesional básico,/images/products/logo-basico.jpg,active
+logo-premium,Diseño de Logo Premium,logo-web-social,diseno-logo,LOG-002,Diseño de logotipo premium completo,/images/products/logo-premium.jpg,active
+web-landing,Landing Page,logo-web-social,diseno-web,WEB-001,Diseño de página de aterrizaje,/images/products/web-landing.jpg,active
+web-completo,Sitio Web Completo,logo-web-social,diseno-web,WEB-002,Diseño de sitio web multipágina,/images/products/web-completo.jpg,active
+pack-redes-sociales,Pack Redes Sociales,logo-web-social,diseno-redes-sociales,RED-001,Pack de contenido para redes sociales,/images/products/pack-redes.jpg,active
+manual-marca,Manual de Marca,logo-web-social,identidad-corporativa,IDE-001,Manual de identidad corporativa completo,/images/products/manual-marca.jpg,active
+diseno-personalizado,Diseño Gráfico Personalizado,servicios-diseno,diseno-grafico,DIS-001,Servicio de diseño gráfico a medida,/images/products/diseno-personalizado.jpg,active
+diseno-packaging-caja,Diseño de Caja,servicios-diseno,diseno-packaging,PAC-001,Diseño de packaging para caja,/images/products/diseno-caja.jpg,active
+diseno-etiqueta,Diseño de Etiqueta,servicios-diseno,diseno-packaging,PAC-002,Diseño de etiqueta para producto,/images/products/diseno-etiqueta.jpg,active
+diseno-catalogo,Diseño de Catálogo,servicios-diseno,diseno-editorial,EDI-001,Diseño de catálogo profesional,/images/products/diseno-catalogo.jpg,active
+diseno-revista,Diseño de Revista,servicios-diseno,diseno-editorial,EDI-002,Diseño de revista o magazine,/images/products/diseno-revista.jpg,active
+campana-publicitaria,Campaña Publicitaria,servicios-diseno,diseno-publicitario,PUB-001,Diseño de campaña publicitaria completa,/images/products/campana-publicitaria.jpg,active
+pack-stickers-bf,Pack Stickers Black Friday,black-friday,ofertas-stickers,BF-ST-001,Pack especial de stickers con descuento,/images/products/pack-stickers-bf.jpg,seasonal
+pack-ropa-bf,Pack Ropa Black Friday,black-friday,ofertas-ropa,BF-ROP-001,Pack de prendas con descuento especial,/images/products/pack-ropa-bf.jpg,seasonal
+pack-tarjetas-bf,Pack Tarjetas Black Friday,black-friday,ofertas-tarjetas,BF-TAR-001,Pack de tarjetas con precio especial,/images/products/pack-tarjetas-bf.jpg,seasonal
+combo-promocional-bf,Combo Promocional Black Friday,black-friday,paquetes-black-friday,BF-COM-001,Combo de productos variados con descuento,/images/products/combo-bf.jpg,seasonal
+tarjeta-navidad-tradicional,Tarjeta Navidad Tradicional,tarjetas-navidad,tarjetas-navidad-clasicas,TNA-001,Tarjeta navideña clásica,/images/products/tarjeta-navidad-tradicional.jpg,seasonal
+tarjeta-navidad-moderna,Tarjeta Navidad Moderna,tarjetas-navidad,tarjetas-navidad-clasicas,TNA-002,Tarjeta navideña con diseño moderno,/images/products/tarjeta-navidad-moderna.jpg,seasonal
+tarjeta-ano-nuevo,Tarjeta Año Nuevo,tarjetas-navidad,tarjetas-ano-nuevo,TAN-001,Tarjeta para celebrar el nuevo año,/images/products/tarjeta-ano-nuevo.jpg,seasonal
+tarjeta-empresarial-navidena,Tarjeta Empresarial Navideña,tarjetas-navidad,tarjetas-empresariales,TEM-001,Tarjeta corporativa para fin de año,/images/products/tarjeta-empresarial-navidad.jpg,seasonal
+calendario-pared-2025,Calendario de Pared 2025,calendarios-regalos,calendarios-pared,CAL-PAR-001,Calendario de pared tamaño grande,/images/products/calendario-pared.jpg,active
+calendario-escritorio-2025,Calendario de Escritorio 2025,calendarios-regalos,calendarios-escritorio,CAL-ESC-001,Calendario compacto para mesa,/images/products/calendario-escritorio.jpg,active
+agenda-personalizada,Agenda Personalizada,calendarios-regalos,agendas-personalizadas,AGE-001,Agenda anual personalizada,/images/products/agenda-personalizada.jpg,active
+libreta-corporativa,Libreta Corporativa,calendarios-regalos,libretas-cuadernos,LIB-001,Cuaderno con logo corporativo,/images/products/libreta-corporativa.jpg,active
+set-regalo-corporativo,Set Regalo Corporativo,calendarios-regalos,regalos-corporativos,REG-001,Set de regalo para empresas,/images/products/set-regalo.jpg,active

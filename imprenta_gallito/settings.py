@@ -93,7 +93,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processor.menu_links',
-                'shop.context_processor.has_shop',
+                'shop.context_processor.navbar_categories',
+                #'shop.context_processor.has_shop',
                 # 'cart.context_processor.current_time',
                 'cart.context_processor.cart_items_counter'
             ],

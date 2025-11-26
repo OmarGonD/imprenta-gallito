@@ -207,7 +207,7 @@ Carrito de compras - Imprenta Gallito
 
                 <!-- Continue Shopping Button (Mobile) -->
                 <div class="continue-shopping-mobile">
-                    <a href="{% url 'shop:allCat' %}" class="btn-continue-shopping">
+                    <a href="{% url 'shop:home' %}" class="btn-continue-shopping">
                         <i class="fas fa-arrow-left"></i> Seguir Comprando
                     </a>
                 </div>
@@ -313,21 +313,21 @@ Carrito de compras - Imprenta Gallito
                                     <button id="depositButton" class="btn-checkout">
                                         <i class="fas fa-money-bill-wave"></i> Pagar con Efectivo
                                     </button>
-                                    <a href="{% url 'shop:allCat' %}" class="btn-continue-desktop">
+                                    <a href="{% url 'shop:home' %}" class="btn-continue-desktop">
                                         <i class="fas fa-arrow-left"></i> Seguir Comprando
                                     </a>
                                 {% elif user.is_authenticated and total == 0 %}
                                     <button id="depositButtonEmptyCart" class="btn-checkout" data-toggle="modal" data-target="#exampleModal">
                                         <i class="fas fa-money-bill-wave"></i> Pagar con Efectivo
                                     </button>
-                                    <a href="{% url 'shop:allCat' %}" class="btn-continue-desktop">
+                                    <a href="{% url 'shop:home' %}" class="btn-continue-desktop">
                                         <i class="fas fa-arrow-left"></i> Seguir Comprando
                                     </a>
                                 {% else %}
                                     <button id="depositButtonCannotbuy" class="btn-checkout" data-toggle="modal" data-target="#CannotbuyButtonModal">
                                         <i class="fas fa-money-bill-wave"></i> Pagar con Efectivo
                                     </button>
-                                    <a href="{% url 'shop:allCat' %}" class="btn-continue-desktop">
+                                    <a href="{% url 'shop:home' %}" class="btn-continue-desktop">
                                         <i class="fas fa-arrow-left"></i> Seguir Comprando
                                     </a>
                                 {% endif %}

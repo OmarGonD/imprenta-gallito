@@ -12,13 +12,132 @@ from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
 from django.views.generic import ListView
-from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile, UnitaryProduct, Sample, Peru
+from shop.models import Profile, Peru
 from shop.tokens import account_activation_token
-from cart.models import Cart, CartItem, SampleItem, PackItem, UnitaryProductItem
+from cart.models import Cart, CartItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque
-from .models import Product, Category, Pack
+from .models import Product, Category
 from marketing.forms import EmailSignUpForm
+
+
+# ============================================================================
+# HOME PAGE VIEW
+# ============================================================================
+
+def Home(request):
+    """
+    E-commerce style homepage for Imprenta Gallito
+    Includes: Hero slider, Popular categories, New products, Special offers,
+    Testimonials, Newsletter signup
+    """
+    # Initialize empty lists - will be populated only if database is ready
+    popular_categories = []
+    new_products = []
+    special_offers = []
+    
+    # Check if required tables exist
+    try:
+        from django.db import connection
+        table_names = connection.introspection.table_names()
+        has_categories = 'categories' in table_names or 'shop_category' in table_names
+        has_products = 'products' in table_names or 'shop_product' in table_names
+    except:
+        has_categories = False
+        has_products = False
+    
+    # Only query if tables exist
+    if has_categories:
+        try:
+            popular_categories = list(Category.objects.filter(
+                status='active'
+            ).prefetch_related('subcategories').order_by('display_order')[:6])
+        except Exception as e:
+            print(f"Error loading categories: {e}")
+            popular_categories = []
+    
+    # Get latest 6 products - only if both tables exist
+    if has_categories and has_products and popular_categories:
+        try:
+            new_products = list(Product.objects.filter(
+                status='active'
+            ).select_related('category').order_by('-created_at')[:6])
+        except Exception as e:
+            print(f"Error loading new products: {e}")
+            new_products = []
+    
+    # Featured/Special offer products
+    if has_categories and has_products and popular_categories:
+        try:
+            special_offers = list(Product.objects.filter(
+                status='active'
+            ).select_related('category').order_by('?')[:4])
+        except Exception as e:
+            print(f"Error loading special offers: {e}")
+            special_offers = []
+    
+    # Hero slider banners
+    hero_banners = [
+        {
+            'title': 'Impresión de Alta Calidad',
+            'subtitle': 'Stickers, etiquetas y más para tu negocio',
+            'cta_text': 'Ver Catálogo',
+            'cta_url': '/catalog/',
+            'image': '/static/img/banner-home.png',
+            'bg_color': 'from-yellow-500 to-orange-500',
+        },
+        {
+            'title': 'Tarjetas de Presentación',
+            'subtitle': 'Diseños profesionales que impresionan',
+            'cta_text': 'Explorar',
+            'cta_url': '/catalog/',
+            'image': '/static/img/banner-home2.png',
+            'bg_color': 'from-orange-500 to-red-500',
+        },
+        {
+            'title': 'Empaques Personalizados',
+            'subtitle': 'Dale identidad a tu marca',
+            'cta_text': 'Ver Productos',
+            'cta_url': '/catalog/',
+            'image': '/static/img/banner-home.png',
+            'bg_color': 'from-amber-500 to-yellow-500',
+        },
+    ]
+    
+    # Static testimonials (can be moved to database later)
+    testimonials = [
+        {
+            'name': 'María García',
+            'company': 'Café Peruano',
+            'text': 'Excelente calidad en los stickers para nuestros productos. El servicio fue rápido y profesional.',
+            'rating': 5,
+            'avatar': 'MG',
+        },
+        {
+            'name': 'Carlos Mendoza',
+            'company': 'Tech Solutions',
+            'text': 'Las tarjetas de presentación quedaron increíbles. Definitivamente seguiremos trabajando con Imprenta Gallito.',
+            'rating': 5,
+            'avatar': 'CM',
+        },
+        {
+            'name': 'Ana Rodríguez',
+            'company': 'Boutique Luna',
+            'text': 'Los empaques personalizados le dieron un toque especial a nuestra marca. Muy recomendados.',
+            'rating': 5,
+            'avatar': 'AR',
+        },
+    ]
+    
+    context = {
+        'popular_categories': popular_categories,
+        'new_products': new_products,
+        'special_offers': special_offers,
+        'hero_banners': hero_banners,
+        'testimonials': testimonials,
+    }
+    
+    return render(request, 'shop/home.html', context)
 
 
 class TarjetasPresentacionListView(ListView):
@@ -48,56 +167,6 @@ class EmpaquesListView(ListView):
 
 
 
-# Create your views here.
-
-# Category View
-
-
-def allCat(request):
-    # Muestras todas las categorias de productos en el home, menos "Muestras"
-    categories = Category.objects.exclude(name='Muestras')
-    email_signup_form = EmailSignUpForm()
-    
-    # Get popular products (can be based on reviews, orders, or just recent products)
-    popular_products = Product.objects.filter(available=True).order_by('-created')[:6]
-
-    # Fix: use the correct template path
-    return render(request, 'shop/index.html', {
-        'categories': categories,
-        'email_signup_form': email_signup_form,
-        'popular_products': popular_products,
-    })
-
-
-def ProdCatDetail(request, c_slug):
-    ### Para mostrar una sección de la página, primero se debe crear su categoría.
-    ### Dependiendo de la categoría, se mostrará la sección: para Comprar, se debe crear la categoría: "stickers", para "muestras", la categoría "muestras".
-    print("### INGRESA A PRODCATDETAIL ###")
-    print("c_slug is: ", c_slug)
-    if c_slug not in ["muestras", "packs"]:
-        print("### INGRESA A C_SLUG  ###")
-        try:
-            category = Category.objects.get(slug=c_slug)
-            products = Product.objects.filter(category__slug=c_slug, available=True)
-            print("### RETURN PRODUCTS POR CATEGORÍA  ###")
-            return render(request, 'shop/productos_por_categoria.html', {'category': category, 'products': products})
-
-        except Exception as e:
-            raise e
-    
-    print("### ANTES DEL ELIF  ###")
-    if c_slug == "packs":
-        categoria = Category.objects.get(slug='packs')
-
-        # Productos que pertenecen a la categoria muestras
-
-        c_slug = 'packs'
-
-        # muestras = Product.objects.filter(category__slug=c_slug)
-
-        packs = Pack.objects.filter(category__slug=c_slug).exclude(available=False)
-        print("### RENDERS PACKS HTML  ###")
-        return render(request, 'shop/packs.html', {'category': categoria, 'packs': packs})
 
 
    
@@ -166,20 +235,6 @@ def PackFun(request, c_slug, pack_slug):
 ################
 
 
-
-def SamplePackPage(request):
-    # La categoria es necesaria para mostrar el video de c/categoria
-
-    c_slug = 'muestras'
-
-    categoria_muestras = Category.objects.get(slug=c_slug)
-
-    # Productos que pertenecen a la categoria muestras
-
-    muestras = Sample.objects.filter(category__slug=c_slug).exclude(slug='sobre-con-muestras').exclude(available=False)
-
-    return render(request, 'shop/muestras.html', {'categoria_muestras': categoria_muestras,
-                                                  'muestras': muestras})
 
 
 
@@ -604,7 +659,7 @@ def activate(request, uidb64, token):
         print(type(user.id))
         print("############")
         send_email_new_registered_user(user.id)
-        return redirect('shop:allCat')
+        return redirect('shop:home')
     else:
         return HttpResponse('¡Enlace de activación inválido! Intente registrarse nuevamente.')
 
@@ -871,34 +926,16 @@ def prices(request):
 ### Catalogo View ###
 #####################
 
-class CatalogoListView(ListView):
+class CategoryListView(ListView):
 
-    model = UnitaryProduct
+    model = Category
     template_name = "shop/catalogo.html"
     paginate_by = 9
 
     def get_queryset(self):
-        filter_val = self.request.GET.get('filtro', 'todas')
-        filter_val = filter_val.lower()
-        order = self.request.GET.get('orderby', 'created')
-        if filter_val == "todas":
-            context = UnitaryProduct.objects.all().filter(available=True).order_by('-created')
-            return context
-        else:    
-            context = UnitaryProduct.objects.filter(
-                subcategory2=filter_val,
-            ).filter(available=True).order_by('-created')
-            return context
-
-    def get_context_data(self, **kwargs):
-        context = super(CatalogoListView, self).get_context_data(**kwargs)
-        context['filtro'] = self.request.GET.get('filtro', 'todas')
-        context['orderby'] = self.request.GET.get('orderby', 'created')
-        context['category'] = Category.objects.get(slug="catalogo")
-        context['total_stickers'] = UnitaryProduct.objects.filter(available=True).count()
-        context['product_count'] = self.get_queryset().count()
-        
+        context = Category.objects.all().filter(available=True).order_by('-created')
         return context
+        
 
 def tarjetas_presentacion(request):
     return render(request, 'shop/tarjetas_presentacion.html')

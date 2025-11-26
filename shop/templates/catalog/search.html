@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Búsqueda: {{ search_term }} - Catálogo - Imprenta Gallito{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/catalog.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="catalog-search">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'catalog:home' %}">Catálogo</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Búsqueda</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Search Header -->
+        <div class="search-header">
+            <h1 class="search-title">Resultados de búsqueda</h1>
+            
+            <!-- Search Bar -->
+            <div class="search-bar-container">
+                <form action="{% url 'catalog:search' %}" method="get" class="search-form">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control search-input" 
+                               placeholder="Buscar productos..." 
+                               value="{{ search_term }}" 
+                               minlength="3"
+                               autofocus>
+                        <button type="submit" class="btn btn-primary search-btn">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {% if search_term %}
+            <p class="search-info">
+                {% if total_results > 0 %}
+                Se encontraron <strong>{{ total_results }}</strong> resultado{{ total_results|pluralize }} para "<strong>{{ search_term }}</strong>"
+                {% else %}
+                No se encontraron resultados para "<strong>{{ search_term }}</strong>"
+                {% endif %}
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Products Grid -->
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'catalog:product_detail' product.category.slug product.slug %}" class="product-link">
+                    {% if product.image %}
+                    <div class="product-image">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                    </div>
+                    {% else %}
+                    <div class="product-image placeholder">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-category">
+                            <i class="fas fa-tag"></i> {{ product.category.name }}
+                            {% if product.subcategory %} > {{ product.subcategory.name }}{% endif %}
+                        </p>
+                        
+                        <div class="product-pricing">
+                            {% if product.min_price %}
+                            <span class="price-from">Desde</span>
+                            <span class="price-amount">S/ {{ product.min_price }}</span>
+                            {% else %}
+                            <span class="price-label">Personalizable</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-sm">
+                                Ver detalles <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if products.has_other_pages %}
+        <nav aria-label="Paginación" class="pagination-nav">
+            <ul class="pagination justify-content-center">
+                {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?q={{ search_term }}&page={{ products.previous_page_number }}">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?q={{ search_term }}&page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                
+                {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?q={{ search_term }}&page={{ products.next_page_number }}">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% elif message %}
+        <div class="no-results">
+            <div class="no-results-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <p>{{ message }}</p>
+        </div>
+        {% else %}
+        <div class="no-results">
+            <div class="no-results-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>No se encontraron resultados</h3>
+            <p>Intenta con otros términos de búsqueda o explora nuestras categorías.</p>
+            <a href="{% url 'catalog:home' %}" class="btn btn-primary">
+                <i class="fas fa-th"></i> Ver todas las categorías
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/catalog.js' %}"></script>
+{% endblock %}

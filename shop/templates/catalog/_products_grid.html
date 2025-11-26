@@ -1,0 +1,59 @@
+{% load static %}
+
+<!-- Products Grid Partial Template -->
+<div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <a href="{% url 'catalog:product_detail' product.category.slug product.slug %}" class="product-link">
+            {% if product.base_image_url %}
+            <div class="product-image">
+                <img src="{{ product.base_image_url }}" alt="{{ product.name }}" loading="lazy">
+            </div>
+            {% else %}
+            <div class="product-image placeholder">
+                <i class="fas fa-image"></i>
+            </div>
+            {% endif %}
+            
+            <div class="product-info">
+                <h3 class="product-name">{{ product.name }}</h3>
+                {% if product.subcategory %}
+                <p class="product-subcategory">
+                    <i class="fas fa-tag"></i> {{ product.subcategory.name }}
+                </p>
+                {% endif %}
+                
+                <div class="product-pricing">
+                    {% if product.get_base_price %}
+                    <span class="price-from">Desde</span>
+                    <span class="price-amount">S/ {{ product.get_base_price }}</span>
+                    {% else %}
+                    <span class="price-label">Personalizable</span>
+                    {% endif %}
+                </div>
+                
+                <div class="product-actions">
+                    <button class="btn btn-primary btn-sm">
+                        Ver detalles <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle"></i> 
+            No hay productos disponibles en esta subcategoría.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if products and products|length > 3 %}
+<div class="text-center mt-4">
+    <a href="{% url 'catalog:subcategory' category.slug subcategory.slug %}" class="btn btn-primary">
+        Ver todos los productos <i class="fas fa-arrow-right"></i>
+    </a>
+</div>
+{% endif %}
