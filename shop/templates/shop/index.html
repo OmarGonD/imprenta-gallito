@@ -1,443 +1,423 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block metadescription %}
-{% if category %}
-{{ category.description|truncatewords:155 }}
-{% else %}
-¡Bienvenidos a Imprenta Gallito Perú!
-{% endif %}
-{% endblock %}
-{% block title %}
-{% if category %}
-{{ category.name }}
-{% else %}
-Stickers personalizados y más
-{% endif %}
-{% endblock %}
 
-{% block content %}
+{% block title %}Imprenta Gallito - Impresión Profesional en Lima{% endblock %}
 
-{% include 'promotional_banner.html' %}
-
-<!-- Redesigned Todas las categorías section -->
-<section id="todas-categorias" style="background: #f6f6f6; padding: 48px 0;">
-    <div class="section-80-center">
-        <h2 style="font-size:2rem; font-weight:700; margin-bottom:32px;">Todas las categorías</h2>
-        <div class="row" style="gap: 32px 0;">
-            {% for category in categories %}
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4 d-flex align-items-stretch">
-                <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                    <a href="{{ category.get_url }}">
-                        {% if category.image %}
-                        <img src="{{ category.image.url }}" alt="{{ category.name }}"
-                             style="width: 90px; height: 90px; object-fit: cover; border-radius: 50%; border: 2px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" />
-                        {% else %}
-                        <div style="width: 90px; height: 90px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #aaa;">Sin imagen</span>
-                        </div>
-                        {% endif %}
-                    </a>
-                    <div style="margin-top: 12px; text-align: center;">
-                        <a href="{{ category.get_url }}" style="text-decoration: none; color: inherit;">
-                            <span style="font-size: 1rem; font-weight: 500;">{{ category.name }}</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<section id="shop-favorites" style="background: #f6f6f6; padding: 48px 0;">
-    <div class="section-80-center">
-        <h2 style="font-size:2rem; font-weight:700; margin-bottom:32px;">Shop favorites and new finds</h2>
-        <div class="row" style="gap: 32px 0;">
-            <!-- Más vendidos -->
-            <div class="col-md-4 mb-4">
-                <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;">
-                    <h3 style="font-size:1.2rem; font-weight:600; margin-bottom:18px;">Más vendidos</h3>
-                    <div class="d-flex justify-content-between" style="gap: 8px;">
-                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80" alt="Más vendido 1" style="width: 32%; border-radius: 8px;">
-                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80" alt="Más vendido 2" style="width: 32%; border-radius: 8px;">
-                        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=80" alt="Más vendido 3" style="width: 32%; border-radius: 8px;">
-                    </div>
-                </div>
-            </div>
-            <!-- Ropa -->
-            <div class="col-md-4 mb-4">
-                <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;">
-                    <h3 style="font-size:1.2rem; font-weight:600; margin-bottom:18px;">Ropa</h3>
-                    <div class="d-flex justify-content-between" style="gap: 8px;">
-                        <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=300&q=80" alt="Ropa 1" style="width: 32%; border-radius: 8px;">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=300&q=80" alt="Ropa 2" style="width: 32%; border-radius: 8px;">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" alt="Ropa 3" style="width: 32%; border-radius: 8px;">
-                    </div>
-                </div>
-            </div>
-            <!-- Nuevos productos -->
-            <div class="col-md-4 mb-4">
-                <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 24px;">
-                    <h3 style="font-size:1.2rem; font-weight:600; margin-bottom:18px;">Nuevos productos</h3>
-                    <div class="d-flex justify-content-between" style="gap: 8px;">
-                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80" alt="Nuevo 1" style="width: 32%; border-radius: 8px;">
-                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80" alt="Nuevo 2" style="width: 32%; border-radius: 8px;">
-                        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=80" alt="Nuevo 3" style="width: 32%; border-radius: 8px;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Hannah Brown Wedding Collection Banner -->
-<div class="section-80-center my-5">
-    <div style="display: flex; flex-wrap: wrap; align-items: stretch; background: #f7ede2; border-radius: 18px; overflow: hidden; min-height: 220px;">
-        <!-- Left: Text -->
-        <div style="flex: 1 1 320px; min-width: 260px; background: #fffbe6; padding: 32px 28px 28px 28px; display: flex; flex-direction: column; justify-content: center;">
-            <div style="font-size: 1.25rem; font-weight: bold; margin-bottom: 10px;">Hannah Brown Wedding Collection</div>
-            <div style="font-size: 1rem; margin-bottom: 10px;">
-                We partnered with the two-time NYT bestselling author, TV personality and lifestyle expert to create a wedding suite that brought her day-of dreams to life and a romantic collection just for you. Save up to 50% on these timeless designs.<br>
-                <b>Code: HANNAH</b>
-            </div>
-            <a href="#" style="display: inline-block; margin: 12px 0 8px 0; padding: 8px 18px; background: #111; color: #fff; border-radius: 6px; font-weight: 600; text-decoration: none; font-size: 1rem;">
-                Shop the collection
-            </a>
-            <div style="font-size: 0.95rem; color: #8a7b6d;">Not combinable with other offers.</div>
-        </div>
-        <!-- Right: Image -->
-        <div style="flex: 1 1 320px; min-width: 220px; display: flex; align-items: center; justify-content: center; background: transparent;">
-            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80"
-                 alt="Wedding Planner" style="max-width: 320px; width: 100%; height: auto; border-radius: 0 18px 18px 0; object-fit: cover;">
-        </div>
-    </div>
-</div>
-
-<!-- Carousel Section -->
-<div class="section-80-center margin-top5 margin-bottom5">
-    <h2 style="font-size:2rem; font-weight:700; margin-bottom:32px;">Shop gifts, mementos and more</h2>
-    <div id="shopGiftsCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="row justify-content-center">
-                    <div class="col-6 col-md-2 text-center">
-                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=300&q=80" class="d-block w-100" alt="Gift 1" style="border-radius:12px;">
-                        <div class="mt-2">Gift 1</div>
-                    </div>
-                    <div class="col-6 col-md-2 text-center">
-                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80" class="d-block w-100" alt="Gift 2" style="border-radius:12px;">
-                        <div class="mt-2">Gift 2</div>
-                    </div>
-                    <div class="col-6 col-md-2 text-center d-none d-md-block">
-                        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=300&q=80" class="d-block w-100" alt="Gift 3" style="border-radius:12px;">
-                        <div class="mt-2">Gift 3</div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="row justify-content-center">
-                    <div class="col-6 col-md-2 text-center">
-                        <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=300&q=80" class="d-block w-100" alt="Gift 4" style="border-radius:12px;">
-                        <div class="mt-2">Gift 4</div>
-                    </div>
-                    <div class="col-6 col-md-2 text-center">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=300&q=80" class="d-block w-100" alt="Gift 5" style="border-radius:12px;">
-                        <div class="mt-2">Gift 5</div>
-                    </div>
-                    <div class="col-6 col-md-2 text-center d-none d-md-block">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" class="d-block w-100" alt="Gift 6" style="border-radius:12px;">
-                        <div class="mt-2">Gift 6</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Custom Controls: Only arrow heads -->
-        <a class="carousel-control-prev custom-carousel-arrow" href="#shopGiftsCarousel" role="button" data-slide="prev">
-            <span class="custom-arrow-icon" aria-hidden="true">&#8592;</span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next custom-carousel-arrow" href="#shopGiftsCarousel" role="button" data-slide="next">
-            <span class="custom-arrow-icon" aria-hidden="true">&#8594;</span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
-</div>
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 <style>
-    .custom-carousel-arrow {
-        width: 44px;
-        height: 44px;
-        background: #f0f0f0;
-        border-radius: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        opacity: 1;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    /* VistaPrint-inspired Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 0;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("{% static 'img/banner-home.png' %}") center/cover;
+        opacity: 0.1;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .hero-title {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .hero-subtitle {
+        font-size: 20px;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+    
+    .hero-cta {
+        display: inline-flex;
+        gap: 15px;
+    }
+    
+    .btn-primary-hero {
+        background: white;
+        color: #667eea;
+        padding: 15px 35px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .btn-primary-hero:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        color: #667eea;
+    }
+    
+    .btn-secondary-hero {
+        background: transparent;
+        color: white;
+        padding: 15px 35px;
+        border: 2px solid white;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary-hero:hover {
+        background: white;
+        color: #667eea;
+    }
+    
+    /* Featured Categories */
+    .featured-categories {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .section-subtitle {
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 50px;
+    }
+    
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .category-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    }
+    
+    .category-image {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .category-content {
+        padding: 25px;
+    }
+    
+    .category-name {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .category-description {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+    
+    .category-link {
+        color: #667eea;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .category-link:hover {
+        gap: 10px;
+    }
+    
+    /* Why Choose Us */
+    .why-choose-us {
+        padding: 60px 0;
+        background: white;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .feature-item {
+        text-align: center;
+    }
+    
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 2;
+        margin: 0 auto 20px;
+        font-size: 35px;
+        color: white;
     }
-    .carousel-control-prev.custom-carousel-arrow {
-        left: -60px;
+    
+    .feature-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
     }
-    .carousel-control-next.custom-carousel-arrow {
-        right: -60px;
+    
+    .feature-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
     }
-    .custom-arrow-icon {
-        color: #111;
-        font-size: 2rem;
-        font-weight: bold;
-        line-height: 1;
-        display: block;
+    
+    /* Popular Products */
+    .popular-products {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+    
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
         margin: 0 auto;
+        padding: 0 20px;
     }
-    @media (max-width: 767px) {
-        .carousel-control-prev.custom-carousel-arrow,
-        .carousel-control-next.custom-carousel-arrow {
-            left: 0;
-            right: 0;
-        }
-    }
-    .section-80-center {
-        width: 80vw;
-        max-width: 1700px;
-        margin-left: 10vw;
-        margin-right: 10vw;
-    }
-    @media (max-width: 767px) {
-        .section-80-center {
-            width: 100vw;
-            margin-left: 0;
-            margin-right: 0;
-        }
-    }
-
-    /* Style for header right-links */
-    .right-links a {
-        color: #111 !important;
-        transition: color 0.2s;
-        font-family: 'Poppins', sans-serif;
-    }
-    .right-links a:hover,
-    .right-links a:focus {
-        color: #3da9fc !important;
+    
+    .product-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
         text-decoration: none;
-        font-family: 'Poppins', sans-serif;
+        color: inherit;
+        display: block;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .product-content {
+        padding: 20px;
+    }
+    
+    .product-name {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .product-price {
+        font-size: 22px;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+    
+    .product-cta {
+        background: #667eea;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-align: center;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover .product-cta {
+        background: #764ba2;
+    }
+    
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 0;
+        text-align: center;
+        color: white;
+    }
+    
+    .cta-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    .cta-subtitle {
+        font-size: 18px;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 32px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+        }
+        
+        .categories-grid,
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
+{% endblock %}
 
+{% block content %}
 <!-- Hero Section -->
-<div id="home-hero" class="container-fluid margin-bottom5 margin-top5" style="padding:0;">
-    <div class="section-80-center">
-        <div class="row margin-top5">
-            <div class="col-md-12">
-                <h1 class="text-center">Envíos a todo el Perú <img src="{% static 'img/home/peru-flag.png' %}" width="40px" height="40px"></h1>
-            </div>
-        </div>
-        <div class="row" style="margin-bottom: 0%;">
-            <div class="col-md-12 margin-top3">
-                <div class="my_home_banner_left" style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="font-size:clamp(1.5rem,3vw,2.2rem); font-weight:700; margin-bottom: 18px; margin-top: 0; letter-spacing: .02em;">
-                        ¿Cómo adquiero mis stickers?
-                    </h2>
-                    <ol style="text-align: left; list-style-position: inside; max-width: 650px; font-size:clamp(1rem,2.5vw,1.15rem); color:#222; line-height:1.7; padding-left:1.2em;">
-                        <li style="margin-bottom: 10px;">Elige qué tipo de producto deseas: stickers transparentes, stickers cuadrados, stickers troquelados, etc.</li>
-                        <li style="margin-bottom: 10px;">Luego indica el tamaño y la cantidad de stickers que deseas.</li>
-                        <li style="margin-bottom: 10px;">Sube tu diseño en nuestra web.</li>
-                        <li style="margin-bottom: 10px;">Haz el depósito por tu orden de stickers a nuestra cuenta bancaria:
-                            <ul style="font-size:0.98em; color:#008965; margin-top: 6px;">
-                                <li><b>BCP - CTA. AHORROS:</b> 191-93277552-0-47</li>
-                                <li><b>BCP - CTA. INTERBANCARIA:</b> 002-191-193277552047-54</li>
-                            </ul>
-                        </li>
-                        <li style="margin-bottom: 10px;">O <b>Yapéanos</b> a este número: <span style="color:#FFD700;">+51963305265</span></li>
-                        <li style="margin-bottom: 10px;">Para confirmar tu orden deberás enviarnos el voucher o una captura de pantalla del yapeo a nuestro correo: <span style="color:#008965;">imprentagallito@gmail.com</span></li>
-                        <li style="margin-bottom: 0;">En unos días enviaremos tus stickers a cualquier parte del Perú en la que te encuentres.</li>
-                    </ol>
-                </div>
-            </div>
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Impresión Profesional a tu Alcance</h1>
+        <p class="hero-subtitle">Tarjetas, volantes, banners y más. Calidad garantizada y entrega rápida en Lima.</p>
+        <div class="hero-cta">
+            <a href="{% url 'shop:catalogo' %}" class="btn-primary-hero">Ver Productos</a>
+            <a href="#categories" class="btn-secondary-hero">Explorar Categorías</a>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Features Section -->
-<div id="home-features" class="margin-bottom5">
-    <div class="section-80-center">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <p class="my_title">Stickers personalizados en 100% vinyl y laminados para mayor protección.</p>
+<!-- Featured Categories -->
+<section class="featured-categories" id="categories">
+    <h2 class="section-title">Nuestras Categorías</h2>
+    <p class="section-subtitle">Encuentra el producto perfecto para tu negocio</p>
+    
+    <div class="categories-grid">
+        {% for category in categories %}
+        <a href="{% url 'shop:ProdCatDetail' category.slug %}" class="category-card">
+            <div class="category-image">
+                {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% endif %}
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Clientes Section -->
-<div id="home-clientes" class="margin-bottom5">
-    <div class="section-80-center">
-        <div class="row margin-bottom5 margin-top3">
-            <div class="text-center col-md-4 djnaoki">
-                <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
+            <div class="category-content">
+                <h3 class="category-name">{{ category.name }}</h3>
+                <p class="category-description">{{ category.description|default:"Descubre nuestra selección de productos de calidad" }}</p>
+                <span class="category-link">Ver productos →</span>
             </div>
-            <div class="col-md-4 cutedog">
-                <img src="{% static 'img/clientes/cute_dog.jpg' %}" width="240px" height="220px">
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-choose-us">
+    <h2 class="section-title">¿Por qué Elegirnos?</h2>
+    <p class="section-subtitle">Calidad y servicio que marcan la diferencia</p>
+    
+    <div class="features-grid">
+        <div class="feature-item">
+            <div class="feature-icon">🎨</div>
+            <h3 class="feature-title">Diseño Personalizado</h3>
+            <p class="feature-description">Crea diseños únicos con nuestras herramientas o envía el tuyo propio.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Entrega Rápida</h3>
+            <p class="feature-description">Entregas en 24-48 horas en Lima Metropolitana.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <h3 class="feature-title">Calidad Garantizada</h3>
+            <p class="feature-description">Materiales premium y acabados profesionales.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">💰</div>
+            <h3 class="feature-title">Mejores Precios</h3>
+            <p class="feature-description">Precios competitivos sin comprometer la calidad.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Products -->
+<section class="popular-products">
+    <h2 class="section-title">Productos Populares</h2>
+    <p class="section-subtitle">Los más solicitados por nuestros clientes</p>
+    
+    <div class="products-grid">
+        {% for product in popular_products %}
+        <a href="{% url 'shop:ProdDetail' product.category.slug product.slug %}" class="product-card">
+            <div class="product-image">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% endif %}
             </div>
-            <div class="text-center col-md-4 cocodrilo">
-                <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
+            <div class="product-content">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <div class="product-price">Cotiza ahora</div>
+                <div class="product-cta">Ver Detalles</div>
             </div>
-        </div>
-        <div class="row margin-bottom5 margin-top3">
-            <div class="text-center col-md-4 armamento">
-                <img src="{% static 'img/clientes/armamento.jpg' %}" width="240px" height="220px">
-            </div>
-            <div class="text-center col-md-4 gustavo">
-                <img src="{% static 'img/clientes/gustavo.jpg' %}" width="240px" height="220px">
-            </div>
-            <div class="text-center col-md-4 unicornio">
-                <img src="{% static 'img/clientes/unicornio.jpg' %}" width="240px" height="220px">
-            </div>
-        </div>
+        </a>
+        {% endfor %}
     </div>
-</div>
+</section>
 
-<!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-DJNaoki" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" alt="Card image cap">
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    $(".djnaoki").click(function () {
-        $("#StickersClientes-DJNaoki").modal('show');
-    });
-</script>
-
-<!-- ######## -->
-<!-- CUTE DOG -->
-<!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-CuteDog" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/clientes/cute_dog.jpg' %}" alt="Card image cap">
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    $(".cutedog").click(function () {
-        $("#StickersClientes-CuteDog").modal('show');
-    });
-</script>
-
-<!-- ######### -->
-<!-- COCODRILO -->
-
-<!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-Cocodrilo" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/clientes/cocodrilo_m.JPG' %}" alt="Card image cap">
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    $(".cocodrilo").click(function () {
-        $("#StickersClientes-Cocodrilo").modal('show');
-    });
-</script>
-
-<!-- ######### -->
-<!-- ARMAMENTO -->
-
-<!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-Armamento" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/clientes/armamento.jpg' %}" alt="Card image cap">
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    $(".armamento").click(function () {
-        $("#StickersClientes-Armamento").modal('show');
-    });
-</script>
-
-<!-- ######### -->
-<!-- GUSTAVO   -->
-
-<!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-Gustavo" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/clientes/gustavo.jpg' %}" alt="Card image cap">
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    $(".gustavo").click(function () {
-        $("#StickersClientes-Gustavo").modal('show');
-    });
-</script>
-
-<!-- ######### -->
-<!-- UNICORNIO -->
-
-<!-- Modal Image -->
-<div class="modal fade" id="StickersClientes-Unicornio" tabindex="-1" role="dialog"
-aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-body">
-            <img class="card-img-top" src="{% static 'img/clientes/unicornio.jpg' %}" alt="Card image cap">
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-</div>
-</div>
-
-<script>
-    $(".unicornio").click(function () {
-        $("#StickersClientes-Unicornio").modal('show');
-    });
-</script>
-
+<!-- CTA Section -->
+<section class="cta-section">
+    <h2 class="cta-title">¿Listo para Comenzar?</h2>
+    <p class="cta-subtitle">Crea tu pedido hoy y recíbelo en tiempo récord</p>
+    <a href="{% url 'shop:catalogo' %}" class="btn-primary-hero">Comenzar Ahora</a>
+</section>
 {% endblock %}

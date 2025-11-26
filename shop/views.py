@@ -2,18 +2,22 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, HttpResponseRedirect, render
+from django.template.loader import get_template
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
-from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile, UnitaryProduct
+from django.views.generic import ListView
+from shop.models import Product_Review, Sample_Review, ProductsPricing, Profile, UnitaryProduct, Sample, Peru
+from shop.tokens import account_activation_token
 from cart.models import Cart, CartItem, SampleItem, PackItem, UnitaryProductItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque
 from .models import Product, Category, Pack
-
-from django.views.generic import ListView
 from marketing.forms import EmailSignUpForm
 
 
@@ -53,11 +57,15 @@ def allCat(request):
     # Muestras todas las categorias de productos en el home, menos "Muestras"
     categories = Category.objects.exclude(name='Muestras')
     email_signup_form = EmailSignUpForm()
+    
+    # Get popular products (can be based on reviews, orders, or just recent products)
+    popular_products = Product.objects.filter(available=True).order_by('-created')[:6]
 
     # Fix: use the correct template path
     return render(request, 'shop/index.html', {
         'categories': categories,
-        'email_signup_form': email_signup_form
+        'email_signup_form': email_signup_form,
+        'popular_products': popular_products,
     })
 
 
@@ -566,6 +574,7 @@ def signoutView(request):
 ### New SignUp Extended
 
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -906,8 +915,8 @@ def banners_posters(request):
 def etiquetas_stickers(request):
     return render(request, 'shop/etiquetas_stickers.html')
 
-def ropa_bolsos(request):
-    return render(request, 'shop/ropa_bolsos.html')
+def ropa_bolsas(request):
+    return render(request, 'shop/ropa_bolsas.html')
 
 def productos_promocionales(request):
     return render(request, 'shop/productos_promocionales.html')
@@ -925,4 +934,79 @@ def servicios_diseno(request):
     return render(request, 'shop/servicios_diseno.html')
 
 
+### Profile Views ###
 
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_view(request):
+    """View user profile"""
+    profile = request.user.profile
+    return render(request, 'accounts/profile.html', {
+        'profile': profile
+    })
+
+
+@login_required
+@transaction.atomic
+def profile_edit_view(request):
+    """Edit user profile"""
+    peru = Peru.objects.all()
+    department_list = sorted(set(p.departamento for p in peru))
+    
+    profile = request.user.profile
+    
+    if request.method == 'POST':
+        # Get the selected department and province for loading districts
+        department = request.POST.get('shipping_department')
+        province = request.POST.get('shipping_province')
+        
+        province_list = sorted(set(Peru.objects.filter(
+            departamento=department
+        ).values_list("provincia", flat=True)))
+        
+        district_list = sorted(set(Peru.objects.filter(
+            departamento=department, 
+            provincia=province
+        ).values_list("distrito", flat=True)))
+        
+        profile_form = ProfileForm(
+            district_list, 
+            province_list, 
+            department_list, 
+            request.POST, 
+            request.FILES,
+            instance=profile
+        )
+        
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('shop:profile')
+    else:
+        # Initialize lists based on current profile data
+        if profile.shipping_department:
+            province_list = sorted(set(Peru.objects.filter(
+                departamento=profile.shipping_department
+            ).values_list("provincia", flat=True)))
+        else:
+            province_list = []
+            
+        if profile.shipping_department and profile.shipping_province:
+            district_list = sorted(set(Peru.objects.filter(
+                departamento=profile.shipping_department,
+                provincia=profile.shipping_province
+            ).values_list("distrito", flat=True)))
+        else:
+            district_list = []
+        
+        profile_form = ProfileForm(
+            district_list,
+            province_list,
+            department_list,
+            instance=profile
+        )
+    
+    return render(request, 'accounts/profile_edit.html', {
+        'profile_form': profile_form,
+        'profile': profile
+    })

@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ropa y Bolsas Personalizadas - Imprenta Gallito{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<div class="category-hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 60px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="text-white display-4 fw-bold mb-3">Ropa y Bolsas Personalizadas</h1>
+                <p class="text-white lead mb-4">Dale vida a tu marca con ropa y bolsas de alta calidad. Perfectas para uniformes, eventos, regalos corporativos y más.</p>
+                <a href="#productos" class="btn btn-light btn-lg px-5">Ver Productos</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{% static 'img/hero-clothing.png' %}" alt="Ropa y Bolsas" class="img-fluid" style="max-height: 400px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Navigation -->
+<div class="bg-light py-3 sticky-top" style="top: 140px; z-index: 100;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="category-filters d-flex gap-2 flex-wrap">
+                <button class="btn btn-sm btn-outline-primary active" data-filter="all">Todos</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="camisetas">Camisetas</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="polos">Polos</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="sudaderas">Sudaderas</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="chaquetas">Chaquetas</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="gorras">Gorras</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="bolsas">Bolsas</button>
+                <button class="btn btn-sm btn-outline-primary" data-filter="mochilas">Mochilas</button>
+            </div>
+            <div class="sort-options">
+                <select class="form-select form-select-sm" style="width: auto;">
+                    <option>Más Popular</option>
+                    <option>Precio: Bajo a Alto</option>
+                    <option>Precio: Alto a Bajo</option>
+                    <option>Nuevo</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="container my-5" id="productos">
+    <div class="row g-4">
+        <!-- Camisetas -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="camisetas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <div class="position-relative">
+                    <img src="{% static 'img/products/camiseta-basica.jpg' %}" class="card-img-top" alt="Camiseta Básica">
+                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">25% OFF</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">Camiseta Básica</h6>
+                    <p class="text-muted small mb-2">100% Algodón</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-decoration-line-through text-muted small">S/ 35</span>
+                            <span class="fw-bold text-primary ms-1">S/ 26</span>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="camisetas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/camiseta-premium.jpg' %}" class="card-img-top" alt="Camiseta Premium">
+                <div class="card-body">
+                    <h6 class="card-title">Camiseta Premium</h6>
+                    <p class="text-muted small mb-2">Algodón Pima</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 45</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Polos -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="polos">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/polo-cuello.jpg' %}" class="card-img-top" alt="Polo con Cuello">
+                <div class="card-body">
+                    <h6 class="card-title">Polo con Cuello</h6>
+                    <p class="text-muted small mb-2">Piqué de Algodón</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 55</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="polos">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <div class="position-relative">
+                    <img src="{% static 'img/products/polo-manga-larga.jpg' %}" class="card-img-top" alt="Polo Manga Larga">
+                    <span class="badge bg-success position-absolute top-0 end-0 m-2">Nuevo</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">Polo Manga Larga</h6>
+                    <p class="text-muted small mb-2">Algodón Premium</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 65</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sudaderas -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="sudaderas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/sudadera-capucha.jpg' %}" class="card-img-top" alt="Sudadera con Capucha">
+                <div class="card-body">
+                    <h6 class="card-title">Sudadera con Capucha</h6>
+                    <p class="text-muted small mb-2">80% Algodón, 20% Poliéster</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 95</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="sudaderas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/sudadera-sin-capucha.jpg' %}" class="card-img-top" alt="Sudadera Clásica">
+                <div class="card-body">
+                    <h6 class="card-title">Sudadera Clásica</h6>
+                    <p class="text-muted small mb-2">Algodón Premium</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 85</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chaquetas -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="chaquetas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/chaqueta-cortavientos.jpg' %}" class="card-img-top" alt="Chaqueta Cortavientos">
+                <div class="card-body">
+                    <h6 class="card-title">Chaqueta Cortavientos</h6>
+                    <p class="text-muted small mb-2">Impermeable</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 125</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="chaquetas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/chaqueta-polar.jpg' %}" class="card-img-top" alt="Chaqueta Polar">
+                <div class="card-body">
+                    <h6 class="card-title">Chaqueta Polar</h6>
+                    <p class="text-muted small mb-2">Fleece Premium</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 135</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gorras -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="gorras">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/gorra-basica.jpg' %}" class="card-img-top" alt="Gorra Básica">
+                <div class="card-body">
+                    <h6 class="card-title">Gorra Básica</h6>
+                    <p class="text-muted small mb-2">Ajustable</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 25</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="gorras">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/gorra-trucker.jpg' %}" class="card-img-top" alt="Gorra Trucker">
+                <div class="card-body">
+                    <h6 class="card-title">Gorra Trucker</h6>
+                    <p class="text-muted small mb-2">Malla Transpirable</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 30</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bolsas -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="bolsas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <div class="position-relative">
+                    <img src="{% static 'img/products/bolsa-tote.jpg' %}" class="card-img-top" alt="Bolsa Tote">
+                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">Popular</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">Bolsa Tote</h6>
+                    <p class="text-muted small mb-2">Algodón Natural</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 18</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="bolsas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/bolsa-non-woven.jpg' %}" class="card-img-top" alt="Bolsa Non-Woven">
+                <div class="card-body">
+                    <h6 class="card-title">Bolsa Non-Woven</h6>
+                    <p class="text-muted small mb-2">Ecológica</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 12</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mochilas -->
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="mochilas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/mochila-basica.jpg' %}" class="card-img-top" alt="Mochila Básica">
+                <div class="card-body">
+                    <h6 class="card-title">Mochila Básica</h6>
+                    <p class="text-muted small mb-2">Poliéster Resistente</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 45</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg-3 product-item" data-category="mochilas">
+            <div class="card h-100 border-0 shadow-sm product-card">
+                <img src="{% static 'img/products/mochila-laptop.jpg' %}" class="card-img-top" alt="Mochila para Laptop">
+                <div class="card-body">
+                    <h6 class="card-title">Mochila para Laptop</h6>
+                    <p class="text-muted small mb-2">Compartimento Acolchado</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">S/ 75</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Ver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4 mb-md-0">
+                <i class="fas fa-tshirt fa-3x text-primary mb-3"></i>
+                <h5>Alta Calidad</h5>
+                <p class="text-muted">Materiales premium y acabados profesionales</p>
+            </div>
+            <div class="col-md-3 mb-4 mb-md-0">
+                <i class="fas fa-palette fa-3x text-primary mb-3"></i>
+                <h5>Diseño Personalizado</h5>
+                <p class="text-muted">Tu logo y diseño con colores ilimitados</p>
+            </div>
+            <div class="col-md-3 mb-4 mb-md-0">
+                <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                <h5>Envío Rápido</h5>
+                <p class="text-muted">Entregas en todo el Perú</p>
+            </div>
+            <div class="col-md-3">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h5>Sin Mínimos</h5>
+                <p class="text-muted">Ordena desde 1 unidad</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.product-card img {
+    height: 250px;
+    object-fit: cover;
+}
+
+.category-filters .btn {
+    border-radius: 20px;
+}
+
+.category-filters .btn.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .product-card img {
+        height: 200px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const productItems = document.querySelectorAll('.product-item');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.dataset.filter;
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter products
+            productItems.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

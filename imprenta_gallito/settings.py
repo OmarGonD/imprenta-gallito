@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 
 if IS_HEROKU_APP:
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ["*"]
 else:
     DEBUG = True
@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     'marketing',
     'django.contrib.humanize',
     'crispy_forms',
-    'crispy_bootstrap4',  # Fixed typo
-    'storages',           # Fixed typo
+    'crispy_bootstrap4',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -286,5 +286,5 @@ LOGGING = {
     }
 }
 
-DEBUG_PROPAGATE_EXCEPTIONS = True
+DEBUG_PROPAGATE_EXCEPTIONS = False
 COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)

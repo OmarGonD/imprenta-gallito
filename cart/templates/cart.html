@@ -8,453 +8,371 @@ This is the shopping Cart.
 Carrito de compras - Imprenta Gallito
 {% endblock %}
 
-
 {% block content %}
-
-
 
 {% if not cart_items and not sample_items and not pack_items and not unitary_product_items %}
 
-<style>
-    #footer-navbar {
-        background-color: rgb(239, 239, 239);
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-    }
-</style>
-<div class="container margin-top10">
-    <div class="margin-bottom10">
-        <div class="text-center">
-            <h1 class="text-center my_title">
-                El Carrito de compras está vacio
-            </h1>
-            <p class="margin-top3">
-                Haga click <a class="text-center" href="/stickers">aquí</a> para seguir comprando
-            </p>
+<!-- Empty Cart State -->
+<div class="empty-cart-container">
+    <div class="container">
+        <div class="empty-cart-content">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h1 class="empty-cart-title">Tu carrito está vacío</h1>
+            <p class="empty-cart-text">¡No te preocupes! Tenemos muchos productos increíbles esperándote.</p>
+            <a href="/stickers" class="btn-empty-cart">
+                <i class="fas fa-arrow-left"></i> Explorar Productos
+            </a>
         </div>
     </div>
-    <div class="margin-bottom10"></div>
 </div>
-
 
 {% else %}
 
-
-
-<div class="container margin-top10">
-    <div class="row margin-bottom5">
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
-            <h1 class="text-center my_title">
-                Tu carrito de compras
+<!-- Cart with Items -->
+<div class="cart-page-container">
+    <div class="container">
+        
+        <!-- Page Title -->
+        <div class="cart-header">
+            <h1 class="cart-title">
+                <i class="fas fa-shopping-cart"></i> Tu Carrito de Compras
             </h1>
+            <p class="cart-subtitle">Revisa tus productos antes de continuar</p>
         </div>
-    </div>
 
-    <div class="row margin-bottom5">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-            <table class="table my_custom_table">
-                <thead class="my_custom_thead">
-                    <tr>
-                        <th colspan="5">
-                            Tus items
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="row">
+            <!-- Cart Items Column -->
+            <div class="col-lg-8 mb-4">
+                
+                <!-- Cart Items Cards -->
+                <div class="cart-items-section">
                     
                     {% for cart_item in cart_items %}
-
-                    {% if cart_item.file_a %} <tr>
-
-                        {% if cart_item.file_name_a|endswith:'.ai' %}
-
-                        <td>
-                            <img src="/static/img/admin/adobe_illustrator_file_logo.png" alt=""
-                                class="float-left rounded" width="90" height="80">
-                        </td>
-
-                        {% else %}
-                        <td>
-                            <img src="{{ cart_item.file_a.url }}" alt="" class="float-left rounded" width="90"
-                                height="90">
-                        </td>
-
-                        {% endif %}
-
-                        <td class="text-left">
-                            <p class="margin-bottom0"><b>{{ cart_item.product.name }}</b></p>
-                            <p class="margin-bottom0">Tamaño: {{ cart_item.size }}</p>
-                            <p class="margin-bottom0">Cantidad: {{ cart_item.quantity }} stickers</p>
-                            <p class="margin-bottom0"><b>{{ cart_item.file_name_a }}</b></p>
-                            <p class="margin-bottom0"><b>{{ cart_item.file_name_b }}</b></p>
-                        </td>
-                        <td>
-                            S/{{ cart_item.sub_total }}
-                            <a href="{% url 'carrito_de_compras:full_remove' cart_item.id %}" class="custom_icon"><i
-                                    class="fas fa-trash-alt custom_icon"></i></a>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td>
-                            <img src="{{ cart_item.product.image.url }}" alt="" class="float-left rounded" width="90"
-                                height="90">
-                        </td>
-                        <td class="text-left">
-                            <b>{{ cart_item.product.name }}</b>
-                            <br>
-                            Tamaño: {{ cart_item.size }}
-                            <br>
-                            Cantidad: {{ cart_item.quantity }}
-                        </td>
-                        <td>
-                            S/{{ cart_item.sub_total }}
-
-                            <a href="{% url 'carrito_de_compras:full_remove' cart_item.id %}" class="custom_icon"><i
-                                    class="fas fa-trash-alt custom_icon"></i></a>
-                        </td>
-                    </tr>
-
-                    {% endif %}
-
-
-
-                    {% endfor %}
-
-
-                    <!-- MOSTRAR SAMPLE_ITEMS IN CART_DETAIL -->
-
-
-                    {% for sample_item in sample_items %}
-
-
-                    <tr>
-                        {% if sample_item.file_a %}
-                        <td>
-                            <img src="{{ sample_item.file_a.url }}" alt="" class="float-left rounded" width="90"
-                                height="90">
-                        </td>
-                        {% else %}
-                        <td>
-                            <img src="{{ sample_item.sample.image.url }}" alt="" class="float-left rounded" width="90"
-                                height="90">
-                        </td>
-                        {% endif %}
-
-                        <td class="text-left">
-                            <p class="margin-bottom0"><b>{{ sample_item.sample.name }}</b></p>
-                            <!--<p class="margin-top0 margin-bottom0">Cantidad: {{ sample_item.quantity }} stickers</p>-->
-                            {% if sample_item.sample.name == 'Sobre con muestras' %}
-                            <p class="margin-top0 margin-bottom0">Cantidad: 05 stickers</p>
-                            {% else %}
-                            <p class="margin-top0 margin-bottom0">Cantidad: 02 stickers</p>
-                            {% endif %}
-                            <p class="margin-top0 margin-bottom0">Tamaño: {{ sample_item.size }}</p>
-                        </td>
-                        <td>
-                            <p>S/{{ sample_item.sub_total }}
-
-                                <a href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}"
-                                    class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-                            </p>
-                        </td>
-                        <td></td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                    <!-- PackItems -->
-
-                    {% for pack_item in pack_items %}
-
-                        {% if pack_item in packs_with_min_prices %} <!--Adds free class when 3X2 is active-->
-
-                            <tr bgcolor="#6EEECB">
-                                {% if pack_item.file_a %}
-                                <td>
-                                    <img src="{{ pack_item.file_a.url }}" alt="" class="float-left rounded" width="90"
-                                        height="60">
-                                </td>
+                    <div class="cart-item-card">
+                        <div class="cart-item-image">
+                            {% if cart_item.file_a %}
+                                {% if cart_item.file_name_a|endswith:'.ai' %}
+                                    <img src="/static/img/admin/adobe_illustrator_file_logo.png" alt="{{ cart_item.product.name }}">
                                 {% else %}
-                                <td>
-                                    <img src="{{ pack_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
-                                        height="60">
-                                </td>
+                                    <img src="{{ cart_item.file_a.url }}" alt="{{ cart_item.product.name }}">
                                 {% endif %}
-
-                                <td class="text-left">
-                                    <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
-                                    <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>
-                                    <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
-                                </td>
-                                <td>
-                                    <p>S/{{ pack_item.sub_total }}
-
-                                        <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}"
-                                            class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-                                    </p>
-                                </td>
-                                <td></td>
-
-                            </tr>
-
-                        {% else %}
-
-                            <tr>
-                                    {% if pack_item.file_a %}
-                                    <td>
-                                        <img src="{{ pack_item.file_a.url }}" alt="" class="float-left rounded" width="90"
-                                            height="60">
-                                    </td>
-                                    {% else %}
-                                    <td>
-                                        <img src="{{ pack_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
-                                            height="60">
-                                    </td>
-                                    {% endif %}
-
-                                        <td class="text-left">
-                                            <p class="margin-bottom0"><b>{{ pack_item.pack.name }}</b></p>
-                                            <p class="margin-top0 margin-bottom0">Cantidad: {{ pack_item.quantity }}</p>
-                                            <p class="margin-top0 margin-bottom0">Tamaño: {{ pack_item.size }}</p>
-                                        </td>
-                                        <td>
-                                            <p>S/{{ pack_item.sub_total }}
-
-                                                <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}"
-                                                    class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-                                            </p>
-                                        </td>
-                                        <td></td>
-                            </tr>
-
-                        {% endif %}
-
+                            {% else %}
+                                <img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-name">{{ cart_item.product.name }}</h3>
+                            <div class="cart-item-specs">
+                                <span class="spec-item"><i class="fas fa-ruler-combined"></i> {{ cart_item.size }}</span>
+                                <span class="spec-item"><i class="fas fa-hashtag"></i> {{ cart_item.quantity }} unidades</span>
+                            </div>
+                            {% if cart_item.file_a %}
+                            <div class="cart-item-files">
+                                <p class="file-name"><i class="fas fa-file"></i> {{ cart_item.file_name_a }}</p>
+                                {% if cart_item.file_name_b %}
+                                <p class="file-name"><i class="fas fa-file"></i> {{ cart_item.file_name_b }}</p>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="cart-item-price">
+                            <p class="price-label">Precio:</p>
+                            <p class="price-value">S/ {{ cart_item.sub_total }}</p>
+                        </div>
+                        
+                        <div class="cart-item-actions">
+                            <a href="{% url 'carrito_de_compras:full_remove' cart_item.id %}" class="btn-remove" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
                     {% endfor %}
 
-
-                     <!-- PackItems -->
-
-                     {% for unitary_product_item in unitary_product_items %}
-
-
-                     <tr>
-                         {% if unitary_product_item.file_a %}
-                         <td>
-                             <img src="{{ unitary_product_item.file_a.url }}" alt="" class="float-left rounded" width="90"
-                                 height="60">
-                         </td>
-                         {% else %}
-                         <td>
-                             <img src="{{ unitary_product_item.pack.image.url }}" alt="" class="float-left rounded" width="90"
-                                 height="60">
-                         </td>
-                         {% endif %}
- 
-                         <td class="text-left">
-                             <p class="margin-bottom0"><b>{{ unitary_product_item.unitaryproduct.name }}</b></p>
-                             <p class="margin-top0 margin-bottom0">Cantidad: {{ unitary_product_item.quantity }}</p>
-                             <p class="margin-top0 margin-bottom0">Tamaño: {{ unitary_product_item.size }}</p>
-                             <p class="margin-top0 margin-bottom0"><b>Precio unitario: S/ {{ unitary_product_item.unitaryproduct.price }}</b></p>
-                         </td>
-                         <td>
-                             <p>S/{{ unitary_product_item.sub_total }}
- 
-                                 <a href="{% url 'carrito_de_compras:full_remove_unitary_product' unitary_product_item.id %}"
-                                     class="custom_icon"><i class="fas fa-trash-alt custom_icon"></i></a>
-                             </p>
-                         </td>
-                         <td></td>
- 
-                     </tr>
- 
-                     {% endfor %}
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-center">
-
-            <table class="table my_custom_table">
-
-                <thead class="my_custom_thead">
-
-                    <tr>
-                        <th>
-                            Checkout
-                        </th>
-                    </tr>
-                </thead>
-                <tboyd>
-                    <tr>
-                        <td>
-                            Por favor, revise su Carrito de Compras antes de proceder con el pago de la
-                            orden
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-left">
-                            <div class="row">
-                                <div class="col-6">
-                                    Costo stickers: <b>S/ {{ total }}</b><br>
-                                    {% if user.is_authenticated %}
-                                        {% if costo_despacho == 0 %}
-                                            Costo de envío: ¡ENVÍO GRATIS!<br>
-                                        {% else %}
-                                            Costo de envío: S/ {{ costo_despacho }}<br>
-                                        {% endif %}        
-                                    Descuento por cupón: <span class="savings"><b> - S/ {{ descuento_por_cupon }}</b></span><br>
-                                    {% if packs_with_min_prices %}
-                                    Packs 3x2 descuento: <span class="savings"><b>- S/ {{ descuento_packs_3x2 }}</b></span><br>
-                                    {% endif %}
-                                    <hr>
-                                   
-                                    A pagar: <strong>S/ {{ total_a_pagar }}</strong><br>
-                                    {% else %}
-                                        Costo de envío: <b>Regístrese para poder brindarle el costo de envío.</b><br>
-                                        Descuento por cupón: <span class="savings"><b>S/ {{ descuento_por_cupon }}</b></span><br>
-                                        {% if packs_with_min_prices %}
-                                            Packs 3x2 descuento: <span class="savings"><b>- S/ {{ discount_packs_promo_3x2 }}</b></span><br>
-                                        {% endif %}
-                                    A pagar: S/ {{ total }} + costo de envío<br>
-                                    {% endif %}
-
-                                </div>
-                                <div class="col-6">
-                                    <div class="flex">
-                                        <input type="text" id="user_cupon" style="display: inline-block; height: 36px;"
-                                            placeholder="Ingrese cupón" class="margin-right2">
-                                        <button type="submit" class="btn btn-secondary" id="cuponButton"
-                                            style="display: inline-block; height: 36px;">Enviar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                    {% if user.is_authenticated %}
-                    <tr>
-                        <td class="text-left">
-                            <b>Dirección de envío:</b>
-                            <select type="text" id="ShippingAddress">
-                                <option value="{{ request.user.profile.shipping_address1 }}" selected>
-                                    {{ request.user.profile.shipping_address1 }}</option>
-                                <option value="{{ request.user.profile.shipping_address2 }}">
-                                    {{ request.user.profile.shipping_address2 }}</option>
-                            </select>
-                        </td>
-                    </tr>
-                    {% endif %}
-
-                    <tr>
-                        <td>
-                            <div class="bg-buttons margin-top3 padding-top2 padding-bottom10">
-
-                                {% if user.is_authenticated and total > 0 %}
-                                <div class="tops">
-                                    
-                                    <div class="margin-top4">
-                                        <button id="depositButton"
-                                            class="btn-naranja btn-block my_custom_btn width60 display-inline"
-                                            checked>Pagar
-                                            con
-                                            Efectivo
-                                        </button>
-                                        <i class="fas fa-exclamation-circle info" data-toggle="modal"
-                                            data-target="#PayWithCashExplanation"></i>
-                                    </div>
-                                    <div class="">
-                                        <a class="btn-seguir-comprando btn-block my_custom_btn margin-top4 width60 display-inline"
-                                            href="{% url 'shop:allCat' %}">Seguir comprando</a>
-                                        <i class="fas fa-exclamation-circle info" data-toggle="modal"
-                                            data-target="#SeguirComprandoExplanation"></i>
-                                    </div>
-                                </div>
-
-                                {% elif user.is_authenticated and total == 0 %}
-
-                                <div class="tops">
-                                    <div class="margin-top4">
-                                        <button id="depositButtonEmptyCart" data-toggle="modal"
-                                            data-target="#exampleModal"
-                                            class="btn-naranja btn-block my_custom_btn width60 display-inline"
-                                            checked>Pagar
-                                            con
-                                            Efectivo
-                                        </button>
-                                        <i class="fas fa-exclamation-circle info" data-toggle="modal"
-                                            data-target="#PayWithCashExplanation"></i>
-                                    </div>
-                                    <div class="">
-                                        <a class="btn-seguir-comprando btn-block my_custom_btn margin-top4 width60 display-inline"
-                                            href="{% url 'shop:allCat' %}">Seguir comprando</a>
-                                        <i class="fas fa-exclamation-circle info" data-toggle="modal"
-                                            data-target="#SeguirComprandoExplanation"></i>
-                                    </div>
-                                </div>
-
+                    <!-- Sample Items -->
+                    {% for sample_item in sample_items %}
+                    <div class="cart-item-card">
+                        <div class="cart-item-image">
+                            {% if sample_item.file_a %}
+                                <img src="{{ sample_item.file_a.url }}" alt="{{ sample_item.sample.name }}">
+                            {% else %}
+                                <img src="{{ sample_item.sample.image.url }}" alt="{{ sample_item.sample.name }}">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-name">{{ sample_item.sample.name }}</h3>
+                            <div class="cart-item-specs">
+                                <span class="spec-item"><i class="fas fa-ruler-combined"></i> {{ sample_item.size }}</span>
+                                {% if sample_item.sample.name == 'Sobre con muestras' %}
+                                <span class="spec-item"><i class="fas fa-hashtag"></i> 05 stickers</span>
                                 {% else %}
+                                <span class="spec-item"><i class="fas fa-hashtag"></i> 02 stickers</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="cart-item-price">
+                            <p class="price-label">Precio:</p>
+                            <p class="price-value">S/ {{ sample_item.sub_total }}</p>
+                        </div>
+                        
+                        <div class="cart-item-actions">
+                            <a href="{% url 'carrito_de_compras:full_remove_sample' sample_item.id %}" class="btn-remove" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
 
-                                <!-- Button trigger modal -->
-                                <div class="tops">
-                                    <div class="margin-top4"></div>
-                                    <button id="depositButtonCannotbuy"
-                                        class="btn-naranja btn-block my_custom_btn width60 display-inline"
-                                        data-toggle="modal" data-target="#CannotbuyButtonModal" checked>Pagar con
-                                        Efectivo
-                                    </button>
-                                    <i class="fas fa-exclamation-circle info" data-toggle="modal"
-                                        data-target="#PayWithCashExplanation"></i>
+                    <!-- Pack Items -->
+                    {% for pack_item in pack_items %}
+                    <div class="cart-item-card {% if pack_item in packs_with_min_prices %}promo-item{% endif %}">
+                        {% if pack_item in packs_with_min_prices %}
+                        <div class="promo-badge">
+                            <i class="fas fa-tag"></i> 3x2
+                        </div>
+                        {% endif %}
+                        
+                        <div class="cart-item-image">
+                            {% if pack_item.file_a %}
+                                <img src="{{ pack_item.file_a.url }}" alt="{{ pack_item.pack.name }}">
+                            {% else %}
+                                <img src="{{ pack_item.pack.image.url }}" alt="{{ pack_item.pack.name }}">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-name">{{ pack_item.pack.name }}</h3>
+                            <div class="cart-item-specs">
+                                <span class="spec-item"><i class="fas fa-hashtag"></i> {{ pack_item.quantity }}</span>
+                                {% if pack_item.size %}
+                                <span class="spec-item"><i class="fas fa-ruler-combined"></i> {{ pack_item.size }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="cart-item-price">
+                            <p class="price-label">Precio:</p>
+                            <p class="price-value">S/ {{ pack_item.sub_total }}</p>
+                        </div>
+                        
+                        <div class="cart-item-actions">
+                            <a href="{% url 'carrito_de_compras:full_remove_pack' pack_item.id %}" class="btn-remove" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Unitary Product Items -->
+                    {% for unitary_product_item in unitary_product_items %}
+                    <div class="cart-item-card">
+                        <div class="cart-item-image">
+                            {% if unitary_product_item.file_a %}
+                                <img src="{{ unitary_product_item.file_a.url }}" alt="{{ unitary_product_item.unitaryproduct.name }}">
+                            {% else %}
+                                <img src="{{ unitary_product_item.unitaryproduct.image.url }}" alt="{{ unitary_product_item.unitaryproduct.name }}">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-name">{{ unitary_product_item.unitaryproduct.name }}</h3>
+                            <div class="cart-item-specs">
+                                <span class="spec-item"><i class="fas fa-hashtag"></i> {{ unitary_product_item.quantity }}</span>
+                                {% if unitary_product_item.size %}
+                                <span class="spec-item"><i class="fas fa-ruler-combined"></i> {{ unitary_product_item.size }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="unit-price">Precio unitario: S/ {{ unitary_product_item.unitaryproduct.price }}</p>
+                        </div>
+                        
+                        <div class="cart-item-price">
+                            <p class="price-label">Total:</p>
+                            <p class="price-value">S/ {{ unitary_product_item.sub_total }}</p>
+                        </div>
+                        
+                        <div class="cart-item-actions">
+                            <a href="{% url 'carrito_de_compras:full_remove_unitary_product' unitary_product_item.id %}" class="btn-remove" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <!-- Continue Shopping Button (Mobile) -->
+                <div class="continue-shopping-mobile">
+                    <a href="{% url 'shop:allCat' %}" class="btn-continue-shopping">
+                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Order Summary Column -->
+            <div class="col-lg-4">
+                <div class="order-summary-sticky">
+                    
+                    <!-- Order Summary Card -->
+                    <div class="order-summary-card">
+                        <h2 class="summary-title">
+                            <i class="fas fa-receipt"></i> Resumen del Pedido
+                        </h2>
+                        
+                        <div class="summary-content">
+                            <!-- Subtotal -->
+                            <div class="summary-row">
+                                <span class="summary-label">Subtotal:</span>
+                                <span class="summary-value">S/ {{ total }}</span>
+                            </div>
+
+                            <!-- Shipping -->
+                            {% if user.is_authenticated %}
+                                {% if costo_despacho == 0 %}
+                                <div class="summary-row">
+                                    <span class="summary-label">Envío:</span>
+                                    <span class="summary-value free-shipping">¡GRATIS!</span>
                                 </div>
-                                <div class="">
-                                    <a class="btn-seguir-comprando btn-block my_custom_btn width60 display-inline"
-                                        href="{% url 'shop:allCat' %}">Seguir comprando</a>
-                                    <i class="fas fa-exclamation-circle info" data-toggle="modal"
-                                        data-target="#SeguirComprandoExplanation"></i>
+                                {% else %}
+                                <div class="summary-row">
+                                    <span class="summary-label">Envío:</span>
+                                    <span class="summary-value">S/ {{ costo_despacho }}</span>
                                 </div>
+                                {% endif %}
+                            {% else %}
+                            <div class="summary-row">
+                                <span class="summary-label">Envío:</span>
+                                <span class="summary-value text-muted small">Regístrese para calcular</span>
                             </div>
                             {% endif %}
 
-                    </tr>
+                            <!-- Coupon Discount -->
+                            {% if descuento_por_cupon > 0 %}
+                            <div class="summary-row discount-row">
+                                <span class="summary-label">Cupón:</span>
+                                <span class="summary-value discount">-S/ {{ descuento_por_cupon }}</span>
+                            </div>
+                            {% endif %}
 
+                            <!-- 3x2 Discount -->
+                            {% if packs_with_min_prices and descuento_packs_3x2 > 0 %}
+                            <div class="summary-row discount-row">
+                                <span class="summary-label">Descuento 3x2:</span>
+                                <span class="summary-value discount">-S/ {{ descuento_packs_3x2 }}</span>
+                            </div>
+                            {% endif %}
 
+                            <div class="summary-divider"></div>
+
+                            <!-- Total -->
+                            <div class="summary-row summary-total">
+                                <span class="summary-label-total">Total a Pagar:</span>
+                                {% if user.is_authenticated %}
+                                <span class="summary-value-total">S/ {{ total_a_pagar }}</span>
+                                {% else %}
+                                <span class="summary-value-total">S/ {{ total }}</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Coupon Input -->
+                            <div class="coupon-section">
+                                <label for="user_cupon" class="coupon-label">
+                                    <i class="fas fa-ticket-alt"></i> ¿Tienes un cupón?
+                                </label>
+                                <div class="coupon-input-group">
+                                    <input type="text" id="user_cupon" class="coupon-input" placeholder="Ingresa tu código">
+                                    <button type="button" id="cuponButton" class="btn-apply-coupon">Aplicar</button>
+                                </div>
+                            </div>
+
+                            <!-- Shipping Address -->
+                            {% if user.is_authenticated %}
+                            <div class="shipping-section">
+                                <label for="ShippingAddress" class="shipping-label">
+                                    <i class="fas fa-map-marker-alt"></i> Dirección de envío:
+                                </label>
+                                <select id="ShippingAddress" class="shipping-select">
+                                    <option value="{{ request.user.profile.shipping_address1 }}" selected>
+                                        {{ request.user.profile.shipping_address1 }}
+                                    </option>
+                                    <option value="{{ request.user.profile.shipping_address2 }}">
+                                        {{ request.user.profile.shipping_address2 }}
+                                    </option>
+                                </select>
+                            </div>
+                            {% endif %}
+
+                            <!-- Action Buttons -->
+                            <div class="checkout-actions">
+                                {% if user.is_authenticated and total > 0 %}
+                                    <button id="depositButton" class="btn-checkout">
+                                        <i class="fas fa-money-bill-wave"></i> Pagar con Efectivo
+                                    </button>
+                                    <a href="{% url 'shop:allCat' %}" class="btn-continue-desktop">
+                                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+                                    </a>
+                                {% elif user.is_authenticated and total == 0 %}
+                                    <button id="depositButtonEmptyCart" class="btn-checkout" data-toggle="modal" data-target="#exampleModal">
+                                        <i class="fas fa-money-bill-wave"></i> Pagar con Efectivo
+                                    </button>
+                                    <a href="{% url 'shop:allCat' %}" class="btn-continue-desktop">
+                                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+                                    </a>
+                                {% else %}
+                                    <button id="depositButtonCannotbuy" class="btn-checkout" data-toggle="modal" data-target="#CannotbuyButtonModal">
+                                        <i class="fas fa-money-bill-wave"></i> Pagar con Efectivo
+                                    </button>
+                                    <a href="{% url 'shop:allCat' %}" class="btn-continue-desktop">
+                                        <i class="fas fa-arrow-left"></i> Seguir Comprando
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <!-- Trust Badges -->
+                            <div class="trust-badges">
+                                <div class="trust-item">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Pago Seguro</span>
+                                </div>
+                                <div class="trust-item">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    <span>Envío Rápido</span>
+                                </div>
+                                <div class="trust-item">
+                                    <i class="fas fa-medal"></i>
+                                    <span>Calidad Garantizada</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
         </div>
 
-        </td>
-        </tr>
-        </tboyd>
-        </table>
     </div>
 </div>
 
 {% endif %}
 
-</div>
-
-
-
-
+<!-- All Scripts -->
 <script>
     $("#buyButton").hide();
     $("#EmptyCartButton").hide();
     $("#CannotbuyButton").hide();
     $(function () {
-
         $("input.pago-tarjeta[type='radio']").click(function () {
             if ($(this).is(':checked')) {
-                $("#buyButton").fadeIn("slow", function () {
-                    // Animation complete
-                });
-                $("#EmptyCartButton").fadeIn("slow", function () {
-                    // Animation complete
-                });
-                $("#CannotbuyButton").fadeIn("slow", function () {
-                    // Animation complete
-                });
+                $("#buyButton").fadeIn("slow");
+                $("#EmptyCartButton").fadeIn("slow");
+                $("#CannotbuyButton").fadeIn("slow");
                 $("#depositButton").hide();
                 $("#depositButtonEmptyCart").hide();
                 $("#depositButtonCannotbuy").hide();
@@ -464,166 +382,73 @@ Carrito de compras - Imprenta Gallito
     });
 
     $(function () {
-        {
-            $("input.pago-deposito[type='radio']").click(function () {
-                if ($(this).is(':checked')) {
-
-                    $("#depositButton").fadeIn("slow", function () {
-                        // Animation complete
-                    });
-                    $("#depositButtonEmptyCart").fadeIn("slow", function () {
-                        // Animation complete
-                    });
-                    $("#depositButtonCannotbuy").fadeIn("slow", function () {
-                        // Animation complete
-                    });
-                    $(".pago-deposito-detalle").show();
-                    $("#buyButton").hide();
-                    $("#EmptyCartButton").hide();
-                    $("#CannotbuyButton").hide();
-                }
-            });
+        $("input.pago-deposito[type='radio']").click(function () {
+            if ($(this).is(':checked')) {
+                $("#depositButton").fadeIn("slow");
+                $("#depositButtonEmptyCart").fadeIn("slow");
+                $("#depositButtonCannotbuy").fadeIn("slow");
+                $(".pago-deposito-detalle").show();
+                $("#buyButton").hide();
+                $("#EmptyCartButton").hide();
+                $("#CannotbuyButton").hide();
+            }
         });
-</script>
+    });
 
-
-<script>
     $('#EmptyCartButton').on('click', function (e) {
-        // Abre el formulario con la configuración en Culqi.settings
         alert("Por favor, añada un pedido a su carrito de compras.");
         e.preventDefault();
     });
 
     $('#buyButton').on('click', function (e) {
-        // Abre el formulario con la configuración en Culqi.settings
         Culqi.open();
         e.preventDefault();
     });
 
-    /* depositButton */
-
     $('#depositButtonEmptyCart').on('click', function (e) {
-        // Abre el formulario con la configuración en Culqi.settings
         alert("Por favor, añada un pedido a su carrito de compras.");
         e.preventDefault();
     });
 
-</script>
-
-// <script>
-//     function getCookie(name) {
-//         var cookieValue = null;
-//         if (document.cookie && document.cookie !== '') {
-//             var cookies = document.cookie.split(';');
-//             for (var i = 0; i < cookies.length; i++) {
-//                 var cookie = jQuery.trim(cookies[i]);
-//                 // Does this cookie string begin with the name we want?
-//                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
-//                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//                     break;
-//                 }
-//             }
-//         }
-//         return cookieValue;
-//     }
-
-//     var csrftoken = getCookie('csrftoken');
-
-//     function csrfSafeMethod(method) {
-//         // these HTTP methods do not require CSRF protection
-//         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-//     }
-
-//     $.ajaxSetup({
-//         beforeSend: function (xhr, settings) {
-//             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-//                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
-//             }
-//         }
-//     });
-
-//     function culqi() {
-
-//         var $container = $('.general-container').addClass("preloader");
-//         var shipping_address = $('#ShippingAddress').val();
-
-//         if (Culqi.token) {
-//             $.post("{% url 'carrito_de_compras:cart_charge_credit_card' %}", {
-//                 payment_method: 'credit_card_payment',
-//                 status: 'aprobado',
-//                 amount: {{ culqi_total }},
-//         currency_code: 'PEN',
-//             email: Culqi.token.email,
-//                 source_id: Culqi.token.id,
-//                     last_four: Culqi.token.last_four,
-//                         shipping_cost: { { costo_despacho } },
-//         shipping_address: shipping_address,
-//                     },
-//                 ).done(function () {
-//             window.location.href = "{% url 'order:thanks_credit_card' %}";
-//         }).fail(function (xhr, status, error) {
-//             window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
-//             alert("Hubo un problema con su compra con Tarjeta de Crédito. No hemos realizado ningún cobro. Intente nuevamente, o puede pagar con efectivo eligiendo la opción Pago en Efectivo");
-//         });
-//             } else {
-
-//         //
-//     }
-//         }
-// </script>
-
-<script>
     $('#depositButton').on('click', function (e) {
-
         var shipping_address = $('#ShippingAddress').val()
         $.post("{% url 'carrito_de_compras:cart_charge_deposit_payment' %}", {
             payment_method: 'deposit_payment',
-            amount: {{ total_a_pagar }},
-            stickers_price: {{ total }},
-            discount: {{ descuento }},
+            amount: '{{ total_a_pagar }}',
+            stickers_price: '{{ total }}',
+            discount: '{{ descuento }}',
             currency_code: 'PEN',
             source_id: "10",
             last_four: 1111,
-            shipping_cost: {{ costo_despacho }},
+            shipping_cost: '{{ costo_despacho }}',
             shipping_address: shipping_address
-                },
-        ).done(function () {
+        }).done(function () {
             window.location.href = "{% url 'order:thanks_deposit_payment' %}";
         });
     });
-</script>
-
-
-
-<script>
 
     $('#cuponButton').on('click', function (e) {
-        //
         var user_cupon = $('#user_cupon').val()
         $.post("{% url 'marketing:cupones' %}", {
             user_cupon: user_cupon,
-        },
-        ).done(function () {
+        }).done(function () {
             window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
         })
     });
-
 </script>
 
-
-<!-- Modal No Registrado -->
-<div class="modal fade" id="CannotbuyButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<!-- Modals -->
+<div class="modal fade" id="CannotbuyButtonModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title my_title" id="exampleModalLabel">Regístrate</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title">Regístrate</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Hola Gallito(a), recuerda que debes registrarte para poder realizar la compra. <br>
+                Hola Gallito(a), recuerda que debes registrarte para poder realizar la compra.<br>
                 Registrándote podrás ingresar la dirección a donde quieres que enviemos los productos.
             </div>
             <div class="modal-footer">
@@ -633,88 +458,20 @@ Carrito de compras - Imprenta Gallito
     </div>
 </div>
 
-
-<!--Mensaje "El monto debe ser mayor a MontoMinimo soles" -->
-<div class="modal fade" id="MontoMinimo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="PayWithCashExplanation" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title my_title" id="exampleModalLongTitle">Monto inferior a los S/{{free_shipping_min_amount}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title">Pagar con Efectivo</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Por favor, añada un producto más a su carrito de compras. El monto de la compra debe
-                ser igual o superior a S/{{free_shipping_min_amount}} (sin considerar el costo de envío).</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Ends Modal -->
-
-<!-- Explicacion métodos de pago -->
-
-<!-- Pagar con Tarjeta -->
-
-<div class="modal fade" id="PayWithCardExplanation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title my_title" id="exampleModalLongTitle">Pagar con Tarjeta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Al elegir este método de pago aparecerá un ventana para que ingrese los datos de su tarjeta. Esta
-                    ventana lo conectará con nuestra pasarela de pagos: Culqi.</p>
-                <p>Culqi es una empresa peruana que gestiona directamente el pago de sus productos con su banco.
-                    <p>Cualquier entidad involucrada con la captura, envío y almacenamiento de datos de tarjetas de
-                        crédito y débito debe cumplir con la normativa <a
-                            href="https://www.pcisecuritystandards.org/pci_security/">PCI DSS Payment Card Industry Data
-                            Security Standards</a>. Culqi nos ayuda a simplificar este proceso ofreciéndoles a
-                        nuestros clientes una integración 100% segura.</p>
-                    <p>Los datos de su tarjeta de crédito nunca ingresan a nuestro sistema, la transacción se realiza
-                        mediante el navegador web que utilice y su banco, mediante Culqi; quienes
-                        actúan como un intermediario entre ambos.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<!-- Pagar con Efectivo -->
-
-<div class="modal fade" id="PayWithCashExplanation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title my_title" id="exampleModalLongTitle">Pagar con Efectivo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Al dar click en esta opción nuestro sistema generará una orden con todos los productos que haya
-                    colocado en su carrito de compras.</p>
-                <p>En pantalla se le mostrará: su número de orden, el total a pagar y las cuentas bancarias para hacer
-                    el depósito. También
-                    le enviaremos un correo con estos detalles.</p>
+                <p>Al dar click en esta opción nuestro sistema generará una orden con todos los productos que haya colocado en su carrito de compras.</p>
+                <p>En pantalla se le mostrará: su número de orden, el total a pagar y las cuentas bancarias para hacer el depósito. También le enviaremos un correo con estos detalles.</p>
                 <p>La fecha de entrega se coordinará con Ud. vía correo electrónico, una vez que cancele su orden.</p>
-                <p>Recuerde que tendrá 48 horas para cancelar su orden, de lo contrario la misma será anulada en nuestro
-                    sistema.</p>
-                <p>Para cualquier duda sobre este método de pago, puede escribirnos a imprentagallito@gmail.com</p>
+                <p>Recuerde que tendrá 48 horas para cancelar su orden, de lo contrario la misma será anulada en nuestro sistema.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -723,24 +480,18 @@ Carrito de compras - Imprenta Gallito
     </div>
 </div>
 
-
-<!-- Seguir comprando -->
-
-<div class="modal fade" id="SeguirComprandoExplanation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="SeguirComprandoExplanation" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title my_title" id="exampleModalLongTitle">Seguir comprando</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title">Seguir comprando</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Puede seguir comprando con total tranquilidad, los producto que ya agregó al carrito de compras
-                    permanecerán en él, incluso si regresa a otra sección de la página.</p>
-                <p>Los productos se eliminarán del carrito de compras, solo si usted los elimina manualmente o
-                    o si cierra su sesión.</p>
+                <p>Puede seguir comprando con total tranquilidad, los producto que ya agregó al carrito de compras permanecerán en él, incluso si regresa a otra sección de la página.</p>
+                <p>Los productos se eliminarán del carrito de compras, solo si usted los elimina manualmente o si cierra su sesión.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -748,11 +499,5 @@ Carrito de compras - Imprenta Gallito
         </div>
     </div>
 </div>
-
-<script>
-    $('#myModal').on('shown.bs.modal', function () {
-        $('#myInput').focus()
-    })
-</script>
 
 {% endblock %}

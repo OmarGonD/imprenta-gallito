@@ -15,4 +15,4 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.7
 sphinxcontrib-serializinghtml==1.1.10
 python-decouple==3.8
-crispy-bootstrap4==2022.1
+crispy-bootstrap4==2025.6

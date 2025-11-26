@@ -5,16 +5,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Imprenta Gallito Perú">
+    <meta name="description" content="{% block metadescription %}{% block metadesciption %}Imprenta Gallito Perú{% endblock %}{% endblock %}">
     <meta name="google-site-verification" content="fGkwUY2RcijkVzB6DiwIuAToP1y5xw8ECXQQabRAOIM"/>
     <link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/gallito_favicon.png' %}"/>
 
-    <!-- Add Baskerville font from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
 
     <script
@@ -27,7 +39,9 @@
 
     <!-- Incluyendo Culqi Checkout -->
     <script src="https://checkout.culqi.com/js/v3"></script>
-    <title>Imprenta Gallito</title>
+    <title>{% block title %}Imprenta Gallito{% endblock %}</title>
+    
+    {% block extra_css %}{% endblock %}
 
     <style>
         html, body {
@@ -106,9 +120,7 @@
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-{% if has_shop_in_url %}
-    {% include 'header.html' %}
-{% endif %}
+{% include 'header.html' %}
 
 <div class="main-section">
 {% block content %}
@@ -166,4 +178,3 @@
 
 </body>
 </html>
-

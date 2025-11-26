@@ -17,75 +17,215 @@
 
 {% block content %}
 
-    <div class="my_header_categories my_header_bg_color  margin-top3">
-        <div class="container padding-top3">
-            <p class="my_category_title">{{ category.name|title }}</p>
-            <p class="text-center text-muted" style="font-size:1.1em;">{{ category.description }}</p>
-            {#            <p>192 reviews<i class="gold-star fas fa-star-half-alt"></i>#}
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star"></i>
-            <i class="gold-star fas fa-star-half-alt"></i>
-            </p>
+<!-- Breadcrumb Navigation -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:allCat' %}">Productos</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Category Hero Banner -->
+<section class="category-hero">
+    <div class="category-hero-overlay"></div>
+    <div class="container">
+        <div class="category-hero-content">
+            <h1 class="category-title">{{ category.name|title }}</h1>
+            <p class="category-description">{{ category.description }}</p>
+            <div class="category-rating">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <span class="rating-text">4.8 (192 reseñas)</span>
+            </div>
         </div>
     </div>
+</section>
 
+<!-- Products Section -->
+<section class="products-section">
     <div class="container">
+        <!-- Filter and Sort Bar -->
+        <div class="filter-sort-bar">
+            <div class="results-count">
+                <span class="count-number">{{ products|length }}</span> productos encontrados
+            </div>
+            <div class="sort-dropdown">
+                <label for="sort-select">Ordenar por:</label>
+                <select id="sort-select" class="form-select">
+                    <option value="popular">Más Popular</option>
+                    <option value="price-low">Precio: Menor a Mayor</option>
+                    <option value="price-high">Precio: Mayor a Menor</option>
+                    <option value="newest">Más Recientes</option>
+                </select>
+            </div>
+        </div>
 
-        <div class="row margin-bottom5 margin-top3">
+        <!-- Products Grid -->
+        <div class="row products-grid">
             {% for product in products %}
-                <div class="col-md-3 padding-top3">
-                    <div class="text-center my_products_icons">
-                        <a href="{{ product.get_url }}">
-                            <img class="my_image_medium"
-                                 src="{{ product.image.url }}"
-                                 alt="{{ product.name }}">
-                        </a>
-                        <p class="text-center"><b>{{ product.name }}</b></p>
-                        <p class="text-center text-muted" style="font-size:0.98em;">{{ product.description }}</p>
-                    </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+                <div class="product-card">
+                    <a href="{{ product.get_url }}" class="product-link">
+                        <div class="product-image-wrapper">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                            {% else %}
+                                <div class="product-placeholder">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                            {% endif %}
+                            <div class="product-overlay">
+                                <button class="btn-quick-view">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                            <p class="product-desc">{{ product.description|truncatewords:10 }}</p>
+                            <div class="product-footer">
+                                <button class="btn-add-cart">
+                                    <i class="fas fa-shopping-cart"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </a>
                 </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="no-products">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No hay productos disponibles</h3>
+                    <p>Vuelve pronto para ver nuevos productos</p>
+                </div>
+            </div>
             {% endfor %}
         </div>
-        
-        <div class="row margin-bottom3 margin-top3">
-            <div class="col-2 col-md-2"></div>
-            <div class="col-8 col-md-8">
-            </div>
-            <div class="col-2 col-md-2"></div>
-        </div>
-
-        <div id="texto-producto" class="row margin-bottom5 margin-top3">
-            <div class="col-md-12 col-lg-12 margin-bottom3">
-                <h2 class="review_title text-center">
-                    Nuestros clientes de {{ category.name|lower }}
-                </h2>
-            </div>
-            <div class="col-md-12 testimonios">
-                <p class="margin-left5 margin-right5 margin-bottom3">
-                    <i>
-                        Descubre lo que opinan nuestros clientes sobre nuestros productos de {{ category.name|lower }}. Nos esforzamos por ofrecer la mejor calidad y personalización en cada pedido.
-                    </i>
-                </p>
-                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Para el precio, la calidad es excelente y el resultado superó mis expectativas."</i> <span class="testimonios-nombre"> - Samanta.</span></p>
-                <p class="margin-left5 margin-right5 margin-bottom3"><i>"El pedido llegó rápido y el acabado de los productos de {{ category.name|lower }} es muy profesional."</i><span class="testimonios-nombre"> - Rodrigo.</span></p>
-                <p class="margin-left5 margin-right5 margin-bottom3"><i>"Me encantó la atención y la personalización. Definitivamente volveré a comprar más de {{ category.name|lower }}."</i><span class="testimonios-nombre"> - Erika.</span></p>
-            </div>
-        </div> 
-        
-        <div class="row margin-bottom5 margin-top3">
-            <div class="text-center col-md-4">
-                <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" width="240px" height="220px">
-            </div>
-            <div class="text-center col-md-4">
-                <img src="{% static 'img/clientes/call_back_final.jpg' %}" width="240px" height="220px">
-            </div>
-            <div class="text-center col-md-4">
-                <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" width="240px" height="220px">
-            </div>
-        </div>
-
     </div>
+</section>
+
+<!-- Customer Testimonials -->
+<section class="testimonials-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+            <p class="section-subtitle">Testimonios reales de clientes satisfechos con {{ category.name|lower }}</p>
+        </div>
+
+        <div class="row testimonials-grid">
+            <div class="col-md-4 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Para el precio, la calidad es excelente y el resultado superó mis expectativas."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div class="author-info">
+                            <p class="author-name">Samanta</p>
+                            <p class="author-title">Cliente Verificado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"El pedido llegó rápido y el acabado de los productos de {{ category.name|lower }} es muy profesional."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div class="author-info">
+                            <p class="author-name">Rodrigo</p>
+                            <p class="author-title">Cliente Verificado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Me encantó la atención y la personalización. Definitivamente volveré a comprar más de {{ category.name|lower }}."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">E</div>
+                        <div class="author-info">
+                            <p class="author-name">Erika</p>
+                            <p class="author-title">Cliente Verificado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Customer Gallery -->
+<section class="customer-gallery-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Galería de Trabajos</h2>
+            <p class="section-subtitle">Proyectos reales de nuestros clientes</p>
+        </div>
+
+        <div class="row gallery-grid">
+            <div class="col-md-4 mb-4">
+                <div class="gallery-item">
+                    <img src="{% static 'img/clientes/dj_naoki_stickers_sobre.jpg' %}" alt="Trabajo cliente 1">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="gallery-item">
+                    <img src="{% static 'img/clientes/call_back_final.jpg' %}" alt="Trabajo cliente 2">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="gallery-item">
+                    <img src="{% static 'img/clientes/cocodrilo_m.JPG' %}" alt="Trabajo cliente 3">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

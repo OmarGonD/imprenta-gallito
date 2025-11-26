@@ -112,6 +112,32 @@
                         <i class="fa fa-phone me-1"></i>964 601 601
                     </a>
                 </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="cuentaDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-user me-1"></i>Cuenta
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cuentaDropdown">
+                        <li><a class="dropdown-item" href="{% url 'shop:profile' %}">
+                            <i class="fa fa-user-circle me-2"></i>Mi Perfil
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'shop:profile_edit' %}">
+                            <i class="fa fa-edit me-2"></i>Editar Perfil
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'signout' %}">
+                            <i class="fa fa-sign-out-alt me-2"></i>Cerrar Sesión
+                        </a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'carrito_de_compras:cart_detail' %}">
+                        <i class="fa fa-shopping-cart me-1"></i>Carrito 
+                        <span class="badge bg-primary">{{ cart_items_counter }}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

@@ -34,7 +34,7 @@ urlpatterns = [
     path('publicidad-impresa/', views.publicidad_impresa, name='publicidad_impresa'),
     path('banners-posters/', views.banners_posters, name='banners_posters'),
     path('etiquetas-stickers/', views.etiquetas_stickers, name='etiquetas_stickers'),
-    path('ropa-bolsos/', views.ropa_bolsos, name='ropa_bolsos'),
+    path('ropa-bolsas/', views.ropa_bolsas, name='ropa_bolsas'),
     path('productos-promocionales/', views.productos_promocionales, name='productos_promocionales'),
     path('empaques/', views.EmpaquesListView.as_view(), name='empaques-list'),
     path('folletoss/', views.FolletosListView.as_view(), name='folletos-list'),
@@ -42,4 +42,6 @@ urlpatterns = [
     path('invitaciones-regalos/', views.invitaciones_regalos, name='invitaciones_regalos'),
     path('bodas/', views.bodas, name='bodas'),
     path('servicios-diseno/', views.servicios_diseno, name='servicios_diseno'),
+    path('perfil/', views.profile_view, name='profile'),
+    path('perfil/editar/', views.profile_edit_view, name='profile_edit'),
 ]

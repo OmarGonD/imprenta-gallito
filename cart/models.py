@@ -45,7 +45,18 @@ class CartItem(models.Model):
         print(type(self.quantity))
         print(self.quantity)
         print("############################")
-        product_price = ProductsPricing.objects.filter(product=self.product, size=self.size, quantity=self.quantity).values_list("price", flat=True)[0]
+        
+        # Use .first() instead of [0] to avoid IndexError
+        product_price = ProductsPricing.objects.filter(
+            product=self.product, 
+            size=self.size, 
+            quantity=self.quantity
+        ).values_list("price", flat=True).first()
+        
+        if product_price is None:
+            print(f"WARNING: No price found for {self.product} - {self.size} x {self.quantity}")
+            return 0  # Return 0 if no price is found
+            
         print("product_price: ", product_price)
         return int(product_price)
 
@@ -182,4 +193,4 @@ class UnitaryProductItem(models.Model):
         if self.file_b:
             return self.file_b.url.split('/')[-1]
         else:
-            return self.product.image.url.split('/')[-1] 
+            return self.product.image.url.split('/')[-1]

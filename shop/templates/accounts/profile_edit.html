@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Editar Perfil
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Profile Photo -->
+                        <div class="mb-4 text-center">
+                            <img src="{{ profile.photo.url }}" alt="Profile Photo" class="img-fluid rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;" id="profile-preview">
+                            <div>
+                                <label for="{{ profile_form.photo.id_for_label }}" class="form-label">Foto de Perfil</label>
+                                {{ profile_form.photo }}
+                                {% if profile_form.photo.errors %}
+                                    <div class="text-danger small">{{ profile_form.photo.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Personal Information -->
+                        <h5 class="mb-3"><i class="fas fa-user me-2"></i>Información Personal</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.dni.id_for_label }}" class="form-label">DNI</label>
+                                {{ profile_form.dni }}
+                                {% if profile_form.dni.errors %}
+                                    <div class="text-danger small">{{ profile_form.dni.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.birthdate.id_for_label }}" class="form-label">Fecha de Nacimiento</label>
+                                {{ profile_form.birthdate }}
+                                {% if profile_form.birthdate.errors %}
+                                    <div class="text-danger small">{{ profile_form.birthdate.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ profile_form.phone_number.id_for_label }}" class="form-label">Teléfono</label>
+                            {{ profile_form.phone_number }}
+                            {% if profile_form.phone_number.errors %}
+                                <div class="text-danger small">{{ profile_form.phone_number.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <hr>
+
+                        <!-- Delivery Address -->
+                        <h5 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Dirección de Entrega</h5>
+                        
+                        <div class="mb-3">
+                            <label for="{{ profile_form.shipping_address1.id_for_label }}" class="form-label">Dirección <span class="text-danger">*</span></label>
+                            {{ profile_form.shipping_address1 }}
+                            {% if profile_form.shipping_address1.errors %}
+                                <div class="text-danger small">{{ profile_form.shipping_address1.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Ingrese su dirección completa (calle, número, urbanización, etc.)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ profile_form.reference.id_for_label }}" class="form-label">Referencia <span class="text-danger">*</span></label>
+                            {{ profile_form.reference }}
+                            {% if profile_form.reference.errors %}
+                                <div class="text-danger small">{{ profile_form.reference.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Referencia para que el repartidor pueda encontrar su dirección fácilmente</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="{{ profile_form.shipping_department.id_for_label }}" class="form-label">Departamento <span class="text-danger">*</span></label>
+                                {{ profile_form.shipping_department }}
+                                {% if profile_form.shipping_department.errors %}
+                                    <div class="text-danger small">{{ profile_form.shipping_department.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ profile_form.shipping_province.id_for_label }}" class="form-label">Provincia <span class="text-danger">*</span></label>
+                                {{ profile_form.shipping_province }}
+                                {% if profile_form.shipping_province.errors %}
+                                    <div class="text-danger small">{{ profile_form.shipping_province.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label for="{{ profile_form.shipping_district.id_for_label }}" class="form-label">Distrito <span class="text-danger">*</span></label>
+                                {{ profile_form.shipping_district }}
+                                {% if profile_form.shipping_district.errors %}
+                                    <div class="text-danger small">{{ profile_form.shipping_district.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Los campos marcados con <span class="text-danger">*</span> son obligatorios para poder realizar envíos.
+                        </div>
+
+                        <hr>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'shop:profile' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.6rem 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.075) !important;
+}
+
+input[type="file"] {
+    padding: 0.5rem;
+}
+
+#profile-preview {
+    border: 3px solid #dee2e6;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Preview profile photo
+    document.getElementById('{{ profile_form.photo.id_for_label }}').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // AJAX for dynamic province and district loading
+    function get_provinces() {
+        return new Promise(function(resolve, reject) {
+            var val_d = $("#id_shipping_department").val();
+            $.ajax({
+                url: "/province/",
+                data: {
+                    d_name: val_d
+                },
+            }).done(function(result) {
+                $("#id_shipping_province").html(result);
+                resolve(result);
+            });
+        });
+    }
+
+    function get_districts() {
+        return new Promise(function(resolve, reject) {
+            var val_d = $("#id_shipping_department").val();
+            var val_p = $("#id_shipping_province").val();
+            $.ajax({
+                url: "/district/",
+                data: {
+                    d_name: val_d,
+                    p_name: val_p
+                },
+            }).done(function(result) {
+                $("#id_shipping_district").html(result);
+                resolve(result);
+            });
+        });
+    }
+
+    $(document).ready(function() {
+        $("#id_shipping_department").change(async function() {
+            await get_provinces();
+            await get_districts();
+        });
+
+        $("#id_shipping_province").change(async function() {
+            await get_districts();
+        });
+    });
+</script>
+{% endblock %}
