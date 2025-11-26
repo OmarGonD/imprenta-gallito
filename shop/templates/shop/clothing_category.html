@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Ropa y Bolsas Personalizadas | Imprenta Gallito{% endblock %}
+{% block title %}{{ category.name }} | Ropa y Bolsas | Imprenta Gallito{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/clothing.css' %}">
@@ -10,10 +10,10 @@
 {% block content %}
 <div class="clothing-page">
     <!-- Hero Banner -->
-    <section class="clothing-hero">
+    <section class="clothing-hero" style="padding: 40px 20px;">
         <div class="hero-content">
-            <h1>Ropa y Bolsas Personalizadas</h1>
-            <p>Personaliza camisetas, gorras, bolsas y más con tu logo o diseño</p>
+            <h1>{{ category.name }}</h1>
+            <p>{{ category.description }}</p>
         </div>
     </section>
 
@@ -22,56 +22,40 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li><a href="{% url 'shop:allCat' %}">Inicio</a></li>
-                <li class="active">Ropa y Bolsas</li>
+                <li><a href="{% url 'shop:ropa_bolsas' %}">Ropa y Bolsas</a></li>
+                <li class="active">{{ category.name }}</li>
             </ol>
         </div>
     </nav>
 
-    <!-- Categories Navigation -->
+    <!-- Subcategories Navigation -->
+    {% if subcategories %}
     <section class="categories-nav">
         <div class="container">
             <div class="categories-grid">
-                {% for category in categories %}
-                <a href="{% url 'shop:clothing_category' category.slug %}" class="category-card {% if selected_category == category.slug %}active{% endif %}">
+                <a href="{% url 'shop:clothing_category' category.slug %}" class="category-card {% if not selected_subcategory %}active{% endif %}">
                     <div class="category-icon">
-                        {% if category.image %}
-                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <span class="category-name">Todos</span>
+                </a>
+                {% for sub in subcategories %}
+                <a href="{% url 'shop:clothing_category' category.slug %}?subcategory={{ sub.slug }}" 
+                   class="category-card {% if selected_subcategory == sub.slug %}active{% endif %}">
+                    <div class="category-icon">
+                        {% if sub.image %}
+                        <img src="{{ sub.image.url }}" alt="{{ sub.name }}">
                         {% else %}
-                        <i class="fas {{ category.icon|default:'fa-tshirt' }}"></i>
+                        <i class="fas {{ category.icon|default:'fa-tag' }}"></i>
                         {% endif %}
                     </div>
-                    <span class="category-name">{{ category.name }}</span>
-                </a>
-                {% empty %}
-                <!-- Default categories when DB is empty -->
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-tshirt"></i></div>
-                    <span class="category-name">Camisetas</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-hat-cowboy"></i></div>
-                    <span class="category-name">Gorras</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-shopping-bag"></i></div>
-                    <span class="category-name">Bolsas</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-user-tie"></i></div>
-                    <span class="category-name">Polos</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-vest"></i></div>
-                    <span class="category-name">Chalecos</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-mitten"></i></div>
-                    <span class="category-name">Accesorios</span>
+                    <span class="category-name">{{ sub.name }}</span>
                 </a>
                 {% endfor %}
             </div>
         </div>
     </section>
+    {% endif %}
 
     <!-- Main Content with Sidebar -->
     <main class="clothing-main">
@@ -81,29 +65,14 @@
                 <aside class="filter-sidebar">
                     <div class="filter-header">
                         <h3><i class="fas fa-filter"></i> Filtros</h3>
-                        <a href="{% url 'shop:ropa_bolsas' %}" class="clear-filters">Limpiar todo</a>
+                        <a href="{% url 'shop:clothing_category' category.slug %}" class="clear-filters">Limpiar todo</a>
                     </div>
 
-                    <form id="filter-form" method="GET" action="{% url 'shop:ropa_bolsas' %}">
-                        <!-- Category Filter -->
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="category">
-                                Categoría
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-category">
-                                {% for category in categories %}
-                                <label class="filter-option">
-                                    <input type="radio" name="category" value="{{ category.slug }}" 
-                                           {% if selected_category == category.slug %}checked{% endif %}>
-                                    <span class="checkmark"></span>
-                                    {{ category.name }}
-                                    <span class="count">({{ category.products.count }})</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-
+                    <form id="filter-form" method="GET" action="{% url 'shop:clothing_category' category.slug %}">
+                        {% if selected_subcategory %}
+                        <input type="hidden" name="subcategory" value="{{ selected_subcategory }}">
+                        {% endif %}
+                        
                         <!-- Price Filter -->
                         <div class="filter-section">
                             <h4 class="filter-title" data-toggle="price">
@@ -134,6 +103,7 @@
                         </div>
 
                         <!-- Color Filter -->
+                        {% if all_colors %}
                         <div class="filter-section">
                             <h4 class="filter-title" data-toggle="color">
                                 Color
@@ -148,38 +118,14 @@
                                         <span class="color-swatch" style="background-color: {{ color.hex_code }};"></span>
                                         <span class="color-name">{{ color.name }}</span>
                                     </label>
-                                    {% empty %}
-                                    <!-- Default colors -->
-                                    <label class="color-option" title="Negro">
-                                        <input type="checkbox" name="color" value="negro">
-                                        <span class="color-swatch" style="background-color: #000000;"></span>
-                                    </label>
-                                    <label class="color-option" title="Blanco">
-                                        <input type="checkbox" name="color" value="blanco">
-                                        <span class="color-swatch" style="background-color: #FFFFFF; border: 1px solid #ddd;"></span>
-                                    </label>
-                                    <label class="color-option" title="Rojo">
-                                        <input type="checkbox" name="color" value="rojo">
-                                        <span class="color-swatch" style="background-color: #E53935;"></span>
-                                    </label>
-                                    <label class="color-option" title="Azul">
-                                        <input type="checkbox" name="color" value="azul">
-                                        <span class="color-swatch" style="background-color: #1E88E5;"></span>
-                                    </label>
-                                    <label class="color-option" title="Verde">
-                                        <input type="checkbox" name="color" value="verde">
-                                        <span class="color-swatch" style="background-color: #43A047;"></span>
-                                    </label>
-                                    <label class="color-option" title="Amarillo">
-                                        <input type="checkbox" name="color" value="amarillo">
-                                        <span class="color-swatch" style="background-color: #FDD835;"></span>
-                                    </label>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
                         <!-- Size Filter -->
+                        {% if all_sizes %}
                         <div class="filter-section">
                             <h4 class="filter-title" data-toggle="size">
                                 Talla
@@ -193,36 +139,11 @@
                                                {% if size.name in selected_sizes %}checked{% endif %}>
                                         <span class="size-box">{{ size.name }}</span>
                                     </label>
-                                    {% empty %}
-                                    <!-- Default sizes -->
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="XS">
-                                        <span class="size-box">XS</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="S">
-                                        <span class="size-box">S</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="M">
-                                        <span class="size-box">M</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="L">
-                                        <span class="size-box">L</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="XL">
-                                        <span class="size-box">XL</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="XXL">
-                                        <span class="size-box">XXL</span>
-                                    </label>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
                         <button type="submit" class="btn-apply-filters">
                             <i class="fas fa-check"></i> Aplicar Filtros
@@ -235,7 +156,7 @@
                     <!-- Sort and Results Bar -->
                     <div class="results-bar">
                         <div class="results-count">
-                            <strong>{{ product_count }}</strong> productos encontrados
+                            <strong>{{ product_count }}</strong> productos en {{ category.name }}
                         </div>
                         <div class="sort-options">
                             <label for="sort-select">Ordenar por:</label>
@@ -317,114 +238,14 @@
                             </div>
                         </article>
                         {% empty %}
-                        <!-- Sample products when DB is empty -->
-                        <article class="product-card">
-                            <span class="badge badge-best">Más vendido</span>
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-tshirt.png' %}" alt="Camiseta Clásica" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Camiseta Clásica de Algodón</a></h3>
-                                <p class="product-description">Camiseta 100% algodón, perfecta para personalizar</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                    <span class="color-dot" style="background-color: #fff; border: 1px solid #ddd;"></span>
-                                    <span class="color-dot" style="background-color: #E53935;"></span>
-                                    <span class="color-dot" style="background-color: #1E88E5;"></span>
-                                    <span class="more-colors">+8</span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-current">Desde S/ 25.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="product-card">
-                            <span class="badge badge-new">Nuevo</span>
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-cap.png' %}" alt="Gorra Trucker" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Gorra Trucker Personalizada</a></h3>
-                                <p class="product-description">Gorra con malla trasera, ideal para empresas</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                    <span class="color-dot" style="background-color: #1E88E5;"></span>
-                                    <span class="color-dot" style="background-color: #E53935;"></span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-current">Desde S/ 18.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="product-card">
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-bag.png' %}" alt="Bolsa Tote" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Bolsa Tote Ecológica</a></h3>
-                                <p class="product-description">Bolsa de algodón reutilizable</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #F5F5DC;"></span>
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-current">Desde S/ 12.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="product-card">
-                            <span class="badge badge-sale">-20%</span>
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-polo.png' %}" alt="Polo Empresarial" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Polo Empresarial Premium</a></h3>
-                                <p class="product-description">Polo con cuello para uniformes corporativos</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                    <span class="color-dot" style="background-color: #fff; border: 1px solid #ddd;"></span>
-                                    <span class="color-dot" style="background-color: #1565C0;"></span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-original">S/ 45.00</span>
-                                    <span class="price-current">S/ 36.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
-                            </div>
-                        </article>
+                        <div class="no-products">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No hay productos disponibles</h3>
+                            <p>No encontramos productos que coincidan con tus filtros. Intenta con otros criterios.</p>
+                            <a href="{% url 'shop:clothing_category' category.slug %}" class="btn-customize">Ver todos los productos</a>
+                        </div>
                         {% endfor %}
                     </div>
-
-                    <!-- Pagination -->
-                    {% if products.has_other_pages %}
-                    <nav class="pagination-nav">
-                        <ul class="pagination">
-                            {% if products.has_previous %}
-                            <li><a href="?page={{ products.previous_page_number }}" class="page-link">&laquo; Anterior</a></li>
-                            {% endif %}
-                            {% for num in products.paginator.page_range %}
-                            <li><a href="?page={{ num }}" class="page-link {% if products.number == num %}active{% endif %}">{{ num }}</a></li>
-                            {% endfor %}
-                            {% if products.has_next %}
-                            <li><a href="?page={{ products.next_page_number }}" class="page-link">Siguiente &raquo;</a></li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
                 </section>
             </div>
         </div>
@@ -478,9 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const content = document.getElementById('filter-' + target);
             const icon = this.querySelector('i');
             
-            content.classList.toggle('collapsed');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
+            if (content) {
+                content.classList.toggle('collapsed');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
         });
     });
 
@@ -495,14 +318,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.querySelectorAll('.price-preset').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-        });
-    });
-
-    // Auto-submit on filter change
-    document.querySelectorAll('.filter-section input[type="checkbox"], .filter-section input[type="radio"]').forEach(function(input) {
-        input.addEventListener('change', function() {
-            // Optional: auto-submit form
-            // document.getElementById('filter-form').submit();
         });
     });
 

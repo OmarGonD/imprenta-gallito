@@ -916,7 +916,320 @@ def etiquetas_stickers(request):
     return render(request, 'shop/etiquetas_stickers.html')
 
 def ropa_bolsas(request):
-    return render(request, 'shop/ropa_bolsas.html')
+    """Main Clothing & Bags page - VistaPrint style"""
+    from .models import ClothingCategory, ClothingProduct, ClothingColor, ClothingSize
+    
+    categories = ClothingCategory.objects.filter(available=True).prefetch_related('subcategories')
+    
+    # Get filter parameters
+    category_filter = request.GET.get('category', '')
+    color_filter = request.GET.getlist('color')
+    size_filter = request.GET.getlist('size')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    sort_by = request.GET.get('sort', 'featured')
+    
+    # Base queryset
+    products = ClothingProduct.objects.filter(available=True)
+    
+    # Apply filters
+    if category_filter:
+        products = products.filter(category__slug=category_filter)
+    
+    if color_filter:
+        products = products.filter(available_colors__slug__in=color_filter).distinct()
+    
+    if size_filter:
+        products = products.filter(available_sizes__name__in=size_filter).distinct()
+    
+    if price_min:
+        products = products.filter(base_price__gte=float(price_min))
+    
+    if price_max:
+        products = products.filter(base_price__lte=float(price_max))
+    
+    # Apply sorting
+    if sort_by == 'price_low':
+        products = products.order_by('base_price')
+    elif sort_by == 'price_high':
+        products = products.order_by('-base_price')
+    elif sort_by == 'newest':
+        products = products.order_by('-created')
+    elif sort_by == 'name':
+        products = products.order_by('name')
+    else:  # featured
+        products = products.order_by('-is_featured', '-is_bestseller', 'name')
+    
+    # Get all colors and sizes for filter sidebar
+    all_colors = ClothingColor.objects.all()
+    all_sizes = ClothingSize.objects.filter(size_type='clothing')
+    
+    context = {
+        'categories': categories,
+        'products': products,
+        'all_colors': all_colors,
+        'all_sizes': all_sizes,
+        'selected_category': category_filter,
+        'selected_colors': color_filter,
+        'selected_sizes': size_filter,
+        'price_min': price_min,
+        'price_max': price_max,
+        'sort_by': sort_by,
+        'product_count': products.count(),
+    }
+    
+    return render(request, 'shop/ropa_bolsas.html', context)
+
+
+def clothing_category(request, category_slug):
+    """Category page for clothing - e.g., /ropa-bolsas/gorras/"""
+    from .models import ClothingCategory, ClothingProduct, ClothingColor, ClothingSize
+    
+    category = ClothingCategory.objects.get(slug=category_slug, available=True)
+    subcategories = category.subcategories.filter(available=True)
+    
+    # Get filter parameters
+    subcategory_filter = request.GET.get('subcategory', '')
+    color_filter = request.GET.getlist('color')
+    size_filter = request.GET.getlist('size')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    sort_by = request.GET.get('sort', 'featured')
+    
+    # Base queryset
+    products = ClothingProduct.objects.filter(category=category, available=True)
+    
+    # Apply filters
+    if subcategory_filter:
+        products = products.filter(subcategory__slug=subcategory_filter)
+    
+    if color_filter:
+        products = products.filter(available_colors__slug__in=color_filter).distinct()
+    
+    if size_filter:
+        products = products.filter(available_sizes__name__in=size_filter).distinct()
+    
+    if price_min:
+        products = products.filter(base_price__gte=float(price_min))
+    
+    if price_max:
+        products = products.filter(base_price__lte=float(price_max))
+    
+    # Apply sorting
+    if sort_by == 'price_low':
+        products = products.order_by('base_price')
+    elif sort_by == 'price_high':
+        products = products.order_by('-base_price')
+    elif sort_by == 'newest':
+        products = products.order_by('-created')
+    elif sort_by == 'name':
+        products = products.order_by('name')
+    else:
+        products = products.order_by('-is_featured', '-is_bestseller', 'name')
+    
+    # Get colors and sizes available in this category
+    all_colors = ClothingColor.objects.filter(products__category=category).distinct()
+    
+    # Determine size type based on category
+    size_type = 'clothing'
+    if 'gorra' in category.slug or 'sombrero' in category.slug:
+        size_type = 'hat'
+    elif 'bolsa' in category.slug or 'mochila' in category.slug:
+        size_type = 'bag'
+    
+    all_sizes = ClothingSize.objects.filter(size_type=size_type)
+    
+    context = {
+        'category': category,
+        'subcategories': subcategories,
+        'products': products,
+        'all_colors': all_colors,
+        'all_sizes': all_sizes,
+        'selected_subcategory': subcategory_filter,
+        'selected_colors': color_filter,
+        'selected_sizes': size_filter,
+        'price_min': price_min,
+        'price_max': price_max,
+        'sort_by': sort_by,
+        'product_count': products.count(),
+    }
+    
+    return render(request, 'shop/clothing_category.html', context)
+
+
+def clothing_subcategory(request, category_slug, subcategory_slug):
+    """Subcategory page - e.g., /ropa-bolsas/gorras/viseras/"""
+    from .models import ClothingCategory, ClothingSubCategory, ClothingProduct, ClothingColor, ClothingSize
+    
+    category = ClothingCategory.objects.get(slug=category_slug, available=True)
+    subcategory = ClothingSubCategory.objects.get(category=category, slug=subcategory_slug, available=True)
+    
+    # Get filter parameters
+    color_filter = request.GET.getlist('color')
+    size_filter = request.GET.getlist('size')
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    sort_by = request.GET.get('sort', 'featured')
+    
+    # Base queryset
+    products = ClothingProduct.objects.filter(subcategory=subcategory, available=True)
+    
+    # Apply filters
+    if color_filter:
+        products = products.filter(available_colors__slug__in=color_filter).distinct()
+    
+    if size_filter:
+        products = products.filter(available_sizes__name__in=size_filter).distinct()
+    
+    if price_min:
+        products = products.filter(base_price__gte=float(price_min))
+    
+    if price_max:
+        products = products.filter(base_price__lte=float(price_max))
+    
+    # Apply sorting
+    if sort_by == 'price_low':
+        products = products.order_by('base_price')
+    elif sort_by == 'price_high':
+        products = products.order_by('-base_price')
+    elif sort_by == 'newest':
+        products = products.order_by('-created')
+    elif sort_by == 'name':
+        products = products.order_by('name')
+    else:
+        products = products.order_by('-is_featured', '-is_bestseller', 'name')
+    
+    # Get colors and sizes
+    all_colors = ClothingColor.objects.filter(products__subcategory=subcategory).distinct()
+    size_type = 'hat' if 'gorra' in category.slug else 'clothing'
+    all_sizes = ClothingSize.objects.filter(size_type=size_type)
+    
+    context = {
+        'category': category,
+        'subcategory': subcategory,
+        'products': products,
+        'all_colors': all_colors,
+        'all_sizes': all_sizes,
+        'selected_colors': color_filter,
+        'selected_sizes': size_filter,
+        'price_min': price_min,
+        'price_max': price_max,
+        'sort_by': sort_by,
+        'product_count': products.count(),
+    }
+    
+    return render(request, 'shop/clothing_subcategory.html', context)
+
+
+def clothing_product_detail(request, category_slug, product_slug):
+    """Product detail page with customization options"""
+    from .models import ClothingCategory, ClothingProduct, ClothingProductImage
+    
+    category = ClothingCategory.objects.get(slug=category_slug)
+    product = ClothingProduct.objects.get(category=category, slug=product_slug, available=True)
+    
+    # Get product images organized by color
+    images = product.images.all().select_related('color')
+    images_by_color = {}
+    default_images = []
+    
+    for img in images:
+        if img.color:
+            if img.color.slug not in images_by_color:
+                images_by_color[img.color.slug] = []
+            images_by_color[img.color.slug].append(img)
+        else:
+            default_images.append(img)
+    
+    # Get pricing tiers
+    pricing_tiers = product.pricing_tiers.all()
+    
+    # Get related products
+    related_products = ClothingProduct.objects.filter(
+        category=category,
+        available=True
+    ).exclude(id=product.id)[:4]
+    
+    context = {
+        'category': category,
+        'product': product,
+        'images_by_color': images_by_color,
+        'default_images': default_images,
+        'pricing_tiers': pricing_tiers,
+        'related_products': related_products,
+    }
+    
+    return render(request, 'shop/clothing_product_detail.html', context)
+
+
+@csrf_exempt
+def add_clothing_to_cart(request):
+    """AJAX endpoint to add clothing product to cart"""
+    from .models import ClothingProduct, ClothingColor, ClothingSize
+    
+    if request.method == 'POST':
+        cart_id = request.COOKIES.get('cart_id')
+        if cart_id:
+            try:
+                cart = Cart.objects.get(id=cart_id)
+            except Cart.DoesNotExist:
+                cart = Cart.objects.create(cart_id="Random")
+        else:
+            cart = Cart.objects.create(cart_id="Random")
+            cart_id = cart.id
+        
+        product_id = request.POST.get('product_id')
+        color_slug = request.POST.get('color')
+        size_name = request.POST.get('size')
+        quantity = int(request.POST.get('quantity', 1))
+        
+        try:
+            product = ClothingProduct.objects.get(id=product_id)
+            color = ClothingColor.objects.get(slug=color_slug) if color_slug else None
+            size = ClothingSize.objects.get(name=size_name) if size_name else None
+            
+            # Create cart item (you may need to extend CartItem model)
+            # For now, we'll use the existing UnitaryProductItem structure
+            from cart.models import UnitaryProductItem
+            
+            # Store clothing-specific data in comment field as JSON
+            import json
+            custom_data = json.dumps({
+                'type': 'clothing',
+                'color': color.name if color else '',
+                'color_hex': color.hex_code if color else '',
+                'size': size.name if size else '',
+            })
+            
+            item = UnitaryProductItem.objects.create(
+                cart=cart,
+                unitaryproduct=None,  # Will need to adapt
+                size=size.name if size else '',
+                quantity=quantity,
+                comment=custom_data,
+                step_two_complete=True,
+            )
+            
+            # Count total items
+            cart_items_count = CartItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+            sample_items_count = SampleItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+            pack_items_count = PackItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+            unitary_items_count = UnitaryProductItem.objects.filter(cart_id=cart_id, step_two_complete=True).count()
+            
+            total_items = cart_items_count + sample_items_count + pack_items_count + unitary_items_count
+            
+            response = JsonResponse({
+                'success': True,
+                'cart_items_counter': total_items,
+                'message': 'Producto agregado al carrito'
+            })
+            response.set_cookie("cart_id", cart_id)
+            return response
+            
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 def productos_promocionales(request):
     return render(request, 'shop/productos_promocionales.html')
