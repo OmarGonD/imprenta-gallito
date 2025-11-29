@@ -1,134 +1,349 @@
 {% load static %}
 
-<!-- VistaPrint-Style Navigation Bar -->
-<nav class="vistaprint-navbar">
-    <div class="navbar-container">
-        <!-- Logo Section -->
-        <div class="navbar-logo">
-            <a href="{% url 'shop:allProdCat' %}" class="logo-link">
-                <img src="{% static 'img/imprenta_gallito_logo_navbar.png' %}" alt="Imprenta Gallito" class="logo-img">
-            </a>
-        </div>
+<!-- Modern Navigation Bar with Glass Effect -->
+<nav class="modern-navbar sticky top-0 z-50 backdrop-blur-md bg-white/95 border-b border-gray-200 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            
+            <!-- Logo Section -->
+            <div class="flex-shrink-0 flex items-center">
+                <a href="{% url 'shop:home' %}" class="flex items-center space-x-3 group">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                        <img src="{% static 'img/imprenta_gallito_logo_navbar.png' %}" 
+                             alt="Imprenta Gallito" 
+                             class="h-12 w-auto relative z-10 transform group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                </a>
+            </div>
 
-        <!-- Main Navigation Menu -->
-        <div class="navbar-menu" id="navbarMenu">
-            <ul class="nav-list">
+            <!-- Desktop Navigation Menu -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-1">
                 {% for category in categories %}
-                <li class="nav-item {% if category.subcategories.all %}has-dropdown{% endif %}">
-                    <a href="{{ category.get_url }}" class="nav-link">
+                <div class="relative group">
+                    <a href="{{ category.get_url }}" 
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 group">
                         {{ category.name }}
                         {% if category.subcategories.all %}
-                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                        <svg class="ml-1 w-4 h-4 transform group-hover:rotate-180 transition-transform duration-300" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
                         {% endif %}
                     </a>
                     
                     {% if category.subcategories.all %}
-                    <div class="mega-dropdown">
-                        <div class="mega-dropdown-inner">
-                            {% for subcategory in category.subcategories.all %}
-                            <div class="dropdown-column">
-                            <h3 class="dropdown-title">
-                                <a href="{{ subcategory.get_url }}">{{ subcategory.name }}</a>
-                            </h3>
+                    <!-- Mega Dropdown -->
+                    <div class="absolute left-0 mt-2 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                        <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden backdrop-blur-lg">
+                            <!-- Dropdown Header -->
+                            <div class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4">
+                                <h3 class="text-white font-bold text-lg">{{ category.name }}</h3>
                             </div>
-                            {% endfor %}
+                            
+                            <!-- Subcategories -->
+                            <div class="p-2 max-h-96 overflow-y-auto">
+                                {% for subcategory in category.subcategories.all %}
+                                <a href="{{ subcategory.get_url }}" 
+                                   class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-600 rounded-xl transition-all duration-200 group/item">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium">{{ subcategory.name }}</span>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- View All Link -->
+                            <div class="border-t border-gray-100 px-6 py-4 bg-gray-50">
+                                <a href="{{ category.get_url }}" 
+                                   class="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center group/all">
+                                    Ver todos en {{ category.name }}
+                                    <svg class="ml-2 w-4 h-4 group-hover/all:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <!-- Right Section: Search & Cart -->
-        <div class="navbar-actions">
-            <!-- Search Bar -->
-            <div class="search-box">
-                <form action="{% url 'search_app:searchResult' %}" method="get" class="search-form">
-                    <input type="text" name="q" placeholder="Search products..." class="search-input" autocomplete="off">
-                    <button type="submit" class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- User Account -->
-            {% if user.is_authenticated %}
-            <div class="account-dropdown">
-                <a href="#" class="account-link">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-                <div class="account-menu">
-                    <a href="{% url 'shop:profile' %}" class="account-item">
-                        <i class="fas fa-user"></i> Mi Perfil
-                    </a>
-                    <a href="{% url 'shop:profile_edit' %}" class="account-item">
-                        <i class="fas fa-edit"></i> Editar Perfil
-                    </a>
-                    <hr class="account-divider">
-                    <a href="{% url 'signout' %}" class="account-item">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                    </a>
                 </div>
+                {% endfor %}
             </div>
-            {% else %}
-            <a href="{% url 'signin' %}" class="account-link">
-                <i class="fas fa-user-circle"></i>
-            </a>
-            {% endif %}
 
-            <!-- Cart -->
-            <a href="{% url 'carrito_de_compras:cart_detail' %}" class="cart-link">
-                <i class="fas fa-shopping-cart"></i>
-                {% if cart_items_counter > 0 %}
-                <span class="cart-badge">{{ cart_items_counter }}</span>
+            <!-- Right Section: Search, Account, Cart -->
+            <div class="flex items-center space-x-3">
+                
+                <!-- Search Box (Desktop) -->
+                <div class="hidden md:block relative group">
+                    <form action="{% url 'search_app:searchResult' %}" method="get" class="relative">
+                        <input type="text" 
+                               name="q" 
+                               placeholder="Buscar productos..." 
+                               class="w-64 pl-12 pr-4 py-2.5 bg-gray-100 border-2 border-transparent rounded-2xl text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all duration-300 placeholder-gray-400"
+                               autocomplete="off">
+                        <button type="submit" 
+                                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Search Icon (Mobile) -->
+                <button class="md:hidden p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all" 
+                        id="mobileSearchToggle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+
+                <!-- User Account Dropdown -->
+                {% if user.is_authenticated %}
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            {{ user.first_name|first|upper|default:"U" }}
+                        </div>
+                        <svg class="w-4 h-4 hidden lg:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- Account Dropdown Menu -->
+                    <div class="absolute right-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                        <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+                            <!-- User Info Header -->
+                            <div class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4">
+                                <p class="text-white font-bold">{{ user.get_full_name|default:user.username }}</p>
+                                <p class="text-white/80 text-sm">{{ user.email }}</p>
+                            </div>
+                            
+                            <!-- Menu Items -->
+                            <div class="p-2">
+                                <a href="{% url 'shop:profile' %}" 
+                                   class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all group/item">
+                                    <svg class="w-5 h-5 mr-3 text-gray-400 group-hover/item:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    Mi Perfil
+                                </a>
+                                <a href="{% url 'shop:profile_edit' %}" 
+                                   class="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all group/item">
+                                    <svg class="w-5 h-5 mr-3 text-gray-400 group-hover/item:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Editar Perfil
+                                </a>
+                                <hr class="my-2">
+                                <a href="{% url 'signout' %}" 
+                                   class="flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all group/item">
+                                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                    </svg>
+                                    Cerrar Sesión
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{% url 'signin' %}" 
+                   class="flex items-center space-x-2 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span class="hidden lg:inline">Ingresar</span>
+                </a>
                 {% endif %}
-            </a>
-        </div>
 
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-        </button>
+                <!-- Cart -->
+                <a href="{% url 'carrito-de-compras:cart_detail' %}" 
+                   class="relative flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 group">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    {% if cart_items_counter > 0 %}
+                    <span class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                        {{ cart_items_counter }}
+                    </span>
+                    {% endif %}
+                    <span class="hidden lg:inline font-semibold">Carrito</span>
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="lg:hidden p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all" 
+                        id="mobileToggle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <h3>Menu</h3>
-            <button class="mobile-close" id="mobileClose">
-                <i class="fas fa-times"></i>
+    <!-- Mobile Search Bar (Hidden by default) -->
+    <div id="mobileSearch" class="hidden md:hidden border-t border-gray-200 px-4 py-3 bg-gray-50">
+        <form action="{% url 'search_app:searchResult' %}" method="get">
+            <div class="relative">
+                <input type="text" 
+                       name="q" 
+                       placeholder="Buscar productos..." 
+                       class="w-full pl-12 pr-4 py-3 bg-white border-2 border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-blue-500 transition-all"
+                       autocomplete="off">
+                <button type="submit" 
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobileMenu" class="fixed inset-0 z-50 lg:hidden hidden">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="mobileBackdrop"></div>
+    
+    <!-- Menu Panel -->
+    <div class="absolute top-0 right-0 bottom-0 w-full max-w-sm bg-white shadow-2xl transform translate-x-full transition-transform duration-300" id="mobileMenuPanel">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-blue-500 to-purple-600">
+            <h3 class="text-white font-bold text-xl">Menú</h3>
+            <button class="text-white p-2 hover:bg-white/20 rounded-xl transition-all" id="mobileClose">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
             </button>
         </div>
-        <div class="mobile-menu-content">
+
+        <!-- Menu Content -->
+        <div class="overflow-y-auto h-full pb-32">
             {% for category in categories %}
-            <div class="mobile-category">
-                <div class="mobile-category-header">
-                    <a href="{{ category.get_url }}">{{ category.name }}</a>
+            <div class="border-b border-gray-100">
+                <button class="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-gray-50 transition-colors mobile-category-toggle" 
+                        data-target="mobile-{{ category.slug }}">
+                    <span class="font-semibold text-gray-900">{{ category.name }}</span>
                     {% if category.subcategories.all %}
-                    <button class="mobile-expand" data-target="mobile-{{ category.slug }}">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
+                    <svg class="w-5 h-5 text-gray-400 transform transition-transform mobile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
                     {% endif %}
-                </div>
+                </button>
+                
                 {% if category.subcategories.all %}
-                <div class="mobile-submenu" id="mobile-{{ category.slug }}">
+                <div id="mobile-{{ category.slug }}" class="hidden bg-gray-50">
                     {% for subcategory in category.subcategories.all %}
-                    <div class="mobile-subcategory">
-                        <a href="{{ subcategory.get_url }}" class="mobile-subcat-link">
-                            {{ subcategory.name }}
-                        </a>
-                    </div>
+                    <a href="{{ subcategory.get_url }}" 
+                       class="block px-6 py-3 pl-12 text-sm text-gray-700 hover:bg-white hover:text-blue-600 transition-colors border-l-4 border-transparent hover:border-blue-500">
+                        {{ subcategory.name }}
+                    </a>
                     {% endfor %}
+                    <a href="{{ category.get_url }}" 
+                       class="block px-6 py-3 pl-12 text-sm font-semibold text-blue-600 hover:bg-white transition-colors">
+                        Ver todos →
+                    </a>
                 </div>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
     </div>
-</nav>
+</div>
 
-<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-<script src="{% static 'js/navbar.js' %}"></script>
+<style>
+/* Smooth scrollbar for dropdowns */
+.max-h-96::-webkit-scrollbar {
+    width: 6px;
+}
+
+.max-h-96::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.max-h-96::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #3B82F6, #8B5CF6);
+    border-radius: 10px;
+}
+
+.max-h-96::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #2563EB, #7C3AED);
+}
+
+/* Prevent body scroll when mobile menu is open */
+body.mobile-menu-open {
+    overflow: hidden;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuPanel = document.getElementById('mobileMenuPanel');
+    const mobileClose = document.getElementById('mobileClose');
+    const mobileBackdrop = document.getElementById('mobileBackdrop');
+    
+    function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        document.body.classList.add('mobile-menu-open');
+        setTimeout(() => {
+            mobileMenuPanel.style.transform = 'translateX(0)';
+        }, 10);
+    }
+    
+    function closeMobileMenu() {
+        mobileMenuPanel.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+            document.body.classList.remove('mobile-menu-open');
+        }, 300);
+    }
+    
+    if (mobileToggle) mobileToggle.addEventListener('click', openMobileMenu);
+    if (mobileClose) mobileClose.addEventListener('click', closeMobileMenu);
+    if (mobileBackdrop) mobileBackdrop.addEventListener('click', closeMobileMenu);
+    
+    // Mobile category toggles
+    document.querySelectorAll('.mobile-category-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const target = document.getElementById(targetId);
+            const chevron = this.querySelector('.mobile-chevron');
+            
+            if (target) {
+                target.classList.toggle('hidden');
+                if (chevron) {
+                    chevron.style.transform = target.classList.contains('hidden') 
+                        ? 'rotate(0deg)' 
+                        : 'rotate(180deg)';
+                }
+            }
+        });
+    });
+    
+    // Mobile search toggle
+    const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+    const mobileSearch = document.getElementById('mobileSearch');
+    
+    if (mobileSearchToggle) {
+        mobileSearchToggle.addEventListener('click', function() {
+            mobileSearch.classList.toggle('hidden');
+        });
+    }
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.group')) {
+            // Dropdowns will close automatically due to :hover in CSS
+        }
+    });
+});
+</script>

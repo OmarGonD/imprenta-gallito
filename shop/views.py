@@ -392,7 +392,7 @@ def PackFun(request, c_slug, pack_slug):
             comment="",
             step_two_complete=True,
         )
-        response = redirect('/carrito_de_compras/')
+        response = redirect('/carrito-de-compras/')
         response.set_cookie("cart_id", cart_id)
         response.set_cookie("item_id", item.id)
         return response
@@ -534,7 +534,7 @@ def AddProduct(request, c_slug, product_slug):
                 comment="",
                 step_two_complete=True)
 
-            response = redirect('/carrito_de_compras/')
+            response = redirect('/carrito-de-compras/')
             response.set_cookie("cart_id", cart_id)
             response.set_cookie("item_id", item.id)
             return response     
@@ -559,7 +559,7 @@ def AddProduct(request, c_slug, product_slug):
                 comment="",
                 step_two_complete=True)
 
-            response = HttpResponseRedirect('/carrito_de_compras/')
+            response = HttpResponseRedirect('/carrito-de-compras/')
             response.set_cookie("cart_id", cart_id)
             response.set_cookie("item_id", pack_item.id)
             return response    
@@ -632,7 +632,7 @@ class StepOneView(FormView):
 class StepTwoView(FormView):
     form_class = StepTwoForm
     template_name = 'shop/subir-arte.html'
-    success_url = '/carrito_de_compras/'
+    success_url = '/carrito-de-compras/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -724,7 +724,7 @@ class StepOneView_Sample(FormView):
 class StepTwoView_Sample(FormView):
     form_class = StepTwoForm_Sample
     template_name = 'shop/subir-arte.html'
-    success_url = '/carrito_de_compras/'
+    success_url = '/carrito-de-compras/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -771,7 +771,7 @@ def signinView(request):
                 login(request, user)
                 # cart_id =_cart_id(request)
                 # request.session['cart_id'] = cart_id
-                return redirect('carrito_de_compras:cart_detail')
+                return redirect('carrito-de-compras:cart_detail')
             else:
                 return redirect('signup')
 
@@ -936,7 +936,7 @@ def signupView(request):
             send_email_new_registered_user(user.id) # send email to admin when a new user registers himself
             login(request, user)
 
-            return redirect('carrito_de_compras:cart_detail')
+            return redirect('carrito-de-compras:cart_detail')
 
         else:
             pass

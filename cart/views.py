@@ -53,7 +53,7 @@ def full_remove(request, cart_item_id):
     cart_item = CartItem.objects.get(id=cart_item_id)
     cart_item.delete()
 
-    return redirect('carrito_de_compras:cart_detail')
+    return redirect('carrito-de-compras:cart_detail')
 
 ### CULQI PAYMENT ###
 
@@ -446,20 +446,42 @@ from shop.forms import StepTwoForm
 from django.shortcuts import get_object_or_404
 
 
+@csrf_exempt
 def upload_design(request, item_id):
-    item = get_object_or_404(CartItem, id=item_id)
+    """Vista AJAX para actualizar el archivo de diseño"""
     if request.method == 'POST':
-        form = StepTwoForm(request.POST, request.FILES)
-        if form.is_valid():
-            item.file_a = form.cleaned_data.get('file_a')
-            item.file_b = form.cleaned_data.get('file_b')
-            item.comment = form.cleaned_data.get('comment')
-            item.save()
-            return redirect('carrito_de_compras:cart_detail')
-    else:
-        form = StepTwoForm(initial={'comment': item.comment})
-    context = {
-        'form': form,
-        'product': item.product,
-    }
-    return render(request, 'shop/subir-arte.html', context)
+        try:
+            cart_item = CartItem.objects.get(id=item_id)
+            design_file = request.FILES.get('design_file')
+            
+            if not design_file:
+                return JsonResponse({'success': False, 'error': 'No se recibió archivo'})
+            
+            # Validar tamaño (50MB max)
+            if design_file.size > 50 * 1024 * 1024:
+                return JsonResponse({'success': False, 'error': 'Archivo muy grande (max 50MB)'})
+            
+            # Validar extensión
+            import os
+            ext = os.path.splitext(design_file.name)[1].lower()
+            allowed = ['.png', '.jpg', '.jpeg', '.pdf', '.ai', '.psd', '.svg', '.eps']
+            
+            if ext not in allowed:
+                return JsonResponse({'success': False, 'error': 'Tipo de archivo no válido'})
+            
+            # Actualizar archivo
+            cart_item.design_file = design_file
+            cart_item.save()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Diseño actualizado correctamente'
+            })
+            
+        except CartItem.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Item no encontrado'})
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})

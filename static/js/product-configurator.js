@@ -294,7 +294,7 @@
             showSuccess('¡Producto agregado al carrito!');
             
             // Optionally redirect to cart or update cart counter
-            // window.location.href = '/carrito_de_compras/';
+            // window.location.href = '/carrito-de-compras/';
         } catch (error) {
             console.error('Error adding to cart:', error);
             showError('Error al agregar al carrito. Por favor intenta nuevamente.');

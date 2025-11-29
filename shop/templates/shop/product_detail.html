@@ -823,18 +823,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
             `;
             
-            // TODO: Implementar AJAX real aquí
-            // const formData = new FormData();
-            // formData.append('design_file', files[0]);
-            // formData.append('quantity', quantity);
-            // ...
+            // Preparar FormData para envío AJAX
+            const formData = new FormData();
+            formData.append('category_slug', '{{ category.slug }}');
+            formData.append('product_slug', '{{ product.slug }}');
+            formData.append('quantity_tier', 'custom');
+            formData.append('custom_quantity', quantity);
+            formData.append('design_file', files[0]);
             
-            // Simular por ahora
-            setTimeout(() => {
-                modal.classList.remove('hidden');
+            // Obtener CSRF token
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Enviar petición AJAX
+            fetch('{% url "shop:add_product_to_cart" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Restaurar botón
                 addToCartBtn.innerHTML = originalText;
                 addToCartBtn.disabled = false;
-            }, 1000);
+                
+                if (data.success) {
+                    // Actualizar contador del carrito si existe
+                    const cartCounter = document.getElementById('cart-items-counter');
+                    if (cartCounter) {
+                        cartCounter.textContent = data.cart_items_counter;
+                    }
+                    
+                    // Mostrar modal de éxito
+                    modal.classList.remove('hidden');
+                } else {
+                    // Mostrar error
+                    alert('❌ Error: ' + (data.error || 'No se pudo agregar al carrito'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addToCartBtn.innerHTML = originalText;
+                addToCartBtn.disabled = false;
+                alert('❌ Error al agregar al carrito. Por favor intenta de nuevo.');
+            });
         });
     }
     
@@ -843,7 +876,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     if (modalGoToCart) {
         modalGoToCart.addEventListener('click', function() {
-            window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
+            window.location.href = "{% url 'carrito-de-compras:cart_detail' %}";
         });
     }
     
