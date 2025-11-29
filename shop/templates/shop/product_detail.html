@@ -843,7 +843,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     if (modalGoToCart) {
         modalGoToCart.addEventListener('click', function() {
-            window.location.href = '/cart/';
+            window.location.href = "{% url 'carrito_de_compras:cart_detail' %}";
         });
     }
     
