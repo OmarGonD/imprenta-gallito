@@ -337,6 +337,8 @@
                 {% csrf_token %}
                 <input type="hidden" name="product_slug" value="{{ product.slug }}">
                 <input type="hidden" name="category_slug" value="{{ category.slug }}">
+                <input type="hidden" name="quantity_tier" value="custom">
+                <input type="hidden" name="custom_quantity" id="custom_quantity_hidden">
                 
                 <!-- Sección de input de cantidad -->
                 <div class="mb-6">
@@ -464,23 +466,22 @@
                     <input 
                         type="file" 
                         id="file-upload-input" 
-                        name="uploaded_file"
+                        name="design_file"
                         class="hidden" 
-                        accept=".jpg,.jpeg,.png,.pdf,.ai,.psd,.svg"
+                        accept="image/*,.pdf,.ai,.psd,.svg"
                         required
                     >
                     
-                    <!-- Botón Examinar archivos -->
-                    <button 
-                        type="button" 
-                        id="browse-files-btn"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    <!-- Label que actúa como botón (NO usar <button>) -->
+                    <label 
+                        for="file-upload-input"
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
                     >
                         <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                         </svg>
                         Examinar archivos
-                    </button>
+                    </label>
                     
                     <p class="text-xs text-gray-500 mt-2">
                         Formatos aceptados: JPG, PNG, PDF, AI, PSD, SVG • Tamaño máximo: 10MB
@@ -588,36 +589,61 @@
     {% endif %}
 </div>
 
+<!-- ============================================ -->
+<!-- ÚNICO BLOQUE DE JAVASCRIPT - NO DUPLICAR    -->
+<!-- ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Al cargar la página o cambiar cantidad
-    document.getElementById('quantity').addEventListener('input', function(e) {
-        const quantity = parseInt(e.target.value);
-        const productSlug = '{{ product.slug }}'; // Desde Django template
-        
-        // Llamar a la API o función local
-        updatePricing(productSlug, quantity);
-    });
-
-    // 2. Función para actualizar precios
-    async function updatePricing(productSlug, quantity) {
-        // Opción A: Llamada AJAX
-        const response = await fetch(`/api/product-pricing/${productSlug}/${quantity}/`);
-        const data = await response.json();
-        
-        // O Opción B: Cálculo local si pasaste todos los tiers en el contexto
-        // const data = calculatePricing(allTiers, quantity);
-        
-        // Actualizar DOM
-        document.getElementById('unit-price').textContent = data.unit_price.toFixed(2);
-        document.getElementById('discount-percent').textContent = data.discount_percent;
-        document.getElementById('total-price').textContent = data.total_price.toFixed(2);
-        
-        // Mostrar/ocultar sugerencia
-        updateSuggestion(data.next_tier);
+    console.log('✅ Inicializando página de producto...');
+    
+    // ========================================
+    // REFERENCIAS A ELEMENTOS DEL DOM
+    // ========================================
+    const quantityInput = document.getElementById('quantity');
+    const fileInput = document.getElementById('file-upload-input');
+    const addToCartBtn = document.getElementById('add-to-cart');
+    const fileRequiredMessage = document.getElementById('file-required-message');
+    const previewContainer = document.getElementById('file-preview-container');
+    const modal = document.getElementById('cart-success-modal');
+    const modalGoToCart = document.getElementById('modal-go-to-cart');
+    const modalContinueShopping = document.getElementById('modal-continue-shopping');
+    const customQuantityHidden = document.getElementById('custom_quantity_hidden');
+    
+    // ========================================
+    // 1. ACTUALIZACIÓN DINÁMICA DE PRECIOS
+    // ========================================
+    if (quantityInput) {
+        quantityInput.addEventListener('input', function(e) {
+            const quantity = parseInt(e.target.value) || 0;
+            const productSlug = '{{ product.slug }}';
+            
+            // Actualizar hidden input
+            if (customQuantityHidden) {
+                customQuantityHidden.value = quantity;
+            }
+            
+            // Actualizar pricing
+            updatePricing(productSlug, quantity);
+        });
     }
-
-    // 4. Mostrar sugerencia inteligente
+    
+    async function updatePricing(productSlug, quantity) {
+        try {
+            const response = await fetch(`/api/product-pricing/${productSlug}/${quantity}/`);
+            const data = await response.json();
+            
+            // Actualizar DOM
+            document.getElementById('unit-price').textContent = data.unit_price.toFixed(2);
+            document.getElementById('discount-percent').textContent = data.discount_percent;
+            document.getElementById('total-price').textContent = data.total_price.toFixed(2);
+            
+            // Mostrar/ocultar sugerencia
+            updateSuggestion(data.next_tier);
+        } catch (error) {
+            console.error('Error al actualizar precios:', error);
+        }
+    }
+    
     function updateSuggestion(nextTier) {
         const suggestionBox = document.getElementById('suggestion-box');
         const suggestionText = document.getElementById('suggestion-text');
@@ -631,141 +657,38 @@ document.addEventListener('DOMContentLoaded', function() {
             suggestionBox.classList.add('hidden');
         }
     }
-
+    
     // Ejecutar al cargar
-    const initialQuantity = parseInt(document.getElementById('quantity').value);
+    const initialQuantity = parseInt(quantityInput.value) || 100;
     const productSlug = '{{ product.slug }}';
     updatePricing(productSlug, initialQuantity);
-
-    // Robust File Upload Handler
-    console.log('🔧 Inicializando botón Examinar archivos...');
     
-    // Referencias a los elementos
-    const browseBtn = document.getElementById('browse-files-btn');
-    const fileInput = document.getElementById('file-upload-input');
-    
-    // VALIDACIÓN 1: Verificar que existan los elementos
-    if (!browseBtn) {
-        console.error('❌ ERROR: No se encontró el botón browse-files-btn');
-        return;
-    }
-    
-    if (!fileInput) {
-        console.error('❌ ERROR: No se encontró el input file-upload-input');
-        return;
-    }
-    
-    console.log('✅ Elementos encontrados correctamente');
-    
-    // FUNCIÓN: Abrir selector de archivos
-    function openFileDialog(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        console.log('🖱️ Click en botón Examinar archivos');
-        
-        try {
-            fileInput.click();
-            console.log('✅ Selector de archivos abierto');
-        } catch (error) {
-            console.error('❌ Error al abrir selector:', error);
-        }
-    }
-    
-    // EVENT LISTENER 1: Click normal
-    browseBtn.addEventListener('click', openFileDialog);
-    
-    // EVENT LISTENER 2: Prevenir submit si está dentro de un form
-    browseBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-    });
-    
-    // EVENT LISTENER 3: Detectar cuando se seleccionan archivos
-    fileInput.addEventListener('change', function(e) {
-        const files = e.target.files;
-        
-        if (files.length === 0) {
-            console.log('ℹ️ No se seleccionaron archivos');
-            return;
-        }
-        
-        console.log(`✅ ${files.length} archivo(s) seleccionado(s):`);
-        Array.from(files).forEach((file, index) => {
-            console.log(`  ${index + 1}. ${file.name} (${(file.size / 1024).toFixed(2)} KB)`);
-        });
-        
-        // Actualizar UI si hay un elemento para mostrar archivos seleccionados
-        updateSelectedFilesDisplay(files);
-    });
-    
-    // FUNCIÓN: Actualizar display de archivos seleccionados (opcional)
-    function updateSelectedFilesDisplay(files) {
-        const displayElement = document.getElementById('selected-files-display');
-        
-        if (!displayElement) return;
-        
-        if (files.length === 0) {
-            displayElement.innerHTML = '<p class="text-sm text-gray-500">Ningún archivo seleccionado</p>';
-            return;
-        }
-        
-        let html = '<div class="space-y-2">';
-        Array.from(files).forEach((file, index) => {
-            const sizeKB = (file.size / 1024).toFixed(2);
-            html += `
-                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path>
-                        </svg>
-                        <span class="text-sm text-gray-700">${file.name}</span>
-                    </div>
-                    <span class="text-xs text-gray-500">${sizeKB} KB</span>
-                </div>
-            `;
-        });
-        html += '</div>';
-        
-        displayElement.innerHTML = html;
-    }
-    
-    console.log('✅ Botón Examinar archivos configurado correctamente');
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('file-upload-input');
-    const browseBtn = document.getElementById('browse-files-btn');
-    const addToCartBtn = document.getElementById('add-to-cart');
-    const fileRequiredMessage = document.getElementById('file-required-message');
-    const previewContainer = document.getElementById('file-preview-container');
-    
-    // Conectar botón Examinar con input file
-    if (browseBtn && fileInput) {
-        browseBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            fileInput.click();
-        });
-    }
-    
-    // Detectar cuando se selecciona archivo
+    // ========================================
+    // 2. MANEJO DE CARGA DE ARCHIVOS
+    // ========================================
     if (fileInput) {
+        // CRÍTICO: Solo UN event listener para 'change'
         fileInput.addEventListener('change', function(e) {
             const files = e.target.files;
             
+            console.log(`📁 Archivos seleccionados: ${files.length}`);
+            
             if (files.length === 0) {
-                // NO hay archivo - deshabilitar botón
+                // NO hay archivo
                 disableAddToCartButton();
                 clearPreview();
                 return;
             }
             
-            // SÍ hay archivo - habilitar botón
+            // SÍ hay archivo
             enableAddToCartButton();
             showFilePreview(files);
         });
     }
     
-    // Función: Deshabilitar botón de agregar al carrito
+    // ========================================
+    // 3. FUNCIONES DE HABILITACIÓN DE BOTÓN
+    // ========================================
     function disableAddToCartButton() {
         if (addToCartBtn) {
             addToCartBtn.disabled = true;
@@ -777,7 +700,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Función: Habilitar botón de agregar al carrito
     function enableAddToCartButton() {
         if (addToCartBtn) {
             addToCartBtn.disabled = false;
@@ -789,7 +711,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Función: Mostrar preview del archivo
+    // ========================================
+    // 4. PREVIEW DE ARCHIVOS
+    // ========================================
     function showFilePreview(files) {
         if (!previewContainer) return;
         
@@ -848,7 +772,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Función: Limpiar preview
     function clearPreview() {
         if (previewContainer) {
             previewContainer.innerHTML = 
@@ -856,7 +779,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Función: Obtener icono de archivo
     function getFileIcon(fileName) {
         const ext = fileName.split('.').pop().toLowerCase();
         
@@ -869,17 +791,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return icons[ext] || '<svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>';
     }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const addToCartBtn = document.getElementById('add-to-cart');
-    const modal = document.getElementById('cart-success-modal');
-    const modalGoToCart = document.getElementById('modal-go-to-cart');
-    const modalContinueShopping = document.getElementById('modal-continue-shopping');
-    const quantityInput = document.getElementById('quantity');
-    const fileInput = document.getElementById('file-upload-input');
     
-    // Click en "Agregar al carrito"
+    // ========================================
+    // 5. AGREGAR AL CARRITO
+    // ========================================
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -887,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const quantity = parseInt(quantityInput.value);
             const files = fileInput.files;
             
-            // VALIDACIÓN DOBLE: Por si acaso
+            // VALIDACIÓN
             if (files.length === 0) {
                 alert('❌ Debes subir un archivo antes de agregar al carrito');
                 return;
@@ -898,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Mostrar loading en el botón
+            // Mostrar loading
             const originalText = addToCartBtn.innerHTML;
             addToCartBtn.disabled = true;
             addToCartBtn.innerHTML = `
@@ -908,31 +823,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
             `;
             
-            // Simular llamada API (reemplazar con AJAX real para agregar al carrito)
+            // TODO: Implementar AJAX real aquí
+            // const formData = new FormData();
+            // formData.append('design_file', files[0]);
+            // formData.append('quantity', quantity);
+            // ...
+            
+            // Simular por ahora
             setTimeout(() => {
-                // Mostrar modal
                 modal.classList.remove('hidden');
-                
-                // Restaurar botón
                 addToCartBtn.innerHTML = originalText;
                 addToCartBtn.disabled = false;
             }, 1000);
         });
     }
     
-    // Click en "Ir al carrito"
+    // ========================================
+    // 6. MODAL DE ÉXITO
+    // ========================================
     if (modalGoToCart) {
         modalGoToCart.addEventListener('click', function() {
-            window.location.href = '/cart/'; // Ruta del carrito
+            window.location.href = '/cart/';
         });
     }
     
-    // Click en "Seguir comprando"
     if (modalContinueShopping) {
         modalContinueShopping.addEventListener('click', function() {
             modal.classList.add('hidden');
         });
     }
+    
+    console.log('✅ Página de producto inicializada correctamente');
 });
 </script>
 
