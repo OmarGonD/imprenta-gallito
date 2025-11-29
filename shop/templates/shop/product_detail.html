@@ -17,6 +17,376 @@
     padding: 20px;
 }
 
+/* ===== RESPONSIVE PARA PANTALLAS GRANDES ===== */
+@media (min-width: 1280px) {
+    .product-detail-container {
+        max-width: 92%;
+        padding: 30px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .product-detail-container {
+        max-width: 88%;
+        margin: 50px auto;
+        padding: 40px;
+    }
+    
+    .product-layout {
+        gap: 60px;
+    }
+    
+    .product-title {
+        font-size: 32px;
+    }
+    
+    .product-description {
+        font-size: 1.05rem;
+    }
+    
+    .quantity-option {
+        padding: 15px 18px;
+    }
+    
+    .quantity-price {
+        font-size: 20px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 18px;
+        font-size: 20px;
+    }
+    
+    .related-products h2 {
+        font-size: 28px;
+    }
+    
+    .related-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+}
+
+@media (min-width: 2560px) {
+    .product-detail-container {
+        max-width: 82%;
+        margin: 60px auto;
+        padding: 50px;
+    }
+    
+    .product-layout {
+        gap: 80px;
+    }
+    
+    .product-title {
+        font-size: 38px;
+    }
+    
+    .product-sku {
+        font-size: 16px;
+    }
+    
+    .product-description {
+        font-size: 1.15rem;
+        line-height: 1.7;
+    }
+    
+    .quantity-selector h3 {
+        font-size: 22px;
+    }
+    
+    .quantity-option {
+        padding: 18px 22px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    
+    .quantity-option input[type="radio"] {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .quantity-amount {
+        font-size: 1.1rem;
+    }
+    
+    .quantity-price {
+        font-size: 24px;
+    }
+    
+    .quantity-savings {
+        font-size: 16px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 20px;
+        font-size: 22px;
+        border-radius: 8px;
+    }
+    
+    .related-products {
+        margin-top: 80px;
+    }
+    
+    .related-products h2 {
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+    
+    .related-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+    }
+    
+    .related-product-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .related-product-card img {
+        height: 240px;
+        border-radius: 8px;
+    }
+    
+    .related-product-card h4 {
+        font-size: 18px;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 1rem;
+    }
+    
+    /* Tabla de tiers - usando clases específicas */
+    .tiers-table {
+        font-size: 1.05rem;
+    }
+    
+    .tiers-table th,
+    .tiers-table td {
+        padding: 1rem 1.25rem !important;
+    }
+    
+    /* Card de precio */
+    .price-card .price-label {
+        font-size: 0.95rem;
+    }
+    
+    .price-card .price-value-lg {
+        font-size: 1.75rem;
+    }
+    
+    .price-card .price-value-xl {
+        font-size: 2.25rem;
+    }
+    
+    /* Upload section */
+    .upload-section {
+        padding: 1.5rem;
+    }
+    
+    .upload-section .upload-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+    }
+    
+    /* Input de cantidad */
+    .quantity-input-wrapper input {
+        font-size: 1.1rem;
+        padding: 0.875rem 1.25rem;
+    }
+    
+    /* Modal */
+    .cart-modal .modal-content {
+        width: 28rem;
+    }
+    
+    .cart-modal .modal-title {
+        font-size: 1.5rem;
+    }
+    
+    .cart-modal .modal-btn {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 3440px) {
+    .product-detail-container {
+        max-width: 78%;
+        margin: 70px auto;
+        padding: 60px;
+    }
+    
+    .product-layout {
+        gap: 100px;
+    }
+    
+    .product-title {
+        font-size: 44px;
+    }
+    
+    .product-sku {
+        font-size: 18px;
+    }
+    
+    .product-description {
+        font-size: 1.25rem;
+        line-height: 1.8;
+    }
+    
+    .quantity-selector h3 {
+        font-size: 26px;
+    }
+    
+    .quantity-option {
+        padding: 22px 28px;
+    }
+    
+    .quantity-price {
+        font-size: 28px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 24px;
+        font-size: 24px;
+    }
+    
+    .related-products h2 {
+        font-size: 36px;
+    }
+    
+    .related-grid {
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 35px;
+    }
+    
+    .related-product-card img {
+        height: 280px;
+    }
+    
+    .related-product-card h4 {
+        font-size: 20px;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 1.1rem;
+    }
+    
+    /* Tabla de tiers */
+    .tiers-table {
+        font-size: 1.15rem;
+    }
+    
+    .tiers-table th,
+    .tiers-table td {
+        padding: 1.25rem 1.5rem !important;
+    }
+    
+    /* Card de precio */
+    .price-card .price-value-lg {
+        font-size: 2rem;
+    }
+    
+    .price-card .price-value-xl {
+        font-size: 2.75rem;
+    }
+    
+    /* Upload section */
+    .upload-section {
+        padding: 2rem;
+    }
+    
+    /* Input de cantidad */
+    .quantity-input-wrapper input {
+        font-size: 1.2rem;
+        padding: 1rem 1.5rem;
+    }
+}
+
+@media (min-width: 3840px) {
+    .product-detail-container {
+        max-width: 72%;
+        margin: 80px auto;
+        padding: 70px;
+    }
+    
+    .product-layout {
+        gap: 120px;
+    }
+    
+    .product-title {
+        font-size: 52px;
+    }
+    
+    .product-sku {
+        font-size: 20px;
+    }
+    
+    .product-description {
+        font-size: 1.35rem;
+    }
+    
+    .quantity-selector h3 {
+        font-size: 30px;
+    }
+    
+    .quantity-option {
+        padding: 26px 32px;
+    }
+    
+    .quantity-price {
+        font-size: 32px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 28px;
+        font-size: 28px;
+    }
+    
+    .related-products h2 {
+        font-size: 42px;
+    }
+    
+    .related-grid {
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 40px;
+    }
+    
+    .related-product-card img {
+        height: 320px;
+    }
+    
+    .related-product-card h4 {
+        font-size: 22px;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb {
+        font-size: 1.2rem;
+    }
+    
+    /* Tabla de tiers */
+    .tiers-table {
+        font-size: 1.25rem;
+    }
+    
+    .tiers-table th,
+    .tiers-table td {
+        padding: 1.5rem 1.75rem !important;
+    }
+    
+    /* Card de precio */
+    .price-card .price-value-lg {
+        font-size: 2.25rem;
+    }
+    
+    .price-card .price-value-xl {
+        font-size: 3rem;
+    }
+}
+
 /* File Upload Styles */
 .upload-zone {
     border: 2px dashed #e0e0e0;
@@ -341,7 +711,7 @@
                 <input type="hidden" name="custom_quantity" id="custom_quantity_hidden">
                 
                 <!-- Sección de input de cantidad -->
-                <div class="mb-6">
+                <div class="mb-6 quantity-input-wrapper">
                     <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
                         Cantidad
                     </label>
@@ -358,23 +728,23 @@
                 </div>
 
                 <!-- Card de precio actual -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-6 border border-blue-200">
+                <div class="price-card bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-6 border border-blue-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Precio unitario</p>
-                            <p class="text-2xl font-bold text-gray-900">
+                            <p class="text-sm text-gray-600 mb-1 price-label">Precio unitario</p>
+                            <p class="text-2xl font-bold text-gray-900 price-value-lg">
                                 S/ <span id="unit-price">1.68</span>
                             </p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Descuento aplicado</p>
-                            <p class="text-2xl font-bold text-green-600">
+                            <p class="text-sm text-gray-600 mb-1 price-label">Descuento aplicado</p>
+                            <p class="text-2xl font-bold text-green-600 price-value-lg">
                                 <span id="discount-percent">33</span>%
                             </p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 mb-1">Total</p>
-                            <p class="text-3xl font-bold text-blue-600">
+                            <p class="text-sm text-gray-600 mb-1 price-label">Total</p>
+                            <p class="text-3xl font-bold text-blue-600 price-value-xl">
                                 S/ <span id="total-price">252.00</span>
                             </p>
                         </div>
@@ -387,7 +757,7 @@
                         ⚡ Descuentos por volumen
                     </h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
+                        <table class="w-full text-sm tiers-table">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-2 text-left">Cantidad</th>
@@ -457,7 +827,7 @@
                 </div>
 
                 <!-- File Upload Section -->
-                <div id="file-upload-section" class="mt-6 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                <div id="file-upload-section" class="upload-section mt-6 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
                         Sube tu diseño <span class="text-red-500 text-lg">*</span> <span class="text-xs text-gray-500">(Requerido)</span>
                     </label>
@@ -475,7 +845,7 @@
                     <!-- Label que actúa como botón (NO usar <button>) -->
                     <label 
                         for="file-upload-input"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
+                        class="upload-btn inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
                     >
                         <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
@@ -513,8 +883,8 @@
             </form>
 
             <!-- Modal: Producto agregado al carrito -->
-            <div id="cart-success-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50" style="backdrop-filter: blur(4px);">
-                <div class="relative top-20 mx-auto p-5 border w-96 shadow-2xl rounded-xl bg-white">
+            <div id="cart-success-modal" class="cart-modal hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50" style="backdrop-filter: blur(4px);">
+                <div class="modal-content relative top-20 mx-auto p-5 border w-96 shadow-2xl rounded-xl bg-white">
                     <div class="mt-3">
                         <!-- Icono de éxito -->
                         <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 animate-bounce-once">
@@ -525,7 +895,7 @@
                         
                         <!-- Mensaje -->
                         <div class="mt-5 text-center">
-                            <h3 class="text-xl leading-6 font-bold text-gray-900">
+                            <h3 class="modal-title text-xl leading-6 font-bold text-gray-900">
                                 ¡Producto agregado!
                             </h3>
                             <div class="mt-3 px-7 py-3">
@@ -539,13 +909,13 @@
                         <div class="items-center px-4 py-3 space-y-3 mt-4">
                             <button
                                 id="modal-go-to-cart"
-                                class="w-full px-5 py-3 bg-blue-600 text-white text-base font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all transform hover:scale-105"
+                                class="modal-btn w-full px-5 py-3 bg-blue-600 text-white text-base font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all transform hover:scale-105"
                             >
                                 🛒 Ir al carrito
                             </button>
                             <button
                                 id="modal-continue-shopping"
-                                class="w-full px-5 py-3 bg-white text-gray-700 text-base font-medium rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
+                                class="modal-btn w-full px-5 py-3 bg-white text-gray-700 text-base font-medium rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
                             >
                                 ← Seguir comprando
                             </button>

@@ -84,94 +84,94 @@
     <style>
         /* ===== OPTIMIZACIÓN PARA TODAS LAS RESOLUCIONES ===== */
         
-        /* Base - Móviles y tablets */
+        /* Base - Móviles y tablets (reducido 5%) */
         html, body {
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
-            font-size: 16px; /* Base font size */
+            font-size: 15.2px; /* Base font size reducido de 16px */
         }
         
-        /* Desktop HD (1920px+) - Aumentar tamaños +12.5% */
+        /* Desktop HD (1920px+) - Reducido 5% */
         @media (min-width: 1920px) {
             html {
-                font-size: 18px;
+                font-size: 17.1px; /* Reducido de 18px */
             }
             
             h1 {
-                font-size: 4.5rem !important;
+                font-size: 4.275rem !important; /* Reducido de 4.5rem */
             }
             
             h2 {
-                font-size: 3.5rem !important;
+                font-size: 3.325rem !important; /* Reducido de 3.5rem */
             }
             
             h3 {
-                font-size: 2rem !important;
+                font-size: 1.9rem !important; /* Reducido de 2rem */
             }
             
             .btn-large, .btn, button[type="submit"], .action-link {
-                font-size: 1.25rem;
-                padding: 1.25rem 2.5rem;
+                font-size: 1.1875rem; /* Reducido de 1.25rem */
+                padding: 1.1875rem 2.375rem; /* Reducido de 1.25rem 2.5rem */
             }
         }
         
-        /* Ultrawide/2K (2560px+) - Aumentar tamaños +25% */
+        /* Ultrawide/2K (2560px+) - Reducido 5% */
         @media (min-width: 2560px) {
             html {
-                font-size: 20px;
+                font-size: 19px; /* Reducido de 20px */
             }
             
             h1 {
-                font-size: 5.5rem !important;
+                font-size: 5.225rem !important; /* Reducido de 5.5rem */
             }
             
             h2 {
-                font-size: 4rem !important;
+                font-size: 3.8rem !important; /* Reducido de 4rem */
             }
             
             h3 {
-                font-size: 2.5rem !important;
+                font-size: 2.375rem !important; /* Reducido de 2.5rem */
             }
             
             h4 {
-                font-size: 1.75rem !important;
+                font-size: 1.6625rem !important; /* Reducido de 1.75rem */
             }
             
             .btn-large, .btn, button[type="submit"], .action-link {
-                font-size: 1.5rem;
-                padding: 1.5rem 3rem;
+                font-size: 1.425rem; /* Reducido de 1.5rem */
+                padding: 1.425rem 2.85rem; /* Reducido de 1.5rem 3rem */
             }
             
-            /* Aumentar tamaño de íconos */
+            /* Aumentar tamaño de íconos (reducido 5%) */
             .fa, .fas, .far, .fab {
-                font-size: 1.25em;
+                font-size: 1.1875em; /* Reducido de 1.25em */
             }
             
-            /* Cards más grandes */
+            /* Cards más grandes (reducido 5%) */
             .card, .product-card, .category-card {
-                padding: 2rem;
+                padding: 1.9rem; /* Reducido de 2rem */
             }
             
-            /* Inputs y formularios */
+            /* Inputs y formularios (reducido 5%) */
             input, textarea, select {
-                font-size: 1.125rem;
-                padding: 1rem 1.5rem;
+                font-size: 1.069rem; /* Reducido de 1.125rem */
+                padding: 0.95rem 1.425rem; /* Reducido de 1rem 1.5rem */
             }
         }
         
-        /* 4K/5K (3840px+) - Aumentar tamaños +30% */
+        /* 4K/5K (3840px+) - Reducido 5% */
         @media (min-width: 3840px) {
             html {
-                font-size: 22px;
+                font-size: 20.9px; /* Reducido de 22px */
             }
             
             h1 {
-                font-size: 6rem !important;
+                font-size: 5.7rem !important; /* Reducido de 6rem */
             }
             
             h2 {
-                font-size: 4.5rem !important;
+                font-size: 4.275rem !important; /* Reducido de 4.5rem */
             }
         }
         
@@ -194,12 +194,12 @@
             font-family: 'Poppins', sans-serif !important;
         }
         
-        /* ===== LAYOUT RESPONSIVO ===== */
+        /* ===== LAYOUT RESPONSIVO CON MEJOR CENTRADO ===== */
         .main-section {
             width: 100vw;
             max-width: 100vw;
-            margin-left: 0;
-            margin-right: 0;
+            margin-left: auto;
+            margin-right: auto;
             padding-left: 0;
             padding-right: 0;
         }
@@ -225,34 +225,34 @@
         /* ===== MEJORAS DE ESPACIADO PARA PANTALLAS GRANDES ===== */
         @media (min-width: 1920px) {
             .container, .container-fluid {
-                padding-left: 2rem;
-                padding-right: 2rem;
+                padding-left: 2.5rem; /* Aumentado para más aire */
+                padding-right: 2.5rem;
             }
             
             section {
-                padding-top: 4rem;
-                padding-bottom: 4rem;
+                padding-top: 3.8rem; /* Reducido de 4rem */
+                padding-bottom: 3.8rem;
             }
         }
         
         @media (min-width: 2560px) {
             .container, .container-fluid {
-                padding-left: 3rem;
-                padding-right: 3rem;
+                padding-left: 3.5rem; /* Aumentado para más aire */
+                padding-right: 3.5rem;
             }
             
             section {
-                padding-top: 5rem;
-                padding-bottom: 5rem;
+                padding-top: 4.75rem; /* Reducido de 5rem */
+                padding-bottom: 4.75rem;
             }
             
-            /* Espaciado entre elementos */
-            .mb-3 { margin-bottom: 1.5rem !important; }
-            .mb-4 { margin-bottom: 2rem !important; }
-            .mb-5 { margin-bottom: 2.5rem !important; }
-            .mt-3 { margin-top: 1.5rem !important; }
-            .mt-4 { margin-top: 2rem !important; }
-            .mt-5 { margin-top: 2.5rem !important; }
+            /* Espaciado entre elementos (reducido 5%) */
+            .mb-3 { margin-bottom: 1.425rem !important; }
+            .mb-4 { margin-bottom: 1.9rem !important; }
+            .mb-5 { margin-bottom: 2.375rem !important; }
+            .mt-3 { margin-top: 1.425rem !important; }
+            .mt-4 { margin-top: 1.9rem !important; }
+            .mt-5 { margin-top: 2.375rem !important; }
         }
         
         /* ===== SCROLLBAR PERSONALIZADA ===== */
@@ -306,21 +306,23 @@
             }
         }
         
-        /* ===== OPTIMIZACIÓN DE ANCHO PARA ULTRAWIDE ===== */
+        /* ===== OPTIMIZACIÓN DE ANCHO PARA MEJOR CENTRADO ===== */
         
-        /* Forzar containers a usar más ancho en pantallas grandes */
+        /* Containers más centrados con más espacio lateral */
         @media (min-width: 1920px) {
             .container,
             .container-fluid,
             .max-w-7xl,
             .max-w-6xl,
             .max-w-5xl {
-                max-width: 90% !important;
+                max-width: 85% !important; /* Reducido de 90% para más centrado */
+                margin-left: auto;
+                margin-right: auto;
             }
         }
         
         @media (min-width: 2560px) {
-            /* Eliminar restricciones de max-width en ultrawide */
+            /* Mejor centrado en ultrawide */
             .container,
             .container-fluid,
             .max-w-7xl,
@@ -328,14 +330,16 @@
             .max-w-6xl,
             .max-w-5xl,
             .max-w-4xl {
-                max-width: 95% !important;
+                max-width: 88% !important; /* Reducido de 95% para más centrado */
+                margin-left: auto;
+                margin-right: auto;
             }
             
             /* Padding lateral generoso pero aprovechando el espacio */
             section,
             .section {
-                padding-left: 4rem !important;
-                padding-right: 4rem !important;
+                padding-left: 5rem !important; /* Aumentado de 4rem */
+                padding-right: 5rem !important;
             }
             
             /* Grids con más columnas en ultrawide */
@@ -354,30 +358,32 @@
             /* Limitar ancho de textos para legibilidad */
             p:not(.no-limit),
             .text-content {
-                max-width: 80ch; /* ~80 caracteres por línea */
+                max-width: 75ch; /* Reducido de 80ch para mejor legibilidad */
             }
             
-            /* Cards y elementos con ancho mínimo */
+            /* Cards y elementos con ancho mínimo (reducido 5%) */
             .card,
             .product-card,
             .category-card {
-                min-width: 280px;
+                min-width: 266px; /* Reducido de 280px */
             }
         }
         
         @media (min-width: 3440px) {
-            /* Para pantallas ultra-anchas específicas */
+            /* Para pantallas ultra-anchas específicas - mejor centrado */
             .container,
             .container-fluid,
             .max-w-7xl,
             .max-w-8xl {
-                max-width: 96% !important;
+                max-width: 90% !important; /* Reducido de 96% */
+                margin-left: auto;
+                margin-right: auto;
             }
             
             section,
             .section {
-                padding-left: 5rem !important;
-                padding-right: 5rem !important;
+                padding-left: 6rem !important; /* Aumentado de 5rem */
+                padding-right: 6rem !important;
             }
             
             /* Aún más columnas en grids */
