@@ -6,15 +6,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from order.models import Order, OrderItem
 from marketing.models import used_cupons
-import uuid
 from django.views.decorators.csrf import csrf_exempt
 import datetime
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from marketing.models import Cupons
 from decimal import Decimal
-import itertools
-
 
 # Create your views here.
 
@@ -23,29 +20,6 @@ def full_remove(request, cart_item_id):
     cart_item.delete()
 
     return redirect('carrito_de_compras:cart_detail')
-
-
-def full_remove_sample(request, sample_item_id):
-    sample_item = SampleItem.objects.get(id=sample_item_id)
-    sample_item.delete()
-
-    return redirect('carrito_de_compras:cart_detail')
-
-
-def full_remove_pack(request, pack_item_id):
-    pack_item = PackItem.objects.get(id=pack_item_id)
-    pack_item.delete()
-
-    return redirect('carrito_de_compras:cart_detail')    
-
-
-
-def full_remove_unitary_product(request, unitary_product_item_id):
-    unitary_product_item = UnitaryProductItem.objects.get(id=unitary_product_item_id)
-    unitary_product_item.delete()
-
-    return redirect('carrito_de_compras:cart_detail')        
-
 
 ### CULQI PAYMENT ###
 
@@ -137,31 +111,7 @@ def cart_charge_credit_card(request):
                 file_b=order_item.file_b,
                 comment=order_item.comment)
                 
-        oi.save()
-        
-        
-        ### Sample ITEMS SAVE
-
-        sample_items = SampleItem.objects.filter(cart=cart)
-
-        for order_item in sample_items:
-            oi = OrderItem.objects.create(
-                order=order_details,
-                name=order_item.sample.name,
-                sku=order_item.sample.sku,
-                quantity=order_item.quantity,
-                size=order_item.size,
-                price=order_item.sample.price,
-                file_a=order_item.file_a,
-                file_b=order_item.file_b,
-                comment=order_item.comment,
-                )
-            try:
-                oi.save()
-            except oi.DoesNotExist:
-                print("No se creo el Order ITEM")
-
-       
+            oi.save()
 
         try:
             '''Calling send_email function'''
@@ -318,74 +268,6 @@ def cart_charge_deposit_payment(request):
             oi.save()
         except oi.DoesNotExist:
             print("No se creo el Order ITEM")
-                
-    ####################################################
-    ############### Sample ITEMS SAVE ##################
-    #####################################################
-
-    sample_items = SampleItem.objects.filter(cart=cart)
-     
-    for order_item in sample_items:
-        oi = OrderItem.objects.create(
-            order=order_details,
-            name=order_item.sample.name,
-            sku=order_item.sample.sku,
-            quantity=order_item.quantity,
-            size=order_item.size,
-            price=order_item.sub_total(),
-            file_a=order_item.file_a,
-            file_b=order_item.file_b,
-            comment=order_item.comment)
-        try:
-            oi.save()
-        except oi.DoesNotExist:
-            print("No se creo el Order ITEM")
-        
-
-    ####################################################
-    ############### Packs ITEMS SAVE ##################
-    #####################################################
-
-    pack_items = PackItem.objects.filter(cart=cart)
-     
-    for order_item in pack_items:
-        oi = OrderItem.objects.create(
-            order=order_details,
-            name=order_item.pack.name,
-            sku=order_item.pack.sku,
-            quantity=order_item.quantity,
-            size=order_item.size,
-            price=order_item.sub_total(),
-            file_a=order_item.file_a,
-            file_b=order_item.file_b,
-            comment=order_item.comment)
-        try:
-            oi.save()
-        except oi.DoesNotExist:
-            print("No se creo el Pack Order ITEMs")
-
-    ########################################################
-    ############### Unitary Products - ITEMS SAVE ##########
-    ########################################################
-
-    unitary_product_items = UnitaryProductItem.objects.filter(cart=cart)
-     
-    for order_item in unitary_product_items:
-        oi = OrderItem.objects.create(
-            order=order_details,
-            name=order_item.unitaryproduct.name,
-            sku=order_item.unitaryproduct.sku,
-            quantity=order_item.quantity,
-            size=order_item.size,
-            price=order_item.sub_total(),
-            file_a=order_item.file_a,
-            file_b=order_item.file_b,
-            comment=order_item.comment)
-        try:
-            oi.save()
-        except oi.DoesNotExist:
-            print("No se creo el Unitary Product Order ITEMs")
-            
 
     order_details.save()    
 
@@ -403,17 +285,6 @@ def cart_charge_deposit_payment(request):
     return response
 
 
-###############################################
-###############################################
-def grouper(iterable, n, fillvalue=None):
-    args = [iter(iterable)] * n
-    return zip(*args)
-
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]    
-
 def cart_detail(request, total=0, counter=0, cart_items=None):
     
     try:
@@ -428,78 +299,21 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     for cart_item in cart_items:
         total += Decimal(cart_item.sub_total())
 
-
-
-    try:
-        sample_items = SampleItem.objects.filter(cart=cart)
-    except:
-        print("##############")
-        print("No se puedo filtrar los SampleItems por el carrito")    
-
-    
-    for sample_item in sample_items:
-        total += Decimal(sample_item.sub_total())
-        
-
     categories = Category.objects.exclude(name='Muestras')
-
-    ################################
-    ### PACK ITEMS PROMOTION 3X2 ###
-    ################################
-    
-    descuento = 0
-    
-    pack_items = PackItem.objects.filter(cart=cart)
-
-    ### Make it condition of 3X2 variable ###
-
-    from django.conf import settings
-
-    descuento_packs_3x2 = 0
-
-    if settings.PACKS3X2:
-    
-        pack_items_grouped_by_3 = chunks(pack_items, 3)
-        
-        packs_with_min_prices = list()
-        
-        for e in pack_items_grouped_by_3: #e is a chunk of 3 objects
-            if len(e) == 3:
-                pack_with_min_price = min(e, key=lambda pack: pack.pack.price)
-                packs_with_min_prices.append(pack_with_min_price)
-
-
-        for pack_promo in packs_with_min_prices:
-            descuento_packs_3x2 += pack_promo.sub_total()
-            descuento += pack_promo.sub_total()
-
-        for pack_item in pack_items:
-            total += Decimal(pack_item.sub_total())             
-
-    else:
-
-        for pack_item in pack_items:
-            total += Decimal(pack_item.sub_total())
-
-
-    ###############################
-
-
-    unitary_product_items = UnitaryProductItem.objects.filter(cart=cart)
-
-    for unitary_product in unitary_product_items:
-        total += Decimal(unitary_product.sub_total())
 
     ### Calcular costo despacho ###
 
-    try:
+    if request.user.is_authenticated:
+        try:
 
-        costo_despacho = Peru.objects.filter(departamento=request.user.profile.shipping_department,
-                                                 provincia=request.user.profile.shipping_province,
-                                                 distrito=request.user.profile.shipping_district).values_list(
-                                                 "costo_despacho_con_recojo", flat=True)[0]
+            costo_despacho = Peru.objects.filter(departamento=request.user.profile.shipping_department,
+                                                     provincia=request.user.profile.shipping_province,
+                                                     distrito=request.user.profile.shipping_district).values_list(
+                                                     "costo_despacho_con_recojo", flat=True)[0]
 
-    except:
+        except:
+            costo_despacho = 15
+    else:
         costo_despacho = 15
 
     ### ¿tiene un cupón de descuento? ###
@@ -516,15 +330,12 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     if cupon:
         if cupon.free_shipping:
             descuento_por_cupon += costo_despacho
-            descuento += costo_despacho
         elif cupon.hard_discount:
             descuento_por_cupon += round(Decimal(cupon.hard_discount),2)
-            descuento += round(Decimal(cupon.hard_discount),2)
         elif cupon.percentage:
             cupon_percentage = int(cupon.percentage) / int(100)
             print(cupon_percentage)
             descuento_por_cupon += round(total * Decimal(cupon_percentage),2)
-            descuento += round(total * Decimal(cupon_percentage),2)
    
         
     
@@ -536,11 +347,10 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     
 
-    total_a_pagar = Decimal(total) + Decimal(costo_despacho) - Decimal(descuento_por_cupon) - Decimal(descuento_packs_3x2)
+    total_a_pagar = Decimal(total) + Decimal(costo_despacho) - Decimal(descuento_por_cupon)
 
     return render(request, 'cart.html',
-                      dict(cart_items=cart_items, sample_items=sample_items, pack_items = pack_items, packs_with_min_prices = packs_with_min_prices, descuento = descuento,
-                       descuento_packs_3x2 = descuento_packs_3x2, unitary_product_items = unitary_product_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
+                      dict(cart_items=cart_items, total=total, free_shipping_min_amount = free_shipping_min_amount,
                        counter=counter, categories=categories, total_a_pagar=total_a_pagar, descuento_por_cupon=descuento_por_cupon, costo_despacho=costo_despacho))
 
 
@@ -598,9 +408,24 @@ def send_email_deposit_payment(order_id):
         return e
 
 
+from shop.forms import StepTwoForm
+from django.shortcuts import get_object_or_404
 
 
-
-
-
-
+def upload_design(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    if request.method == 'POST':
+        form = StepTwoForm(request.POST, request.FILES)
+        if form.is_valid():
+            item.file_a = form.cleaned_data.get('file_a')
+            item.file_b = form.cleaned_data.get('file_b')
+            item.comment = form.cleaned_data.get('comment')
+            item.save()
+            return redirect('carrito_de_compras:cart_detail')
+    else:
+        form = StepTwoForm(initial={'comment': item.comment})
+    context = {
+        'form': form,
+        'product': item.product,
+    }
+    return render(request, 'shop/subir-arte.html', context)

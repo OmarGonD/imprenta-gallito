@@ -8,6 +8,7 @@ MIGRATION NOTE (2024):
 """
 import os
 import pandas as pd
+import csv
 from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -27,6 +28,20 @@ from shop.models import (
 
 class Command(BaseCommand):
     help = 'Importa el sistema de categorías de productos desde archivos CSV'
+
+    def safe_read_csv(self, filepath):
+        encodings = ['utf-8', 'latin-1', 'windows-1252']
+        for encoding in encodings:
+            try:
+                with open(filepath, 'r', encoding=encoding) as f:
+                    sample = f.read(2048)
+                    dialect = csv.Sniffer().sniff(sample)
+                    f.seek(0)
+                    df = pd.read_csv(f, encoding=encoding, dialect=dialect)
+                    return df
+            except (UnicodeDecodeError, csv.Error):
+                continue
+        raise ValueError(f"Could not read {filepath} with any supported encoding or delimiter")
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -163,7 +178,7 @@ class Command(BaseCommand):
         """Importa categorías desde CSV"""
         self.stdout.write('📁 Importando categorías...')
         filepath = os.path.join(self.data_dir, 'categories_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         updated = 0
@@ -197,7 +212,7 @@ class Command(BaseCommand):
         """Importa subcategorías desde CSV"""
         self.stdout.write('📂 Importando subcategorías...')
         filepath = os.path.join(self.data_dir, 'subcategories_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         updated = 0
@@ -243,7 +258,7 @@ class Command(BaseCommand):
         """Importa tipos de variantes desde CSV"""
         self.stdout.write('🎨 Importando tipos de variantes...')
         filepath = os.path.join(self.data_dir, 'variant_types_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         updated = 0
@@ -277,7 +292,7 @@ class Command(BaseCommand):
         """Importa opciones de variantes desde CSV"""
         self.stdout.write('🎯 Importando opciones de variantes...')
         filepath = os.path.join(self.data_dir, 'variant_options_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         updated = 0
@@ -322,7 +337,7 @@ class Command(BaseCommand):
         """Importa productos desde CSV"""
         self.stdout.write('🛍️  Importando productos...')
         filepath = os.path.join(self.data_dir, 'products_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         updated = 0
@@ -377,7 +392,7 @@ class Command(BaseCommand):
         """Importa relaciones producto-variantes desde CSV"""
         self.stdout.write('🔗 Importando variantes de productos...')
         filepath = os.path.join(self.data_dir, 'product_variant_types_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         skipped = 0
@@ -413,7 +428,7 @@ class Command(BaseCommand):
         """Importa niveles de precio desde CSV"""
         self.stdout.write('💰 Importando niveles de precios...')
         filepath = os.path.join(self.data_dir, 'price_tiers_complete.csv')
-        df = pd.read_csv(filepath)
+        df = self.safe_read_csv(filepath)
         
         created = 0
         updated = 0

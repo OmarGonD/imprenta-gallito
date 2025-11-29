@@ -29,20 +29,46 @@
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
 
-    <script
-            src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
 
     <!-- HTMX for dynamic content loading -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
-    <script src="{% static 'js/footer.js' %}"></script>
-    <script src="{% static 'js/size-quantity.js' %}"></script>
-
-    <!-- Incluyendo Culqi Checkout -->
-    <script src="https://checkout.culqi.com/js/v3"></script>
     <title>{% block title %}Imprenta Gallito{% endblock %}</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gallito': {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            800: '#92400e',
+                            900: '#78350f',
+                        },
+                        'brand': {
+                            yellow: '#FFC107',
+                            orange: '#FF9800',
+                            red: '#FF5722',
+                            dark: '#2D3748',
+                        }
+                    },
+                    fontFamily: {
+                        'display': ['Poppins', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     {% block extra_css %}{% endblock %}
 

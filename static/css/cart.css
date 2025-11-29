@@ -985,3 +985,55 @@ hr {
     border-top: 2px solid #e0e0e0;
     margin: 24px 0;
 }
+
+/* File Preview Styles */
+.file-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+}
+
+.file-actions {
+    margin-top: 5px;
+}
+
+.file-actions a {
+    margin: 0 5px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.file-actions a:hover {
+    color: #0056b3;
+}
+
+.no-design-warning {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    color: #856404;
+    text-align: center;
+}
+
+.upload-link {
+    display: block;
+    margin-top: 5px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.upload-link:hover {
+    text-decoration: underline;
+}

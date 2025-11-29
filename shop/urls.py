@@ -4,9 +4,9 @@ from . import views
 
 app_name = "shop"
 
+
 urlpatterns = [
     path('', views.Home, name='home'),
-    path('catalogo', views.CategoryListView.as_view(), name='catalogo'), #Todos los productos unitarios
     path('province/', views.get_province, name='province'),
     path('district/', views.get_district, name='district'),
     path('quienes-somos/', views.quienes_somos, name='quienes_somos'),
@@ -46,4 +46,9 @@ urlpatterns = [
     path('servicios-diseno/', views.servicios_diseno, name='servicios_diseno'),
     path('perfil/', views.profile_view, name='profile'),
     path('perfil/editar/', views.profile_edit_view, name='profile_edit'),
+    path('agregar-producto-carrito/', views.add_product_to_cart, name='add_product_to_cart'),
+    path('<slug:category_slug>/', views.category_view, name='category'),
+    path('<slug:category_slug>/<slug:subcategory_slug>/', views.subcategory_view, name='subcategory'),
+    path('<slug:category_slug>/producto/<slug:product_slug>/', views.product_detail_view, name='product_detail'),
+    #path('catalogo', views.CategoryListView.as_view(), name='catalogo'), #Todos los productos unitarios
 ]

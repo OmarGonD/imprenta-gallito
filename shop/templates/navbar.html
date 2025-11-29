@@ -15,7 +15,7 @@
             <ul class="nav-list">
                 {% for category in categories %}
                 <li class="nav-item {% if category.subcategories.all %}has-dropdown{% endif %}">
-                    <a href="{% url 'catalog:home' %}#category-{{ category.slug }}" class="nav-link">
+                    <a href="{{ category.get_url }}" class="nav-link">
                         {{ category.name }}
                         {% if category.subcategories.all %}
                         <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -27,9 +27,9 @@
                         <div class="mega-dropdown-inner">
                             {% for subcategory in category.subcategories.all %}
                             <div class="dropdown-column">
-                                <h3 class="dropdown-title">
-                                    <a href="{% url 'catalog:subcategory' category.slug subcategory.slug %}">{{ subcategory.name }}</a>
-                                </h3>
+                            <h3 class="dropdown-title">
+                                <a href="{{ subcategory.get_url }}">{{ subcategory.name }}</a>
+                            </h3>
                             </div>
                             {% endfor %}
                         </div>
@@ -106,7 +106,7 @@
             {% for category in categories %}
             <div class="mobile-category">
                 <div class="mobile-category-header">
-                    <a href="{% url 'catalog:home' %}#category-{{ category.slug }}">{{ category.name }}</a>
+                    <a href="{{ category.get_url }}">{{ category.name }}</a>
                     {% if category.subcategories.all %}
                     <button class="mobile-expand" data-target="mobile-{{ category.slug }}">
                         <i class="fas fa-chevron-down"></i>
@@ -117,7 +117,7 @@
                 <div class="mobile-submenu" id="mobile-{{ category.slug }}">
                     {% for subcategory in category.subcategories.all %}
                     <div class="mobile-subcategory">
-                        <a href="{% url 'catalog:subcategory' category.slug subcategory.slug %}" class="mobile-subcat-link">
+                        <a href="{{ subcategory.get_url }}" class="mobile-subcat-link">
                             {{ subcategory.name }}
                         </a>
                     </div>

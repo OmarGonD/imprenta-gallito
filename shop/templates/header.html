@@ -133,11 +133,9 @@
                         {% if category.subcategories.all %}
                         <div class="dropdown-menu">
                             {% for subcategory in category.subcategories.all %}
-                            {% if subcategory.is_active %}
                             <a href="{{ subcategory.get_url }}" class="dropdown-item">
                                 {{ subcategory.name }}
                             </a>
-                            {% endif %}
                             {% endfor %}
                         </div>
                         {% endif %}

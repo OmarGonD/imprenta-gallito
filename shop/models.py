@@ -23,10 +23,14 @@ from .sizes_and_quantities import TAMANIOS, CANTIDADES
 # These are the primary models for the new catalog/product system
 # ============================================================================
 
+from django.db import models
+from django.urls import reverse
+from decimal import Decimal
+
+
 class Category(models.Model):
     """
     Categorías principales del catálogo personalizable
-    Migrated from CatalogCategory - this is the primary category model for the catalog system
     """
     slug = models.SlugField(max_length=250, unique=True, primary_key=True, 
                            help_text="Identificador único de la categoría")
@@ -55,17 +59,20 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('catalog:categories', args=[self.slug])
+        return reverse('shop:category', args=[self.slug])
+
+    @property
+    def get_url(self):
+        return self.get_absolute_url()
 
     def get_active_products_count(self):
         """Retorna el número de productos activos en esta categoría"""
-        return self.catalog_products.filter(status='active').count()
+        return self.products.filter(status='active').count()
 
 
 class Subcategory(models.Model):
     """
     Subcategorías del catálogo personalizable
-    Migrated from CatalogSubcategory
     """
     slug = models.SlugField(max_length=250, unique=True, primary_key=True,
                            help_text="Identificador único de la subcategoría")
@@ -80,7 +87,7 @@ class Subcategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'catalog_subcategory'
+        db_table = 'subcategories'
         ordering = ['display_order', 'name']
         verbose_name = 'Subcategoría'
         verbose_name_plural = 'Subcategorías'
@@ -92,20 +99,24 @@ class Subcategory(models.Model):
         return f"{self.category.name} > {self.name}"
 
     def get_absolute_url(self):
-        return reverse('catalog:subcategory', args=[self.category.slug, self.slug])
+        return reverse('shop:subcategory', args=[self.category.slug, self.slug])
+
+    @property
+    def get_url(self):
+        return self.get_absolute_url()
 
 
 class Product(models.Model):
-    """Producto personalizable del catálogo"""
+    """Producto personalizable"""
     slug = models.SlugField(max_length=250, primary_key=True,
                            help_text="Identificador único del producto")
     name = models.CharField(max_length=250, verbose_name="Nombre del Producto")
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
-                                 related_name='catalog_products',
+                                 related_name='products',
                                  verbose_name="Categoría")
     subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL,
                                     null=True, blank=True,
-                                    related_name='catalog_products',
+                                    related_name='products',
                                     verbose_name="Subcategoría")
     sku = models.CharField(max_length=50, unique=True, verbose_name="SKU",
                           help_text="Código único del producto")
@@ -119,7 +130,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'catalog_product'
+        db_table = 'products'
         ordering = ['name']
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
@@ -133,7 +144,7 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('shop:catalog_product_detail', 
+        return reverse('shop:product_detail', 
                       args=[self.category.slug, self.slug])
 
     def get_base_price(self, quantity=1):
@@ -193,7 +204,7 @@ class VariantType(models.Model):
                                   help_text="Categorías o tipos de productos a los que aplica")
 
     class Meta:
-        db_table = 'variant_type'
+        db_table = 'variant_types'
         ordering = ['display_order', 'name']
         verbose_name = 'Tipo de Variante'
         verbose_name_plural = 'Tipos de Variantes'
@@ -230,7 +241,7 @@ class VariantOption(models.Model):
     display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
 
     class Meta:
-        db_table = 'variant_option'
+        db_table = 'variant_options'
         ordering = ['variant_type', 'display_order', 'name']
         verbose_name = 'Opción de Variante'
         verbose_name_plural = 'Opciones de Variantes'
@@ -259,7 +270,7 @@ class ProductVariantType(models.Model):
                                      verbose_name="Tipo de Variante")
 
     class Meta:
-        db_table = 'product_variant_type'
+        db_table = 'product_variant_types'
         unique_together = ['product', 'variant_type']
         verbose_name = 'Variante de Producto'
         verbose_name_plural = 'Variantes de Productos'
@@ -292,7 +303,7 @@ class PriceTier(models.Model):
                                              help_text="Descuento aplicado respecto al precio base")
 
     class Meta:
-        db_table = 'price_tier'
+        db_table = 'price_tiers'
         ordering = ['product', 'min_quantity']
         unique_together = ['product', 'min_quantity']
         verbose_name = 'Nivel de Precio'
@@ -370,6 +381,12 @@ class TarjetaPresentacion(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='tarjetas_presentacion', blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    type = models.CharField(
+        max_length=20,
+        choices=[('standard', 'Standard'), ('premium', 'Premium'), ('deluxe', 'Deluxe')],
+        default='standard',
+        verbose_name="Tipo"
+    )
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

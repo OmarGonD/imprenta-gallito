@@ -25,126 +25,71 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    size = models.CharField(max_length=20, choices=TAMANIOS)
-    quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    file_a = models.FileField(upload_to='files', blank=True, null=True)
-    file_b = models.FileField(upload_to='files', blank=True, null=True)
+    size = models.CharField(max_length=20, choices=TAMANIOS, blank=True, null=True)
+    quantity = models.CharField(max_length=20, choices=CANTIDADES, blank=True, null=True)
+    design_file = models.FileField(upload_to='designs/%Y/%m/%d/', blank=True, null=True, max_length=500)
     comment = models.CharField(max_length=100, blank=True, null=True, default='')
     uploaded_at = models.DateTimeField(auto_now_add=True)
     step_two_complete = models.BooleanField(default=False)
 
-    # def __str__(self):
-    #     return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
+    class Meta:
+        db_table = 'CartItem'
+        ordering = ['-uploaded_at']
+
+    def __str__(self):
+        return f"{self.product.name} - {self.quantity or 'N/A'}"
 
     def sub_total(self):
-        print("### PRODUCTITEM SUBTOTAL ###")
-        print(type(self.product))
-        print(self.product)
-        print(type(self.size))
-        print(self.size)
-        print(type(self.quantity))
-        print(self.quantity)
-        print("############################")
+        """Calculate subtotal based on product price tiers"""
+        if not self.product or not self.quantity:
+            return 0
         
-        # Use .first() instead of [0] to avoid IndexError
-        product_price = ProductsPricing.objects.filter(
-            product=self.product, 
-            size=self.size, 
-            quantity=self.quantity
-        ).values_list("price", flat=True).first()
+        quantity = int(''.join(filter(str.isdigit, self.quantity)))
+        tier = self.product.price_tiers.filter(
+            min_quantity__lte=quantity,
+            max_quantity__gte=quantity
+        ).first()
         
-        if product_price is None:
-            print(f"WARNING: No price found for {self.product} - {self.size} x {self.quantity}")
-            return 0  # Return 0 if no price is found
-            
-        print("product_price: ", product_price)
-        return int(product_price)
+        if tier:
+            return tier.unit_price * quantity
+        
+        # Fallback to first tier
+        first_tier = self.product.price_tiers.order_by('min_quantity').first()
+        return first_tier.unit_price * quantity if first_tier else 0
 
+    def get_file_extension(self):
+        """Get the file extension in lowercase"""
+        if self.design_file:
+            import os
+            return os.path.splitext(self.design_file.name)[1].lower()
+        return None
 
+    def is_image_file(self):
+        """Check if the uploaded file is an image"""
+        image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
+        return self.get_file_extension() in image_extensions
+    
+    def is_pdf_file(self):
+        """Check if the uploaded file is a PDF"""
+        return self.get_file_extension() == '.pdf'
+
+    def get_file_size_mb(self):
+        """Get file size in megabytes"""
+        if self.design_file:
+            try:
+                return round(self.design_file.size / (1024 * 1024), 2)
+            except:
+                return 0
+        return 0
+    
+    def get_file_name(self):
+        """Get clean filename without path"""
+        if self.design_file:
+            import os
+            return os.path.basename(self.design_file.name)
+        return None
+    
     @property
-    def file_name_a(self):
-        if self.file_a:
-            return self.file_a.url.split('/')[-1]
-        else:
-            return self.product.image.url.split('/')[-1]
-
-    @property
-    def file_name_b(self):
-        if self.file_b:
-            return self.file_b.url.split('/')[-1]
-        else:
-            pass        
-
-
-
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    size = models.CharField(max_length=20, choices=TAMANIOS)
-    quantity = models.CharField(max_length=20, choices=CANTIDADES)
-    file_a = models.FileField(upload_to='files', blank=True, null=True)
-    file_b = models.FileField(upload_to='files', blank=True, null=True)
-    comment = models.CharField(max_length=100, blank=True, null=True, default='')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    step_two_complete = models.BooleanField(default=False)
-
-    def sub_total(self):
-
-        #sample_price = SamplesPricing.objects.filter(sample=self.sample, size=self.size, quantity=self.quantity).values_list("price", flat=True)[0]
-        #return int(sample_price)
-        print("#######SUB TOTAL - SAMPLEITEM #############")
-        print(type(self.sample))
-        print(self.sample)
-        print(type(self.size))
-        print(self.size)
-        print(type(self.quantity))
-        print(self.quantity)
-        print("####################")
-        return int(5)
-
-    @property
-    def file_name_a(self):
-        if self.file_a:
-            return self.file_a.url.split('/')[-1]
-        else:
-            return self.product.image.url.split('/')[-1]
-
-    @property
-    def file_name_b(self):
-        if self.file_b:
-            return self.file_b.url.split('/')[-1]
-        else:
-            return self.product.image.url.split('/')[-1]        
-
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    size = models.CharField(max_length=20, blank=True, null=True)
-    quantity = models.CharField(max_length=20, blank=True, null=True)
-    file_a = models.FileField(upload_to='files', blank=True, null=True)
-    file_b = models.FileField(upload_to='files', blank=True, null=True)
-    comment = models.CharField(max_length=100, blank=True, null=True, default='')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    step_two_complete = models.BooleanField(default=False)
-
-    # def __str__(self):
-    #     return str(self.id) + " - " + str(self.size) + " por " + str(self.quantity)
-
-    def sub_total(self):
-        pack_price = self.pack.price
-        return int(pack_price)
-
-
-    @property
-    def file_name_a(self):
-        if self.file_a:
-            return self.file_a.url.split('/')[-1]
-        else:
-            return self.product.image.url.split('/')[-1]
-
-    @property
-    def file_name_b(self):
-        if self.file_b:
-            return self.file_b.url.split('/')[-1]
-        else:
-            pass  
-
-
-
-      
+    def total_price(self):
+        """Calculate total price for this cart item"""
+        return self.sub_total()

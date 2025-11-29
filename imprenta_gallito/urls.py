@@ -22,15 +22,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ordenes/', include('order.urls')),
-    path('categorias/', include('shop.catalog_urls')),  # Sistema de categorías personalizable
-    path('', include('shop.urls')),
     path('carrito_de_compras/', include('cart.urls')),
+    path('', include('shop.urls')),
     path('marketing/', include('marketing.urls')),
-    path('registrarse/', views.signupView, name = 'signup'),
-    path('ingresar/', views.signinView, name = 'signin'),
-    path('salir/', views.signoutView, name = 'signout'),
-    path('province/', views.get_province, name = 'province'),
+    path('registrarse/', views.signupView, name='signup'),
+    path('ingresar/', views.signinView, name='signin'),
+    path('salir/', views.signoutView, name='signout'),
+    path('province/', views.get_province, name='province'),
 ]
 
 if settings.DEBUG:

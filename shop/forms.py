@@ -90,13 +90,12 @@ class StepTwoForm(forms.ModelForm):
 
     class Meta:
         model = CartItem
-        fields = ('file_a', 'file_b', 'comment')
+        fields = ('design_file', 'comment')
 
     def __init__(self, *args, **kwargs):
         super(StepTwoForm, self).__init__(*args, **kwargs)
         self.fields['comment'].required = False
-        self.fields['file_a'].required = False
-        self.fields['file_b'].required = False
+        self.fields['design_file'].required = False
 
     def save(self, commit=True):
         instance = super(StepTwoForm, self).save(commit=commit)
@@ -119,21 +118,14 @@ class StepTwoForm_Sample(forms.ModelForm):
 
     class Meta:
         model = CartItem
-        fields = ('file_a', 'file_b', 'comment')
+        fields = ('design_file', 'comment')
 
     def __init__(self, *args, **kwargs):
         super(StepTwoForm_Sample, self).__init__(*args, **kwargs)
         self.fields['comment'].required = False
-        self.fields['file_a'].required = False
-        self.fields['file_b'].required = False
+        self.fields['design_file'].required = False
 
     def save(self, commit=True):
         instance = super(StepTwoForm_Sample, self).save(commit=commit)
         # self.send_email()
         return instance
-
-
-
-
-
-

@@ -1,14 +1,129 @@
 from django.contrib import admin
 from .models import (
-    Product, Profile, Peru,
+    Product, Profile, Peru, Category, Subcategory,
+    VariantType, VariantOption, ProductVariantType, PriceTier,
     ClothingCategory, ClothingSubCategory, ClothingColor, ClothingSize,
     ClothingProduct, ClothingProductImage, ClothingProductPricing
 )
 
-# Import catalog admin configuration (handles Category, Subcategory, CatalogProduct, etc.)
-from . import catalog_admin
+
 
 # Register your models here.
+
+# ===========================
+# CATALOG SYSTEM ADMIN
+# ===========================
+
+class SubcategoryInline(admin.TabularInline):
+    model = Subcategory
+    extra = 1
+    prepopulated_fields = {'slug': ('name',)}
+    fields = ['slug', 'name', 'description', 'display_order']
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'name', 'display_order', 'status', 'created_at']
+    list_editable = ['display_order', 'status']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'slug', 'description']
+    list_filter = ['status', 'created_at']
+    inlines = [SubcategoryInline]
+    
+    fieldsets = (
+        ('Información Básica', {
+            'fields': ('slug', 'name', 'description')
+        }),
+        ('Imagen', {
+            'fields': ('image_url',)
+        }),
+        ('Configuración', {
+            'fields': ('display_order', 'status')
+        }),
+    )
+
+
+@admin.register(Subcategory)
+class SubcategoryAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'name', 'category', 'display_order', 'created_at']
+    list_editable = ['display_order']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'slug', 'description']
+    list_filter = ['category', 'created_at']
+    
+    fieldsets = (
+        ('Información Básica', {
+            'fields': ('slug', 'name', 'category', 'description')
+        }),
+        ('Imagen', {
+            'fields': ('image_url',)
+        }),
+        ('Configuración', {
+            'fields': ('display_order',)
+        }),
+    )
+
+
+class PriceTierInline(admin.TabularInline):
+    model = PriceTier
+    extra = 3
+    fields = ['min_quantity', 'max_quantity', 'unit_price', 'discount_percentage']
+
+
+class ProductVariantTypeInline(admin.TabularInline):
+    model = ProductVariantType
+    extra = 1
+    fields = ['variant_type']
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'name', 'category', 'subcategory', 'sku', 'status', 'created_at']
+    list_editable = ['status']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'slug', 'sku', 'description']
+    list_filter = ['category', 'subcategory', 'status', 'created_at']
+    inlines = [PriceTierInline, ProductVariantTypeInline]
+    
+    fieldsets = (
+        ('Información Básica', {
+            'fields': ('slug', 'name', 'sku', 'description')
+        }),
+        ('Categorización', {
+            'fields': ('category', 'subcategory')
+        }),
+        ('Imagen', {
+            'fields': ('base_image_url',)
+        }),
+        ('Estado', {
+            'fields': ('status',)
+        }),
+    )
+
+
+@admin.register(VariantType)
+class VariantTypeAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'name', 'is_required', 'allows_multiple', 'display_order']
+    list_editable = ['is_required', 'allows_multiple', 'display_order']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'description']
+    list_filter = ['is_required', 'allows_multiple']
+
+
+@admin.register(VariantOption)
+class VariantOptionAdmin(admin.ModelAdmin):
+    list_display = ['slug', 'name', 'variant_type', 'additional_price', 'display_order']
+    list_editable = ['additional_price', 'display_order']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name', 'description']
+    list_filter = ['variant_type']
+
+
+@admin.register(PriceTier)
+class PriceTierAdmin(admin.ModelAdmin):
+    list_display = ['product', 'min_quantity', 'max_quantity', 'unit_price', 'discount_percentage']
+    list_filter = ['product__category']
+    search_fields = ['product__name']
 
 
 

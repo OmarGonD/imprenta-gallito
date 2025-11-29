@@ -1,20 +1,41 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Tarjetas de Presentación{% endblock %}
 {% block content %}
 <div class="container margin-top5 margin-bottom5">
     <h1 class="my_title">Tarjetas de Presentación</h1>
+    <div class="filters mb-4">
+        <a href="?subcategory=estandar" class="btn btn-outline-primary {% if request.GET.subcategory == 'estandar' %}active{% endif %}">Estándar</a>
+        <a href="?subcategory=premium" class="btn btn-outline-primary {% if request.GET.subcategory == 'premium' %}active{% endif %}">Premium</a>
+        <a href="?subcategory=deluxe" class="btn btn-outline-primary {% if request.GET.subcategory == 'deluxe' %}active{% endif %}">Deluxe</a>
+        <a href="?" class="btn btn-outline-secondary">Todos</a>
+    </div>
     <div class="row">
-        {% for tarjeta in tarjetas %}
+        {% for product in products %}
         <div class="col-md-4 margin-bottom5">
-            <div class="card">
-                {% if tarjeta.image %}
-                <img src="{{ tarjeta.image.url }}" class="card-img-top" alt="{{ tarjeta.name }}">
+            <div class="card h-100">
+                {% if product.base_image_url %}
+                <img src="{{ product.base_image_url }}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'img/placeholder-product.png' %}" class="card-img-top" alt="{{ product.name }}" style="height: 250px; object-fit: cover;">
                 {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ tarjeta.name }}</h5>
-                    <p class="card-text">{{ tarjeta.description }}</p>
-                    <p class="card-text"><b>Precio:</b> S/ {{ tarjeta.price }}</p>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                    <p class="card-text"><small class="text-muted">SKU: {{ product.sku }}</small></p>
+                    {% if product.subcategory %}
+                    <p class="card-text"><span class="badge badge-info">{{ product.subcategory.name }}</span></p>
+                    {% endif %}
+                    <div class="mt-auto">
+                        <a href="{{ product.get_absolute_url }}" class="btn btn-primary btn-block">Ver detalles</a>
+                    </div>
                 </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                No se encontraron productos en esta categoría.
             </div>
         </div>
         {% endfor %}

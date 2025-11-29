@@ -78,30 +78,6 @@ def Home(request):
     
     # Hero slider banners
     hero_banners = [
-        {
-            'title': 'Impresión de Alta Calidad',
-            'subtitle': 'Stickers, etiquetas y más para tu negocio',
-            'cta_text': 'Ver Catálogo',
-            'cta_url': '/catalog/',
-            'image': '/static/img/banner-home.png',
-            'bg_color': 'from-yellow-500 to-orange-500',
-        },
-        {
-            'title': 'Tarjetas de Presentación',
-            'subtitle': 'Diseños profesionales que impresionan',
-            'cta_text': 'Explorar',
-            'cta_url': '/catalog/',
-            'image': '/static/img/banner-home2.png',
-            'bg_color': 'from-orange-500 to-red-500',
-        },
-        {
-            'title': 'Empaques Personalizados',
-            'subtitle': 'Dale identidad a tu marca',
-            'cta_text': 'Ver Productos',
-            'cta_url': '/catalog/',
-            'image': '/static/img/banner-home.png',
-            'bg_color': 'from-amber-500 to-yellow-500',
-        },
     ]
     
     # Static testimonials (can be moved to database later)
@@ -140,10 +116,191 @@ def Home(request):
     return render(request, 'shop/home.html', context)
 
 
+def category_view(request, category_slug):
+    """
+    Vista para mostrar una categoría y sus productos
+    """
+    try:
+        category = Category.objects.get(slug=category_slug, status='active')
+    except Category.DoesNotExist:
+        from django.http import Http404
+        raise Http404("Categoría no encontrada")
+    
+    # Obtener subcategorías de esta categoría
+    subcategories = category.subcategories.all()
+    
+    # Obtener productos de esta categoría
+    products = Product.objects.filter(
+        category=category,
+        status='active'
+    ).select_related('category', 'subcategory').prefetch_related('price_tiers')
+    
+    # Filtros opcionales
+    subcategory_filter = request.GET.get('subcategory')
+    if subcategory_filter:
+        products = products.filter(subcategory__slug=subcategory_filter)
+    
+    context = {
+        'category': category,
+        'subcategories': subcategories,
+        'products': products,
+        'product_count': products.count(),
+    }
+    
+    return render(request, 'shop/category.html', context)
+
+
+def subcategory_view(request, category_slug, subcategory_slug):
+    """
+    Vista para mostrar una subcategoría y sus productos
+    """
+    try:
+        category = Category.objects.get(slug=category_slug, status='active')
+        subcategory = Subcategory.objects.get(
+            category=category,
+            slug=subcategory_slug
+        )
+    except (Category.DoesNotExist, Subcategory.DoesNotExist):
+        from django.http import Http404
+        raise Http404("Subcategoría no encontrada")
+    
+    # Obtener productos de esta subcategoría
+    products = Product.objects.filter(
+        subcategory=subcategory,
+        status='active'
+    ).select_related('category', 'subcategory').prefetch_related('price_tiers')
+    
+    context = {
+        'category': category,
+        'subcategory': subcategory,
+        'products': products,
+        'product_count': products.count(),
+    }
+    
+    return render(request, 'shop/subcategory.html', context)
+
+def product_detail_view(request, category_slug, product_slug):
+    """
+    Vista para mostrar el detalle de un producto
+    """
+    try:
+        category = Category.objects.get(slug=category_slug, status='active')
+        product = Product.objects.get(
+            category=category,
+            slug=product_slug,
+            status='active'
+        )
+    except (Category.DoesNotExist, Product.DoesNotExist):
+        from django.http import Http404
+        raise Http404("Producto no encontrado")
+    
+    # Obtener los price tiers
+    price_tiers = product.price_tiers.all().order_by('min_quantity')
+    
+    # Obtener tipos de variantes disponibles
+    variant_types = product.get_available_variant_types()
+    
+    # Productos relacionados de la misma categoría
+    related_products = Product.objects.filter(
+        category=category,
+        status='active'
+    ).exclude(pk=product.pk)[:4]
+    
+    context = {
+        'category': category,
+        'product': product,
+        'price_tiers': price_tiers,
+        'variant_types': variant_types,
+        'related_products': related_products,
+    }
+    
+    return render(request, 'shop/product_detail.html', context)
+
+
+@csrf_exempt
+def add_product_to_cart(request):
+    """AJAX endpoint to add product to cart with file uploads"""
+    if request.method == 'POST':
+        cart_id = request.COOKIES.get('cart_id')
+        if cart_id:
+            try:
+                cart = Cart.objects.get(id=cart_id)
+            except Cart.DoesNotExist:
+                cart = Cart.objects.create(cart_id="Random")
+        else:
+            cart = Cart.objects.create(cart_id="Random")
+            cart_id = cart.id
+        
+        # Get form data
+        category_slug = request.POST.get('category_slug')
+        product_slug = request.POST.get('product_slug')
+        quantity_tier = request.POST.get('quantity_tier')
+        custom_quantity = request.POST.get('custom_quantity')
+        
+        # Determine quantity
+        if quantity_tier == 'custom':
+            quantity = custom_quantity
+        else:
+            quantity = quantity_tier
+        
+        try:
+            product = Product.objects.get(
+                category__slug=category_slug,
+                slug=product_slug,
+                status='active'
+            )
+            
+            # Create cart item
+            cart_item = CartItem.objects.create(
+                cart=cart,
+                product=product,
+                quantity=quantity,
+                design_file = request.FILES.get('design_file'),
+                # Files will be uploaded in step 2 or can be optional
+            )
+            
+            # Count total cart items
+            total_items = CartItem.objects.filter(
+                cart_id=cart_id, 
+                step_two_complete=True
+            ).count() + 1  # +1 for this new item
+            
+            response = JsonResponse({
+                'success': True,
+                'cart_items_counter': total_items,
+                'message': 'Producto agregado al carrito',
+                'item_id': cart_item.id
+            })
+            response.set_cookie("cart_id", cart_id)
+            response.set_cookie("item_id", cart_item.id)
+            return response
+            
+        except Product.DoesNotExist:
+            return JsonResponse({
+                'success': False, 
+                'error': 'Producto no encontrado'
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
 class TarjetasPresentacionListView(ListView):
-    model = TarjetaPresentacion
+    model = Product
     template_name = 'shop/tarjetas_presentacion.html'
-    context_object_name = 'tarjetas'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        # Get products from tarjetas-presentacion category
+        queryset = Product.objects.filter(
+            category__slug='tarjetas-presentacion',
+            status='active'
+        ).select_related('category', 'subcategory').prefetch_related('price_tiers')
+        
+        # Filter by subcategory if specified
+        filter_type = self.request.GET.get('subcategory')
+        if filter_type:
+            queryset = queryset.filter(subcategory__slug=filter_type)
+        
+        return queryset.order_by('name')
 
 class FolletosListView(ListView):
     model = Folleto
@@ -926,15 +1083,6 @@ def prices(request):
 ### Catalogo View ###
 #####################
 
-class CategoryListView(ListView):
-
-    model = Category
-    template_name = "shop/catalogo.html"
-    paginate_by = 9
-
-    def get_queryset(self):
-        context = Category.objects.all().filter(available=True).order_by('-created')
-        return context
         
 
 def tarjetas_presentacion(request):

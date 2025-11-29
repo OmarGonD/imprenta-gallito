@@ -1,0 +1,713 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - {{ category.name }}{% endblock %}
+
+{% block content %}
+<style>
+.product-detail-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* File Upload Styles */
+.upload-zone {
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    padding: 30px;
+    background: #fafbfc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    border-color: #007bff;
+    background: #f8f9ff;
+}
+
+.upload-zone.dragover {
+    border-color: #007bff;
+    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
+    transform: scale(1.02);
+}
+
+.upload-area {
+    text-align: center;
+}
+
+.upload-area i {
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover i {
+    color: #0056b3;
+    transform: scale(1.1);
+}
+
+.file-preview {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-outline-primary {
+    border: 2px solid #007bff;
+    color: #007bff;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .upload-zone {
+        padding: 20px;
+    }
+    
+    .product-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+.product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+/* Left side - Image */
+.product-image-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image-section img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Right side - Options */
+.product-options-section {
+    padding: 20px 0;
+}
+
+.product-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.product-sku {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.product-description {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.quantity-selector {
+    margin-top: 30px;
+}
+
+.quantity-selector h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.quantity-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quantity-option:hover {
+    border-color: #007bff;
+    background-color: #f8f9ff;
+}
+
+.quantity-option.selected {
+    border-color: #007bff;
+    background-color: #e7f1ff;
+}
+
+.quantity-option input[type="radio"] {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.quantity-label {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.quantity-amount {
+    font-weight: 600;
+    color: #333;
+    min-width: 80px;
+}
+
+.quantity-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    min-width: 80px;
+    text-align: right;
+}
+
+.quantity-savings {
+    font-size: 14px;
+    color: #28a745;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.custom-quantity-option {
+    margin-top: 15px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+.custom-quantity-option.active {
+    border-color: #007bff;
+    background-color: #f8f9ff;
+}
+
+.custom-quantity-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.custom-quantity-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #0056b3;
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Related Products */
+.related-products {
+    margin-top: 60px;
+}
+
+.related-products h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.related-product-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    transition: box-shadow 0.2s;
+}
+
+.related-product-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.related-product-card img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.related-product-card h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.related-product-card a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .product-layout {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="product-detail-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" style="margin-bottom: 20px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'shop:home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{{ category.get_url }}">{{ category.name }}</a></li>
+            {% if product.subcategory %}
+            <li class="breadcrumb-item"><a href="{{ product.subcategory.get_url }}">{{ product.subcategory.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Main Product Layout -->
+    <div class="product-layout">
+        <!-- Left: Image -->
+        <div class="product-image-section">
+            {% if product.base_image_url %}
+                <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}">
+            {% endif %}
+        </div>
+
+        <!-- Right: Options -->
+        <div class="product-options-section">
+            <h1 class="product-title">{{ product.name }}</h1>
+            <p class="product-sku">SKU: {{ product.sku }}</p>
+            
+            {% if product.description %}
+            <p class="product-description">{{ product.description }}</p>
+            {% endif %}
+
+            <form id="productForm" method="POST" action="#" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="product_slug" value="{{ product.slug }}">
+                <input type="hidden" name="category_slug" value="{{ category.slug }}">
+                
+                <!-- Quantity Selector -->
+                <div class="quantity-selector">
+                    <h3>Selecciona una cantidad</h3>
+                    
+                    {% for tier in price_tiers %}
+                    <div class="quantity-option" data-min="{{ tier.min_quantity }}" data-max="{{ tier.max_quantity }}" data-price="{{ tier.unit_price }}">
+                        <input type="radio" 
+                               name="quantity_tier" 
+                               value="{{ tier.min_quantity }}" 
+                               id="qty_{{ tier.min_quantity }}"
+                               {% if forloop.first %}checked{% endif %}>
+                        <label for="qty_{{ tier.min_quantity }}" class="quantity-label">
+                            <span class="quantity-amount">
+                                {% if tier.max_quantity >= 999999 %}
+                                    {{ tier.min_quantity|floatformat:0 }}+
+                                {% else %}
+                                    {{ tier.min_quantity|floatformat:0 }}
+                                {% endif %}
+                            </span>
+                            <span class="quantity-price">
+                                ${{ tier.unit_price|floatformat:0 }}
+                            </span>
+                            {% if tier.discount_percentage > 0 %}
+                            <span class="quantity-savings">Ahorra {{ tier.discount_percentage }}%</span>
+                            {% endif %}
+                        </label>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Custom Quantity Option -->
+                    <div class="custom-quantity-option" id="customQuantityOption">
+                        <div>
+                            <input type="radio" name="quantity_tier" value="custom" id="qty_custom">
+                            <label for="qty_custom" style="cursor: pointer; font-weight: 600;">Cantidad personalizada</label>
+                        </div>
+                        <div class="custom-quantity-input" id="customQuantityInput" style="display: none;">
+                            <input type="number" 
+                                   id="customQuantity" 
+                                   name="custom_quantity" 
+                                   min="1" 
+                                   placeholder="Ingrese cantidad"
+                                   class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Upload Section -->
+                <div class="file-upload-section" style="margin: 30px 0;">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #333;">📤 Sube tu diseño</h3>
+                    
+                    <div id="fileUploadZone" class="upload-zone">
+                    <label class="upload-area" id="uploadArea" for="fileInputA">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #007bff; margin-bottom: 15px;"></i>
+                            <p style="font-size: 16px; color: #666; margin-bottom: 10px;">Arrastra archivos aquí o haz clic para seleccionar</p>
+                            <input type="file" id="fileInputA" name="design_file" accept=".pdf,.ai,.png,.jpg,.jpeg,.eps" style="display: none;" hx-disable>
+                            <button type="button" id="browseBtn" class="btn btn-outline-primary" style="border-radius: 25px; padding: 10px 25px;">
+                                Examinar archivos
+                            </button>
+                            <div style="margin-top: 15px; font-size: 14px; color: #888;">
+                                <strong>Formatos aceptados:</strong> PDF, AI, PNG, JPG, EPS<br>
+                                <strong>Tamaño máximo:</strong> 50MB por archivo
+                            </div>
+                        </label>
+                        <div id="filePreview" style="display: none; margin-top: 20px; padding: 15px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <img id="previewImg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Vista previa">
+                                <div style="flex: 1;">
+                                    <div id="fileName" style="font-weight: 600; color: #333;"></div>
+                                    <div id="fileSize" style="font-size: 14px; color: #666;"></div>
+                                </div>
+                                <button type="button" id="removeFile" class="btn btn-danger btn-sm" style="border-radius: 20px;">
+                                    <i class="fas fa-times"></i> Quitar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button type="submit" class="add-to-cart-btn" id="addToCartBtn">
+                    <span id="btnText">Agregar al carrito</span>
+                    <div id="loadingSpinner" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                </button>
+            </form>
+
+            <!-- Product Features -->
+            {% if variant_types %}
+            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #e0e0e0;">
+                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px;">Opciones disponibles</h3>
+                {% for variant_type in variant_types %}
+                <div style="margin-bottom: 10px;">
+                    <strong>{{ variant_type.name }}:</strong> {{ variant_type.description }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="related-products">
+        <h2>Productos Relacionados</h2>
+        <div class="related-grid">
+            {% for related in related_products %}
+            <div class="related-product-card">
+                {% if related.base_image_url %}
+                    <img src="{{ related.base_image_url }}" alt="{{ related.name }}">
+                {% else %}
+                    <img src="{% static 'img/placeholder-product.png' %}" alt="{{ related.name }}">
+                {% endif %}
+                <h4>{{ related.name }}</h4>
+                <a href="{{ related.get_absolute_url }}">Ver detalles →</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // File upload constants
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+    const ALLOWED_EXTENSIONS = ['.pdf', '.ai', '.png', '.jpg', '.jpeg', '.eps'];
+    
+    // DOM elements
+    const quantityOptions = document.querySelectorAll('.quantity-option');
+    const customOption = document.getElementById('qty_custom');
+    const customQuantityOption = document.getElementById('customQuantityOption');
+    const customQuantityInput = document.getElementById('customQuantityInput');
+    const customQuantity = document.getElementById('customQuantity');
+    const productForm = document.getElementById('productForm');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const btnText = document.getElementById('btnText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    
+    // File upload elements
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInputA = document.getElementById('fileInputA');
+    const browseBtn = document.getElementById('browseBtn');
+    const filePreview = document.getElementById('filePreview');
+    const previewImg = document.getElementById('previewImg');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const removeFile = document.getElementById('removeFile');
+    
+    let selectedFile = null;
+
+    // Quantity selection handlers (existing)
+    quantityOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            updateSelection();
+        });
+    });
+
+    customOption.addEventListener('change', function() {
+        if (this.checked) {
+            customQuantityOption.classList.add('active');
+            customQuantityInput.style.display = 'flex';
+            customQuantity.focus();
+        }
+        updateSelection();
+    });
+
+    customQuantityOption.addEventListener('click', function(e) {
+        if (e.target !== customQuantity) {
+            customOption.checked = true;
+            customQuantityOption.classList.add('active');
+            customQuantityInput.style.display = 'flex';
+            customQuantity.focus();
+            updateSelection();
+        }
+    });
+
+    document.querySelectorAll('input[name="quantity_tier"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value !== 'custom') {
+                customQuantityOption.classList.remove('active');
+                customQuantityInput.style.display = 'none';
+            }
+            updateSelection();
+        });
+    });
+
+    function updateSelection() {
+        quantityOptions.forEach(opt => opt.classList.remove('selected'));
+        const checkedRadio = document.querySelector('input[name="quantity_tier"]:checked');
+        if (checkedRadio && checkedRadio.value !== 'custom') {
+            const parentOption = checkedRadio.closest('.quantity-option');
+            if (parentOption) {
+                parentOption.classList.add('selected');
+            }
+        }
+    }
+
+    // File upload handlers
+    function validateFile(file) {
+        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+        const fileSizeMB = file.size / (1024 * 1024);
+        
+        if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
+            return { valid: false, error: `Formato no permitido. Usa: ${ALLOWED_EXTENSIONS.join(', ')}` };
+        }
+        if (file.size > MAX_FILE_SIZE) {
+            return { valid: false, error: 'El archivo excede el tamaño máximo de 50MB' };
+        }
+        return { valid: true };
+    }
+
+    function showPreview(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+        filePreview.style.display = 'block';
+        selectedFile = file;
+        
+        // Show image preview for image files
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImg.style.display = 'none';
+        }
+    }
+
+    // Drag and drop events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        uploadArea.style.borderColor = '#007bff';
+        uploadArea.style.backgroundColor = '#f8f9ff';
+    }
+
+    function unhighlight(e) {
+        uploadArea.style.borderColor = '#e0e0e0';
+        uploadArea.style.backgroundColor = 'transparent';
+    }
+
+    uploadArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    }
+
+    // Click to browse
+    browseBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInputA.click();
+    });
+
+    fileInputA.addEventListener('change', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        
+        const files = e.target.files;
+        handleFiles(files);
+    });
+
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            const validation = validateFile(file);
+            if (validation.valid) {
+                showPreview(file);
+            } else {
+                alert(validation.error);
+                fileInputA.value = '';
+            }
+        }
+    }
+
+    // Remove file
+    removeFile.addEventListener('click', function() {
+        selectedFile = null;
+        fileInputA.value = '';
+        filePreview.style.display = 'none';
+    });
+
+    // Form submission with AJAX
+    productForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const selectedTier = document.querySelector('input[name="quantity_tier"]:checked');
+        if (!selectedTier) {
+            alert('Por favor selecciona una cantidad');
+            return;
+        }
+        
+        let quantity;
+        if (selectedTier.value === 'custom') {
+            quantity = parseInt(customQuantity.value);
+            if (!quantity || quantity < 1) {
+                alert('Por favor ingrese una cantidad válida');
+                return;
+            }
+        } else {
+            quantity = parseInt(selectedTier.value);
+        }
+
+        if (!selectedFile) {
+            alert('Por favor, sube un diseño antes de agregar al carrito.');
+            return;
+        }
+        
+        // Show loading
+        addToCartBtn.disabled = true;
+        btnText.style.display = 'none';
+        loadingSpinner.style.display = 'inline-block';
+        
+        // Create FormData
+        const formData = new FormData(productForm);
+        formData.append('quantity_tier', selectedTier.value);
+        if (selectedTier.value === 'custom') {
+            formData.append('custom_quantity', quantity);
+        }
+        
+        // Add file if selected
+        if (selectedFile) {
+            formData.append('design_file', selectedFile);
+        }
+        
+        try {
+            const response = await fetch('{% url "shop:add_product_to_cart" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert('¡Producto agregado al carrito exitosamente!');
+                // Optionally redirect to cart or reset form
+                window.location.href = '/carrito_de_compras/';
+            } else {
+                alert('Error: ' + (result.error || 'No se pudo agregar al carrito'));
+            }
+        } catch (error) {
+            alert('Error de conexión: ' + error.message);
+        } finally {
+            // Reset button
+            addToCartBtn.disabled = false;
+            btnText.style.display = 'inline';
+            loadingSpinner.style.display = 'none';
+        }
+    });
+
+    // Initialize
+    updateSelection();
+});
+</script>
+{% endblock %}
