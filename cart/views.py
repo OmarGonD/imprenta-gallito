@@ -12,8 +12,42 @@ from django.template.loader import get_template
 from django.core.mail import EmailMessage
 from marketing.models import Cupons
 from decimal import Decimal
+from django.http import JsonResponse
 
 # Create your views here.
+
+def add_to_cart(request, product_slug):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, slug=product_slug)
+        quantity = int(request.POST.get('quantity', 1))
+        uploaded_file = request.FILES.get('uploaded_file')
+
+        # Get or create cart
+        cart_id = request.COOKIES.get('cart_id')
+        if cart_id:
+            try:
+                cart = Cart.objects.get(id=cart_id)
+            except Cart.DoesNotExist:
+                cart = Cart.objects.create()
+        else:
+            cart = Cart.objects.create()
+
+        # Create or update cart item
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={'quantity': quantity}
+        )
+        if not created:
+            cart_item.quantity += quantity
+        if uploaded_file:
+            cart_item.file_a = uploaded_file
+        cart_item.save()
+
+        response = JsonResponse({'success': True, 'message': 'Producto agregado al carrito'})
+        response.set_cookie('cart_id', cart.id)
+        return response
+    return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
 
 def full_remove(request, cart_item_id):
     cart_item = CartItem.objects.get(id=cart_item_id)

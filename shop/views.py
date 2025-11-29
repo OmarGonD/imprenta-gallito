@@ -19,6 +19,7 @@ from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneFor
 from .models import TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque
 from .models import Product, Category
 from marketing.forms import EmailSignUpForm
+from shop.utils.pricing import PricingService
 
 
 # ============================================================================
@@ -194,8 +195,13 @@ def product_detail_view(request, category_slug, product_slug):
         from django.http import Http404
         raise Http404("Producto no encontrado")
     
-    # Obtener los price tiers
-    price_tiers = product.price_tiers.all().order_by('min_quantity')
+    pricing_service = PricingService()
+    all_tiers = pricing_service.price_tiers.get(product.slug, [])
+    
+    if all_tiers:
+        base_price = all_tiers[0]['unit_price']
+        for tier in all_tiers:
+            tier['savings'] = base_price - tier['unit_price']
     
     # Obtener tipos de variantes disponibles
     variant_types = product.get_available_variant_types()
@@ -209,12 +215,20 @@ def product_detail_view(request, category_slug, product_slug):
     context = {
         'category': category,
         'product': product,
-        'price_tiers': price_tiers,
+        'tiers': all_tiers,
         'variant_types': variant_types,
         'related_products': related_products,
     }
     
     return render(request, 'shop/product_detail.html', context)
+
+
+def get_product_pricing(request, product_slug, quantity):
+    pricing_service = PricingService()
+    pricing_data = pricing_service.get_pricing(product_slug, quantity)
+    if pricing_data is None:
+        return JsonResponse({'error': 'Product not found'}, status=404)
+    return JsonResponse(pricing_data)
 
 
 @csrf_exempt

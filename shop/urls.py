@@ -50,5 +50,6 @@ urlpatterns = [
     path('<slug:category_slug>/', views.category_view, name='category'),
     path('<slug:category_slug>/<slug:subcategory_slug>/', views.subcategory_view, name='subcategory'),
     path('<slug:category_slug>/producto/<slug:product_slug>/', views.product_detail_view, name='product_detail'),
+    path('api/product-pricing/<str:product_slug>/<int:quantity>/', views.get_product_pricing, name='get_product_pricing'),
     #path('catalogo', views.CategoryListView.as_view(), name='catalogo'), #Todos los productos unitarios
 ]

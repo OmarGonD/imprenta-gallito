@@ -65,10 +65,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('=' * 70))
         
         if self.dry_run:
-            self.stdout.write(self.style.WARNING('\n⚠️  MODO DRY-RUN: No se escribirá en la base de datos\n'))
+            self.stdout.write(self.style.WARNING('\nWARNING MODO DRY-RUN: No se escribirá en la base de datos\n'))
         
         if self.force and not self.dry_run:
-            self.stdout.write(self.style.WARNING('\n⚠️  Modo FORCE activado: Se eliminarán datos existentes\n'))
+            self.stdout.write(self.style.WARNING('\nWARNING Modo FORCE activado: Se eliminarán datos existentes\n'))
             if not self.confirm_action('¿Está seguro de que desea continuar?'):
                 self.stdout.write(self.style.ERROR('Operación cancelada'))
                 return
@@ -83,7 +83,7 @@ class Command(BaseCommand):
                     self.clear_existing_data()
                 
                 # Importar en orden correcto
-                self.stdout.write('\n📦 Iniciando importación...\n')
+                self.stdout.write('\nIniciando importación...\n')
                 
                 categories_count = self.import_categories()
                 subcategories_count = self.import_subcategories()
@@ -95,9 +95,9 @@ class Command(BaseCommand):
                 
                 # Resumen
                 self.stdout.write('\n' + '=' * 70)
-                self.stdout.write(self.style.SUCCESS('✅ IMPORTACIÓN COMPLETADA CON ÉXITO'))
+                self.stdout.write(self.style.SUCCESS('IMPORTACIÓN COMPLETADA CON ÉXITO'))
                 self.stdout.write('=' * 70)
-                self.stdout.write(f'\n📊 Registros importados:')
+                self.stdout.write(f'\nRegistros importados:')
                 self.stdout.write(f'   • Categorías: {categories_count}')
                 self.stdout.write(f'   • Subcategorías: {subcategories_count}')
                 self.stdout.write(f'   • Productos: {products_count}')
@@ -105,18 +105,18 @@ class Command(BaseCommand):
                 self.stdout.write(f'   • Opciones de variantes: {variant_options_count}')
                 self.stdout.write(f'   • Variantes de productos: {product_variants_count}')
                 self.stdout.write(f'   • Niveles de precios: {price_tiers_count}')
-                self.stdout.write(f'\n📈 Total: {categories_count + subcategories_count + products_count + variant_types_count + variant_options_count + product_variants_count + price_tiers_count} registros')
+                self.stdout.write(f'\nTotal: {categories_count + subcategories_count + products_count + variant_types_count + variant_options_count + product_variants_count + price_tiers_count} registros')
                 
                 if self.dry_run:
-                    self.stdout.write(self.style.WARNING('\n⚠️  DRY-RUN: Revertiendo transacción...'))
+                    self.stdout.write(self.style.WARNING('\nWARNING DRY-RUN: Revertiendo transacción...'))
                     raise Exception('Dry run - rolling back')
                     
         except Exception as e:
             if not self.dry_run:
-                self.stdout.write(self.style.ERROR(f'\n❌ Error durante la importación: {str(e)}'))
+                self.stdout.write(self.style.ERROR(f'\nError durante la importación: {str(e)}'))
                 raise
             else:
-                self.stdout.write(self.style.SUCCESS('\n✅ Dry-run completado exitosamente'))
+                self.stdout.write(self.style.SUCCESS('\nOK Dry-run completado exitosamente'))
 
     def confirm_action(self, message):
         """Solicita confirmación del usuario"""
@@ -135,7 +135,7 @@ class Command(BaseCommand):
             'product_variant_types_complete.csv'
         ]
         
-        self.stdout.write('🔍 Verificando archivos CSV...')
+        self.stdout.write('Verificando archivos CSV...')
         missing_files = []
         
         for filename in required_files:
@@ -143,18 +143,18 @@ class Command(BaseCommand):
             if not os.path.exists(filepath):
                 missing_files.append(filename)
             else:
-                self.stdout.write(f'   ✓ {filename}')
+                self.stdout.write(f'   OK {filename}')
         
         if missing_files:
             raise FileNotFoundError(
                 f'Archivos CSV faltantes: {", ".join(missing_files)}'
             )
         
-        self.stdout.write(self.style.SUCCESS('   ✅ Todos los archivos encontrados\n'))
+        self.stdout.write(self.style.SUCCESS('   OK Todos los archivos encontrados\n'))
 
     def clear_existing_data(self):
         """Elimina datos existentes de categorías"""
-        self.stdout.write('🗑️  Eliminando datos existentes...')
+        self.stdout.write('Eliminando datos existentes...')
         
         # Updated to use the new model names
         counts = {
@@ -168,7 +168,7 @@ class Command(BaseCommand):
         }
         
         total = sum(counts.values())
-        self.stdout.write(f'   ✓ {total} registros eliminados')
+        self.stdout.write(f'   OK {total} registros eliminados')
         for model, count in counts.items():
             if count > 0:
                 self.stdout.write(f'     - {model}: {count}')
@@ -176,7 +176,7 @@ class Command(BaseCommand):
 
     def import_categories(self):
         """Importa categorías desde CSV"""
-        self.stdout.write('📁 Importando categorías...')
+        self.stdout.write('Importando categorías...')
         filepath = os.path.join(self.data_dir, 'categories_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -205,12 +205,12 @@ class Command(BaseCommand):
             else:
                 created += 1
         
-        self.stdout.write(f'   ✓ {created} creadas, {updated} actualizadas\n')
+        self.stdout.write(f'   OK {created} creadas, {updated} actualizadas\n')
         return created + updated
 
     def import_subcategories(self):
         """Importa subcategorías desde CSV"""
-        self.stdout.write('📂 Importando subcategorías...')
+        self.stdout.write('Importando subcategorías...')
         filepath = os.path.join(self.data_dir, 'subcategories_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -243,20 +243,20 @@ class Command(BaseCommand):
                     created += 1
             except Category.DoesNotExist:
                 self.stdout.write(self.style.WARNING(
-                    f'   ⚠️  Categoría no encontrada: {row["category_slug"]}'
+                    f'   WARNING Categoría no encontrada: {row["category_slug"]}'
                 ))
                 errors += 1
         
-        self.stdout.write(f'   ✓ {created} creadas, {updated} actualizadas')
+        self.stdout.write(f'   OK {created} creadas, {updated} actualizadas')
         if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   ⚠️  {errors} errores\n'))
+            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
         else:
             self.stdout.write('')
         return created + updated
 
     def import_variant_types(self):
         """Importa tipos de variantes desde CSV"""
-        self.stdout.write('🎨 Importando tipos de variantes...')
+        self.stdout.write('Importando tipos de variantes...')
         filepath = os.path.join(self.data_dir, 'variant_types_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -285,12 +285,12 @@ class Command(BaseCommand):
             else:
                 created += 1
         
-        self.stdout.write(f'   ✓ {created} creados, {updated} actualizados\n')
+        self.stdout.write(f'   OK {created} creados, {updated} actualizados\n')
         return created + updated
 
     def import_variant_options(self):
         """Importa opciones de variantes desde CSV"""
-        self.stdout.write('🎯 Importando opciones de variantes...')
+        self.stdout.write('Importando opciones de variantes...')
         filepath = os.path.join(self.data_dir, 'variant_options_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -322,20 +322,20 @@ class Command(BaseCommand):
                     created += 1
             except VariantType.DoesNotExist:
                 self.stdout.write(self.style.WARNING(
-                    f'   ⚠️  Tipo de variante no encontrado: {row["variant_type_slug"]}'
+                    f'   WARNING Tipo de variante no encontrado: {row["variant_type_slug"]}'
                 ))
                 errors += 1
         
-        self.stdout.write(f'   ✓ {created} creadas, {updated} actualizadas')
+        self.stdout.write(f'   OK {created} creadas, {updated} actualizadas')
         if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   ⚠️  {errors} errores\n'))
+            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
         else:
             self.stdout.write('')
         return created + updated
 
     def import_products(self):
         """Importa productos desde CSV"""
-        self.stdout.write('🛍️  Importando productos...')
+        self.stdout.write('Importando productos...')
         filepath = os.path.join(self.data_dir, 'products_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -377,20 +377,20 @@ class Command(BaseCommand):
                     created += 1
             except Category.DoesNotExist:
                 self.stdout.write(self.style.WARNING(
-                    f'   ⚠️  Categoría no encontrada para producto: {row["product_slug"]}'
+                    f'   WARNING Categoría no encontrada para producto: {row["product_slug"]}'
                 ))
                 errors += 1
         
-        self.stdout.write(f'   ✓ {created} creados, {updated} actualizados')
+        self.stdout.write(f'   OK {created} creados, {updated} actualizados')
         if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   ⚠️  {errors} errores\n'))
+            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
         else:
             self.stdout.write('')
         return created + updated
 
     def import_product_variant_types(self):
         """Importa relaciones producto-variantes desde CSV"""
-        self.stdout.write('🔗 Importando variantes de productos...')
+        self.stdout.write('Importando variantes de productos...')
         filepath = os.path.join(self.data_dir, 'product_variant_types_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -417,16 +417,16 @@ class Command(BaseCommand):
             except (Product.DoesNotExist, VariantType.DoesNotExist) as e:
                 errors += 1
         
-        self.stdout.write(f'   ✓ {created} creadas, {skipped} ya existían')
+        self.stdout.write(f'   OK {created} creadas, {skipped} ya existían')
         if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   ⚠️  {errors} errores\n'))
+            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
         else:
             self.stdout.write('')
         return created
 
     def import_price_tiers(self):
         """Importa niveles de precio desde CSV"""
-        self.stdout.write('💰 Importando niveles de precios...')
+        self.stdout.write('Importando niveles de precios...')
         filepath = os.path.join(self.data_dir, 'price_tiers_complete.csv')
         df = self.safe_read_csv(filepath)
         
@@ -439,13 +439,13 @@ class Command(BaseCommand):
                 if not self.dry_run:
                     product = Product.objects.get(slug=row['product_slug'])
                     defaults = {
-                        'max_quantity': int(row['max_quantity']),
+                        'max_quantity': int(row['max_quan']),
                         'unit_price': Decimal(str(row['unit_price'])),
-                        'discount_percentage': int(row['discount_percentage'])
+                        'discount_percentage': int(row['discount_percent'])
                     }
                     _, was_created = PriceTier.objects.update_or_create(
                         product=product,
-                        min_quantity=int(row['min_quantity']),
+                        min_quantity=int(row['min_quan']),
                         defaults=defaults
                     )
                     if was_created:
@@ -457,9 +457,9 @@ class Command(BaseCommand):
             except Product.DoesNotExist:
                 errors += 1
         
-        self.stdout.write(f'   ✓ {created} creados, {updated} actualizados')
+        self.stdout.write(f'   OK {created} creados, {updated} actualizados')
         if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   ⚠️  {errors} errores\n'))
+            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
         else:
             self.stdout.write('')
         return created + updated
