@@ -5,702 +5,92 @@
 
 {% block content %}
 <style>
+/* ===== ESTILOS ESPECÍFICOS DE PRODUCT DETAIL ===== */
+/* Solo animaciones y estilos que NO están en base.html/Tailwind */
+
 @keyframes bounce-once {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
-.product-detail-container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
+.animate-bounce-once {
+    animation: bounce-once 0.6s ease-in-out;
 }
 
-/* ===== RESPONSIVE PARA PANTALLAS GRANDES ===== */
-@media (min-width: 1280px) {
-    .product-detail-container {
-        max-width: 92%;
-        padding: 30px;
-    }
-}
-
-@media (min-width: 1920px) {
-    .product-detail-container {
-        max-width: 88%;
-        margin: 50px auto;
-        padding: 40px;
-    }
-    
-    .product-layout {
-        gap: 60px;
-    }
-    
-    .product-title {
-        font-size: 32px;
-    }
-    
-    .product-description {
-        font-size: 1.05rem;
-    }
-    
-    .quantity-option {
-        padding: 15px 18px;
-    }
-    
-    .quantity-price {
-        font-size: 20px;
-    }
-    
-    .add-to-cart-btn {
-        padding: 18px;
-        font-size: 20px;
-    }
-    
-    .related-products h2 {
-        font-size: 28px;
-    }
-    
-    .related-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 25px;
-    }
-}
-
-@media (min-width: 2560px) {
-    .product-detail-container {
-        max-width: 82%;
-        margin: 60px auto;
-        padding: 50px;
-    }
-    
-    .product-layout {
-        gap: 80px;
-    }
-    
-    .product-title {
-        font-size: 38px;
-    }
-    
-    .product-sku {
-        font-size: 16px;
-    }
-    
-    .product-description {
-        font-size: 1.15rem;
-        line-height: 1.7;
-    }
-    
-    .quantity-selector h3 {
-        font-size: 22px;
-    }
-    
-    .quantity-option {
-        padding: 18px 22px;
-        border-radius: 8px;
-        margin-bottom: 12px;
-    }
-    
-    .quantity-option input[type="radio"] {
-        width: 22px;
-        height: 22px;
-    }
-    
-    .quantity-amount {
-        font-size: 1.1rem;
-    }
-    
-    .quantity-price {
-        font-size: 24px;
-    }
-    
-    .quantity-savings {
-        font-size: 16px;
-    }
-    
-    .add-to-cart-btn {
-        padding: 20px;
-        font-size: 22px;
-        border-radius: 8px;
-    }
-    
-    .related-products {
-        margin-top: 80px;
-    }
-    
-    .related-products h2 {
-        font-size: 32px;
-        margin-bottom: 30px;
-    }
-    
-    .related-grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 30px;
-    }
-    
-    .related-product-card {
-        padding: 20px;
-        border-radius: 12px;
-    }
-    
-    .related-product-card img {
-        height: 240px;
-        border-radius: 8px;
-    }
-    
-    .related-product-card h4 {
-        font-size: 18px;
-    }
-    
-    /* Breadcrumb */
-    .breadcrumb {
-        font-size: 1rem;
-    }
-    
-    /* Tabla de tiers - usando clases específicas */
-    .tiers-table {
-        font-size: 1.05rem;
-    }
-    
-    .tiers-table th,
-    .tiers-table td {
-        padding: 1rem 1.25rem !important;
-    }
-    
-    /* Card de precio */
-    .price-card .price-label {
-        font-size: 0.95rem;
-    }
-    
-    .price-card .price-value-lg {
-        font-size: 1.75rem;
-    }
-    
-    .price-card .price-value-xl {
-        font-size: 2.25rem;
-    }
-    
-    /* Upload section */
-    .upload-section {
-        padding: 1.5rem;
-    }
-    
-    .upload-section .upload-btn {
-        padding: 0.75rem 1.25rem;
-        font-size: 1rem;
-    }
-    
-    /* Input de cantidad */
-    .quantity-input-wrapper input {
-        font-size: 1.1rem;
-        padding: 0.875rem 1.25rem;
-    }
-    
-    /* Modal */
-    .cart-modal .modal-content {
-        width: 28rem;
-    }
-    
-    .cart-modal .modal-title {
-        font-size: 1.5rem;
-    }
-    
-    .cart-modal .modal-btn {
-        padding: 1rem 1.5rem;
-        font-size: 1.1rem;
-    }
-}
-
-@media (min-width: 3440px) {
-    .product-detail-container {
-        max-width: 78%;
-        margin: 70px auto;
-        padding: 60px;
-    }
-    
-    .product-layout {
-        gap: 100px;
-    }
-    
-    .product-title {
-        font-size: 44px;
-    }
-    
-    .product-sku {
-        font-size: 18px;
-    }
-    
-    .product-description {
-        font-size: 1.25rem;
-        line-height: 1.8;
-    }
-    
-    .quantity-selector h3 {
-        font-size: 26px;
-    }
-    
-    .quantity-option {
-        padding: 22px 28px;
-    }
-    
-    .quantity-price {
-        font-size: 28px;
-    }
-    
-    .add-to-cart-btn {
-        padding: 24px;
-        font-size: 24px;
-    }
-    
-    .related-products h2 {
-        font-size: 36px;
-    }
-    
-    .related-grid {
-        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-        gap: 35px;
-    }
-    
-    .related-product-card img {
-        height: 280px;
-    }
-    
-    .related-product-card h4 {
-        font-size: 20px;
-    }
-    
-    /* Breadcrumb */
-    .breadcrumb {
-        font-size: 1.1rem;
-    }
-    
-    /* Tabla de tiers */
-    .tiers-table {
-        font-size: 1.15rem;
-    }
-    
-    .tiers-table th,
-    .tiers-table td {
-        padding: 1.25rem 1.5rem !important;
-    }
-    
-    /* Card de precio */
-    .price-card .price-value-lg {
-        font-size: 2rem;
-    }
-    
-    .price-card .price-value-xl {
-        font-size: 2.75rem;
-    }
-    
-    /* Upload section */
-    .upload-section {
-        padding: 2rem;
-    }
-    
-    /* Input de cantidad */
-    .quantity-input-wrapper input {
-        font-size: 1.2rem;
-        padding: 1rem 1.5rem;
-    }
-}
-
-@media (min-width: 3840px) {
-    .product-detail-container {
-        max-width: 72%;
-        margin: 80px auto;
-        padding: 70px;
-    }
-    
-    .product-layout {
-        gap: 120px;
-    }
-    
-    .product-title {
-        font-size: 52px;
-    }
-    
-    .product-sku {
-        font-size: 20px;
-    }
-    
-    .product-description {
-        font-size: 1.35rem;
-    }
-    
-    .quantity-selector h3 {
-        font-size: 30px;
-    }
-    
-    .quantity-option {
-        padding: 26px 32px;
-    }
-    
-    .quantity-price {
-        font-size: 32px;
-    }
-    
-    .add-to-cart-btn {
-        padding: 28px;
-        font-size: 28px;
-    }
-    
-    .related-products h2 {
-        font-size: 42px;
-    }
-    
-    .related-grid {
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        gap: 40px;
-    }
-    
-    .related-product-card img {
-        height: 320px;
-    }
-    
-    .related-product-card h4 {
-        font-size: 22px;
-    }
-    
-    /* Breadcrumb */
-    .breadcrumb {
-        font-size: 1.2rem;
-    }
-    
-    /* Tabla de tiers */
-    .tiers-table {
-        font-size: 1.25rem;
-    }
-    
-    .tiers-table th,
-    .tiers-table td {
-        padding: 1.5rem 1.75rem !important;
-    }
-    
-    /* Card de precio */
-    .price-card .price-value-lg {
-        font-size: 2.25rem;
-    }
-    
-    .price-card .price-value-xl {
-        font-size: 3rem;
-    }
-}
-
-/* File Upload Styles */
+/* Upload zone - estados */
 .upload-zone {
-    border: 2px dashed #e0e0e0;
-    border-radius: 12px;
-    padding: 30px;
-    background: #fafbfc;
     transition: all 0.3s ease;
-    cursor: pointer;
 }
 
 .upload-zone:hover {
-    border-color: #007bff;
-    background: #f8f9ff;
+    border-color: #3B82F6;
+    background-color: #F0F9FF;
 }
 
 .upload-zone.dragover {
-    border-color: #007bff;
-    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
-    transform: scale(1.02);
+    border-color: #2563EB;
+    background-color: #DBEAFE;
+    transform: scale(1.01);
 }
 
-.upload-area {
-    text-align: center;
+/* Tabla de tiers - highlight fila actual */
+.tier-row-active {
+    background-color: #EFF6FF;
+    border-left: 4px solid #3B82F6;
 }
 
-.upload-area i {
+/* Modal backdrop blur */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+}
+
+/* Transiciones suaves para cards */
+.product-card-hover {
     transition: all 0.3s ease;
 }
 
-.upload-zone:hover i {
-    color: #0056b3;
-    transform: scale(1.1);
-}
-
-.file-preview {
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.btn-outline-primary {
-    border: 2px solid #007bff;
-    color: #007bff;
-    background: transparent;
-    transition: all 0.3s ease;
-}
-
-.btn-outline-primary:hover {
-    background: #007bff;
-    color: white;
-    transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-    .upload-zone {
-        padding: 20px;
-    }
-    
-    .product-layout {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-}
-
-.product-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
-}
-
-/* Left side - Image */
-.product-image-section {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.product-image-section img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-}
-
-/* Right side - Options */
-.product-options-section {
-    padding: 20px 0;
-}
-
-.product-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.product-sku {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.product-description {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-
-.quantity-selector {
-    margin-top: 30px;
-}
-
-.quantity-selector h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.quantity-option {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.quantity-option:hover {
-    border-color: #007bff;
-    background-color: #f8f9ff;
-}
-
-.quantity-option.selected {
-    border-color: #007bff;
-    background-color: #e7f1ff;
-}
-
-.quantity-option input[type="radio"] {
-    margin-right: 12px;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-.quantity-label {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-
-.quantity-amount {
-    font-weight: 600;
-    color: #333;
-    min-width: 80px;
-}
-
-.quantity-price {
-    font-size: 18px;
-    font-weight: bold;
-    color: #007bff;
-    min-width: 80px;
-    text-align: right;
-}
-
-.quantity-savings {
-    font-size: 14px;
-    color: #28a745;
-    font-weight: 600;
-    margin-left: 10px;
-}
-
-.custom-quantity-option {
-    margin-top: 15px;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-}
-
-.custom-quantity-option.active {
-    border-color: #007bff;
-    background-color: #f8f9ff;
-}
-
-.custom-quantity-input {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.custom-quantity-input input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.add-to-cart-btn {
-    width: 100%;
-    padding: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.2s;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #0056b3;
-}
-
-.add-to-cart-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Related Products */
-.related-products {
-    margin-top: 60px;
-}
-
-.related-products h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.related-product-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    transition: box-shadow 0.2s;
-}
-
-.related-product-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.related-product-card img {
-    max-width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 10px;
-}
-
-.related-product-card h4 {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.related-product-card a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-@media (max-width: 768px) {
-    .product-layout {
-        grid-template-columns: 1fr;
-    }
+.product-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 </style>
 
-<div class="product-detail-container">
+<div class="container mx-auto px-4 py-8 max-w-7xl">
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" style="margin-bottom: 20px;">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'shop:home' %}">Inicio</a></li>
-            <li class="breadcrumb-item"><a href="{{ category.get_url }}">{{ category.name }}</a></li>
+    <nav class="mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600">
+            <li><a href="{% url 'shop:home' %}" class="hover:text-blue-600 transition-colors">Inicio</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ category.get_url }}" class="hover:text-blue-600 transition-colors">{{ category.name }}</a></li>
             {% if product.subcategory %}
-            <li class="breadcrumb-item"><a href="{{ product.subcategory.get_url }}">{{ product.subcategory.name }}</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ product.subcategory.get_url }}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
             {% endif %}
-            <li class="breadcrumb-item active">{{ product.name }}</li>
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-900 font-medium">{{ product.name }}</li>
         </ol>
     </nav>
 
     <!-- Main Product Layout -->
-    <div class="product-layout">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
         <!-- Left: Image -->
-        <div class="product-image-section">
+        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center">
             {% if product.base_image_url %}
-                <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
+                <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg">
             {% else %}
-                <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}">
+                <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg">
             {% endif %}
         </div>
 
         <!-- Right: Options -->
-        <div class="product-options-section">
-            <h1 class="product-title">{{ product.name }}</h1>
-            <p class="product-sku">SKU: {{ product.sku }}</p>
+        <div class="space-y-6">
+            <div>
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{{ product.name }}</h1>
+                <p class="text-sm text-gray-500">SKU: {{ product.sku }}</p>
+            </div>
             
             {% if product.description %}
-            <p class="product-description">{{ product.description }}</p>
+            <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
             {% endif %}
 
             <form id="productForm" method="POST" action="#" enctype="multipart/form-data">
@@ -710,8 +100,8 @@
                 <input type="hidden" name="quantity_tier" value="custom">
                 <input type="hidden" name="custom_quantity" id="custom_quantity_hidden">
                 
-                <!-- Sección de input de cantidad -->
-                <div class="mb-6 quantity-input-wrapper">
+                <!-- Input de cantidad -->
+                <div class="mb-6">
                     <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
                         Cantidad
                     </label>
@@ -722,29 +112,29 @@
                         min="1" 
                         max="999999"
                         value="100"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
                     >
                     <p class="text-sm text-gray-500 mt-1">Ingresa la cantidad exacta que necesitas</p>
                 </div>
 
                 <!-- Card de precio actual -->
-                <div class="price-card bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-6 border border-blue-200">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-200">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <p class="text-sm text-gray-600 mb-1 price-label">Precio unitario</p>
-                            <p class="text-2xl font-bold text-gray-900 price-value-lg">
+                            <p class="text-sm text-gray-600 mb-1">Precio unitario</p>
+                            <p class="text-2xl font-bold text-gray-900">
                                 S/ <span id="unit-price">1.68</span>
                             </p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 mb-1 price-label">Descuento aplicado</p>
-                            <p class="text-2xl font-bold text-green-600 price-value-lg">
+                            <p class="text-sm text-gray-600 mb-1">Descuento aplicado</p>
+                            <p class="text-2xl font-bold text-green-600">
                                 <span id="discount-percent">33</span>%
                             </p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600 mb-1 price-label">Total</p>
-                            <p class="text-3xl font-bold text-blue-600 price-value-xl">
+                            <p class="text-sm text-gray-600 mb-1">Total</p>
+                            <p class="text-3xl font-bold text-blue-600">
                                 S/ <span id="total-price">252.00</span>
                             </p>
                         </div>
@@ -756,65 +146,56 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">
                         ⚡ Descuentos por volumen
                     </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm tiers-table">
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                        <table class="w-full text-sm">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-2 text-left">Cantidad</th>
-                                    <th class="px-4 py-2 text-left">Precio/unidad</th>
-                                    <th class="px-4 py-2 text-left">Descuento</th>
-                                    <th class="px-4 py-2 text-left">Ahorro</th>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Cantidad</th>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Precio/unidad</th>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Descuento</th>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Ahorro</th>
                                 </tr>
                             </thead>
                             <tbody id="tiers-table">
-    {% if tiers %}
-        {% for tier in tiers %}
-        <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150
-                   {% if forloop.counter == 3 %}bg-blue-50 border-l-4 border-blue-500{% endif %}">
-            
-            <!-- Columna: Cantidad -->
-            <td class="px-4 py-3">
-                {% if tier.max_quan == 999999 %}
-                    <span class="font-medium text-gray-900">{{ tier.min_quan }}+</span>
-                {% else %}
-                    <span class="font-medium text-gray-900">{{ tier.min_quan }}-{{ tier.max_quan }}</span>
-                {% endif %}
-            </td>
-            
-            <!-- Columna: Precio/unidad -->
-            <td class="px-4 py-3">
-                <span class="font-semibold text-gray-900">S/ {{ tier.unit_price|floatformat:2 }}</span>
-            </td>
-            
-            <!-- Columna: Descuento -->
-            <td class="px-4 py-3">
-                {% if tier.discount_percent > 0 %}
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                        {{ tier.discount_percent }}%
-                    </span>
-                {% else %}
-                    <span class="text-gray-400 text-sm">-</span>
-                {% endif %}
-            </td>
-            
-            <!-- Columna: Ahorro -->
-            <td class="px-4 py-3">
-                {% if tier.savings > 0 %}
-                    <span class="text-green-600 font-medium">S/ {{ tier.savings|floatformat:2 }}</span>
-                {% else %}
-                    <span class="text-gray-400 text-sm">-</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    {% else %}
-        <tr>
-            <td colspan="4" class="px-4 py-8 text-center text-gray-500">
-                <p class="text-sm">No hay tiers de precio disponibles para este producto</p>
-            </td>
-        </tr>
-    {% endif %}
-</tbody>
+                                {% if tiers %}
+                                    {% for tier in tiers %}
+                                    <tr class="tier-row border-b border-gray-200 hover:bg-gray-50 transition-colors" data-min="{{ tier.min_quan }}" data-max="{{ tier.max_quan }}">
+                                        <td class="px-4 py-3">
+                                            {% if tier.max_quan == 999999 %}
+                                                <span class="font-medium text-gray-900">{{ tier.min_quan }}+</span>
+                                            {% else %}
+                                                <span class="font-medium text-gray-900">{{ tier.min_quan }}-{{ tier.max_quan }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <span class="font-semibold text-gray-900">S/ {{ tier.unit_price|floatformat:2 }}</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {% if tier.discount_percent > 0 %}
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                                    {{ tier.discount_percent }}%
+                                                </span>
+                                            {% else %}
+                                                <span class="text-gray-400">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            {% if tier.savings > 0 %}
+                                                <span class="text-green-600 font-medium">S/ {{ tier.savings|floatformat:2 }}</span>
+                                            {% else %}
+                                                <span class="text-gray-400">-</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                                            No hay tiers de precio disponibles para este producto
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -827,12 +208,11 @@
                 </div>
 
                 <!-- File Upload Section -->
-                <div id="file-upload-section" class="upload-section mt-6 p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                <div id="file-upload-section" class="upload-zone p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
-                        Sube tu diseño <span class="text-red-500 text-lg">*</span> <span class="text-xs text-gray-500">(Requerido)</span>
+                        Sube tu diseño <span class="text-red-500">*</span>
                     </label>
                     
-                    <!-- Input file oculto -->
                     <input 
                         type="file" 
                         id="file-upload-input" 
@@ -842,10 +222,9 @@
                         required
                     >
                     
-                    <!-- Label que actúa como botón (NO usar <button>) -->
                     <label 
                         for="file-upload-input"
-                        class="upload-btn inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                         <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
@@ -854,16 +233,15 @@
                     </label>
                     
                     <p class="text-xs text-gray-500 mt-2">
-                        Formatos aceptados: JPG, PNG, PDF, AI, PSD, SVG • Tamaño máximo: 10MB
+                        Formatos: JPG, PNG, PDF, AI, PSD, SVG • Máx: 10MB
                     </p>
                     
-                    <!-- Área de preview -->
                     <div id="file-preview-container" class="mt-4">
                         <p class="text-sm text-gray-400">Ningún archivo seleccionado</p>
                     </div>
                 </div>
 
-                <!-- Botón agregar al carrito (DESHABILITADO por defecto) -->
+                <!-- Botón agregar al carrito -->
                 <button 
                     type="button"
                     id="add-to-cart"
@@ -882,41 +260,26 @@
                 </p>
             </form>
 
-            <!-- Modal: Producto agregado al carrito -->
-            <div id="cart-success-modal" class="cart-modal hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50" style="backdrop-filter: blur(4px);">
-                <div class="modal-content relative top-20 mx-auto p-5 border w-96 shadow-2xl rounded-xl bg-white">
-                    <div class="mt-3">
-                        <!-- Icono de éxito -->
+            <!-- Modal: Producto agregado -->
+            <div id="cart-success-modal" class="modal-backdrop hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-6 w-full max-w-md shadow-2xl rounded-xl bg-white">
+                    <div class="text-center">
                         <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 animate-bounce-once">
                             <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </div>
                         
-                        <!-- Mensaje -->
-                        <div class="mt-5 text-center">
-                            <h3 class="modal-title text-xl leading-6 font-bold text-gray-900">
-                                ¡Producto agregado!
-                            </h3>
-                            <div class="mt-3 px-7 py-3">
-                                <p class="text-sm text-gray-600" id="cart-modal-message">
-                                    Tu producto ha sido agregado al carrito correctamente.
-                                </p>
-                            </div>
-                        </div>
+                        <h3 class="mt-5 text-xl font-bold text-gray-900">¡Producto agregado!</h3>
+                        <p class="mt-3 text-sm text-gray-600" id="cart-modal-message">
+                            Tu producto ha sido agregado al carrito correctamente.
+                        </p>
                         
-                        <!-- Botones -->
-                        <div class="items-center px-4 py-3 space-y-3 mt-4">
-                            <button
-                                id="modal-go-to-cart"
-                                class="modal-btn w-full px-5 py-3 bg-blue-600 text-white text-base font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all transform hover:scale-105"
-                            >
+                        <div class="mt-6 space-y-3">
+                            <button id="modal-go-to-cart" class="w-full px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all">
                                 🛒 Ir al carrito
                             </button>
-                            <button
-                                id="modal-continue-shopping"
-                                class="modal-btn w-full px-5 py-3 bg-white text-gray-700 text-base font-medium rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
-                            >
+                            <button id="modal-continue-shopping" class="w-full px-5 py-3 bg-white text-gray-700 font-medium rounded-lg border-2 border-gray-300 hover:bg-gray-50 transition-all">
                                 ← Seguir comprando
                             </button>
                         </div>
@@ -926,11 +289,12 @@
 
             <!-- Product Features -->
             {% if variant_types %}
-            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #e0e0e0;">
-                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px;">Opciones disponibles</h3>
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Opciones disponibles</h3>
                 {% for variant_type in variant_types %}
-                <div style="margin-bottom: 10px;">
-                    <strong>{{ variant_type.name }}:</strong> {{ variant_type.description }}
+                <div class="mb-2">
+                    <strong class="text-gray-700">{{ variant_type.name }}:</strong> 
+                    <span class="text-gray-600">{{ variant_type.description }}</span>
                 </div>
                 {% endfor %}
             </div>
@@ -940,19 +304,23 @@
 
     <!-- Related Products -->
     {% if related_products %}
-    <div class="related-products">
-        <h2>Productos Relacionados</h2>
-        <div class="related-grid">
+    <div class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Productos Relacionados</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {% for related in related_products %}
-            <div class="related-product-card">
-                {% if related.base_image_url %}
-                    <img src="{{ related.base_image_url }}" alt="{{ related.name }}">
-                {% else %}
-                    <img src="{% static 'img/placeholder-product.png' %}" alt="{{ related.name }}">
-                {% endif %}
-                <h4>{{ related.name }}</h4>
-                <a href="{{ related.get_absolute_url }}">Ver detalles →</a>
-            </div>
+            <a href="{{ related.get_absolute_url }}" class="product-card-hover block bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div class="aspect-square bg-gray-100 p-4">
+                    {% if related.base_image_url %}
+                        <img src="{{ related.base_image_url }}" alt="{{ related.name }}" class="w-full h-full object-contain">
+                    {% else %}
+                        <img src="{% static 'img/placeholder-product.png' %}" alt="{{ related.name }}" class="w-full h-full object-contain">
+                    {% endif %}
+                </div>
+                <div class="p-4">
+                    <h4 class="font-medium text-gray-900 mb-2 line-clamp-2">{{ related.name }}</h4>
+                    <span class="text-blue-600 font-semibold">Ver detalles →</span>
+                </div>
+            </a>
             {% endfor %}
         </div>
     </div>
@@ -998,20 +366,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     async function updatePricing(productSlug, quantity) {
+        if (quantity < 1) return;
+        
         try {
             const response = await fetch(`/api/product-pricing/${productSlug}/${quantity}/`);
             const data = await response.json();
             
-            // Actualizar DOM
+            // Actualizar UI
             document.getElementById('unit-price').textContent = data.unit_price.toFixed(2);
             document.getElementById('discount-percent').textContent = data.discount_percent;
             document.getElementById('total-price').textContent = data.total_price.toFixed(2);
             
-            // Mostrar/ocultar sugerencia
+            // Resaltar tier activo en la tabla
+            highlightActiveTier(quantity);
+            
+            // Mostrar sugerencia si hay siguiente tier
             updateSuggestion(data.next_tier);
         } catch (error) {
             console.error('Error al actualizar precios:', error);
         }
+    }
+    
+    function highlightActiveTier(quantity) {
+        const rows = document.querySelectorAll('.tier-row');
+        
+        rows.forEach(row => {
+            const min = parseInt(row.dataset.min);
+            const max = parseInt(row.dataset.max);
+            
+            // Quitar clase activa de todas las filas
+            row.classList.remove('tier-row-active');
+            
+            // Agregar clase activa a la fila correspondiente
+            if (quantity >= min && quantity <= max) {
+                row.classList.add('tier-row-active');
+            }
+        });
     }
     
     function updateSuggestion(nextTier) {
@@ -1037,20 +427,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2. MANEJO DE CARGA DE ARCHIVOS
     // ========================================
     if (fileInput) {
-        // CRÍTICO: Solo UN event listener para 'change'
         fileInput.addEventListener('change', function(e) {
             const files = e.target.files;
             
             console.log(`📁 Archivos seleccionados: ${files.length}`);
             
             if (files.length === 0) {
-                // NO hay archivo
                 disableAddToCartButton();
                 clearPreview();
                 return;
             }
             
-            // SÍ hay archivo
             enableAddToCartButton();
             showFilePreview(files);
         });
@@ -1093,7 +480,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const filePreview = document.createElement('div');
             filePreview.className = 'p-4 border-2 border-green-200 rounded-lg bg-white shadow-sm';
             
-            // Si es imagen
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 
@@ -1120,7 +506,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 reader.readAsDataURL(file);
             } else {
-                // Para archivos no-imagen (PDF, AI, PSD, etc)
                 const icon = getFileIcon(file.name);
                 filePreview.innerHTML = `
                     <div class="flex items-center space-x-4">
@@ -1172,7 +557,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const quantity = parseInt(quantityInput.value);
             const files = fileInput.files;
             
-            // VALIDACIÓN
             if (files.length === 0) {
                 alert('❌ Debes subir un archivo antes de agregar al carrito');
                 return;
@@ -1193,7 +577,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
             `;
             
-            // Preparar FormData para envío AJAX
             const formData = new FormData();
             formData.append('category_slug', '{{ category.slug }}');
             formData.append('product_slug', '{{ product.slug }}');
@@ -1201,10 +584,8 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('custom_quantity', quantity);
             formData.append('design_file', files[0]);
             
-            // Obtener CSRF token
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
-            // Enviar petición AJAX
             fetch('{% url "shop:add_product_to_cart" %}', {
                 method: 'POST',
                 headers: {
@@ -1214,21 +595,17 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                // Restaurar botón
                 addToCartBtn.innerHTML = originalText;
                 addToCartBtn.disabled = false;
                 
                 if (data.success) {
-                    // Actualizar contador del carrito si existe
                     const cartCounter = document.getElementById('cart-items-counter');
                     if (cartCounter) {
                         cartCounter.textContent = data.cart_items_counter;
                     }
                     
-                    // Mostrar modal de éxito
                     modal.classList.remove('hidden');
                 } else {
-                    // Mostrar error
                     alert('❌ Error: ' + (data.error || 'No se pudo agregar al carrito'));
                 }
             })
