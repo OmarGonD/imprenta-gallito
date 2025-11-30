@@ -21,16 +21,15 @@ plancha-stickers;Plancha de Stickers;stickers-etiquetas;Stickers en plancha para
 rollo-stickers;Rollo de Stickers;stickers-etiquetas;Stickers en rollo para producción en volumen;/images/subcategories/rollo-stickers.jpg;3
 etiquetas-productos;Etiquetas para Productos;stickers-etiquetas;Etiquetas adhesivas para empaques;/images/subcategories/etiquetas-productos.jpg;4
 calcomanias-vehiculos;Calcomanías para Vehículos;stickers-etiquetas;Stickers de gran formato para autos;/images/subcategories/calcomanias-vehiculos.jpg;5
-polos;Polos;ropa-bolsas;Polos y camisetas básicas;/images/subcategories/polos.jpg;1
-polos-cuello;Polos con Cuello;ropa-bolsas;Polos tipo polo con cuello;/images/subcategories/polos-cuello.jpg;2
-sudaderas;Sweatshirts & Hoodies;ropa-bolsas;Sudaderas y hoodies personalizados;/images/subcategories/sudaderas.jpg;3
-casacas;Casacas;ropa-bolsas;Casacas y chaquetas;/images/subcategories/casacas.jpg;4
-cortaviento;Cortaviento;ropa-bolsas;Chaquetas cortaviento impermeables;/images/subcategories/cortaviento.jpg;5
-camisas;Camisas;ropa-bolsas;Camisas formales y casuales;/images/subcategories/camisas.jpg;6
-gorros;Gorros;ropa-bolsas;Gorras y sombreros personalizados;/images/subcategories/gorros.jpg;7
-shorts;Shorts;ropa-bolsas;Shorts y pantalones cortos;/images/subcategories/shorts.jpg;8
-mandiles;Mandiles;ropa-bolsas;Delantales y mandiles;/images/subcategories/mandiles.jpg;9
-bolsos;Bolsos;ropa-bolsas;Bolsas y mochilas personalizadas;/images/subcategories/bolsos.jpg;10
+polos;Polos;ropa-bolsos;Polos personalizados;/images/subcategory_images/polos.jpg;1
+polos-cuello;Polos con Cuello;ropa-bolsos;Polos tipo polo con cuello;/images/subcategory_images/polos_con_cuello.jpg;2
+poleras;Poleras;ropa-bolsos;Poleras y hoodies personalizados;/images/subcategory_images/poleras.jpg;3
+casacas;Casacas;ropa-bolsos;Casacas y chaquetas;/images/subcategory_images/casacas.jpg;4
+camisas;Camisas;ropa-bolsos;Camisas formales y casuales;/images/subcategory_images/camisas.jpg;6
+gorros;Gorros;ropa-bolsos;Gorras y sombreros personalizados;/images/subcategory_images/gorros.jpg;7
+shorts;Shorts;ropa-bolsos;Shorts y pantalones cortos;/images/subcategory_images/shorts.jpg;8
+mandiles;Mandiles;ropa-bolsos;Delantales y mandiles;/images/subcategory_images/mandiles.jpg;9
+bolsos;Bolsos;ropa-bolsos;Bolsas personalizadas;/images/subcategory_images/bolsos.jpg;10
 tazas-vasos;Tazas y Vasos;productos-promocionales;Tazas y vasos personalizados;/images/subcategories/tazas-vasos.jpg;1
 llaveros;Llaveros;productos-promocionales;Llaveros promocionales personalizados;/images/subcategories/llaveros.jpg;2
 plumas-boligrafos;Plumas y Bolígrafos;productos-promocionales;Artículos de escritura personalizados;/images/subcategories/plumas-boligrafos.jpg;3
@@ -75,3 +74,5 @@ calendarios-escritorio;Calendarios de Escritorio;calendarios-regalos;Calendarios
 agendas-personalizadas;Agendas Personalizadas;calendarios-regalos;Agendas y planners customizados;/images/subcategories/agendas-personalizadas.jpg;3
 libretas-cuadernos;Libretas y Cuadernos;calendarios-regalos;Cuadernos personalizados;/images/subcategories/libretas-cuadernos.jpg;4
 regalos-corporativos;Regalos Corporativos;calendarios-regalos;Sets de regalo para empresas;/images/subcategories/regalos-corporativos.jpg;5
+bufandas;Bufandas;ropa-bolsos;Bufandas personalizadas;/images/subcategory_images/bufandas.jpg;11
+Mochilas;Mochilas;ropa-bolsos;Mochilas personalizadas;/images/subcategory_images/mochilas.jpg;12

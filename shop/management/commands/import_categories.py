@@ -29,8 +29,93 @@ from shop.models import (
 class Command(BaseCommand):
     help = 'Importa el sistema de categorías de productos desde archivos CSV'
 
+    # Mapeo de caracteres cirílicos a latinos acentuados
+    # Estos caracteres aparecen por corrupción de datos en los CSVs
+    CYRILLIC_TO_LATIN = {
+        '\u0443': 'ó',  # у -> ó (Algodуn -> Algodón)
+        '\u0423': 'Ó',  # У -> Ó
+        '\u0431': 'á',  # б -> á (Estбndar -> Estándar)
+        '\u0411': 'Á',  # Б -> Á
+        '\u0441': 'ñ',  # с -> ñ (Cбсamo -> Cáñamo)
+        '\u0421': 'Ñ',  # С -> Ñ
+        '\u043d': 'í',  # н -> í (Bolнgrafo -> Bolígrafo)
+        '\u041d': 'Í',  # Н -> Í
+        '\u0456': 'i',  # і -> i
+        '\u0406': 'I',  # І -> I
+        '\u0435': 'e',  # е -> e
+        '\u0415': 'E',  # Е -> E
+        '\u043e': 'o',  # о -> o
+        '\u041e': 'O',  # О -> O
+        '\u0430': 'a',  # а -> a
+        '\u0410': 'A',  # А -> A
+        '\u0440': 'p',  # р -> p
+        '\u0420': 'P',  # Р -> P
+        '\u0445': 'x',  # х -> x
+        '\u0425': 'X',  # Х -> X
+        '\u0451': 'ё',  # ё -> ё
+    }
+
+    def fix_cyrillic_homoglyphs(self, text):
+        """
+        Reemplaza caracteres cirílicos que parecen latinos.
+        Ejemplo: "Algodуn" (con у cirílico) -> "Algodón"
+        """
+        if not isinstance(text, str):
+            return text
+        
+        result = text
+        for cyrillic, latin in self.CYRILLIC_TO_LATIN.items():
+            result = result.replace(cyrillic, latin)
+        return result
+
+    def fix_mojibake(self, text):
+        """
+        Corrige caracteres mojibake en un texto.
+        Mojibake ocurre cuando texto UTF-8 es interpretado como Latin-1/Windows-1252.
+        
+        Soporta doble o triple mojibake aplicando correcciones repetidamente.
+        Ejemplo: "AlgodÑƒn" -> "Algodón"
+        """
+        if not isinstance(text, str):
+            return text
+        
+        result = text
+        max_iterations = 3  # Prevenir loops infinitos
+        
+        for _ in range(max_iterations):
+            try:
+                # Re-codificar: latin-1 -> bytes -> utf-8
+                fixed = result.encode('latin-1').decode('utf-8')
+                if fixed == result:
+                    # Ya no hay cambios, terminamos
+                    break
+                result = fixed
+            except (UnicodeDecodeError, UnicodeEncodeError):
+                # No se puede corregir más
+                break
+        
+        # Corregir caracteres cirílicos DESPUÉS del mojibake
+        result = self.fix_cyrillic_homoglyphs(result)
+        
+        return result
+
+    def fix_dataframe_encoding(self, df):
+        """
+        Aplica corrección de mojibake a todas las columnas de texto del DataFrame.
+        """
+        for column in df.columns:
+            if df[column].dtype == 'object':  # Columnas de texto
+                df[column] = df[column].apply(
+                    lambda x: self.fix_mojibake(x) if isinstance(x, str) else x
+                )
+        return df
+
     def safe_read_csv(self, filepath):
-        encodings = ['utf-8', 'latin-1', 'windows-1252']
+        """
+        Lee CSV probando múltiples codificaciones y corrige problemas de mojibake.
+        """
+        encodings = ['utf-8', 'utf-8-sig', 'latin-1', 'windows-1252']
+        
         for encoding in encodings:
             try:
                 with open(filepath, 'r', encoding=encoding) as f:
@@ -38,9 +123,14 @@ class Command(BaseCommand):
                     dialect = csv.Sniffer().sniff(sample)
                     f.seek(0)
                     df = pd.read_csv(f, encoding=encoding, dialect=dialect)
+                    
+                    # Aplicar corrección de mojibake a todo el DataFrame
+                    df = self.fix_dataframe_encoding(df)
+                    
                     return df
             except (UnicodeDecodeError, csv.Error):
                 continue
+        
         raise ValueError(f"Could not read {filepath} with any supported encoding or delimiter")
 
     def add_arguments(self, parser):
@@ -54,15 +144,27 @@ class Command(BaseCommand):
             action='store_true',
             help='Simular importación sin escribir en base de datos'
         )
+        parser.add_argument(
+            '--no-fix-encoding',
+            action='store_true',
+            help='Desactivar corrección automática de caracteres (mojibake)'
+        )
 
     def handle(self, *args, **options):
         self.force = options['force']
         self.dry_run = options['dry_run']
+        self.fix_encoding = not options.get('no_fix_encoding', False)
         self.data_dir = os.path.join(settings.BASE_DIR, 'static', 'data')
         
         self.stdout.write(self.style.SUCCESS('=' * 70))
         self.stdout.write(self.style.SUCCESS('IMPORTACIÓN DE CATEGORÍAS DE PRODUCTOS'))
         self.stdout.write(self.style.SUCCESS('=' * 70))
+        
+        if self.fix_encoding:
+            self.stdout.write(self.style.SUCCESS(
+                '\n[OK] Correccion automatica de caracteres (mojibake) ACTIVADA'
+            ))
+            self.stdout.write('  (Ej: "DiseA+-o" se corrige a "Diseno")\n')
         
         if self.dry_run:
             self.stdout.write(self.style.WARNING('\nWARNING MODO DRY-RUN: No se escribirá en la base de datos\n'))
@@ -187,13 +289,11 @@ class Command(BaseCommand):
             defaults = {
                 'name': row['category_name'],
                 'description': row['description'] if pd.notna(row['description']) else '',
-                'image_url': row['image_url'] if pd.notna(row['image_url']) else '',
+                'image_url': row['image_url'] if pd.notna(row['image_url']) else None,
                 'display_order': int(row['display_order']),
-                'status': row['status']
+                'status': row['status'] if 'status' in row else 'active'
             }
-            
             if not self.dry_run:
-                # Using Category instead of CatalogCategory
                 _, was_created = Category.objects.update_or_create(
                     slug=row['category_slug'],
                     defaults=defaults
@@ -221,16 +321,14 @@ class Command(BaseCommand):
         for _, row in df.iterrows():
             try:
                 if not self.dry_run:
-                    # Using Category instead of CatalogCategory
                     category = Category.objects.get(slug=row['category_slug'])
                     defaults = {
                         'name': row['subcategory_name'],
                         'category': category,
                         'description': row['description'] if pd.notna(row['description']) else '',
-                        'image_url': row['image_url'] if pd.notna(row['image_url']) else '',
-                        'display_order': int(row['display_order'])
+                        'image_url': row['image_url'] if pd.notna(row['image_url']) else None,
+                        'display_order': int(row['display_order']),
                     }
-                    # Using Subcategory instead of CatalogSubcategory
                     _, was_created = Subcategory.objects.update_or_create(
                         slug=row['subcategory_slug'],
                         defaults=defaults
@@ -267,12 +365,8 @@ class Command(BaseCommand):
             defaults = {
                 'name': row['variant_type_name'],
                 'description': row['description'] if pd.notna(row['description']) else '',
-                'is_required': str(row['is_required']).lower() == 'true',
-                'allows_multiple': str(row['allows_multiple']).lower() == 'true',
-                'display_order': int(row['display_order']),
-                'applies_to': row['applies_to'] if pd.notna(row['applies_to']) else None
+                'display_order': int(row['display_order'])
             }
-            
             if not self.dry_run:
                 _, was_created = VariantType.objects.update_or_create(
                     slug=row['variant_type_slug'],
