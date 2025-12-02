@@ -3,175 +3,643 @@
 
 {% block title %}{{ category.name }} - Imprenta Gallito{% endblock %}
 
-{% block content %}
-<div class="container mx-auto px-4 py-8">
-    <!-- Breadcrumb -->
-    <nav class="flex mb-6 text-sm" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a href="{% url 'shop:home' %}" class="text-gray-700 hover:text-blue-600">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                    </svg>
-                    Inicio
-                </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="ml-1 text-gray-500 md:ml-2">{{ category.name }}</span>
-                </div>
-            </li>
-        </ol>
-    </nav>
+{% block extra_css %}
+<style>
+/* ============================================
+   CATEGORY PAGE - ESTILOS BASE
+   ============================================ */
 
-    <!-- Category Header -->
-    <div class="relative mb-10 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl overflow-hidden">
-        <!-- Patrón decorativo de fondo -->
-        <div class="absolute inset-0 opacity-10">
-            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <defs>
-                    <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
-                    </pattern>
-                </defs>
-                <rect width="100" height="100" fill="url(#grid)"/>
-            </svg>
-        </div>
-        
-        <div class="relative px-6 py-10 md:px-10 md:py-14 lg:py-16">
-            <div class="max-w-3xl">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-                    {{ category.name }}
-                </h1>
-                {% if category.description %}
-                <p class="text-lg md:text-xl text-blue-100 leading-relaxed max-w-2xl">
-                    {{ category.description }}
-                </p>
-                {% endif %}
-                
-                {% if product_count %}
-                <div class="mt-6 inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                    <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
-                    <span class="text-white font-medium">{{ product_count }} producto{{ product_count|pluralize }} disponible{{ product_count|pluralize }}</span>
+:root {
+    --primary: #0066cc;
+    --primary-dark: #004999;
+    --secondary: #e63946;
+    --dark: #1a1a2e;
+    --light-bg: #f8f9fa;
+    --border-color: #e0e0e0;
+}
+
+.category-page {
+    background-color: var(--light-bg);
+    min-height: 100vh;
+}
+
+/* ============================================
+   HERO SECTION - DINÁMICO POR TIPO
+   ============================================ */
+.category-hero {
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hero para quality_tiers (Tarjetas de Presentación) */
+.category-hero.hero-quality-tiers {
+    background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+}
+
+/* Hero para product_types (Ropa, Productos Promocionales) */
+.category-hero.hero-product-types {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
+}
+
+/* Hero para formats (Stickers, Banners) */
+.category-hero.hero-formats {
+    background: linear-gradient(135deg, #0066cc 0%, #004999 100%);
+}
+
+/* Hero para services (Diseño) */
+.category-hero.hero-services {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+/* Hero para occasions (Invitaciones) */
+.category-hero.hero-occasions {
+    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+}
+
+/* Hero default */
+.category-hero.hero-standard {
+    background: linear-gradient(135deg, #0066cc 0%, #0d47a1 100%);
+}
+
+.category-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.category-hero .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.category-hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.category-hero .hero-description {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 30px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.hero-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.hero-badge i {
+    color: #4ade80;
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.category-breadcrumb {
+    background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.category-breadcrumb .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.category-breadcrumb ol {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.category-breadcrumb li:not(:last-child)::after {
+    content: "/";
+    margin-left: 8px;
+    color: #999;
+}
+
+.category-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.category-breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.category-breadcrumb .active {
+    color: #333;
+    font-weight: 500;
+}
+
+/* ============================================
+   PRODUCTOS GRID
+   ============================================ */
+.products-section {
+    padding: 50px 0;
+}
+
+.products-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.products-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.products-count {
+    background: #e5e7eb;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.product-image {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+}
+
+.product-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.product-content {
+    padding: 20px;
+}
+
+.product-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-subcategory {
+    font-size: 0.8rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.product-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.price-current {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.price-from {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.product-sku {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.product-cta {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-top: 15px;
+    transition: background 0.3s ease;
+}
+
+.product-card:hover .product-cta {
+    background: var(--primary-dark);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 16px;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #999;
+    margin-bottom: 25px;
+}
+
+.empty-state a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+.features-section {
+    background: white;
+    padding: 50px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.features-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), #0088ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.feature-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.feature-item h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.feature-item p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+@media (max-width: 992px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .category-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-badges {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="category-page">
+    
+    {# ============================================
+       HERO SECTION - Color según category_type
+       ============================================ #}
+    <section class="category-hero hero-{{ category.category_type|default:'standard' }}">
+        <div class="container">
+            <h1>{{ category.name }}</h1>
+            {% if category.description %}
+            <p class="hero-description">{{ category.description }}</p>
+            {% endif %}
+            
+            <div class="hero-badges">
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Envío a todo el Perú</span>
                 </div>
-                {% endif %}
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Diseño asistido gratis</span>
+                </div>
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Garantía de calidad</span>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Subcategories Filter -->
-    {% if subcategories %}
-    <div class="mb-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-            </svg>
-            Filtrar por Subcategoría
-        </h2>
-        <div class="flex flex-wrap gap-2">
-            <a href="{% url 'shop:category' category.slug %}" 
-               class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 {% if not request.GET.subcategory %}bg-blue-600 text-white shadow-md{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
-                Todas
-            </a>
-            {% for subcategory in subcategories %}
-            <a href="?subcategory={{ subcategory.slug }}" 
-               class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 {% if request.GET.subcategory == subcategory.slug %}bg-blue-600 text-white shadow-md{% else %}bg-gray-100 text-gray-700 hover:bg-gray-200{% endif %}">
-                {{ subcategory.name }}
-            </a>
-            {% endfor %}
+    {# ============================================
+       BREADCRUMB
+       ============================================ #}
+    <nav class="category-breadcrumb">
+        <div class="container">
+            <ol>
+                <li><a href="{% url 'shop:home' %}">Inicio</a></li>
+                <li class="active">{{ category.name }}</li>
+            </ol>
         </div>
-    </div>
+    </nav>
+
+    {# ============================================
+       SUBCATEGORÍAS - Renderizado según category_type
+       ============================================ #}
+    {% if subcategories %}
+        {% if category.category_type == 'quality_tiers' %}
+            {# TABS para niveles de calidad (Deluxe, Premium, Estándar) #}
+            {% include 'shop/components/_subcategories_tabs.html' %}
+            
+        {% elif category.category_type == 'product_types' %}
+            {# CÍRCULOS para tipos de producto (Polos, Gorros, Bolsos) #}
+            {% include 'shop/components/_subcategories_circles.html' %}
+            
+        {% elif category.category_type == 'formats' or category.category_type == 'occasions' or category.category_type == 'services' %}
+            {# CARDS para formatos, ocasiones y servicios #}
+            {% include 'shop/components/_subcategories_cards.html' %}
+            
+        {% else %}
+            {# DEFAULT: Botones simples como antes #}
+            <section class="subcategories-buttons-section" style="background: white; padding: 30px 0; border-bottom: 1px solid #e0e0e0;">
+                <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                        <a href="{% url 'shop:category' category.slug %}" 
+                           style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.2s;
+                                  {% if not selected_subcategory %}background: #0066cc; color: white;{% else %}background: #f0f0f0; color: #333;{% endif %}">
+                            Todas
+                        </a>
+                        {% for sub in subcategories %}
+                        <a href="{% url 'shop:category' category.slug %}?subcategory={{ sub.slug }}" 
+                           style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.2s;
+                                  {% if selected_subcategory == sub.slug %}background: #0066cc; color: white;{% else %}background: #f0f0f0; color: #333;{% endif %}">
+                            {{ sub.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
     {% endif %}
 
-    <!-- Products Grid -->
-    <div class="mb-6">
-        <h2 class="text-2xl font-semibold text-gray-900">Productos</h2>
-    </div>
-
-    {% if products %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {% for product in products %}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-            <a href="{{ product.get_absolute_url }}" class="block">
-                <!-- Product Image -->
-                <div class="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
-                    {% if product.base_image_url %}
-                    <img src="{{ product.base_image_url }}" 
-                         alt="{{ product.name }}"
-                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+    {# ============================================
+       PRODUCTOS GRID
+       ============================================ #}
+    <section class="products-section">
+        <div class="container">
+            <div class="products-header">
+                <h2>
+                    {% if selected_subcategory %}
+                        Productos en esta selección
                     {% else %}
-                    <div class="text-gray-400 text-center p-4">
-                        <svg class="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                        <p class="text-sm">Sin imagen</p>
-                    </div>
+                        Todos los productos
                     {% endif %}
-                </div>
+                </h2>
+                <span class="products-count">{{ products|length }} producto{{ products|length|pluralize }}</span>
+            </div>
 
-                <!-- Product Info -->
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3 leading-normal line-clamp-2">
-                        {{ product.name }}
-                    </h3>
-                    
-                    {% if product.subcategory %}
-                    <p class="text-sm text-gray-500 mb-3">
-                        {{ product.subcategory.name }}
-                    </p>
-                    {% endif %}
-
-                    {% if product.description %}
-                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">
-                        {{ product.description }}
-                    </p>
-                    {% endif %}
-
-                    <!-- Price Range -->
-                    {% with price_range=product.get_price_range %}
-                    <div class="flex items-baseline gap-2">
-                        {% if price_range.0 == price_range.1 %}
-                        <span class="text-xl font-bold text-blue-600">
-                            S/ {{ price_range.0 }}
-                        </span>
+            {% if products %}
+            <div class="products-grid">
+                {% for product in products %}
+                <a href="{{ product.get_absolute_url }}" class="product-card">
+                    <div class="product-image">
+                        {% if product.base_image_url %}
+                        <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
                         {% else %}
-                        <span class="text-xl font-bold text-blue-600">
-                            Desde S/ {{ price_range.0 }}
-                        </span>
+                        <div class="product-placeholder">
+                            <i class="fas fa-image"></i>
+                            <span>Sin imagen</span>
+                        </div>
                         {% endif %}
                     </div>
-                    {% endwith %}
-
-                    <!-- SKU -->
-                    <p class="text-xs text-gray-400 mt-2">SKU: {{ product.sku }}</p>
-                </div>
-
-                <!-- View Details Button -->
-                <div class="px-4 pb-4">
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
-                        Ver Detalles
-                    </button>
-                </div>
-            </a>
+                    
+                    <div class="product-content">
+                        <h3>{{ product.name }}</h3>
+                        
+                        {% if product.subcategory %}
+                        <p class="product-subcategory">{{ product.subcategory.name }}</p>
+                        {% endif %}
+                        
+                        {% if product.description %}
+                        <p class="product-description">{{ product.description }}</p>
+                        {% endif %}
+                        
+                        {% with price_range=product.get_price_range %}
+                        <div class="product-price">
+                            {% if price_range.0 == price_range.1 %}
+                            <span class="price-current">S/ {{ price_range.0 }}</span>
+                            {% else %}
+                            <span class="price-from">Desde</span>
+                            <span class="price-current">S/ {{ price_range.0 }}</span>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                        
+                        <p class="product-sku">SKU: {{ product.sku }}</p>
+                        
+                        <span class="product-cta">Ver Detalles</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>No hay productos disponibles</h3>
+                <p>Esta categoría aún no tiene productos.</p>
+                <a href="{% url 'shop:home' %}">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver al Inicio
+                </a>
+            </div>
+            {% endif %}
         </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="text-center py-16">
-        <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-        </svg>
-        <h3 class="text-2xl font-semibold text-gray-700 mb-2">No hay productos disponibles</h3>
-        <p class="text-gray-500 mb-6">Esta categoría aún no tiene productos.</p>
-        <a href="{% url 'shop:home' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
-            Volver al Inicio
-        </a>
-    </div>
-    {% endif %}
+    </section>
+
+    {# ============================================
+       FEATURES SECTION
+       ============================================ #}
+    <section class="features-section">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h4>Envío Rápido</h4>
+                    <p>Entrega en 3-5 días hábiles a todo el Perú</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h4>Diseño Gratis</h4>
+                    <p>Te ayudamos a crear tu diseño sin costo adicional</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Garantía 100%</h4>
+                    <p>Si no te gusta, lo reimprimimos gratis</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h4>Soporte Experto</h4>
+                    <p>Atención personalizada por WhatsApp</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 {% endblock %}

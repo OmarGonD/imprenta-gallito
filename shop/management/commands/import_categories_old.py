@@ -19,11 +19,13 @@ from shop.models import (
     Category,
     Subcategory,
     Product,
+    DesignTemplate,
     VariantType,
     VariantOption,
     ProductVariantType,
     PriceTier
 )
+
 
 
 class Command(BaseCommand):

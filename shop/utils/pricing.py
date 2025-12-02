@@ -3,24 +3,83 @@ from decimal import Decimal
 from django.conf import settings
 import os
 
+
 class PricingService:
     def __init__(self):
         self.price_tiers = self.load_price_tiers()
 
+    def fix_mojibake(self, text):
+        """Corrige caracteres mojibake (UTF-8 leído como Latin-1)."""
+        if not isinstance(text, str):
+            return text
+        
+        result = text
+        for _ in range(3):
+            try:
+                fixed = result.encode('latin-1').decode('utf-8')
+                if fixed == result:
+                    break
+                result = fixed
+            except (UnicodeDecodeError, UnicodeEncodeError):
+                break
+        return result
+
+    def detect_delimiter(self, filepath):
+        """Detecta el delimitador del CSV (coma o punto y coma)."""
+        with open(filepath, 'r', encoding='latin-1') as f:
+            sample = f.read(2048)
+            # Si hay más ; que , probablemente sea ;
+            if sample.count(';') > sample.count(','):
+                return ';'
+            return ','
+
+    def clean_key(self, key):
+        """Limpia una clave de diccionario de caracteres invisibles y BOM."""
+        if not key:
+            return key
+        # Eliminar BOM, espacios, y caracteres de control
+        return key.strip().lstrip('\ufeff').strip()
+
     def load_price_tiers(self):
         filepath = os.path.join(settings.BASE_DIR, 'static', 'data', 'price_tiers_complete.csv')
         tiers = {}
-        with open(filepath, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
+        
+        # Detectar delimitador
+        delimiter = self.detect_delimiter(filepath)
+        
+        # Leer como Latin-1 (acepta cualquier byte, nunca falla)
+        with open(filepath, 'r', encoding='latin-1') as f:
+            reader = csv.DictReader(f, delimiter=delimiter)
+            
             for row in reader:
-                slug = row['product_slug']
+                # Limpiar las claves del diccionario (por si tienen BOM o espacios)
+                cleaned_row = {self.clean_key(k): v for k, v in row.items()}
+                
+                # Debug: si no encuentra la columna, mostrar qué columnas hay
+                if 'product_slug' not in cleaned_row:
+                    raise KeyError(
+                        f"Columna 'product_slug' no encontrada. "
+                        f"Columnas disponibles: {list(cleaned_row.keys())}. "
+                        f"Delimitador detectado: '{delimiter}'"
+                    )
+                
+                # Corregir encoding del slug si tiene caracteres especiales
+                slug = self.fix_mojibake(cleaned_row['product_slug'].strip())
+                
                 if slug not in tiers:
                     tiers[slug] = []
+                
+                # Limpiar valores de espacios y \r
+                min_q = cleaned_row['min_quan'].strip()
+                max_q = cleaned_row['max_quan'].strip()
+                price = cleaned_row['unit_price'].strip()
+                discount = cleaned_row['discount_percent'].strip()
+                    
                 tiers[slug].append({
-                    'min_quan': int(row['min_quan']),
-                    'max_quan': int(row['max_quan']) if row['max_quan'] != '999999' else 999999,
-                    'unit_price': Decimal(row['unit_price']),
-                    'discount_percent': int(row['discount_percent'])
+                    'min_quan': int(min_q),
+                    'max_quan': int(max_q) if max_q != '999999' else 999999,
+                    'unit_price': Decimal(price),
+                    'discount_percent': int(discount)
                 })
         return tiers
 

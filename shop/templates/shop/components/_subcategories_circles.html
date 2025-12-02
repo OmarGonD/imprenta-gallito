@@ -1,0 +1,152 @@
+{# ===========================================
+   COMPONENTE: Subcategorías como Círculos
+   USO: Para category_type = 'product_types'
+   EJEMPLO: Ropa y Bolsos (Polos, Camisas, Gorros, Bolsos)
+   =========================================== #}
+
+<section class="subcategories-circles-section">
+    <div class="container">
+        <div class="section-title-center">
+            <h2>Explora por Categoría</h2>
+            <p>Selecciona el tipo de producto que deseas</p>
+        </div>
+        
+        <div class="circles-wrapper">
+            {% for sub in subcategories %}
+            <a href="{% url 'shop:category' category.slug %}?subcategory={{ sub.slug }}" 
+               class="subcategory-circle {% if selected_subcategory == sub.slug %}active{% endif %}">
+                <div class="circle-image">
+                    {% if sub.image_url %}
+                    <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
+                    {% else %}
+                    <div class="circle-placeholder" style="background: linear-gradient(135deg, 
+                        {% cycle '#0066cc' '#f59e0b' '#10b981' '#8b5cf6' '#ec4899' '#ef4444' %}, 
+                        {% cycle '#0088ff' '#d97706' '#059669' '#6d28d9' '#db2777' '#dc2626' %});">
+                        <i class="fas {% if 'polo' in sub.slug or 'camisa' in sub.slug %}fa-tshirt{% elif 'gorro' in sub.slug or 'sombrero' in sub.slug %}fa-hat-cowboy{% elif 'bolso' in sub.slug or 'bolsa' in sub.slug %}fa-shopping-bag{% else %}fa-tag{% endif %}"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <span class="circle-name">{{ sub.name }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.subcategories-circles-section {
+    background: white;
+    padding: 50px 0;
+}
+
+.section-title-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title-center h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+}
+
+.section-title-center p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.circles-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.subcategory-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    width: 140px;
+}
+
+.subcategory-circle:hover {
+    transform: translateY(-8px);
+}
+
+.circle-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #e0e0e0;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.subcategory-circle:hover .circle-image {
+    border-color: #0066cc;
+    box-shadow: 0 8px 30px rgba(0,102,204,0.3);
+}
+
+.subcategory-circle.active .circle-image {
+    border-color: #e63946;
+    border-width: 5px;
+}
+
+.circle-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.circle-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-placeholder i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.circle-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    text-align: center;
+}
+
+.subcategory-circle:hover .circle-name {
+    color: #0066cc;
+}
+
+.subcategory-circle.active .circle-name {
+    color: #e63946;
+}
+
+@media (max-width: 768px) {
+    .circles-wrapper {
+        gap: 25px;
+    }
+    
+    .subcategory-circle {
+        width: 100px;
+    }
+    
+    .circle-image {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .circle-name {
+        font-size: 0.85rem;
+    }
+}
+</style>

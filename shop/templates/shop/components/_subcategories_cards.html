@@ -1,0 +1,204 @@
+{# ===========================================
+   COMPONENTE: Subcategorías como Cards
+   USO: Para category_type = 'formats', 'occasions', 'services', 'standard'
+   EJEMPLO: Stickers (Individual, Plancha, Rollo), Invitaciones, Servicios
+   =========================================== #}
+
+<section class="subcategories-cards-section">
+    <div class="container">
+        <div class="cards-header">
+            <h2>Elige una opción</h2>
+            <p>Selecciona el formato que mejor se adapte a tus necesidades</p>
+        </div>
+        
+        <div class="cards-grid">
+            {% for sub in subcategories %}
+            <a href="{% url 'shop:category' category.slug %}?subcategory={{ sub.slug }}" 
+               class="subcategory-card {% if selected_subcategory == sub.slug %}active{% endif %}">
+                <div class="card-image">
+                    {% if sub.image_url %}
+                    <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
+                    {% else %}
+                    <div class="card-placeholder">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    {% endif %}
+                    
+                    {% if selected_subcategory == sub.slug %}
+                    <div class="card-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="card-content">
+                    <h3>{{ sub.name }}</h3>
+                    {% if sub.description %}
+                    <p>{{ sub.description|truncatewords:12 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="card-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.subcategories-cards-section {
+    background: #f8f9fa;
+    padding: 50px 0;
+}
+
+.cards-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.cards-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+}
+
+.cards-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.subcategory-card {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.subcategory-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    border-color: #0066cc;
+}
+
+.subcategory-card.active {
+    border-color: #0066cc;
+    box-shadow: 0 8px 25px rgba(0,102,204,0.2);
+}
+
+.card-image {
+    position: relative;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.subcategory-card:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-placeholder i {
+    font-size: 3rem;
+    color: white;
+    opacity: 0.8;
+}
+
+.card-check {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background: #0066cc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-check i {
+    color: white;
+    font-size: 0.9rem;
+}
+
+.card-content {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.card-content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.card-content p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.card-arrow {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    text-align: right;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.subcategory-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.card-arrow i {
+    color: #0066cc;
+}
+
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+</style>

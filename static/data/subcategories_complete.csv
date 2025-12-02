@@ -1,78 +1,62 @@
-subcategory_slug;subcategory_name;category_slug;description;image_url;display_order
-deluxe;Deluxe;tarjetas-presentacion;Tarjetas premium de alta calidad;/media/subcategory_images/tarjetas_delux.jpg;1
-estandar;Estándar;tarjetas-presentacion;Tarjetas clásicas económicas;/media/subcategory_images/tarjetas_estandar.jpg;2
-premium;Premium;tarjetas-presentacion;Tarjetas premium de alta calidad;/media/subcategory_images/tarjetas_premium.jpg;3
-postales-estandar;Postales Estándar;postales-publicidad;Postales tamaño estándar;/images/subcategories/postales-estandar.jpg;1
-postales-panoramicas;Postales Panorámicas;postales-publicidad;Postales en formato panorámico;/images/subcategories/postales-panoramicas.jpg;2
-flyers;Flyers;postales-publicidad;Volantes publicitarios tamaño carta;/images/subcategories/flyers.jpg;3
-folletos;Folletos;postales-publicidad;Folletos informativos;/images/subcategories/folletos.jpg;4
-tripticos;Trípticos;postales-publicidad;Folletos doblados en tres partes;/images/subcategories/tripticos.jpg;5
-dipticos;Dípticos;postales-publicidad;Folletos doblados por la mitad;/images/subcategories/dipticos.jpg;6
-catalogos;Catálogos;postales-publicidad;Catálogos de productos impresos;/images/subcategories/catalogos.jpg;7
-banners-vinilicos;Banners Vinílicos;letreros-banners;Banners de vinilo para exterior e interior;/images/subcategories/banners-vinilicos.jpg;1
-posters-impresos;Pósters Impresos;letreros-banners;Pósters de alta calidad;/images/subcategories/posters-impresos.jpg;2
-letreros-rigidos;Letreros Rígidos;letreros-banners;Señalización en materiales rígidos;/images/subcategories/letreros-rigidos.jpg;3
-displays-retractiles;Displays Retráctiles;letreros-banners;Roll-ups y banners retráctiles;/images/subcategories/displays-retractiles.jpg;4
-senalizacion-exterior;Señalización Exterior;letreros-banners;Letreros para uso en exteriores;/images/subcategories/senalizacion-exterior.jpg;5
-banderas-publicitarias;Banderas Publicitarias;letreros-banners;Banderas y pendones promocionales;/images/subcategories/banderas-publicitarias.jpg;6
-marcos-displays;Marcos y Displays;letreros-banners;Marcos para pósters y displays de mesa;/images/subcategories/marcos-displays.jpg;7
-stickers-individuales;Stickers Individuales;stickers-etiquetas;Stickers sueltos personalizados;/images/subcategories/stickers-individuales.jpg;1
-plancha-stickers;Plancha de Stickers;stickers-etiquetas;Stickers en plancha para múltiples unidades;/images/subcategories/plancha-stickers.jpg;2
-rollo-stickers;Rollo de Stickers;stickers-etiquetas;Stickers en rollo para producción en volumen;/images/subcategories/rollo-stickers.jpg;3
-etiquetas-productos;Etiquetas para Productos;stickers-etiquetas;Etiquetas adhesivas para empaques;/images/subcategories/etiquetas-productos.jpg;4
-calcomanias-vehiculos;Calcomanías para Vehículos;stickers-etiquetas;Stickers de gran formato para autos;/images/subcategories/calcomanias-vehiculos.jpg;5
-polos;Polos;ropa-bolsos;Polos personalizados;/images/subcategory_images/polos.jpg;1
-polos-cuello;Polos con Cuello;ropa-bolsos;Polos tipo polo con cuello;/images/subcategory_images/polos_con_cuello.jpg;2
-poleras;Poleras;ropa-bolsos;Poleras y hoodies personalizados;/images/subcategory_images/poleras.jpg;3
-casacas;Casacas;ropa-bolsos;Casacas y chaquetas;/images/subcategory_images/casacas.jpg;4
-camisas;Camisas;ropa-bolsos;Camisas formales y casuales;/images/subcategory_images/camisas.jpg;6
-gorros;Gorros;ropa-bolsos;Gorras y sombreros personalizados;/images/subcategory_images/gorros.jpg;7
-shorts;Shorts;ropa-bolsos;Shorts y pantalones cortos;/images/subcategory_images/shorts.jpg;8
-mandiles;Mandiles;ropa-bolsos;Delantales y mandiles;/images/subcategory_images/mandiles.jpg;9
-bolsos;Bolsos;ropa-bolsos;Bolsas personalizadas;/images/subcategory_images/bolsos.jpg;10
-tazas-vasos;Tazas y Vasos;productos-promocionales;Tazas y vasos personalizados;/images/subcategories/tazas-vasos.jpg;1
-llaveros;Llaveros;productos-promocionales;Llaveros promocionales personalizados;/images/subcategories/llaveros.jpg;2
-plumas-boligrafos;Plumas y Bolígrafos;productos-promocionales;Artículos de escritura personalizados;/images/subcategories/plumas-boligrafos.jpg;3
-usb-tecnologia;USB y Tecnología;productos-promocionales;Memorias USB y gadgets tecnológicos;/images/subcategories/usb-tecnologia.jpg;4
-articulos-escritorio;Artículos de Escritorio;productos-promocionales;Productos para oficina personalizados;/images/subcategories/articulos-escritorio.jpg;5
-termos-botellas;Termos y Botellas;productos-promocionales;Botellas y termos reutilizables;/images/subcategories/termos-botellas.jpg;6
-articulos-deportivos;Artículos Deportivos;productos-promocionales;Productos deportivos personalizados;/images/subcategories/articulos-deportivos.jpg;7
-juguetes-peluches;Juguetes y Peluches;productos-promocionales;Juguetes promocionales y peluches;/images/subcategories/juguetes-peluches.jpg;8
-cajas-personalizadas;Cajas Personalizadas;embalaje;Cajas de cartón personalizadas;/images/subcategories/cajas-personalizadas.jpg;1
-bolsas-papel;Bolsas de Papel;embalaje;Bolsas de papel kraft personalizadas;/images/subcategories/bolsas-papel.jpg;2
-etiquetas-packaging;Etiquetas para Packaging;embalaje;Etiquetas adhesivas para empaques;/images/subcategories/etiquetas-packaging.jpg;3
-tape-personalizado;Tape Personalizado;embalaje;Cinta adhesiva con logo;/images/subcategories/tape-personalizado.jpg;4
-papel-seda;Papel Seda;embalaje;Papel de seda para envolver;/images/subcategories/papel-seda.jpg;5
-sobres-personalizados;Sobres Personalizados;embalaje;Sobres con diseño personalizado;/images/subcategories/sobres-personalizados.jpg;6
-material-relleno;Material de Relleno;embalaje;Relleno protector para paquetes;/images/subcategories/material-relleno.jpg;7
-invitaciones-boda;Invitaciones de Boda;invitaciones-papeleria;Invitaciones elegantes para bodas;/images/subcategories/invitaciones-boda.jpg;1
-save-the-date;Save the Date;invitaciones-papeleria;Tarjetas de reserva de fecha;/images/subcategories/save-the-date.jpg;2
-programas-evento;Programas de Evento;invitaciones-papeleria;Programas impresos para ceremonias;/images/subcategories/programas-evento.jpg;3
-menus-personalizados;Menús Personalizados;invitaciones-papeleria;Menús para eventos y restaurantes;/images/subcategories/menus-personalizados.jpg;4
-tarjetas-agradecimiento;Tarjetas de Agradecimiento;invitaciones-papeleria;Thank you cards personalizadas;/images/subcategories/tarjetas-agradecimiento.jpg;5
-invitaciones-cumpleanos;Invitaciones de Cumpleaños;invitaciones-papeleria;Invitaciones para fiestas infantiles y adultos;/images/subcategories/invitaciones-cumpleanos.jpg;6
-papeleria-corporativa;Papelería Corporativa;invitaciones-papeleria;Papelería empresarial personalizada;/images/subcategories/papeleria-corporativa.jpg;7
-diseno-logo;Diseño de Logo;logo-web-social;Creación de logotipos profesionales;/images/subcategories/diseno-logo.jpg;1
-diseno-web;Diseño de Sitios Web;logo-web-social;Diseño y desarrollo de páginas web;/images/subcategories/diseno-web.jpg;2
-diseno-redes-sociales;Diseño para Redes Sociales;logo-web-social;Contenido gráfico para social media;/images/subcategories/diseno-redes-sociales.jpg;3
-identidad-corporativa;Identidad Corporativa;logo-web-social;Branding y manual de marca completo;/images/subcategories/identidad-corporativa.jpg;4
-diseno-grafico;Diseño Gráfico General;servicios-diseno;Servicios generales de diseño;/images/subcategories/diseno-grafico.jpg;1
-diseno-packaging;Diseño de Packaging;servicios-diseno;Diseño de empaques y etiquetas;/images/subcategories/diseno-packaging.jpg;2
-diseno-editorial;Diseño Editorial;servicios-diseno;Diseño de libros revistas y catálogos;/images/subcategories/diseno-editorial.jpg;3
-diseno-publicitario;Diseño Publicitario;servicios-diseno;Diseño de campañas publicitarias;/images/subcategories/diseno-publicitario.jpg;4
-ofertas-stickers;Ofertas en Stickers;black-friday;Descuentos especiales en stickers;/images/subcategories/ofertas-stickers.jpg;1
-ofertas-ropa;Ofertas en Ropa;black-friday;Descuentos en prendas personalizadas;/images/subcategories/ofertas-ropa.jpg;2
-ofertas-tarjetas;Ofertas en Tarjetas;black-friday;Promociones en tarjetas de presentación;/images/subcategories/ofertas-tarjetas.jpg;3
-ofertas-promocionales;Ofertas en Productos Promocionales;black-friday;Descuentos en artículos promocionales;/images/subcategories/ofertas-promocionales.jpg;4
-paquetes-black-friday;Paquetes Black Friday;black-friday;Combos especiales con descuento;/images/subcategories/paquetes-black-friday.jpg;5
-tarjetas-navidad-clasicas;Tarjetas Navideñas Clásicas;tarjetas-navidad;Tarjetas tradicionales de Navidad;/images/subcategories/tarjetas-navidad-clasicas.jpg;1
-tarjetas-ano-nuevo;Tarjetas de Año Nuevo;tarjetas-navidad;Tarjetas para celebrar el nuevo año;/images/subcategories/tarjetas-ano-nuevo.jpg;2
-tarjetas-empresariales;Tarjetas Empresariales Navideñas;tarjetas-navidad;Tarjetas corporativas para fin de año;/images/subcategories/tarjetas-empresariales.jpg;3
-tarjetas-otras-festividades;Otras Festividades;tarjetas-navidad;Tarjetas para diferentes celebraciones;/images/subcategories/tarjetas-otras-festividades.jpg;4
-calendarios-pared;Calendarios de Pared;calendarios-regalos;Calendarios grandes para colgar;/images/subcategories/calendarios-pared.jpg;1
-calendarios-escritorio;Calendarios de Escritorio;calendarios-regalos;Calendarios compactos para mesa;/images/subcategories/calendarios-escritorio.jpg;2
-agendas-personalizadas;Agendas Personalizadas;calendarios-regalos;Agendas y planners customizados;/images/subcategories/agendas-personalizadas.jpg;3
-libretas-cuadernos;Libretas y Cuadernos;calendarios-regalos;Cuadernos personalizados;/images/subcategories/libretas-cuadernos.jpg;4
-regalos-corporativos;Regalos Corporativos;calendarios-regalos;Sets de regalo para empresas;/images/subcategories/regalos-corporativos.jpg;5
-bufandas;Bufandas;ropa-bolsos;Bufandas personalizadas;/images/subcategory_images/bufandas.jpg;11
-Mochilas;Mochilas;ropa-bolsos;Mochilas personalizadas;/images/subcategory_images/mochilas.jpg;12
+subcategory_slug;subcategory_name;category_slug;description;image_url;display_order;display_style
+deluxe;Deluxe;tarjetas-presentacion;Tarjetas premium de alta calidad con acabados especiales;/media/subcategory_images/tarjetas_presentacion/tarjetas_deluxe.jpg;1;tab
+estandar;Estándar;tarjetas-presentacion;Tarjetas clásicas económicas de gran calidad;/media/subcategory_images/tarjetas_presentacion/tarjetas_estandar.jpg;2;tab
+premium;Premium;tarjetas-presentacion;Tarjetas premium con materiales selectos;/media/subcategory_images/tarjetas_presentacion/tarjetas_premium.jpg;3;tab
+postales-estandar;Postales Estándar;postales-publicidad;Postales tamaño estándar;/media/subcategory_images/postales/postales-estandar.jpg;1;card
+postales-panoramicas;Postales Panorámicas;postales-publicidad;Postales en formato panorámico;/media/subcategory_images/postales/postales-panoramicas.jpg;2;card
+flyers;Flyers;postales-publicidad;Volantes publicitarios tamaño carta;/media/subcategory_images/postales/flyers.jpg;3;card
+folletos;Folletos;postales-publicidad;Folletos informativos;/media/subcategory_images/postales/folletos.jpg;4;card
+tripticos;Trípticos;postales-publicidad;Folletos doblados en tres partes;/media/subcategory_images/postales/tripticos.jpg;5;card
+dipticos;Dípticos;postales-publicidad;Folletos doblados por la mitad;/media/subcategory_images/postales/dipticos.jpg;6;card
+catalogos;Catálogos;postales-publicidad;Catálogos de productos impresos;/media/subcategory_images/postales/catalogos.jpg;7;card
+banners-vinilicos;Banners Vinílicos;letreros-banners;Banners de vinilo para exterior e interior;/media/subcategory_images/banners/banners-vinilicos.jpg;1;card
+posters-impresos;Pósters Impresos;letreros-banners;Pósters de alta calidad;/media/subcategory_images/banners/posters-impresos.jpg;2;card
+letreros-rigidos;Letreros Rígidos;letreros-banners;Señalización en materiales rígidos;/media/subcategory_images/banners/letreros-rigidos.jpg;3;card
+displays-retractiles;Displays Retráctiles;letreros-banners;Roll-ups y banners retráctiles;/media/subcategory_images/banners/displays-retractiles.jpg;4;card
+senalizacion-exterior;Señalización Exterior;letreros-banners;Letreros para uso en exteriores;/media/subcategory_images/banners/senalizacion-exterior.jpg;5;card
+banderas-publicitarias;Banderas Publicitarias;letreros-banners;Banderas y pendones promocionales;/media/subcategory_images/banners/banderas-publicitarias.jpg;6;card
+marcos-displays;Marcos y Displays;letreros-banners;Marcos para pósters y displays de mesa;/media/subcategory_images/banners/marcos-displays.jpg;7;card
+stickers-individuales;Stickers Individuales;stickers-etiquetas;Stickers sueltos personalizados;/media/subcategory_images/stickers/stickers-individuales.jpg;1;card
+plancha-stickers;Plancha de Stickers;stickers-etiquetas;Stickers en plancha para múltiples unidades;/media/subcategory_images/stickers/plancha-stickers.jpg;2;card
+rollo-stickers;Rollo de Stickers;stickers-etiquetas;Stickers en rollo para producción en volumen;/media/subcategory_images/stickers/rollo-stickers.jpg;3;card
+etiquetas-productos;Etiquetas para Productos;stickers-etiquetas;Etiquetas adhesivas para empaques;/media/subcategory_images/stickers/etiquetas-productos.jpg;4;card
+calcomanias-vehiculos;Calcomanías para Vehículos;stickers-etiquetas;Stickers de gran formato para autos;/media/subcategory_images/stickers/calcomanias-vehiculos.jpg;5;card
+polos;Polos;ropa-bolsos;Polos con diseño personalizado;/media/subcategory_images/ropa_y_bolsos/polos.jpg;1;circle
+camisas;Camisas;ropa-bolsos;Camisas con logo personalizado;/media/subcategory_images/ropa_y_bolsos/camisas.jpg;2;circle
+gorros;Gorros;ropa-bolsos;Gorros con diseño personalizado;/media/subcategory_images/ropa_y_bolsos/gorros.jpg;3;circle
+bolsos;Bolsos;ropa-bolsos;Bolsos con diseño personalizado;/media/subcategory_images/ropa_y_bolsos/bolsos.jpg;4;circle
+tazas-vasos;Tazas y Vasos;productos-promocionales;Tazas y vasos personalizados;/media/subcategory_images/promocionales/tazas-vasos.jpg;1;circle
+llaveros;Llaveros;productos-promocionales;Llaveros promocionales personalizados;/media/subcategory_images/promocionales/llaveros.jpg;2;circle
+plumas-boligrafos;Plumas y Bolígrafos;productos-promocionales;Artículos de escritura personalizados;/media/subcategory_images/promocionales/plumas-boligrafos.jpg;3;circle
+usb-tecnologia;USB y Tecnología;productos-promocionales;Memorias USB y gadgets tecnológicos;/media/subcategory_images/promocionales/usb-tecnologia.jpg;4;circle
+articulos-escritorio;Artículos de Escritorio;productos-promocionales;Productos para oficina personalizados;/media/subcategory_images/promocionales/articulos-escritorio.jpg;5;circle
+termos-botellas;Termos y Botellas;productos-promocionales;Botellas y termos reutilizables;/media/subcategory_images/promocionales/termos-botellas.jpg;6;circle
+articulos-deportivos;Artículos Deportivos;productos-promocionales;Productos deportivos personalizados;/media/subcategory_images/promocionales/articulos-deportivos.jpg;7;circle
+juguetes-peluches;Juguetes y Peluches;productos-promocionales;Juguetes promocionales y peluches;/media/subcategory_images/promocionales/juguetes-peluches.jpg;8;circle
+cajas-personalizadas;Cajas Personalizadas;embalaje;Cajas de cartón personalizadas;/media/subcategory_images/embalaje/cajas-personalizadas.jpg;1;card
+bolsas-papel;Bolsas de Papel;embalaje;Bolsas de papel kraft personalizadas;/media/subcategory_images/embalaje/bolsas-papel.jpg;2;card
+etiquetas-packaging;Etiquetas para Packaging;embalaje;Etiquetas adhesivas para empaques;/media/subcategory_images/embalaje/etiquetas-packaging.jpg;3;card
+tape-personalizado;Tape Personalizado;embalaje;Cinta adhesiva con logo;/media/subcategory_images/embalaje/tape-personalizado.jpg;4;card
+papel-seda;Papel Seda;embalaje;Papel de seda para envolver;/media/subcategory_images/embalaje/papel-seda.jpg;5;card
+sobres-personalizados;Sobres Personalizados;embalaje;Sobres con diseño personalizado;/media/subcategory_images/embalaje/sobres-personalizados.jpg;6;card
+material-relleno;Material de Relleno;embalaje;Relleno protector para paquetes;/media/subcategory_images/embalaje/material-relleno.jpg;7;card
+invitaciones-boda;Invitaciones de Boda;invitaciones-papeleria;Invitaciones elegantes para bodas;/media/subcategory_images/invitaciones/invitaciones-boda.jpg;1;card
+save-the-date;Save the Date;invitaciones-papeleria;Tarjetas de reserva de fecha;/media/subcategory_images/invitaciones/save-the-date.jpg;2;card
+programas-evento;Programas de Evento;invitaciones-papeleria;Programas impresos para ceremonias;/media/subcategory_images/invitaciones/programas-evento.jpg;3;card
+menus-personalizados;Menús Personalizados;invitaciones-papeleria;Menús para eventos y restaurantes;/media/subcategory_images/invitaciones/menus-personalizados.jpg;4;card
+tarjetas-agradecimiento;Tarjetas de Agradecimiento;invitaciones-papeleria;Thank you cards personalizadas;/media/subcategory_images/invitaciones/tarjetas-agradecimiento.jpg;5;card
+invitaciones-cumpleanos;Invitaciones de Cumpleaños;invitaciones-papeleria;Invitaciones para fiestas infantiles y adultos;/media/subcategory_images/invitaciones/invitaciones-cumpleanos.jpg;6;card
+papeleria-corporativa;Papelería Corporativa;invitaciones-papeleria;Papelería empresarial personalizada;/media/subcategory_images/invitaciones/papeleria-corporativa.jpg;7;card
+diseno-logo;Diseño de Logo;logo-web-social;Creación de logotipos profesionales;/media/subcategory_images/servicios/diseno-logo.jpg;1;card
+diseno-web;Diseño de Sitios Web;logo-web-social;Diseño y desarrollo de páginas web;/media/subcategory_images/servicios/diseno-web.jpg;2;card
+diseno-redes-sociales;Diseño para Redes Sociales;logo-web-social;Contenido gráfico para social media;/media/subcategory_images/servicios/diseno-redes-sociales.jpg;3;card
+identidad-corporativa;Identidad Corporativa;logo-web-social;Branding y manual de marca completo;/media/subcategory_images/servicios/identidad-corporativa.jpg;4;card
+diseno-grafico;Diseño Gráfico General;servicios-diseno;Servicios generales de diseño;/media/subcategory_images/servicios/diseno-grafico.jpg;1;card
+diseno-packaging;Diseño de Packaging;servicios-diseno;Diseño de empaques y etiquetas;/media/subcategory_images/servicios/diseno-packaging.jpg;2;card
+diseno-editorial;Diseño Editorial;servicios-diseno;Diseño de libros revistas y catálogos;/media/subcategory_images/servicios/diseno-editorial.jpg;3;card
+diseno-publicitario;Diseño Publicitario;servicios-diseno;Diseño de campañas publicitarias;/media/subcategory_images/servicios/diseno-publicitario.jpg;4;card
+calendarios-pared;Calendarios de Pared;calendarios-regalos;Calendarios grandes para colgar;/media/subcategory_images/calendarios/calendarios-pared.jpg;1;circle
+calendarios-escritorio;Calendarios de Escritorio;calendarios-regalos;Calendarios compactos para mesa;/media/subcategory_images/calendarios/calendarios-escritorio.jpg;2;circle
+agendas-personalizadas;Agendas Personalizadas;calendarios-regalos;Agendas y planners customizados;/media/subcategory_images/calendarios/agendas-personalizadas.jpg;3;circle
+libretas-cuadernos;Libretas y Cuadernos;calendarios-regalos;Cuadernos personalizados;/media/subcategory_images/calendarios/libretas-cuadernos.jpg;4;circle
+regalos-corporativos;Regalos Corporativos;calendarios-regalos;Sets de regalo para empresas;/media/subcategory_images/calendarios/regalos-corporativos.jpg;5;circle

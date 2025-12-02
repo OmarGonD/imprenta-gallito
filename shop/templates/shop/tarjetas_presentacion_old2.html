@@ -1,0 +1,1055 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tarjetas de Presentación Personalizadas | Imprenta Gallito{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ============================================
+   TARJETAS DE PRESENTACIÓN - VISTAPRINT STYLE
+   ============================================ */
+
+:root {
+    --primary: #0066cc;
+    --primary-dark: #004999;
+    --secondary: #e63946;
+    --dark: #1a1a2e;
+    --light-bg: #f8f9fa;
+    --border-color: #e0e0e0;
+}
+
+.business-cards-page {
+    background-color: var(--light-bg);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.bc-hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.bc-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,102,204,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.bc-hero .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.bc-hero-content h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.bc-hero-content p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.bc-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--secondary);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(230,57,70,0.4);
+}
+
+.bc-hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(230,57,70,0.5);
+    background: #d62839;
+}
+
+.bc-hero-image {
+    display: flex;
+    justify-content: center;
+}
+
+.bc-hero-image img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+}
+
+.hero-features {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.95rem;
+}
+
+.hero-feature i {
+    color: #4ade80;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.bc-breadcrumb {
+    background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.bc-breadcrumb .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.bc-breadcrumb ol {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.bc-breadcrumb li:not(:last-child)::after {
+    content: "/";
+    margin-left: 8px;
+    color: #999;
+}
+
+.bc-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.bc-breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.bc-breadcrumb .active {
+    color: #333;
+    font-weight: 500;
+}
+
+/* ============================================
+   SUBCATEGORY TABS (Quality Tiers)
+   ============================================ */
+.bc-subcategories {
+    background: white;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.bc-subcategories .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.subcategory-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.subcategory-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 40px;
+    background: var(--light-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.subcategory-tab:hover {
+    border-color: var(--primary);
+    background: rgba(0,102,204,0.05);
+}
+
+.subcategory-tab.active {
+    border-color: var(--primary);
+    background: rgba(0,102,204,0.1);
+    box-shadow: 0 4px 15px rgba(0,102,204,0.2);
+}
+
+.tab-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.tab-icon i {
+    color: white;
+    font-size: 1.4rem;
+}
+
+.subcategory-tab.active .tab-icon {
+    background: var(--secondary);
+}
+
+.tab-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.tab-desc {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+}
+
+/* ============================================
+   MATERIALS/PRODUCTS GRID
+   ============================================ */
+.bc-materials {
+    padding: 60px 0;
+}
+
+.bc-materials .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 15px;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.material-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.material-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.material-image {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+}
+
+.material-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.material-card:hover .material-image img {
+    transform: scale(1.05);
+}
+
+.material-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--secondary);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.material-badge.deluxe {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.material-badge.premium {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.material-content {
+    padding: 20px;
+}
+
+.material-content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.material-content p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.material-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.price-from {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.price-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.material-cta {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 15px;
+    transition: background 0.3s ease;
+}
+
+.material-cta:hover {
+    background: var(--primary-dark);
+}
+
+/* ============================================
+   TEMPLATES CAROUSEL
+   ============================================ */
+.bc-templates {
+    background: white;
+    padding: 60px 0;
+}
+
+.bc-templates .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.templates-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.templates-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.templates-header a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.templates-carousel-wrapper {
+    position: relative;
+}
+
+.templates-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.templates-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.template-card {
+    flex: 0 0 220px;
+    background: var(--light-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.template-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.template-image {
+    aspect-ratio: 3.5/2;
+    overflow: hidden;
+}
+
+.template-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.template-info {
+    padding: 12px;
+    text-align: center;
+}
+
+.template-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 4px;
+}
+
+.template-info span {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.carousel-btn.prev {
+    left: -22px;
+}
+
+.carousel-btn.next {
+    right: -22px;
+}
+
+/* ============================================
+   COMPARE SECTION
+   ============================================ */
+.bc-compare {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+}
+
+.bc-compare .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.compare-table {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.compare-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.compare-table th,
+.compare-table td {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compare-table th {
+    background: var(--dark);
+    color: white;
+    font-weight: 600;
+}
+
+.compare-table th:first-child {
+    text-align: left;
+}
+
+.compare-table td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.compare-table tr:last-child td {
+    border-bottom: none;
+}
+
+.compare-table tr:hover {
+    background: rgba(0,102,204,0.03);
+}
+
+.check-icon {
+    color: #4ade80;
+    font-size: 1.2rem;
+}
+
+.cross-icon {
+    color: #f87171;
+    font-size: 1.2rem;
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+.bc-features {
+    background: white;
+    padding: 60px 0;
+}
+
+.bc-features .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--primary), #0088ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.feature-icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.feature-item h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.feature-item p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* ============================================
+   CTA FINAL
+   ============================================ */
+.bc-final-cta {
+    background: linear-gradient(135deg, var(--secondary) 0%, #c1121f 100%);
+    padding: 60px 0;
+    text-align: center;
+}
+
+.bc-final-cta .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.bc-final-cta h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.bc-final-cta p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 30px;
+}
+
+.bc-final-cta .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    color: var(--secondary);
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.bc-final-cta .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .bc-hero .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .bc-hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-features {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .bc-hero-image {
+        display: none;
+    }
+    
+    .subcategory-tabs {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 10px;
+    }
+    
+    .subcategory-tab {
+        min-width: 150px;
+        padding: 15px 25px;
+    }
+    
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .bc-hero {
+        padding: 40px 0;
+    }
+    
+    .bc-hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .materials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .compare-table {
+        overflow-x: auto;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .templates-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="business-cards-page">
+    <!-- Hero Section -->
+    <section class="bc-hero">
+        <div class="container">
+            <div class="bc-hero-content">
+                <h1>Tarjetas de Presentación que Dejan Huella</h1>
+                <p>Crea tarjetas profesionales que reflejen tu marca. Elige entre más de 20 materiales premium y miles de diseños personalizables.</p>
+                
+                <a href="#materials" class="bc-hero-cta">
+                    <i class="fas fa-magic"></i>
+                    Comenzar a Diseñar
+                </a>
+                
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Envío gratis desde 500 unidades</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Diseño asistido gratis</span>
+                    </div>
+                    <div class="hero-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Entrega en 5 días</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bc-hero-image">
+                <img src="{% static 'images/hero-tarjetas.png' %}" alt="Tarjetas de Presentación">
+            </div>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <nav class="bc-breadcrumb">
+        <div class="container">
+            <ol>
+                <li><a href="{% url 'shop:home' %}">Inicio</a></li>
+                <li class="active">Tarjetas de Presentación</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Subcategory Tabs -->
+    <section class="bc-subcategories">
+        <div class="container">
+            <div class="subcategory-tabs">
+                <a href="?tier=all" class="subcategory-tab {% if not selected_subcategory %}active{% endif %}">
+                    <div class="tab-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <span class="tab-name">Todos</span>
+                    <span class="tab-desc">Ver todos los materiales</span>
+                </a>
+                {% for sub in subcategories %}
+                <a href="?tier={{ sub.slug }}" class="subcategory-tab {% if selected_subcategory == sub.slug %}active{% endif %}">
+                    <div class="tab-icon">
+                        {% if sub.slug == 'deluxe' %}
+                        <i class="fas fa-crown"></i>
+                        {% elif sub.slug == 'premium' %}
+                        <i class="fas fa-star"></i>
+                        {% else %}
+                        <i class="fas fa-layer-group"></i>
+                        {% endif %}
+                    </div>
+                    <span class="tab-name">{{ sub.name }}</span>
+                    <span class="tab-desc">{{ sub.description|truncatewords:5 }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Materials/Products Grid -->
+    <section class="bc-materials" id="materials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Explora Nuestros Materiales y Acabados</h2>
+                <p>Cada material ofrece una experiencia táctil única que hará destacar tu tarjeta</p>
+            </div>
+            
+            <div class="materials-grid">
+                {% for product in products %}
+                <a href="{{ product.get_absolute_url }}" class="material-card">
+                    <div class="material-image">
+                        {% if product.base_image_url %}
+                        <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{% static 'images/placeholder-card.jpg' %}" alt="{{ product.name }}">
+                        {% endif %}
+                        
+                        {% if product.subcategory %}
+                        <span class="material-badge {{ product.subcategory.slug }}">
+                            {{ product.subcategory.name }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="material-content">
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description|truncatewords:15 }}</p>
+                        
+                        <div class="material-price">
+                            <span class="price-from">Desde</span>
+                            <span class="price-value">S/ {{ product.get_base_price }}</span>
+                        </div>
+                        
+                        <span class="material-cta">Personalizar</span>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="no-products">
+                    <p>No hay productos disponibles en esta categoría.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Carousel -->
+    {% if design_templates %}
+    <section class="bc-templates">
+        <div class="container">
+            <div class="templates-header">
+                <h2>Templates Populares</h2>
+                <a href="#">Ver todos los diseños <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="templates-carousel-wrapper">
+                <button class="carousel-btn prev" onclick="scrollTemplates(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="templates-carousel" id="templates-carousel">
+                    {% for template in design_templates %}
+                    <div class="template-card">
+                        <div class="template-image">
+                            <img src="{{ template.thumbnail_url }}" alt="{{ template.name }}">
+                        </div>
+                        <div class="template-info">
+                            <h4>{{ template.name }}</h4>
+                            <span>{{ template.subcategory.name }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button class="carousel-btn next" onclick="scrollTemplates(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Compare Section -->
+    <section class="bc-compare">
+        <div class="container">
+            <div class="section-header">
+                <h2>Compara Nuestras Opciones</h2>
+                <p>Encuentra el material perfecto para tu negocio</p>
+            </div>
+            
+            <div class="compare-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Estándar</th>
+                            <th>Premium</th>
+                            <th>Deluxe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Grosor del papel</td>
+                            <td>300g</td>
+                            <td>350g</td>
+                            <td>400g+</td>
+                        </tr>
+                        <tr>
+                            <td>Acabados disponibles</td>
+                            <td>Mate, Brillante</td>
+                            <td>+ Lino, Soft Touch</td>
+                            <td>+ Foil, Relieve, Barniz UV</td>
+                        </tr>
+                        <tr>
+                            <td>Bordes pintados</td>
+                            <td><i class="fas fa-times cross-icon"></i></td>
+                            <td><i class="fas fa-times cross-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Esquinas redondeadas</td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Impresión a doble cara</td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                            <td><i class="fas fa-check check-icon"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Materiales eco-friendly</td>
+                            <td>Reciclado</td>
+                            <td>+ Algodón, Cáñamo</td>
+                            <td>+ Bambú</td>
+                        </tr>
+                        <tr>
+                            <td>Precio desde</td>
+                            <td><strong>S/ 25</strong></td>
+                            <td><strong>S/ 45</strong></td>
+                            <td><strong>S/ 75</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="bc-features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h4>Envío Rápido</h4>
+                    <p>Entrega en 3-5 días hábiles a todo el Perú</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h4>Diseño Gratis</h4>
+                    <p>Nuestro equipo te ayuda sin costo adicional</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Garantía 100%</h4>
+                    <p>Si no te gusta, lo reimprimimos gratis</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h4>Soporte Experto</h4>
+                    <p>Atención por WhatsApp en horario extendido</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="bc-final-cta">
+        <div class="container">
+            <h2>¿Listo para causar una gran impresión?</h2>
+            <p>Únete a miles de profesionales que confían en nuestras tarjetas de presentación</p>
+            <a href="#materials" class="cta-btn">
+                <i class="fas fa-rocket"></i>
+                Crear Mi Tarjeta Ahora
+            </a>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Templates Carousel
+function scrollTemplates(direction) {
+    const carousel = document.getElementById('templates-carousel');
+    const scrollAmount = 260;
+    carousel.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+{% endblock %}

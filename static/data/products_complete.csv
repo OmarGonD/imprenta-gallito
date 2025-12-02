@@ -30,22 +30,22 @@ rollo-stickers-1000;Rollo de Stickers 1000 unidades;stickers-etiquetas;rollo-sti
 etiqueta-producto-circular;Etiqueta Circular;stickers-etiquetas;etiquetas-productos;ET-PRO-001;Etiqueta circular para productos;/images/products/etiqueta-circular.jpg;active
 etiqueta-producto-rectangular;Etiqueta Rectangular;stickers-etiquetas;etiquetas-productos;ET-PRO-002;Etiqueta rectangular para productos;/images/products/etiqueta-rectangular.jpg;active
 stickers-auto;Calcomanнas para Auto;stickers-etiquetas;calcomanias-vehiculos;CA-VEH-001;Stickers de gran formato para vehнculos;/images/products/calcomanias-auto.jpg;active
-polo-basico;Polo Bбsico;ropa-bolsos;polos;POL-001;Polo de algodуn personalizable;/images/products/polo-basico.jpg;active
-polo-con-cuello;Polo con Cuello;ropa-bolsos;polos-cuello;POL-CUE-001;Polo estilo polo con cuello y botones;/images/products/polo-cuello.jpg;active
-sweatshirt;Sweatshirt;ropa-bolsos;sudaderas;SWE-001;Sudadera sin capucha personalizable;/images/products/sweatshirt.jpg;active
-hoodie;Hoodie;ropa-bolsos;sudaderas;HOO-001;Sudadera con capucha personalizable;/images/products/hoodie.jpg;active
-casaca-basica;Casaca Bбsica;ropa-bolsos;casacas;CAS-001;Casaca clбsica personalizable;/images/products/casaca.jpg;active
-cortaviento-basico;Cortaviento;ropa-bolsos;cortaviento;COR-001;Chaqueta cortaviento impermeable;/images/products/cortaviento.jpg;active
-camisa-casual;Camisa Casual;ropa-bolsos;camisas;CAM-CAS-001;Camisa casual personalizable;/images/products/camisa-casual.jpg;active
-camisa-formal;Camisa Formal;ropa-bolsos;camisas;CAM-FOR-001;Camisa formal para trabajo;/images/products/camisa-formal.jpg;active
-gorra-personalizada;Gorra Personalizada;ropa-bolsos;gorros;GOR-001;Gorra totalmente personalizable;/images/products/gorra-base.jpg;active
-short-deportivo;Short Deportivo;ropa-bolsos;shorts;SHO-DEP-001;Short para actividades deportivas;/images/products/short-deportivo.jpg;active
-short-casual;Short Casual;ropa-bolsos;shorts;SHO-CAS-001;Short para uso casual;/images/products/short-casual.jpg;active
-mandil-cocina;Mandil de Cocina;ropa-bolsos;mandiles;MAN-COC-001;Delantal para cocina personalizable;/images/products/mandil-cocina.jpg;active
-mandil-trabajo;Mandil de Trabajo;ropa-bolsos;mandiles;MAN-TRA-001;Mandil industrial personalizable;/images/products/mandil-trabajo.jpg;active
-bolso-tote;Bolso Tote;ropa-bolsos;bolsos;BOL-TOT-001;Bolso tote de lona personalizable;/images/products/bolso-tote.jpg;active
-mochila-basica;Mochila Bбsica;ropa-bolsos;bolsos;BOL-MOC-001;Mochila personalizable;/images/products/mochila.jpg;active
-bolso-gym;Bolso Deportivo;ropa-bolsos;bolsos;BOL-GYM-001;Bolso para gimnasio personalizable;/images/products/bolso-gym.jpg;active
+polos-hombre;Polos de hombre;ropa-bolsos;ropa;POL-001;Polos de hombre de alta calidad;/images/products/polo-basico.jpg;active
+polos-de-mujer;Polos de mujer;ropa-bolsos;ropa;POL-002;Polos de mujer de alta calidad;/images/products/polo-cuello.jpg;active
+polos-unisex;Polos unisex;ropa-bolsos;ropa;POL-003;Polos unisex;/images/products/sweatshirt.jpg;active
+polos-ninos;Polos ni�os;ropa-bolsos;ropa;POL-004;Polos ni�os;/images/products/hoodie.jpg;active
+polos-manga-larga-hombre;Polos manga larga hombres;ropa-bolsos;ropa;POL-005;Polos manga larga hombre;/images/products/casaca.jpg;active
+polos-manga-larga-mujer;Polos manga larga mujer;ropa-bolsos;ropa;POL-006;Polos manga larga mujer;/images/products/cortaviento.jpg;active
+polos-estampado-trasero-hombre;Polos para hombre con estampado trasero;ropa-bolsos;ropa;POL-007;Polos para hombre con estampado trasero;/images/products/camisa-casual.jpg;active
+polos-estampado-trasero-mujer;Polos para mujer  con estampado trasero;ropa-bolsos;ropa;POL-008;Polos para mujer con estampado trasero;/images/products/camisa-formal.jpg;active
+polos-estampado-delantero-y-trasero-hombre;Polos para hombre con estampado delantero y trasero;ropa-bolsos;ropa;POL-009;Polos para hombre con estampado delantero y trasero;;active
+polos-estampado-delantero-y-trasero-mujer;Polos para mujer con estampado delantero y trasero;ropa-bolsos;ropa;POL-010;Polos para mujer con estampado delantero y trasero;;active
+gorros;Gorros;ropa-bolsos;gorros;GOR-001;Gorros unisex;;active
+viseras;Viseras;ropa-bolsos;gorros;GOR-002;Viseras unisex;;active
+chullos;Chullos;ropa-bolsos;gorros;GOR-003;Chullos;;
+sombrero-de-cubo;Sombrero de cubo;ropa-bolsos;gorros;GOR-004;Sombrero de cubo;;
+;;;;;;;
+;;;;;;;
 taza-ceramica;Taza de Cerбmica;productos-promocionales;tazas-vasos;TAZ-001;Taza de cerбmica 11oz personalizable;/images/products/taza-ceramica.jpg;active
 taza-magica;Taza Mбgica;productos-promocionales;tazas-vasos;TAZ-002;Taza que cambia con temperatura;/images/products/taza-magica.jpg;active
 vaso-termico;Vaso Tйrmico;productos-promocionales;tazas-vasos;VAS-001;Vaso tйrmico para bebidas;/images/products/vaso-termico.jpg;active

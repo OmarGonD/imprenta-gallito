@@ -27,6 +27,23 @@ from django.db import models
 from django.urls import reverse
 from decimal import Decimal
 
+# --- PASO 1: Agregar CHOICES al inicio del archivo (después de los imports) ---
+
+CATEGORY_TYPES = [
+    ('quality_tiers', 'Niveles de Calidad'),      # Tarjetas: Deluxe > Premium > Estándar
+    ('product_types', 'Tipos de Producto'),        # Ropa: Polos, Gorros, Bolsos
+    ('formats', 'Formatos de Entrega'),            # Stickers: Individual, Plancha, Rollo
+    ('services', 'Servicios'),                     # Diseño: Logo, Web, Redes
+    ('occasions', 'Ocasiones'),                    # Invitaciones: Boda, Cumpleaños
+    ('standard', 'Estándar'),                      # Default
+]
+
+DISPLAY_STYLES = [
+    ('tab', 'Tabs Horizontales'),          # Para quality_tiers
+    ('circle', 'Círculos con Imagen'),     # Para product_types
+    ('card', 'Cards con Imagen'),          # Para formats
+    ('vertical_card', 'Cards Verticales'), # Para services
+]
 
 class Category(models.Model):
     """
@@ -42,6 +59,13 @@ class Category(models.Model):
     status = models.CharField(max_length=20, default='active',
                              choices=[('active', 'Activo'), ('seasonal', 'Temporal')],
                              verbose_name="Estado")
+    category_type = models.CharField(
+        max_length=20, 
+        choices=CATEGORY_TYPES, 
+        default='standard',
+        verbose_name="Tipo de Categoría",
+        help_text="Define cómo se renderiza esta categoría en el frontend"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -83,6 +107,13 @@ class Subcategory(models.Model):
     description = models.TextField(blank=True, verbose_name="Descripción")
     image_url = models.CharField(max_length=500, blank=True, verbose_name="URL de imagen")
     display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
+    display_style = models.CharField(
+        max_length=20,
+        choices=DISPLAY_STYLES,
+        default='card',
+        verbose_name="Estilo de Visualización",
+        help_text="Cómo se muestra esta subcategoría en el frontend"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -630,3 +661,51 @@ class ClothingProductPricing(models.Model):
     def __str__(self):
         max_qty = self.max_quantity if self.max_quantity else "+"
         return f"{self.product.name}: {self.min_quantity}-{max_qty} @ S/{self.price_per_unit}"
+
+
+class DesignTemplate(models.Model):
+    """
+    Templates de diseño predefinidos para categorías como Tarjetas de Presentación
+    Permite mostrar diseños populares que el cliente puede usar como base
+    """
+    slug = models.SlugField(max_length=100, unique=True, primary_key=True)
+    name = models.CharField(max_length=200, verbose_name="Nombre del Template")
+    category = models.ForeignKey(
+        Category, 
+        on_delete=models.CASCADE, 
+        related_name='design_templates',
+        verbose_name="Categoría"
+    )
+    subcategory = models.ForeignKey(
+        Subcategory,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='design_templates',
+        verbose_name="Subcategoría"
+    )
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    thumbnail_url = models.CharField(
+        max_length=500, 
+        verbose_name="URL Miniatura",
+        help_text="Imagen pequeña para grid"
+    )
+    preview_url = models.CharField(
+        max_length=500, 
+        blank=True,
+        verbose_name="URL Preview",
+        help_text="Imagen grande para vista previa"
+    )
+    is_popular = models.BooleanField(default=False, verbose_name="Es Popular")
+    is_new = models.BooleanField(default=False, verbose_name="Es Nuevo")
+    display_order = models.IntegerField(default=0, verbose_name="Orden")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'design_templates'
+        ordering = ['-is_popular', 'display_order', 'name']
+        verbose_name = 'Template de Diseño'
+        verbose_name_plural = 'Templates de Diseño'
+
+    def __str__(self):
+        return f"{self.name} ({self.category.name})"

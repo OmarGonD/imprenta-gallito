@@ -1,552 +1,1240 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Ropa y Bolsas Personalizadas | Imprenta Gallito{% endblock %}
+{% block title %}Ropa y Bolsos Personalizados | Imprenta Gallito{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/clothing.css' %}">
+<style>
+/* ============================================
+   ROPA Y BOLSOS - VISTAPRINT STYLE
+   ============================================ */
+
+:root {
+    --primary: #0066cc;
+    --primary-dark: #004999;
+    --secondary: #e63946;
+    --dark: #1a1a2e;
+    --light-bg: #f8f9fa;
+    --border-color: #e0e0e0;
+}
+
+.clothing-bags-page {
+    background-color: var(--light-bg);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.cb-hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
+    padding: 70px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.cb-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.cb-hero .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.cb-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.cb-hero p {
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 35px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.hero-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    border-radius: 50px;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.hero-badge i {
+    color: #4ade80;
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.cb-breadcrumb {
+    background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cb-breadcrumb .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.cb-breadcrumb ol {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+}
+
+.cb-breadcrumb li:not(:last-child)::after {
+    content: "/";
+    margin-left: 8px;
+    color: #999;
+}
+
+.cb-breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.cb-breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.cb-breadcrumb .active {
+    color: #333;
+    font-weight: 500;
+}
+
+/* ============================================
+   SUBCATEGORIES CIRCLES
+   ============================================ */
+.cb-subcategories {
+    background: white;
+    padding: 50px 0;
+}
+
+.cb-subcategories .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.section-title-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title-center h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+.section-title-center p {
+    color: #666;
+    font-size: 1.05rem;
+}
+
+.subcategories-circles {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.subcategory-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    width: 140px;
+}
+
+.subcategory-circle:hover {
+    transform: translateY(-8px);
+}
+
+.circle-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--border-color);
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.subcategory-circle:hover .circle-image {
+    border-color: var(--primary);
+    box-shadow: 0 8px 30px rgba(0,102,204,0.3);
+}
+
+.subcategory-circle.active .circle-image {
+    border-color: var(--secondary);
+    border-width: 5px;
+}
+
+.circle-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.circle-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, #0088ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-placeholder i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.subcategory-circle span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-align: center;
+}
+
+.subcategory-circle:hover span {
+    color: var(--primary);
+}
+
+.subcategory-circle.active span {
+    color: var(--secondary);
+}
+
+/* ============================================
+   PRODUCTS CAROUSEL
+   ============================================ */
+.cb-products-carousel {
+    padding: 60px 0;
+    background: var(--light-bg);
+}
+
+.cb-products-carousel .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.carousel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.carousel-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.carousel-header .view-all {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+}
+
+.carousel-header .view-all:hover {
+    gap: 12px;
+}
+
+.products-carousel-wrapper {
+    position: relative;
+}
+
+.products-carousel {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 15px 5px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.products-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.product-carousel-card {
+    flex: 0 0 280px;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-carousel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.product-carousel-image {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.product-carousel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-carousel-card:hover .product-carousel-image img {
+    transform: scale(1.08);
+}
+
+.product-tags {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.product-tag.new {
+    background: #4ade80;
+    color: white;
+}
+
+.product-tag.bestseller {
+    background: var(--secondary);
+    color: white;
+}
+
+.product-tag.sale {
+    background: #f59e0b;
+    color: white;
+}
+
+.product-carousel-content {
+    padding: 20px;
+}
+
+.product-carousel-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.product-carousel-content p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.product-colors-preview {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.color-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.more-colors {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #eee;
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.product-carousel-price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.price-current {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.price-original {
+    font-size: 1rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.product-carousel-cta {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: var(--dark);
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.product-carousel-card:hover .product-carousel-cta {
+    background: var(--primary);
+}
+
+.carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.carousel-nav-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.carousel-nav-btn.prev {
+    left: -25px;
+}
+
+.carousel-nav-btn.next {
+    right: -25px;
+}
+
+/* ============================================
+   COLLECTIONS SECTION
+   ============================================ */
+.cb-collections {
+    padding: 60px 0;
+    background: white;
+}
+
+.cb-collections .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.collections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.collection-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    text-decoration: none;
+}
+
+.collection-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.collection-card:hover img {
+    transform: scale(1.05);
+}
+
+.collection-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 25px;
+}
+
+.collection-overlay h3 {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.collection-overlay p {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.95rem;
+}
+
+.collection-arrow {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.collection-card:hover .collection-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.collection-arrow i {
+    color: var(--dark);
+}
+
+/* ============================================
+   USE CASES SECTION
+   ============================================ */
+.cb-use-cases {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+}
+
+.cb-use-cases .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.use-cases-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.use-case-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.use-case-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.use-case-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), #0088ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.use-case-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.use-case-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.use-case-card p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+.cb-features {
+    background: white;
+    padding: 60px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.cb-features .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.features-inline {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.feature-inline-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.feature-inline-item i {
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.feature-inline-item div h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 4px;
+}
+
+.feature-inline-item div p {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* ============================================
+   CTA FINAL
+   ============================================ */
+.cb-final-cta {
+    background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
+    padding: 70px 0;
+    text-align: center;
+}
+
+.cb-final-cta .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.cb-final-cta h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.cb-final-cta p {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 30px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.cta-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--secondary);
+    color: white;
+    padding: 16px 35px;
+    border-radius: 50px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cta-btn-primary:hover {
+    background: #d62839;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(230,57,70,0.4);
+}
+
+.cta-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: white;
+    padding: 16px 35px;
+    border-radius: 50px;
+    border: 2px solid rgba(255,255,255,0.3);
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cta-btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 992px) {
+    .cb-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .subcategories-circles {
+        gap: 25px;
+    }
+    
+    .subcategory-circle {
+        width: 110px;
+    }
+    
+    .circle-image {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .collections-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .use-cases-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .cb-hero {
+        padding: 50px 0;
+    }
+    
+    .cb-hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .cb-hero p {
+        font-size: 1rem;
+    }
+    
+    .hero-badges {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .subcategories-circles {
+        gap: 20px;
+    }
+    
+    .subcategory-circle {
+        width: 90px;
+    }
+    
+    .circle-image {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .subcategory-circle span {
+        font-size: 0.85rem;
+    }
+    
+    .carousel-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .collections-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .use-cases-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-inline {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .feature-inline-item {
+        flex-direction: column;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="clothing-page">
-    <!-- Hero Banner -->
-    <section class="clothing-hero">
-        <div class="hero-content">
-            <h1>Ropa y Bolsas Personalizadas</h1>
-            <p>Personaliza camisetas, gorras, bolsas y más con tu logo o diseño</p>
+<div class="clothing-bags-page">
+    <!-- Hero Section -->
+    <section class="cb-hero">
+        <div class="container">
+            <h1>Ropa y Bolsos Personalizados</h1>
+            <p>Dale vida a tu marca con prendas y accesorios de alta calidad. Personaliza polos, gorras, bolsos y más con tu logo o diseño único.</p>
+            
+            <div class="hero-badges">
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Sin mínimo de pedido</span>
+                </div>
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Múltiples técnicas de estampado</span>
+                </div>
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Entrega en 7 días</span>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Breadcrumb -->
-    <nav class="breadcrumb-nav">
+    <nav class="cb-breadcrumb">
         <div class="container">
-            <ol class="breadcrumb">
+            <ol>
                 <li><a href="{% url 'shop:home' %}">Inicio</a></li>
-                <li class="active">Ropa y Bolsas</li>
+                <li class="active">Ropa y Bolsos</li>
             </ol>
         </div>
     </nav>
 
-    <!-- Categories Navigation -->
-    <section class="categories-nav">
+    <!-- Subcategories Circles -->
+    <section class="cb-subcategories">
         <div class="container">
-            <div class="categories-grid">
+            <div class="section-title-center">
+                <h2>Explora por Categoría</h2>
+                <p>Selecciona el tipo de producto que deseas personalizar</p>
+            </div>
+            
+            <div class="subcategories-circles">
                 {% for category in categories %}
-                <a href="{% url 'shop:clothing_category' category.slug %}" class="category-card {% if selected_category == category.slug %}active{% endif %}">
-                    <div class="category-icon">
+                <a href="{% url 'shop:clothing_category' category.slug %}" class="subcategory-circle {% if selected_category == category.slug %}active{% endif %}">
+                    <div class="circle-image">
                         {% if category.image %}
                         <img src="{{ category.image.url }}" alt="{{ category.name }}">
                         {% else %}
-                        <i class="fas {{ category.icon|default:'fa-tshirt' }}"></i>
+                        <div class="circle-placeholder">
+                            <i class="fas {{ category.icon|default:'fa-tshirt' }}"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    <span class="category-name">{{ category.name }}</span>
+                    <span>{{ category.name }}</span>
                 </a>
                 {% empty %}
-                <!-- Default categories when DB is empty -->
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-tshirt"></i></div>
-                    <span class="category-name">Camisetas</span>
+                <!-- Default categories -->
+                <a href="#" class="subcategory-circle">
+                    <div class="circle-image">
+                        <div class="circle-placeholder">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                    </div>
+                    <span>Polos</span>
                 </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-hat-cowboy"></i></div>
-                    <span class="category-name">Gorras</span>
+                <a href="#" class="subcategory-circle">
+                    <div class="circle-image">
+                        <div class="circle-placeholder" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                    </div>
+                    <span>Camisas</span>
                 </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-shopping-bag"></i></div>
-                    <span class="category-name">Bolsas</span>
+                <a href="#" class="subcategory-circle">
+                    <div class="circle-image">
+                        <div class="circle-placeholder" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fas fa-hat-cowboy"></i>
+                        </div>
+                    </div>
+                    <span>Gorros</span>
                 </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-user-tie"></i></div>
-                    <span class="category-name">Polos</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-vest"></i></div>
-                    <span class="category-name">Chalecos</span>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon"><i class="fas fa-mitten"></i></div>
-                    <span class="category-name">Accesorios</span>
+                <a href="#" class="subcategory-circle">
+                    <div class="circle-image">
+                        <div class="circle-placeholder" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                    </div>
+                    <span>Bolsos</span>
                 </a>
                 {% endfor %}
             </div>
         </div>
     </section>
 
-    <!-- Main Content with Sidebar -->
-    <main class="clothing-main">
+    <!-- Products Carousel - Destacados -->
+    <section class="cb-products-carousel">
         <div class="container">
-            <div class="clothing-layout">
-                <!-- Filter Sidebar -->
-                <aside class="filter-sidebar">
-                    <div class="filter-header">
-                        <h3><i class="fas fa-filter"></i> Filtros</h3>
-                        <a href="{% url 'shop:ropa_bolsas' %}" class="clear-filters">Limpiar todo</a>
-                    </div>
-
-                    <form id="filter-form" method="GET" action="{% url 'shop:ropa_bolsas' %}">
-                        <!-- Category Filter -->
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="category">
-                                Categoría
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-category">
-                                {% for category in categories %}
-                                <label class="filter-option">
-                                    <input type="radio" name="category" value="{{ category.slug }}" 
-                                           {% if selected_category == category.slug %}checked{% endif %}>
-                                    <span class="checkmark"></span>
-                                    {{ category.name }}
-                                    <span class="count">({{ category.products.count }})</span>
-                                </label>
+            <div class="carousel-header">
+                <h2>Productos Destacados</h2>
+                <a href="#" class="view-all">Ver todos <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="products-carousel-wrapper">
+                <button class="carousel-nav-btn prev" onclick="scrollCarousel('featured', -1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="products-carousel" id="carousel-featured">
+                    {% for product in products %}
+                    <a href="{{ product.get_absolute_url }}" class="product-carousel-card">
+                        <div class="product-carousel-image">
+                            {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+                            {% elif product.base_image_url %}
+                            <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
+                            {% else %}
+                            <img src="{% static 'images/placeholder-product.jpg' %}" alt="{{ product.name }}">
+                            {% endif %}
+                            
+                            <div class="product-tags">
+                                {% if product.is_new %}
+                                <span class="product-tag new">Nuevo</span>
+                                {% endif %}
+                                {% if product.is_bestseller %}
+                                <span class="product-tag bestseller">Más vendido</span>
+                                {% endif %}
+                                {% if product.sale_price %}
+                                <span class="product-tag sale">Oferta</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-content">
+                            <h3>{{ product.name }}</h3>
+                            <p>{{ product.short_description|default:product.description|truncatewords:10 }}</p>
+                            
+                            {% if product.available_colors.exists %}
+                            <div class="product-colors-preview">
+                                {% for color in product.available_colors.all|slice:":5" %}
+                                <span class="color-dot" style="background-color: {{ color.hex_code }};" title="{{ color.name }}"></span>
                                 {% endfor %}
+                                {% if product.available_colors.count > 5 %}
+                                <span class="more-colors">+{{ product.available_colors.count|add:"-5" }}</span>
+                                {% endif %}
                             </div>
-                        </div>
-
-                        <!-- Price Filter -->
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="price">
-                                Precio
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-price">
-                                <div class="price-inputs">
-                                    <div class="price-field">
-                                        <label>Mín</label>
-                                        <input type="number" name="price_min" placeholder="S/ 0" 
-                                               value="{{ price_min }}" min="0">
-                                    </div>
-                                    <span class="price-separator">-</span>
-                                    <div class="price-field">
-                                        <label>Máx</label>
-                                        <input type="number" name="price_max" placeholder="S/ 500" 
-                                               value="{{ price_max }}" min="0">
-                                    </div>
-                                </div>
-                                <div class="price-presets">
-                                    <button type="button" class="price-preset" data-min="0" data-max="25">Hasta S/25</button>
-                                    <button type="button" class="price-preset" data-min="25" data-max="50">S/25 - S/50</button>
-                                    <button type="button" class="price-preset" data-min="50" data-max="100">S/50 - S/100</button>
-                                    <button type="button" class="price-preset" data-min="100" data-max="">Más de S/100</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Color Filter -->
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="color">
-                                Color
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-color">
-                                <div class="color-grid">
-                                    {% for color in all_colors %}
-                                    <label class="color-option" title="{{ color.name }}">
-                                        <input type="checkbox" name="color" value="{{ color.slug }}"
-                                               {% if color.slug in selected_colors %}checked{% endif %}>
-                                        <span class="color-swatch" style="background-color: {{ color.hex_code }};"></span>
-                                        <span class="color-name">{{ color.name }}</span>
-                                    </label>
-                                    {% empty %}
-                                    <!-- Default colors -->
-                                    <label class="color-option" title="Negro">
-                                        <input type="checkbox" name="color" value="negro">
-                                        <span class="color-swatch" style="background-color: #000000;"></span>
-                                    </label>
-                                    <label class="color-option" title="Blanco">
-                                        <input type="checkbox" name="color" value="blanco">
-                                        <span class="color-swatch" style="background-color: #FFFFFF; border: 1px solid #ddd;"></span>
-                                    </label>
-                                    <label class="color-option" title="Rojo">
-                                        <input type="checkbox" name="color" value="rojo">
-                                        <span class="color-swatch" style="background-color: #E53935;"></span>
-                                    </label>
-                                    <label class="color-option" title="Azul">
-                                        <input type="checkbox" name="color" value="azul">
-                                        <span class="color-swatch" style="background-color: #1E88E5;"></span>
-                                    </label>
-                                    <label class="color-option" title="Verde">
-                                        <input type="checkbox" name="color" value="verde">
-                                        <span class="color-swatch" style="background-color: #43A047;"></span>
-                                    </label>
-                                    <label class="color-option" title="Amarillo">
-                                        <input type="checkbox" name="color" value="amarillo">
-                                        <span class="color-swatch" style="background-color: #FDD835;"></span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Size Filter -->
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="size">
-                                Talla
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-size">
-                                <div class="size-grid">
-                                    {% for size in all_sizes %}
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="{{ size.name }}"
-                                               {% if size.name in selected_sizes %}checked{% endif %}>
-                                        <span class="size-box">{{ size.name }}</span>
-                                    </label>
-                                    {% empty %}
-                                    <!-- Default sizes -->
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="XS">
-                                        <span class="size-box">XS</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="S">
-                                        <span class="size-box">S</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="M">
-                                        <span class="size-box">M</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="L">
-                                        <span class="size-box">L</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="XL">
-                                        <span class="size-box">XL</span>
-                                    </label>
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="XXL">
-                                        <span class="size-box">XXL</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn-apply-filters">
-                            <i class="fas fa-check"></i> Aplicar Filtros
-                        </button>
-                    </form>
-                </aside>
-
-                <!-- Products Grid -->
-                <section class="products-section">
-                    <!-- Sort and Results Bar -->
-                    <div class="results-bar">
-                        <div class="results-count">
-                            <strong>{{ product_count }}</strong> productos encontrados
-                        </div>
-                        <div class="sort-options">
-                            <label for="sort-select">Ordenar por:</label>
-                            <select id="sort-select" name="sort" onchange="updateSort(this.value)">
-                                <option value="featured" {% if sort_by == 'featured' %}selected{% endif %}>Destacados</option>
-                                <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Menor precio</option>
-                                <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Mayor precio</option>
-                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Más recientes</option>
-                                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nombre A-Z</option>
-                            </select>
-                        </div>
-                        <div class="view-options">
-                            <button type="button" class="view-btn active" data-view="grid" title="Vista de cuadrícula">
-                                <i class="fas fa-th"></i>
-                            </button>
-                            <button type="button" class="view-btn" data-view="list" title="Vista de lista">
-                                <i class="fas fa-list"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Products Grid -->
-                    <div class="products-grid" id="products-container">
-                        {% for product in products %}
-                        <article class="product-card" data-product-id="{{ product.id }}">
-                            {% if product.is_new %}
-                            <span class="badge badge-new">Nuevo</span>
-                            {% endif %}
-                            {% if product.discount_percentage %}
-                            <span class="badge badge-sale">-{{ product.discount_percentage }}%</span>
-                            {% endif %}
-                            {% if product.is_bestseller %}
-                            <span class="badge badge-best">Más vendido</span>
                             {% endif %}
                             
-                            <a href="{{ product.get_absolute_url }}" class="product-image-wrapper">
-                                <img src="{% if product.main_image %}{{ product.main_image.url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}" 
-                                     alt="{{ product.name }}" 
-                                     class="product-image primary">
-                                {% if product.hover_image %}
-                                <img src="{{ product.hover_image.url }}" 
-                                     alt="{{ product.name }}" 
-                                     class="product-image hover">
+                            <div class="product-carousel-price">
+                                {% if product.sale_price %}
+                                <span class="price-current">S/ {{ product.sale_price }}</span>
+                                <span class="price-original">S/ {{ product.base_price }}</span>
+                                {% else %}
+                                <span class="price-current">Desde S/ {{ product.base_price|default:"25.00" }}</span>
                                 {% endif %}
-                            </a>
+                            </div>
                             
-                            <div class="product-info">
-                                <h3 class="product-name">
-                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                                </h3>
-                                
-                                {% if product.short_description %}
-                                <p class="product-description">{{ product.short_description }}</p>
-                                {% endif %}
-                                
-                                <div class="product-colors">
-                                    {% for color in product.available_colors.all|slice:":6" %}
-                                    <span class="color-dot" style="background-color: {{ color.hex_code }};" title="{{ color.name }}"></span>
-                                    {% endfor %}
-                                    {% if product.available_colors.count > 6 %}
-                                    <span class="more-colors">+{{ product.available_colors.count|add:"-6" }}</span>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="product-pricing">
-                                    {% if product.sale_price %}
-                                    <span class="price-original">S/ {{ product.base_price }}</span>
-                                    <span class="price-current">S/ {{ product.sale_price }}</span>
-                                    {% else %}
-                                    <span class="price-current">Desde S/ {{ product.base_price }}</span>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="product-actions">
-                                    <a href="{{ product.get_absolute_url }}" class="btn-customize">
-                                        <i class="fas fa-paint-brush"></i> Personalizar
-                                    </a>
-                                </div>
+                            <span class="product-carousel-cta">Personalizar</span>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <!-- Productos de ejemplo -->
+                    <div class="product-carousel-card">
+                        <div class="product-carousel-image">
+                            <img src="{% static 'images/placeholder-polo.jpg' %}" alt="Polo Básico">
+                            <div class="product-tags">
+                                <span class="product-tag bestseller">Más vendido</span>
                             </div>
-                        </article>
-                        {% empty %}
-                        <!-- Sample products when DB is empty -->
-                        <article class="product-card">
-                            <span class="badge badge-best">Más vendido</span>
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-tshirt.png' %}" alt="Camiseta Clásica" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Camiseta Clásica de Algodón</a></h3>
-                                <p class="product-description">Camiseta 100% algodón, perfecta para personalizar</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                    <span class="color-dot" style="background-color: #fff; border: 1px solid #ddd;"></span>
-                                    <span class="color-dot" style="background-color: #E53935;"></span>
-                                    <span class="color-dot" style="background-color: #1E88E5;"></span>
-                                    <span class="more-colors">+8</span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-current">Desde S/ 25.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
+                        </div>
+                        <div class="product-carousel-content">
+                            <h3>Polo Básico Personalizado</h3>
+                            <p>Polo de algodón 100% con tu diseño</p>
+                            <div class="product-colors-preview">
+                                <span class="color-dot" style="background-color: #000;"></span>
+                                <span class="color-dot" style="background-color: #fff; border: 1px solid #ddd;"></span>
+                                <span class="color-dot" style="background-color: #1e40af;"></span>
+                                <span class="color-dot" style="background-color: #dc2626;"></span>
+                                <span class="more-colors">+8</span>
                             </div>
-                        </article>
-                        
-                        <article class="product-card">
-                            <span class="badge badge-new">Nuevo</span>
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-cap.png' %}" alt="Gorra Trucker" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Gorra Trucker Personalizada</a></h3>
-                                <p class="product-description">Gorra con malla trasera, ideal para empresas</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                    <span class="color-dot" style="background-color: #1E88E5;"></span>
-                                    <span class="color-dot" style="background-color: #E53935;"></span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-current">Desde S/ 18.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
+                            <div class="product-carousel-price">
+                                <span class="price-current">Desde S/ 25.00</span>
                             </div>
-                        </article>
-                        
-                        <article class="product-card">
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-bag.png' %}" alt="Bolsa Tote" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Bolsa Tote Ecológica</a></h3>
-                                <p class="product-description">Bolsa de algodón reutilizable</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #F5F5DC;"></span>
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-current">Desde S/ 12.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="product-card">
-                            <span class="badge badge-sale">-20%</span>
-                            <a href="#" class="product-image-wrapper">
-                                <img src="{% static 'img/placeholder-polo.png' %}" alt="Polo Empresarial" class="product-image primary">
-                            </a>
-                            <div class="product-info">
-                                <h3 class="product-name"><a href="#">Polo Empresarial Premium</a></h3>
-                                <p class="product-description">Polo con cuello para uniformes corporativos</p>
-                                <div class="product-colors">
-                                    <span class="color-dot" style="background-color: #000;"></span>
-                                    <span class="color-dot" style="background-color: #fff; border: 1px solid #ddd;"></span>
-                                    <span class="color-dot" style="background-color: #1565C0;"></span>
-                                </div>
-                                <div class="product-pricing">
-                                    <span class="price-original">S/ 45.00</span>
-                                    <span class="price-current">S/ 36.00</span>
-                                </div>
-                                <div class="product-actions">
-                                    <a href="#" class="btn-customize"><i class="fas fa-paint-brush"></i> Personalizar</a>
-                                </div>
-                            </div>
-                        </article>
-                        {% endfor %}
+                            <span class="product-carousel-cta">Personalizar</span>
+                        </div>
                     </div>
-
-                    <!-- Pagination -->
-                    {% if products.has_other_pages %}
-                    <nav class="pagination-nav">
-                        <ul class="pagination">
-                            {% if products.has_previous %}
-                            <li><a href="?page={{ products.previous_page_number }}" class="page-link">&laquo; Anterior</a></li>
-                            {% endif %}
-                            {% for num in products.paginator.page_range %}
-                            <li><a href="?page={{ num }}" class="page-link {% if products.number == num %}active{% endif %}">{{ num }}</a></li>
-                            {% endfor %}
-                            {% if products.has_next %}
-                            <li><a href="?page={{ products.next_page_number }}" class="page-link">Siguiente &raquo;</a></li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
-                </section>
+                    {% endfor %}
+                </div>
+                
+                <button class="carousel-nav-btn next" onclick="scrollCarousel('featured', 1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Features Section -->
-    <section class="features-section">
+    <!-- Collections -->
+    <section class="cb-collections">
         <div class="container">
-            <div class="features-grid">
-                <div class="feature-item">
-                    <i class="fas fa-shipping-fast"></i>
-                    <h4>Envío Rápido</h4>
-                    <p>Entrega en 3-5 días hábiles a todo el Perú</p>
+            <div class="section-title-center">
+                <h2>Colecciones Populares</h2>
+                <p>Inspiración para tu próximo proyecto</p>
+            </div>
+            
+            <div class="collections-grid">
+                <a href="#" class="collection-card">
+                    <img src="{% static 'images/collection-corporate.jpg' %}" alt="Uniformes Corporativos">
+                    <div class="collection-overlay">
+                        <h3>Uniformes Corporativos</h3>
+                        <p>Profesionaliza tu equipo de trabajo</p>
+                    </div>
+                    <div class="collection-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+                
+                <a href="#" class="collection-card">
+                    <img src="{% static 'images/collection-events.jpg' %}" alt="Eventos y Promociones">
+                    <div class="collection-overlay">
+                        <h3>Eventos y Promociones</h3>
+                        <p>Destaca en ferias y activaciones</p>
+                    </div>
+                    <div class="collection-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+                
+                <a href="#" class="collection-card">
+                    <img src="{% static 'images/collection-sports.jpg' %}" alt="Equipos Deportivos">
+                    <div class="collection-overlay">
+                        <h3>Equipos Deportivos</h3>
+                        <p>Camisetas y uniformes deportivos</p>
+                    </div>
+                    <div class="collection-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="cb-use-cases">
+        <div class="container">
+            <div class="section-title-center">
+                <h2>¿Para qué lo necesitas?</h2>
+                <p>Tenemos soluciones para cada ocasión</p>
+            </div>
+            
+            <div class="use-cases-grid">
+                <a href="#" class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h4>Empresas</h4>
+                    <p>Uniformes y merchandising corporativo</p>
+                </a>
+                
+                <a href="#" class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h4>Tiendas</h4>
+                    <p>Bolsas personalizadas para tu negocio</p>
+                </a>
+                
+                <a href="#" class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4>Eventos</h4>
+                    <p>Merchandising para conferencias y ferias</p>
+                </a>
+                
+                <a href="#" class="use-case-card">
+                    <div class="use-case-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Grupos</h4>
+                    <p>Camisetas para viajes y reuniones</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="cb-features">
+        <div class="container">
+            <div class="features-inline">
+                <div class="feature-inline-item">
+                    <i class="fas fa-truck"></i>
+                    <div>
+                        <h4>Envío a Todo el Perú</h4>
+                        <p>Entrega en 5-7 días hábiles</p>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <i class="fas fa-paint-brush"></i>
-                    <h4>Diseño Gratis</h4>
-                    <p>Te ayudamos a crear tu diseño sin costo adicional</p>
+                
+                <div class="feature-inline-item">
+                    <i class="fas fa-palette"></i>
+                    <div>
+                        <h4>Diseño Incluido</h4>
+                        <p>Te ayudamos sin costo extra</p>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <i class="fas fa-undo"></i>
-                    <h4>Garantía de Calidad</h4>
-                    <p>Si no estás satisfecho, lo reimprimimos gratis</p>
+                
+                <div class="feature-inline-item">
+                    <i class="fas fa-award"></i>
+                    <div>
+                        <h4>Calidad Garantizada</h4>
+                        <p>Materiales premium</p>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <i class="fas fa-headset"></i>
-                    <h4>Soporte Experto</h4>
-                    <p>Atención personalizada por WhatsApp</p>
+                
+                <div class="feature-inline-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <h4>Soporte por WhatsApp</h4>
+                        <p>Respuesta inmediata</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Final CTA -->
+    <section class="cb-final-cta">
+        <div class="container">
+            <h2>¿Tienes un proyecto especial en mente?</h2>
+            <p>Contáctanos para pedidos mayoristas, uniformes corporativos o proyectos personalizados</p>
+            
+            <div class="cta-buttons">
+                <a href="{% url 'shop:contactanos' %}" class="cta-btn-primary">
+                    <i class="fab fa-whatsapp"></i>
+                    Solicitar Cotización
+                </a>
+                <a href="#" class="cta-btn-secondary">
+                    <i class="fas fa-download"></i>
+                    Descargar Catálogo
+                </a>
+            </div>
+        </div>
+    </section>
 </div>
-
-<!-- Mobile Filter Button -->
-<button type="button" class="mobile-filter-btn" id="mobile-filter-toggle">
-    <i class="fas fa-filter"></i> Filtros
-</button>
-
-<!-- Mobile Filter Overlay -->
-<div class="filter-overlay" id="filter-overlay"></div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// Products Carousel Navigation
+function scrollCarousel(carouselId, direction) {
+    const carousel = document.getElementById('carousel-' + carouselId);
+    const scrollAmount = 310;
+    carousel.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Initialize all carousels with touch/drag support
 document.addEventListener('DOMContentLoaded', function() {
-    // Toggle filter sections
-    document.querySelectorAll('.filter-title').forEach(function(title) {
-        title.addEventListener('click', function() {
-            const target = this.getAttribute('data-toggle');
-            const content = document.getElementById('filter-' + target);
-            const icon = this.querySelector('i');
-            
-            content.classList.toggle('collapsed');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
+    const carousels = document.querySelectorAll('.products-carousel');
+    
+    carousels.forEach(carousel => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
         });
-    });
 
-    // Price presets
-    document.querySelectorAll('.price-preset').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const minInput = document.querySelector('input[name="price_min"]');
-            const maxInput = document.querySelector('input[name="price_max"]');
-            
-            minInput.value = this.getAttribute('data-min');
-            maxInput.value = this.getAttribute('data-max');
-            
-            document.querySelectorAll('.price-preset').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+        carousel.addEventListener('mouseleave', () => {
+            isDown = false;
         });
-    });
 
-    // Auto-submit on filter change
-    document.querySelectorAll('.filter-section input[type="checkbox"], .filter-section input[type="radio"]').forEach(function(input) {
-        input.addEventListener('change', function() {
-            // Optional: auto-submit form
-            // document.getElementById('filter-form').submit();
+        carousel.addEventListener('mouseup', () => {
+            isDown = false;
         });
-    });
 
-    // Mobile filter toggle
-    const mobileFilterBtn = document.getElementById('mobile-filter-toggle');
-    const filterSidebar = document.querySelector('.filter-sidebar');
-    const filterOverlay = document.getElementById('filter-overlay');
-
-    if (mobileFilterBtn) {
-        mobileFilterBtn.addEventListener('click', function() {
-            filterSidebar.classList.toggle('open');
-            filterOverlay.classList.toggle('active');
-            document.body.classList.toggle('filter-open');
-        });
-    }
-
-    if (filterOverlay) {
-        filterOverlay.addEventListener('click', function() {
-            filterSidebar.classList.remove('open');
-            filterOverlay.classList.remove('active');
-            document.body.classList.remove('filter-open');
-        });
-    }
-
-    // View toggle (grid/list)
-    document.querySelectorAll('.view-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const view = this.getAttribute('data-view');
-            const container = document.getElementById('products-container');
-            
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            container.classList.remove('grid-view', 'list-view');
-            container.classList.add(view + '-view');
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2;
+            carousel.scrollLeft = scrollLeft - walk;
         });
     });
 });
-
-// Sort function
-function updateSort(value) {
-    const url = new URL(window.location);
-    url.searchParams.set('sort', value);
-    window.location = url;
-}
 </script>
 {% endblock %}

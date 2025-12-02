@@ -1,0 +1,135 @@
+{# ===========================================
+   COMPONENTE: Subcategorías como Tabs
+   USO: Para category_type = 'quality_tiers'
+   EJEMPLO: Tarjetas de Presentación (Deluxe, Premium, Estándar)
+   =========================================== #}
+
+<section class="subcategories-tabs-section">
+    <div class="container">
+        <div class="tabs-wrapper">
+            <a href="{% url 'shop:category' category.slug %}" 
+               class="subcategory-tab {% if not selected_subcategory %}active{% endif %}">
+                <div class="tab-icon">
+                    <i class="fas fa-th-large"></i>
+                </div>
+                <span class="tab-name">Todos</span>
+                <span class="tab-count">{{ products.count }} productos</span>
+            </a>
+            
+            {% for sub in subcategories %}
+            <a href="{% url 'shop:category' category.slug %}?subcategory={{ sub.slug }}" 
+               class="subcategory-tab {% if selected_subcategory == sub.slug %}active{% endif %}">
+                <div class="tab-icon">
+                    {% if sub.slug == 'deluxe' %}
+                    <i class="fas fa-crown"></i>
+                    {% elif sub.slug == 'premium' %}
+                    <i class="fas fa-star"></i>
+                    {% else %}
+                    <i class="fas fa-layer-group"></i>
+                    {% endif %}
+                </div>
+                <span class="tab-name">{{ sub.name }}</span>
+                {% if sub.description %}
+                <span class="tab-desc">{{ sub.description|truncatewords:5 }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.subcategories-tabs-section {
+    background: white;
+    padding: 30px 0;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.tabs-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.subcategory-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 35px;
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+    min-width: 160px;
+}
+
+.subcategory-tab:hover {
+    border-color: #0066cc;
+    background: rgba(0,102,204,0.05);
+    transform: translateY(-2px);
+}
+
+.subcategory-tab.active {
+    border-color: #0066cc;
+    background: rgba(0,102,204,0.1);
+    box-shadow: 0 4px 15px rgba(0,102,204,0.2);
+}
+
+.tab-icon {
+    width: 50px;
+    height: 50px;
+    background: #0066cc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.tab-icon i {
+    color: white;
+    font-size: 1.3rem;
+}
+
+.subcategory-tab.active .tab-icon {
+    background: #e63946;
+}
+
+.tab-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.tab-desc {
+    font-size: 0.75rem;
+    color: #666;
+    text-align: center;
+}
+
+.tab-count {
+    font-size: 0.7rem;
+    color: #999;
+    margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+    .tabs-wrapper {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 10px;
+        flex-wrap: nowrap;
+    }
+    
+    .subcategory-tab {
+        min-width: 140px;
+        padding: 15px 20px;
+    }
+}
+</style>

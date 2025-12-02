@@ -28,7 +28,7 @@ urlpatterns = [
     path('email_confirmation_needed/', views.email_confirmation_needed, name='email_confirmation_needed'),
     re_path(r'^confirmacion-de-correo-electronico/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
-    path('tarjetas-de-presentacion/', views.TarjetasPresentacionListView.as_view(), name='tarjetas_presentacion'),
+    path('tarjetas-presentacion/', views.TarjetasPresentacionListView.as_view(), name='tarjetas_presentacion'),
     path('publicidad-impresa/', views.publicidad_impresa, name='publicidad_impresa'),
     path('banners-posters/', views.banners_posters, name='banners_posters'),
     path('etiquetas-stickers/', views.etiquetas_stickers, name='etiquetas_stickers'),

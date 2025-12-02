@@ -17,7 +17,7 @@ from shop.tokens import account_activation_token
 from cart.models import Cart, CartItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from .models import TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque
-from .models import Product, Category
+from .models import Product, Category, Subcategory  # <-- AGREGADO Subcategory
 from marketing.forms import EmailSignUpForm
 from shop.utils.pricing import PricingService
 
@@ -117,9 +117,14 @@ def Home(request):
     return render(request, 'shop/home.html', context)
 
 
+# ============================================================================
+# CATEGORY & SUBCATEGORY VIEWS (UPDATED con category_type y display_style)
+# ============================================================================
+
 def category_view(request, category_slug):
     """
-    Vista para mostrar una categoría y sus productos
+    Vista para mostrar una categoría y sus productos.
+    Usa category_type para determinar el estilo de renderizado en el template.
     """
     try:
         category = Category.objects.get(slug=category_slug, status='active')
@@ -127,8 +132,8 @@ def category_view(request, category_slug):
         from django.http import Http404
         raise Http404("Categoría no encontrada")
     
-    # Obtener subcategorías de esta categoría
-    subcategories = category.subcategories.all()
+    # Obtener subcategorías de esta categoría (ordenadas por display_order)
+    subcategories = category.subcategories.all().order_by('display_order')
     
     # Obtener productos de esta categoría
     products = Product.objects.filter(
@@ -136,16 +141,20 @@ def category_view(request, category_slug):
         status='active'
     ).select_related('category', 'subcategory').prefetch_related('price_tiers')
     
-    # Filtros opcionales
-    subcategory_filter = request.GET.get('subcategory')
+    # Filtro por subcategoría (desde query params)
+    subcategory_filter = request.GET.get('subcategory', '')
     if subcategory_filter:
         products = products.filter(subcategory__slug=subcategory_filter)
+    
+    # Ordenar productos
+    products = products.order_by('subcategory__display_order', 'name')
     
     context = {
         'category': category,
         'subcategories': subcategories,
         'products': products,
         'product_count': products.count(),
+        'selected_subcategory': subcategory_filter,  # <-- NUEVO: Para marcar tab/círculo activo
     }
     
     return render(request, 'shop/category.html', context)
@@ -153,7 +162,8 @@ def category_view(request, category_slug):
 
 def subcategory_view(request, category_slug, subcategory_slug):
     """
-    Vista para mostrar una subcategoría y sus productos
+    Vista para mostrar una subcategoría y sus productos.
+    Usa display_style para determinar cómo mostrar las subcategorías hermanas.
     """
     try:
         category = Category.objects.get(slug=category_slug, status='active')
@@ -171,14 +181,19 @@ def subcategory_view(request, category_slug, subcategory_slug):
         status='active'
     ).select_related('category', 'subcategory').prefetch_related('price_tiers')
     
+    # Obtener subcategorías hermanas para navegación lateral
+    sibling_subcategories = category.subcategories.all().order_by('display_order')
+    
     context = {
         'category': category,
         'subcategory': subcategory,
         'products': products,
         'product_count': products.count(),
+        'sibling_subcategories': sibling_subcategories,  # <-- NUEVO: Para navegación entre hermanas
     }
     
     return render(request, 'shop/subcategory.html', context)
+
 
 def product_detail_view(request, category_slug, product_slug):
     """
@@ -297,51 +312,78 @@ def add_product_to_cart(request):
     
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
+
 class TarjetasPresentacionListView(ListView):
+    """
+    Vista para Tarjetas de Presentación con filtrado del lado del cliente (JavaScript).
+    Carga TODOS los productos y el filtrado se hace en el navegador sin recargar.
+    """
     model = Product
     template_name = 'shop/tarjetas_presentacion.html'
     context_object_name = 'products'
 
     def get_queryset(self):
-        # Get products from tarjetas-presentacion category
+        # Cargar TODOS los productos de la categoría (sin filtrar)
+        # El filtrado se hace del lado del cliente con JavaScript
         queryset = Product.objects.filter(
             category__slug='tarjetas-presentacion',
             status='active'
         ).select_related('category', 'subcategory').prefetch_related('price_tiers')
         
-        # Filter by subcategory if specified
-        filter_type = self.request.GET.get('subcategory')
-        if filter_type:
-            queryset = queryset.filter(subcategory__slug=filter_type)
+        return queryset.order_by('subcategory__display_order', 'name')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         
-        return queryset.order_by('name')
+        # Obtener la categoría para pasarla al template
+        try:
+            category = Category.objects.get(slug='tarjetas-presentacion')
+            context['category'] = category
+            
+            # Obtener las subcategorías de esta categoría (ordenadas por display_order)
+            context['subcategories'] = category.subcategories.all().order_by('display_order')
+        except Category.DoesNotExist:
+            context['category'] = None
+            context['subcategories'] = []
+        
+        # El parámetro "tier" se usa solo para el estado inicial del UI
+        # (cuando el usuario comparte un link con filtro o usa el botón atrás)
+        tier_param = self.request.GET.get('tier', '')
+        context['selected_subcategory'] = tier_param if tier_param != 'all' else ''
+        
+        # Nombre de la subcategoría seleccionada para mostrar en la UI
+        if context['selected_subcategory']:
+            try:
+                selected_sub = Subcategory.objects.get(slug=context['selected_subcategory'])
+                context['selected_subcategory_name'] = selected_sub.name
+            except Subcategory.DoesNotExist:
+                context['selected_subcategory_name'] = ''
+        
+        return context
+
 
 class FolletosListView(ListView):
     model = Folleto
     template_name = 'shop/folletos.html'
     context_object_name = 'folletos-list'
 
+
 class PostersListView(ListView):
     model = Poster
     template_name = 'shop/posters.html'
     context_object_name = 'posters'
+
 
 class EtiquetasListView(ListView):
     model = Etiqueta
     template_name = 'shop/etiquetas.html'
     context_object_name = 'etiquetas'
 
+
 class EmpaquesListView(ListView):
     model = Empaque
     template_name = 'shop/empaques.html'
     context_object_name = 'empaques'
-
-
-
-
-
-   
-
 
 
 #### PACKS PAGE #####
@@ -362,6 +404,7 @@ def PacksPage(request):
 
     return render(request, 'shop/packs.html', {'category': categoria,
                                                   'packs': packs})
+
 
 #### PACKS ####
 
@@ -404,9 +447,6 @@ def PackFun(request, c_slug, pack_slug):
 
 
 ################
-
-
-
 
 
 @csrf_exempt
@@ -454,7 +494,6 @@ def AddUnitaryProduct(request):
 
     except Exception as e:
         raise e
-
 
 
 ### Add Pack ###
@@ -566,9 +605,6 @@ def AddProduct(request, c_slug, product_slug):
 
         except Exception as e:
             raise e
-
-   
-           
 
 
 # Tamanos y cantidades
@@ -1118,7 +1154,7 @@ def ropa_bolsas(request):
     """Main Clothing & Bags page - VistaPrint style"""
     from .models import ClothingCategory, ClothingProduct, ClothingColor, ClothingSize
     
-    categories = ClothingCategory.objects.filter(available=True).prefetch_related('subcategories')
+    categories = ClothingCategory.objects.filter(available=True).prefetch_related('clothing_subcategories')
     
     # Get filter parameters
     category_filter = request.GET.get('category', '')
@@ -1185,7 +1221,7 @@ def clothing_category(request, category_slug):
     from .models import ClothingCategory, ClothingProduct, ClothingColor, ClothingSize
     
     category = ClothingCategory.objects.get(slug=category_slug, available=True)
-    subcategories = category.subcategories.filter(available=True)
+    subcategories = category.clothing_subcategories.filter(available=True)  # <-- CORREGIDO
     
     # Get filter parameters
     subcategory_filter = request.GET.get('subcategory', '')
@@ -1429,6 +1465,7 @@ def add_clothing_to_cart(request):
             return JsonResponse({'success': False, 'error': str(e)})
     
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 def productos_promocionales(request):
     return render(request, 'shop/productos_promocionales.html')

@@ -1,14 +1,14 @@
-category_slug;category_name;description;image_url;display_order;status
-tarjetas-presentacion;Tarjetas de Presentaci�n;Tarjetas de visita profesionales personalizadas;/media/category_images/tarjetas_presentacion.jpg;1;active
-postales-publicidad;Postales y Publicidad Impresa;Material publicitario impreso y postales promocionales;/media/category_images/publicidad_impresa.jpg;2;active
-letreros-banners;Letreros Banners y P�sters;Señalización y material publicitario de gran formato;/media/category_images/banners.jpg;3;active
-stickers-etiquetas;Stickers y Etiquetas;Stickers personalizados y etiquetas adhesivas;/media/category_images/stickers.jpg;4;active
-ropa-bolsos;Ropa y Bolsos;Prendas y accesorios personalizados;/media/category_images/ropa_y_bolsos.jpg;5;active
-productos-promocionales;Productos Promocionales;Artículos promocionales personalizados para marketing;/media/category_images/productos_promocionales.jpg;6;active
-embalaje;Embalaje;Soluciones de empaque y packaging personalizado;/media/category_images/embalaje.jpg;7;active
-invitaciones-papeleria;Invitaciones Papeler�a y Bodas;Invitaciones y papelería para eventos especiales;/media/category_images/papeleria_bodas.jpg;8;active
-logo-web-social;Logo Sitios Web y Redes Sociales;Diseño de identidad corporativa y presencia digital;/media/category_images/redes_sociales.jpg;9;active
-servicios-diseno;Servicios de Dise�o;Servicios profesionales de diseño gráfico;/media/category_images/servicios_dise�o.jpg;10;active
-black-friday;Venta de Black Friday;Ofertas y descuentos especiales durante Black Friday;/media/category_images/black_friday.jpg;11;seasonal
-tarjetas-navidad;Tarjetas de Navidad y Festividades;Tarjetas personalizadas para Navidad y celebraciones;/media/category_images/navidad.jpg;12;seasonal
-calendarios-regalos;Calendarios y Regalos;Calendarios personalizados y artículos de regalo;/media/category_images/calendario_y_regalos.jpg;13;active
+category_slug;category_name;description;image_url;display_order;status;category_type
+tarjetas-presentacion;Tarjetas de Presentación;Tarjetas de visita profesionales personalizadas;/media/category_images/tarjetas_presentacion.jpg;1;active;quality_tiers
+postales-publicidad;Postales y Publicidad Impresa;Material publicitario impreso y postales promocionales;/media/category_images/publicidad_impresa.jpg;2;active;formats
+letreros-banners;Letreros Banners y Pósters;Señalización y material publicitario de gran formato;/media/category_images/banners.jpg;3;active;formats
+stickers-etiquetas;Stickers y Etiquetas;Stickers personalizados y etiquetas adhesivas;/media/category_images/stickers.jpg;4;active;formats
+ropa-bolsos;Ropa y Bolsos;Prendas y accesorios personalizados;/media/category_images/ropa_y_bolsos.jpg;5;active;product_types
+productos-promocionales;Productos Promocionales;Artículos promocionales personalizados para marketing;/media/category_images/productos_promocionales.jpg;6;active;product_types
+embalaje;Embalaje;Soluciones de empaque y packaging personalizado;/media/category_images/embalaje.jpg;7;active;formats
+invitaciones-papeleria;Invitaciones Papelería y Bodas;Invitaciones y papelería para eventos especiales;/media/category_images/papeleria_bodas.jpg;8;active;occasions
+logo-web-social;Logo Sitios Web y Redes Sociales;Diseño de identidad corporativa y presencia digital;/media/category_images/redes_sociales.jpg;9;active;services
+servicios-diseno;Servicios de Diseño;Servicios profesionales de diseño gráfico;/media/category_images/servicios_diseno.jpg;10;active;services
+black-friday;Venta de Black Friday;Ofertas y descuentos especiales durante Black Friday;/media/category_images/black_friday.jpg;11;seasonal;standard
+tarjetas-navidad;Tarjetas de Navidad y Festividades;Tarjetas personalizadas para Navidad y celebraciones;/media/category_images/navidad.jpg;12;seasonal;occasions
+calendarios-regalos;Calendarios y Regalos;Calendarios personalizados y artículos de regalo;/media/category_images/calendario_y_regalos.jpg;13;active;product_types
