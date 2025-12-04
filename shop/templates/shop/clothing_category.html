@@ -277,15 +277,14 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Redirigir al detalle con el color seleccionado
-// CORREGIDO: Ahora incluye /producto/ en la URL
 function goToDetailWithColor(card) {
     const productSlug = card.dataset.productSlug;
     const categorySlug = "{{ category.slug }}";
     const activeSwatch = card.querySelector('.color-dot.active') || card.querySelector('.color-dot');
     const colorSlug = activeSwatch ? activeSwatch.dataset.colorSlug : '';
     
-    // URL CORRECTA: /ropa-bolsos/categoria/producto/slug-producto/?color=color
-    window.location.href = `/ropa-bolsos/${categorySlug}/producto/${encodeURIComponent(productSlug)}/?color=${colorSlug}`;
+    // URL limpia: /ropa-bolsos/categoria/slug-producto/?color=color
+    window.location.href = `/ropa-bolsos/${categorySlug}/${encodeURIComponent(productSlug)}/?color=${colorSlug}`;
 }
 
 function updateSort(value) {
