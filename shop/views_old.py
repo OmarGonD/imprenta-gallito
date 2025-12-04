@@ -526,84 +526,49 @@ def clothing_subcategory(request, category_slug, subcategory_slug):
 def clothing_product_detail(request, category_slug, product_slug):
     """
     Detalle de producto de ropa.
-    MEJORA: Lee el parámetro ?color=slug de la URL para determinar la imagen principal inicial.
+    Usa el sistema unificado Product.
     """
-    parent_category = get_object_or_404(Category, slug='ropa-bolsos')
-    subcategory = get_object_or_404(Subcategory, slug=category_slug, category=parent_category)
+    try:
+        subcategory = Subcategory.objects.get(
+            slug=category_slug,
+            category__slug='ropa-bolsos',
+            status='active'
+        )
+        product = Product.objects.get(
+            slug=product_slug,
+            subcategory=subcategory,
+            status='active'
+        )
+        category = subcategory.category
+    except (Subcategory.DoesNotExist, Product.DoesNotExist):
+        raise Http404("Producto no encontrado")
     
-    product = get_object_or_404(
-        Product,
-        slug=product_slug,
-        subcategory=subcategory,
-        status='active'
-    )
-    
-    # OBTENER COLOR SELECCIONADO DE LA URL
-    selected_color_slug = request.GET.get('color')
-    
-    # Obtener imágenes organizadas por color
-    images_by_color = {}
-    for image in product.images.all():
-        color_slug = image.color.slug if image.color else 'default'
-        
-        if color_slug not in images_by_color:
-            images_by_color[color_slug] = []
-            
-        images_by_color[color_slug].append({
-            'image': image.image_url, 
-            'is_primary': image.is_primary,
-            'image_id': image.pk
-        })
-    
-    # ----------------------------------------------------------------------
-    # LÓGICA PARA DETERMINAR LA IMAGEN PRINCIPAL INICIAL BASADA EN EL URL
-    # ----------------------------------------------------------------------
-    initial_image_url = None
-    
-    # 1. Intentar encontrar la imagen principal del color seleccionado en la URL
-    target_slug = selected_color_slug or 'default'
-    
-    images_for_initial_color = images_by_color.get(target_slug)
-    if images_for_initial_color:
-        # Busca la imagen marcada como 'is_primary'
-        primary_image = next((img for img in images_for_initial_color if img['is_primary']), None)
-        if primary_image:
-            initial_image_url = primary_image['image']
-
-    # 2. Si no se encontró (y se especificó un color), fallback a la imagen default
-    if not initial_image_url and selected_color_slug and target_slug != 'default':
-        default_images = images_by_color.get('default')
-        if default_images:
-            default_primary_image = next((img for img in default_images if img['is_primary']), None)
-            if default_primary_image:
-                initial_image_url = default_primary_image['image']
-    
-    # 3. Fallback final si no se encontró ninguna imagen principal (usar placeholder)
-    if not initial_image_url:
-         # Usar el placeholder estático
-         initial_image_url = settings.STATIC_URL + 'img/placeholder-product-image.png' 
-    # ----------------------------------------------------------------------
-
-    # Obtener tiers de precio
-    pricing_tiers = product.price_tiers.all().order_by('min_quantity')
+    # Obtener imágenes adicionales
+    product_images = product.images.all().order_by('display_order')
     
     # Productos relacionados
     related_products = Product.objects.filter(
         subcategory=subcategory,
         status='active'
-    ).exclude(pk=product.pk)[:4]
+    ).exclude(pk=product.pk).order_by('-is_featured', '-is_bestseller')[:4]
+    
+    # Colores con imágenes
+    colors_with_images = {}
+    for img in product_images:
+        if img.color:
+            if img.color.slug not in colors_with_images:
+                colors_with_images[img.color.slug] = []
+            colors_with_images[img.color.slug].append(img.image_url)
     
     context = {
-        'product': product,
-        'category': subcategory,
+        'category': category,
         'subcategory': subcategory,
-        'parent_category': parent_category,
-        'initial_image_url': initial_image_url,       # <--- URL DE LA IMAGEN PRINCIPAL
-        'selected_color_slug': selected_color_slug,   # <--- SLUG DEL COLOR SELECCIONADO
-        'images_by_color': json.dumps(images_by_color),
-        'pricing_tiers': pricing_tiers,
+        'product': product,
+        'product_images': product_images,
         'related_products': related_products,
+        'colors_with_images': json.dumps(colors_with_images),
     }
+    
     return render(request, 'shop/clothing_product_detail.html', context)
 
 
@@ -1892,34 +1857,13 @@ def get_available_colors(request):
 def get_product_colors(request, product_slug):
     """
     API para obtener colores e imágenes de un producto específico.
-    
-    Si se pasa ?color=slug, retorna solo la imagen de ese color:
-        { "image": "url_de_la_imagen" }
-    
-    Si no se pasa color, retorna todos los colores:
-        { "product_slug": "...", "colors": [...] }
+    Útil para el modal de selección rápida o hover.
     """
     try:
         product = Product.objects.get(slug=product_slug)
     except Product.DoesNotExist:
         return JsonResponse({'error': 'Producto no encontrado'}, status=404)
     
-    # Si se pide un color específico, retornar solo la imagen
-    color_slug = request.GET.get('color')
-    if color_slug:
-        # Buscar la imagen para este color
-        image = ProductImage.objects.filter(
-            product=product,
-            color__slug=color_slug
-        ).first()
-        
-        if image:
-            return JsonResponse({'image': image.image_url})
-        else:
-            # Si no hay imagen específica para el color, retornar la base
-            return JsonResponse({'image': product.base_image_url or ''})
-    
-    # Si no se pide color específico, retornar todos
     colors_data = []
     for color in product.available_colors.all():
         # Buscar imagen para este color
@@ -1945,3 +1889,52 @@ def get_product_colors(request, product_slug):
 # =============================================================================
 # VISTA: Detalle de producto de ropa
 # =============================================================================
+def clothing_product_detail(request, category_slug, product_slug):
+    """
+    Vista de detalle de producto de ropa con selector de colores y tallas.
+    """
+    parent_category = get_object_or_404(Category, slug='ropa-bolsos')
+    subcategory = get_object_or_404(Subcategory, slug=category_slug, category=parent_category)
+    
+    product = get_object_or_404(
+        Product,
+        slug=product_slug,
+        subcategory=subcategory,
+        status='active'
+    )
+    
+    # Obtener imágenes organizadas por color
+    images_by_color = {}
+    for image in product.images.all():
+        color_slug = image.color.slug if image.color else 'default'
+        if color_slug not in images_by_color:
+            images_by_color[color_slug] = []
+        images_by_color[color_slug].append({
+            'image': image.image_url,
+            'is_primary': image.is_primary,
+        })
+    
+    # Obtener imágenes por defecto (sin color específico)
+    default_images = product.images.filter(color__isnull=True)
+    
+    # Obtener tiers de precio
+    pricing_tiers = product.price_tiers.all().order_by('min_quantity')
+    
+    # Productos relacionados
+    related_products = Product.objects.filter(
+        subcategory=subcategory,
+        status='active'
+    ).exclude(pk=product.pk)[:4]
+    
+    context = {
+        'product': product,
+        'category': subcategory,
+        'subcategory': subcategory,
+        'parent_category': parent_category,
+        'images_by_color': json.dumps(images_by_color),
+        'default_images': default_images,
+        'pricing_tiers': pricing_tiers,
+        'related_products': related_products,
+    }
+    
+    return render(request, 'shop/clothing_product_detail.html', context)

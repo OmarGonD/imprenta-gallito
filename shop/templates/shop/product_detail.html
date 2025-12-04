@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load l10n %}
 
 {% block title %}{{ product.name }} - {{ category.name }}{% endblock %}
 
@@ -53,6 +54,100 @@
     transform: translateY(-4px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
+
+/* ===== DESIGN CHOICE CARDS ===== */
+.design-choice-card {
+    border: 2px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: block;
+}
+
+.design-choice-card:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.design-choice-card:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px -5px rgba(59, 130, 246, 0.2);
+}
+
+.design-choice-card:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.design-choice-card.selected {
+    border-color: #3B82F6;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+}
+
+.design-choice-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 50px 50px 0;
+    border-color: transparent #3B82F6 transparent transparent;
+}
+
+.design-choice-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.design-choice-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.design-choice-card:first-child .design-choice-icon {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+    color: #2563EB;
+}
+
+.design-choice-card:last-child .design-choice-icon {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    color: #059669;
+}
+
+/* Template mini preview */
+.template-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.template-mini-grid img {
+    width: 100%;
+    aspect-ratio: 1.75/1;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #E5E7EB;
+}
 </style>
 
 <div class="container mx-auto px-4 py-8 max-w-7xl">
@@ -99,6 +194,7 @@
                 <input type="hidden" name="category_slug" value="{{ category.slug }}">
                 <input type="hidden" name="quantity_tier" value="custom">
                 <input type="hidden" name="custom_quantity" id="custom_quantity_hidden">
+                <input type="hidden" name="design_choice" id="design_choice_hidden" value="">
                 
                 <!-- Input de cantidad -->
                 <div class="mb-6">
@@ -207,8 +303,69 @@
                     </p>
                 </div>
 
-                <!-- File Upload Section -->
-                <div id="file-upload-section" class="upload-zone p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 mb-6">
+                <!-- ============================================ -->
+                <!-- NUEVA SECCIÓN: Elegir Diseño -->
+                <!-- ============================================ -->
+                {% if category.slug == 'tarjetas-presentacion' %}
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        ¿Cómo quieres diseñar tu tarjeta? <span class="text-red-500">*</span>
+                    </label>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Opción 1: Elegir de galería -->
+                        <button type="button" class="design-choice-card text-left" id="choice-gallery" data-choice="gallery">
+                            <div class="design-choice-icon">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-1">Elegir una plantilla</h4>
+                            <p class="text-gray-500 text-sm mb-3">Más de 450 diseños profesionales para personalizar con tus datos</p>
+                            <span class="inline-flex items-center text-blue-600 font-semibold text-sm group-hover:underline">
+                                Ver plantillas
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
+                            
+                            <!-- Mini preview de templates -->
+                            <div class="template-mini-grid">
+                                <img src="/static/media/template_images/templates_tarjetas_presentacion/TP-01RNZ.jpg" alt="Template 1" loading="lazy">
+                                <img src="/static/media/template_images/templates_tarjetas_presentacion/TP-04K2A.jpg" alt="Template 2" loading="lazy">
+                                <img src="/static/media/template_images/templates_tarjetas_presentacion/TP-070G0.jpg" alt="Template 3" loading="lazy">
+                            </div>
+                        </button>
+                        
+                        <!-- Opción 2: Subir diseño propio -->
+                        <button type="button" class="design-choice-card text-left" id="choice-upload" data-choice="upload">
+                            <div class="design-choice-icon">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-1">Subir mi diseño</h4>
+                            <p class="text-gray-500 text-sm mb-3">¿Ya tienes tu diseño listo? Súbelo aquí directamente</p>
+                            <span class="inline-flex items-center text-green-600 font-semibold text-sm">
+                                Subir archivo
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
+                            
+                            <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                                <p class="text-xs text-gray-500">
+                                    <span class="font-medium">Formatos:</span> JPG, PNG, PDF, AI, PSD, SVG<br>
+                                    <span class="font-medium">Tamaño máx:</span> 10MB
+                                </p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- File Upload Section (Solo si NO es tarjetas de presentación o si selecciona "upload") -->
+                <div id="file-upload-section" class="upload-zone p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 mb-6 {% if category.slug == 'tarjetas-presentacion' %}hidden{% endif %}">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
                         Sube tu diseño <span class="text-red-500">*</span>
                     </label>
@@ -219,7 +376,7 @@
                         name="design_file"
                         class="hidden" 
                         accept="image/*,.pdf,.ai,.psd,.svg"
-                        required
+                        {% if category.slug != 'tarjetas-presentacion' %}required{% endif %}
                     >
                     
                     <label 
@@ -256,7 +413,11 @@
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                     </svg>
+                    {% if category.slug == 'tarjetas-presentacion' %}
+                    Selecciona cómo quieres diseñar tu tarjeta
+                    {% else %}
                     Debes subir tu diseño para continuar
+                    {% endif %}
                 </p>
             </form>
 
@@ -279,46 +440,33 @@
                             <button id="modal-go-to-cart" class="w-full px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all">
                                 🛒 Ir al carrito
                             </button>
-                            <button id="modal-continue-shopping" class="w-full px-5 py-3 bg-white text-gray-700 font-medium rounded-lg border-2 border-gray-300 hover:bg-gray-50 transition-all">
-                                ← Seguir comprando
+                            <button id="modal-continue-shopping" class="w-full px-5 py-3 border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all">
+                                Seguir comprando
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Product Features -->
-            {% if variant_types %}
-            <div class="mt-8 pt-8 border-t border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Opciones disponibles</h3>
-                {% for variant_type in variant_types %}
-                <div class="mb-2">
-                    <strong class="text-gray-700">{{ variant_type.name }}:</strong> 
-                    <span class="text-gray-600">{{ variant_type.description }}</span>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
         </div>
     </div>
 
     <!-- Related Products -->
     {% if related_products %}
-    <div class="mt-16">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Productos Relacionados</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="border-t border-gray-200 pt-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Productos relacionados</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             {% for related in related_products %}
-            <a href="{{ related.get_absolute_url }}" class="product-card-hover block bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <div class="aspect-square bg-gray-100 p-4">
+            <a href="{% url 'shop:product_detail' category.slug related.slug %}" class="product-card-hover bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="aspect-square bg-gray-100 flex items-center justify-center">
                     {% if related.base_image_url %}
-                        <img src="{{ related.base_image_url }}" alt="{{ related.name }}" class="w-full h-full object-contain">
+                        <img src="{{ related.base_image_url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
                     {% else %}
-                        <img src="{% static 'img/placeholder-product.png' %}" alt="{{ related.name }}" class="w-full h-full object-contain">
+                        <span class="text-gray-400 text-sm">Sin imagen</span>
                     {% endif %}
                 </div>
                 <div class="p-4">
-                    <h4 class="font-medium text-gray-900 mb-2 line-clamp-2">{{ related.name }}</h4>
-                    <span class="text-blue-600 font-semibold">Ver detalles →</span>
+                    <h3 class="font-semibold text-gray-900 mb-1 line-clamp-2">{{ related.name }}</h3>
+                    <p class="text-sm text-gray-500">{{ related.subcategory.name|default:category.name }}</p>
                 </div>
             </a>
             {% endfor %}
@@ -327,150 +475,239 @@
     {% endif %}
 </div>
 
-<!-- ============================================ -->
-<!-- ÚNICO BLOQUE DE JAVASCRIPT - NO DUPLICAR    -->
-<!-- ============================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Inicializando página de producto...');
-    
     // ========================================
-    // REFERENCIAS A ELEMENTOS DEL DOM
+    // 1. ELEMENTOS DEL DOM
     // ========================================
     const quantityInput = document.getElementById('quantity');
+    const customQuantityHidden = document.getElementById('custom_quantity_hidden');
+    const unitPriceEl = document.getElementById('unit-price');
+    const discountPercentEl = document.getElementById('discount-percent');
+    const totalPriceEl = document.getElementById('total-price');
+    const tiersTable = document.getElementById('tiers-table');
+    const tierRows = document.querySelectorAll('.tier-row');
+    const suggestionBox = document.getElementById('suggestion-box');
+    const suggestionText = document.getElementById('suggestion-text');
     const fileInput = document.getElementById('file-upload-input');
-    const addToCartBtn = document.getElementById('add-to-cart');
-    const fileRequiredMessage = document.getElementById('file-required-message');
+    const fileUploadSection = document.getElementById('file-upload-section');
     const previewContainer = document.getElementById('file-preview-container');
+    const addToCartBtn = document.getElementById('add-to-cart');
+    const fileRequiredMsg = document.getElementById('file-required-message');
     const modal = document.getElementById('cart-success-modal');
     const modalGoToCart = document.getElementById('modal-go-to-cart');
     const modalContinueShopping = document.getElementById('modal-continue-shopping');
-    const customQuantityHidden = document.getElementById('custom_quantity_hidden');
+    
+    // Design choice elements (solo para tarjetas de presentación)
+    const choiceGallery = document.getElementById('choice-gallery');
+    const choiceUpload = document.getElementById('choice-upload');
+    const designChoiceHidden = document.getElementById('design_choice_hidden');
+    const isTarjetasPage = '{{ category.slug }}' === 'tarjetas-presentacion';
+    
+    let selectedDesignChoice = null;
     
     // ========================================
-    // 1. ACTUALIZACIÓN DINÁMICA DE PRECIOS
+    // 2. DESIGN CHOICE HANDLING (Tarjetas)
     // ========================================
-    if (quantityInput) {
-        quantityInput.addEventListener('input', function(e) {
-            const quantity = parseInt(e.target.value) || 0;
-            const productSlug = '{{ product.slug }}';
+    // URL base para la galería (renderizada por Django)
+    const galleryBaseUrl = "{% url 'shop:template_gallery' category.slug product.slug %}";
+    
+    if (isTarjetasPage && choiceGallery && choiceUpload) {
+        console.log('✅ Inicializando botones de diseño para tarjetas');
+        console.log('📍 URL de galería:', galleryBaseUrl);
+        
+        choiceGallery.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🎨 Click en "Elegir plantilla"');
             
-            // Actualizar hidden input
-            if (customQuantityHidden) {
-                customQuantityHidden.value = quantity;
-            }
+            // Marcar como seleccionado visualmente
+            choiceUpload.classList.remove('selected');
+            choiceGallery.classList.add('selected');
             
-            // Actualizar pricing
-            updatePricing(productSlug, quantity);
+            // Redirigir a la galería de templates
+            const quantity = quantityInput.value || 100;
+            const targetUrl = galleryBaseUrl + '?quantity=' + quantity;
+            console.log('🔗 Redirigiendo a:', targetUrl);
+            
+            window.location.href = targetUrl;
+        });
+        
+        choiceUpload.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('📤 Click en "Subir mi diseño"');
+            
+            // Seleccionar esta opción
+            choiceGallery.classList.remove('selected');
+            choiceUpload.classList.add('selected');
+            selectedDesignChoice = 'upload';
+            designChoiceHidden.value = 'upload';
+            
+            // Mostrar sección de upload
+            fileUploadSection.classList.remove('hidden');
+            
+            // Scroll suave al upload
+            setTimeout(() => {
+                fileUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            
+            updateButtonState();
+        });
+    } else if (isTarjetasPage) {
+        console.warn('⚠️ Botones de diseño no encontrados:', {
+            choiceGallery: !!choiceGallery,
+            choiceUpload: !!choiceUpload
         });
     }
     
-    async function updatePricing(productSlug, quantity) {
-        if (quantity < 1) return;
-        
-        try {
-            const response = await fetch(`/api/product-pricing/${productSlug}/${quantity}/`);
-            const data = await response.json();
-            
-            // Actualizar UI
-            document.getElementById('unit-price').textContent = data.unit_price.toFixed(2);
-            document.getElementById('discount-percent').textContent = data.discount_percent;
-            document.getElementById('total-price').textContent = data.total_price.toFixed(2);
-            
-            // Resaltar tier activo en la tabla
-            highlightActiveTier(quantity);
-            
-            // Mostrar sugerencia si hay siguiente tier
-            updateSuggestion(data.next_tier);
-        } catch (error) {
-            console.error('Error al actualizar precios:', error);
-        }
-    }
+    // Datos de tiers desde Django
+    const priceTiers = [
+        {% for tier in tiers %}
+        {
+            min: {% localize off %}{{ tier.min_quan }}{% endlocalize %},
+            max: {% localize off %}{{ tier.max_quan }}{% endlocalize %},
+            price: {% localize off %}{{ tier.unit_price }}{% endlocalize %},
+            discount: {% localize off %}{{ tier.discount_percent }}{% endlocalize %}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
     
-    function highlightActiveTier(quantity) {
-        const rows = document.querySelectorAll('.tier-row');
+    // ========================================
+    // 3. CÁLCULO DE PRECIOS
+    // ========================================
+    function calculatePrice(quantity) {
+        if (!priceTiers.length) return null;
         
-        rows.forEach(row => {
-            const min = parseInt(row.dataset.min);
-            const max = parseInt(row.dataset.max);
-            
-            // Quitar clase activa de todas las filas
-            row.classList.remove('tier-row-active');
-            
-            // Agregar clase activa a la fila correspondiente
-            if (quantity >= min && quantity <= max) {
-                row.classList.add('tier-row-active');
+        let currentTier = priceTiers[0];
+        for (const tier of priceTiers) {
+            if (quantity >= tier.min && quantity <= tier.max) {
+                currentTier = tier;
+                break;
             }
-        });
+            if (quantity >= tier.min) {
+                currentTier = tier;
+            }
+        }
+        
+        return {
+            unitPrice: currentTier.price,
+            discount: currentTier.discount,
+            total: currentTier.price * quantity,
+            tier: currentTier
+        };
     }
     
-    function updateSuggestion(nextTier) {
-        const suggestionBox = document.getElementById('suggestion-box');
-        const suggestionText = document.getElementById('suggestion-text');
+    function updatePricing() {
+        const quantity = parseInt(quantityInput.value) || 1;
+        customQuantityHidden.value = quantity;
         
-        if (nextTier && nextTier.units_needed > 0) {
-            suggestionText.textContent = 
-                `Compra ${nextTier.units_needed} unidades más (${nextTier.min_quan} total) ` +
-                `y ahorra S/ ${nextTier.savings.toFixed(2)} adicionales`;
-            suggestionBox.classList.remove('hidden');
-        } else {
-            suggestionBox.classList.add('hidden');
+        const pricing = calculatePrice(quantity);
+        
+        if (pricing) {
+            unitPriceEl.textContent = pricing.unitPrice.toFixed(2);
+            discountPercentEl.textContent = pricing.discount;
+            totalPriceEl.textContent = pricing.total.toFixed(2);
+            
+            // Highlight current tier
+            tierRows.forEach(row => {
+                const min = parseInt(row.dataset.min);
+                const max = parseInt(row.dataset.max);
+                
+                if (quantity >= min && quantity <= max) {
+                    row.classList.add('tier-row-active');
+                } else {
+                    row.classList.remove('tier-row-active');
+                }
+            });
+            
+            // Suggestion for next tier
+            updateSuggestion(quantity, pricing.tier);
         }
     }
     
-    // Ejecutar al cargar
-    const initialQuantity = parseInt(quantityInput.value) || 100;
-    const productSlug = '{{ product.slug }}';
-    updatePricing(productSlug, initialQuantity);
-    
-    // ========================================
-    // 2. MANEJO DE CARGA DE ARCHIVOS
-    // ========================================
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const files = e.target.files;
+    function updateSuggestion(quantity, currentTier) {
+        const nextTier = priceTiers.find(t => t.min > currentTier.max);
+        
+        if (nextTier) {
+            const unitsNeeded = nextTier.min - quantity;
+            const currentTotal = currentTier.price * quantity;
+            const nextTotal = nextTier.price * nextTier.min;
+            const savings = (currentTier.price - nextTier.price) * nextTier.min;
             
-            console.log(`📁 Archivos seleccionados: ${files.length}`);
-            
-            if (files.length === 0) {
-                disableAddToCartButton();
-                clearPreview();
+            if (unitsNeeded <= 20 && unitsNeeded > 0) {
+                suggestionText.textContent = `Compra ${unitsNeeded} unidades más (${nextTier.min} total) y ahorra S/ ${savings.toFixed(2)} adicionales`;
+                suggestionBox.classList.remove('hidden');
                 return;
             }
-            
-            enableAddToCartButton();
-            showFilePreview(files);
+        }
+        
+        suggestionBox.classList.add('hidden');
+    }
+    
+    // Event listener para cantidad
+    quantityInput.addEventListener('input', updatePricing);
+    
+    // Inicializar precio
+    updatePricing();
+    
+    // ========================================
+    // 4. ESTADO DEL BOTÓN
+    // ========================================
+    function updateButtonState() {
+        let canSubmit = false;
+        
+        if (isTarjetasPage) {
+            // Para tarjetas: necesita elegir opción Y subir archivo si eligió upload
+            if (selectedDesignChoice === 'upload' && fileInput.files.length > 0) {
+                canSubmit = true;
+            }
+            // Si eligió gallery, se redirige automáticamente
+        } else {
+            // Para otros productos: solo necesita archivo
+            canSubmit = fileInput.files.length > 0;
+        }
+        
+        if (canSubmit) {
+            addToCartBtn.disabled = false;
+            addToCartBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            addToCartBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+            fileRequiredMsg.classList.add('hidden');
+        } else {
+            addToCartBtn.disabled = true;
+            addToCartBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            addToCartBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+            fileRequiredMsg.classList.remove('hidden');
+        }
+    }
+    
+    // ========================================
+    // 5. MANEJO DE ARCHIVOS
+    // ========================================
+    if (fileUploadSection) {
+        fileUploadSection.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        
+        fileUploadSection.addEventListener('dragleave', function() {
+            this.classList.remove('dragover');
+        });
+        
+        fileUploadSection.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            showFilePreview(e.dataTransfer.files);
+            updateButtonState();
         });
     }
     
-    // ========================================
-    // 3. FUNCIONES DE HABILITACIÓN DE BOTÓN
-    // ========================================
-    function disableAddToCartButton() {
-        if (addToCartBtn) {
-            addToCartBtn.disabled = true;
-            addToCartBtn.className = 'w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-lg cursor-not-allowed transition-all';
-        }
-        
-        if (fileRequiredMessage) {
-            fileRequiredMessage.classList.remove('hidden');
-        }
+    if (fileInput) {
+        fileInput.addEventListener('change', function() {
+            showFilePreview(this.files);
+            updateButtonState();
+        });
     }
     
-    function enableAddToCartButton() {
-        if (addToCartBtn) {
-            addToCartBtn.disabled = false;
-            addToCartBtn.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg';
-        }
-        
-        if (fileRequiredMessage) {
-            fileRequiredMessage.classList.add('hidden');
-        }
-    }
-    
-    // ========================================
-    // 4. PREVIEW DE ARCHIVOS
-    // ========================================
     function showFilePreview(files) {
         if (!previewContainer) return;
         
@@ -527,13 +764,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function clearPreview() {
-        if (previewContainer) {
-            previewContainer.innerHTML = 
-                '<p class="text-sm text-gray-400">Ningún archivo seleccionado</p>';
-        }
-    }
-    
     function getFileIcon(fileName) {
         const ext = fileName.split('.').pop().toLowerCase();
         
@@ -548,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ========================================
-    // 5. AGREGAR AL CARRITO
+    // 6. AGREGAR AL CARRITO
     // ========================================
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', function(e) {
@@ -583,6 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('quantity_tier', 'custom');
             formData.append('custom_quantity', quantity);
             formData.append('design_file', files[0]);
+            formData.append('design_type', 'custom');
             
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
@@ -619,7 +850,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ========================================
-    // 6. MODAL DE ÉXITO
+    // 7. MODAL DE ÉXITO
     // ========================================
     if (modalGoToCart) {
         modalGoToCart.addEventListener('click', function() {
@@ -632,6 +863,9 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.classList.add('hidden');
         });
     }
+    
+    // Inicializar estado del botón
+    updateButtonState();
     
     console.log('✅ Página de producto inicializada correctamente');
 });

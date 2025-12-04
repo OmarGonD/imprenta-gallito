@@ -10,500 +10,250 @@
 
 {% block content %}
 <div class="product-detail-page">
-    <!-- Breadcrumb -->
     <nav class="breadcrumb-nav">
         <div class="container">
             <ol class="breadcrumb">
                 <li><a href="{% url 'shop:home' %}">Inicio</a></li>
-                <li><a href="{% url 'shop:ropa_bolsas' %}">Ropa y Bolsas</a></li>
-                <li><a href="{% url 'shop:clothing_category' category.slug %}">{{ category.name }}</a></li>
+                <li><a href="{% url 'shop:category' category_slug='ropa-bolsos' %}">Ropa y Bolsas</a></li>
+                <li><a href="{% url 'shop:clothing_category' category_slug=category.slug %}">{{ category.name }}</a></li>
                 <li class="active">{{ product.name }}</li>
             </ol>
         </div>
     </nav>
 
-    <!-- Product Main Section -->
     <main class="product-main">
         <div class="container">
             <div class="product-detail-layout">
-                <!-- Product Gallery -->
                 <div class="product-gallery">
                     <div class="main-image-container">
                         <img id="main-product-image" 
-                             src="{% if product.main_image %}{{ product.main_image.url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}" 
-                             alt="{{ product.name }}"
-                             class="main-product-image">
-                        {% if product.is_new %}
-                        <span class="badge badge-new">Nuevo</span>
-                        {% endif %}
-                        {% if product.discount_percentage %}
-                        <span class="badge badge-sale">-{{ product.discount_percentage }}%</span>
-                        {% endif %}
+                             src="{{ base_image_url }}" 
+                             alt="{{ product.name }}">
                     </div>
+
+                    <div class="thumbnail-list">
+                        </div>
+                </div>
+
+                <div class="product-info">
+                    <h1 class="product-title">{{ product.name }}</h1>
+                    <p class="product-code">SKU: {{ product.sku }}</p>
                     
-                    <div class="thumbnail-gallery">
-                        {% if product.main_image %}
-                        <button type="button" class="thumbnail active" data-image="{{ product.main_image.url }}">
-                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
-                        </button>
-                        {% endif %}
-                        {% for img in default_images %}
-                        <button type="button" class="thumbnail" data-image="{{ img.image.url }}">
-                            <img src="{{ img.image.url }}" alt="{{ img.alt_text }}">
-                        </button>
+                    <div class="product-pricing">
+                        {% for tier in pricing_tiers %}
+                            {% if forloop.first %}
+                            <span class="price-label">Precio desde:</span>
+                            <span class="main-price">S/ {{ tier.price|floatformat:2 }}</span>
+                            <span class="unit-price">/unidad (Min. {{ tier.min_quantity }})</span>
+                            {% endif %}
                         {% endfor %}
                     </div>
-                </div>
 
-                <!-- Product Info -->
-                <div class="product-info-section">
-                    <div class="product-header">
-                        <h1 class="product-title">{{ product.name }}</h1>
-                        <p class="product-sku">SKU: {{ product.sku }}</p>
-                    </div>
-
-                    {% if product.short_description %}
-                    <p class="product-short-desc">{{ product.short_description }}</p>
-                    {% endif %}
-
-                    <!-- Pricing -->
-                    <div class="product-pricing-section">
-                        {% if product.sale_price %}
-                        <div class="price-box">
-                            <span class="price-original">S/ {{ product.base_price }}</span>
-                            <span class="price-sale">S/ {{ product.sale_price }}</span>
-                            <span class="price-save">Ahorras {{ product.discount_percentage }}%</span>
-                        </div>
-                        {% else %}
-                        <div class="price-box">
-                            <span class="price-label">Desde</span>
-                            <span class="price-main">S/ {{ product.base_price }}</span>
-                            <span class="price-unit">por unidad</span>
-                        </div>
-                        {% endif %}
-                        
-                        {% if pricing_tiers %}
-                        <div class="quantity-pricing">
-                            <h4>Precios por cantidad:</h4>
-                            <table class="pricing-table">
-                                <thead>
-                                    <tr>
-                                        <th>Cantidad</th>
-                                        <th>Precio/und</th>
-                                        <th>Ahorro</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for tier in pricing_tiers %}
-                                    <tr>
-                                        <td>{{ tier.min_quantity }}{% if tier.max_quantity %} - {{ tier.max_quantity }}{% else %}+{% endif %}</td>
-                                        <td>S/ {{ tier.price_per_unit }}</td>
-                                        <td class="savings">
-                                            {% widthratio product.base_price 1 tier.price_per_unit as tier_percent %}
-                                            -{{ tier_percent|floatformat:0 }}%
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <!-- Customization Form -->
-                    <form id="add-to-cart-form" class="customization-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="product_id" value="{{ product.id }}">
-                        
-                        <!-- Color Selection -->
-                        {% if product.available_colors.count > 0 %}
-                        <div class="option-section">
-                            <label class="option-label">
-                                Color: <span id="selected-color-name">Selecciona un color</span>
-                            </label>
-                            <div class="color-selector">
-                                {% for color in product.available_colors.all %}
-                                <label class="color-option-detail" title="{{ color.name }}">
-                                    <input type="radio" name="color" value="{{ color.slug }}" 
-                                           data-color-name="{{ color.name }}"
-                                           data-hex="{{ color.hex_code }}"
-                                           {% if forloop.first %}checked{% endif %}>
-                                    <span class="color-circle" style="background-color: {{ color.hex_code }};"></span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Size Selection -->
-                        {% if product.available_sizes.count > 0 %}
-                        <div class="option-section">
-                            <label class="option-label">
-                                Talla: <span id="selected-size-name">Selecciona una talla</span>
-                            </label>
-                            <div class="size-selector">
-                                {% for size in product.available_sizes.all %}
-                                <label class="size-option-detail">
-                                    <input type="radio" name="size" value="{{ size.name }}"
-                                           data-size-name="{{ size.display_name }}"
-                                           {% if forloop.first %}checked{% endif %}>
-                                    <span class="size-button">{{ size.name }}</span>
-                                </label>
-                                {% endfor %}
-                            </div>
-                            <a href="#" class="size-guide-link"><i class="fas fa-ruler"></i> Guía de tallas</a>
-                        </div>
-                        {% endif %}
-
-                        <!-- Quantity -->
-                        <div class="option-section">
-                            <label class="option-label">Cantidad:</label>
-                            <div class="quantity-selector">
-                                <button type="button" class="qty-btn minus" onclick="updateQuantity(-1)">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" name="quantity" id="quantity-input" 
-                                       value="{{ product.min_quantity }}" 
-                                       min="{{ product.min_quantity }}" 
-                                       max="1000">
-                                <button type="button" class="qty-btn plus" onclick="updateQuantity(1)">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <span class="min-qty-note">Mínimo: {{ product.min_quantity }} unidades</span>
-                        </div>
-
-                        <!-- Upload Design (Optional) -->
-                        <div class="option-section">
-                            <label class="option-label">Sube tu diseño (opcional):</label>
-                            <div class="upload-area" id="upload-area">
-                                <input type="file" name="design_file" id="design-file" accept="image/*,.pdf,.ai,.psd" hidden>
-                                <div class="upload-placeholder" onclick="document.getElementById('design-file').click()">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Arrastra tu archivo aquí o <span>haz clic para seleccionar</span></p>
-                                    <small>Formatos: JPG, PNG, PDF, AI, PSD</small>
-                                </div>
-                                <div class="upload-preview" id="upload-preview" style="display: none;">
-                                    <img id="preview-image" src="" alt="Preview">
-                                    <button type="button" class="remove-file" onclick="removeFile()">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Total Price -->
-                        <div class="total-section">
-                            <div class="total-row">
-                                <span>Subtotal:</span>
-                                <span class="subtotal" id="subtotal">S/ {{ product.current_price }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="action-buttons">
-                            <button type="submit" class="btn-add-cart">
-                                <i class="fas fa-shopping-cart"></i> Agregar al Carrito
-                            </button>
-                            <button type="button" class="btn-customize-design">
-                                <i class="fas fa-paint-brush"></i> Personalizar Diseño
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Product Features -->
-                    {% if product.features_list %}
-                    <div class="product-features">
-                        <h4>Características:</h4>
-                        <ul>
-                            {% for feature in product.features_list %}
-                            <li><i class="fas fa-check"></i> {{ feature }}</li>
+                    <div class="option-section">
+                        <h4>Color: <span id="selected-color-name">
+                            {# CORRECCIÓN: Usar el objeto selected_color pasado desde la vista #}
+                            {% if selected_color %}
+                                {{ selected_color.name }}
+                            {% else %}
+                                Por defecto
+                            {% endif %}
+                        </span></h4>
+                        <div class="color-swatches-container">
+                            {% for color in product.colors.all %}
+                            <div class="color-dot {% if color.slug == selected_color_slug %}active{% endif %}" 
+                                data-color-slug="{{ color.slug }}" 
+                                data-color-name="{{ color.name }}"
+                                style="background-color: {{ color.hex_code }};"
+                            ></div>
                             {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    <!-- Additional Info -->
-                    <div class="additional-info">
-                        {% if product.material %}
-                        <div class="info-item">
-                            <i class="fas fa-layer-group"></i>
-                            <span><strong>Material:</strong> {{ product.material }}</span>
                         </div>
-                        {% endif %}
-                        {% if product.weight %}
-                        <div class="info-item">
-                            <i class="fas fa-weight-hanging"></i>
-                            <span><strong>Peso:</strong> {{ product.weight }}</span>
-                        </div>
-                        {% endif %}
                     </div>
 
-                    <!-- Guarantees -->
-                    <div class="guarantees">
-                        <div class="guarantee-item">
-                            <i class="fas fa-truck"></i>
-                            <span>Envío a todo el Perú</span>
+                    <div class="option-section">
+                        <h4>Talla:</h4>
+                        <div class="size-options-grid">
+                            {% for size in product.sizes.all %}
+                            <div class="size-dot" data-size-slug="{{ size.slug }}">
+                                {{ size.name }}
+                            </div>
+                            {% endfor %}
                         </div>
-                        <div class="guarantee-item">
-                            <i class="fas fa-undo"></i>
-                            <span>Garantía de satisfacción</span>
-                        </div>
-                        <div class="guarantee-item">
-                            <i class="fas fa-headset"></i>
-                            <span>Soporte por WhatsApp</span>
-                        </div>
+                        <button id="size-guide-btn" class="text-link mt-2">Guía de Tallas</button>
+                    </div>
+
+                    <div class="option-section">
+                        <h4>Cantidad:</h4>
+                        <input type="number" id="quantity-input" value="1" min="1" class="form-control d-inline-block w-auto" oninput="updatePrice()">
+                    </div>
+                    
+                    <div class="add-to-cart-section">
+                        <span class="subtotal-label">Subtotal:</span>
+                        <span id="subtotal" class="subtotal-value font-weight-bold">S/ 0.00</span>
+                        <button class="btn btn-lg btn-primary btn-block mt-3" id="add-to-cart-btn">Añadir al Carrito</button>
+                    </div>
+
+                    <div class="product-description mt-4">
+                        <h4>Descripción</h4>
+                        {{ product.description|linebreaksbr }}
                     </div>
                 </div>
             </div>
-
-            <!-- Product Description -->
-            {% if product.description %}
-            <div class="product-description-section">
-                <h2>Descripción del Producto</h2>
-                <div class="description-content">
-                    {{ product.description|linebreaks }}
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Related Products -->
-            {% if related_products %}
-            <section class="related-products">
-                <h2>Productos Relacionados</h2>
-                <div class="related-grid">
-                    {% for related in related_products %}
-                    <article class="product-card">
-                        <a href="{{ related.get_absolute_url }}" class="product-image-wrapper">
-                            <img src="{% if related.main_image %}{{ related.main_image.url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}" 
-                                 alt="{{ related.name }}" class="product-image primary">
-                        </a>
-                        <div class="product-info">
-                            <h3 class="product-name">
-                                <a href="{{ related.get_absolute_url }}">{{ related.name }}</a>
-                            </h3>
-                            <div class="product-pricing">
-                                <span class="price-current">Desde S/ {{ related.base_price }}</span>
-                            </div>
-                            <div class="product-actions">
-                                <a href="{{ related.get_absolute_url }}" class="btn-customize">
-                                    <i class="fas fa-paint-brush"></i> Ver Producto
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    {% endfor %}
-                </div>
-            </section>
-            {% endif %}
         </div>
     </main>
+    
+    {% include 'shop/partials/related_products.html' %}
+
 </div>
 
-<!-- Size Guide Modal -->
-<div class="modal" id="size-guide-modal">
-    <div class="modal-content">
-        <button type="button" class="modal-close" onclick="closeSizeGuide()">
-            <i class="fas fa-times"></i>
-        </button>
+<div id="size-guide-modal" class="modal-guide">
+    <div class="modal-content-guide">
+        <span class="close-guide" onclick="closeSizeGuide()">&times;</span>
         <h3>Guía de Tallas</h3>
-        <table class="size-guide-table">
-            <thead>
-                <tr>
-                    <th>Talla</th>
-                    <th>Pecho (cm)</th>
-                    <th>Largo (cm)</th>
-                    <th>Hombros (cm)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>XS</td><td>86-91</td><td>66</td><td>42</td></tr>
-                <tr><td>S</td><td>91-96</td><td>69</td><td>44</td></tr>
-                <tr><td>M</td><td>96-101</td><td>72</td><td>46</td></tr>
-                <tr><td>L</td><td>101-106</td><td>74</td><td>48</td></tr>
-                <tr><td>XL</td><td>106-112</td><td>76</td><td>50</td></tr>
-                <tr><td>XXL</td><td>112-117</td><td>78</td><td>52</td></tr>
-            </tbody>
-        </table>
-    </div>
+        <p>Tabla de tallas para {{ product.name }}...</p>
+        </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
+<script id="product-images-data" type="application/json">
+    {{ images_by_color|safe }}
+</script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const basePrice = {{ product.current_price }};
-    const minQty = {{ product.min_quantity }};
+    // Obtener el color seleccionado de la URL (si existe)
+    const colorFromUrl = '{{ selected_color_slug|default:""|safe }}';
     
-    // Color selection
-    document.querySelectorAll('input[name="color"]').forEach(function(input) {
-        input.addEventListener('change', function() {
-            const colorName = this.getAttribute('data-color-name');
-            document.getElementById('selected-color-name').textContent = colorName;
-            
-            // Update product image based on color if available
-            const colorSlug = this.value;
-            const imagesForColor = {{ images_by_color|safe }};
-            if (imagesForColor && imagesForColor[colorSlug] && imagesForColor[colorSlug].length > 0) {
-                document.getElementById('main-product-image').src = imagesForColor[colorSlug][0].image;
+    // Asumiendo que esta variable de precio base existe
+    const basePrice = {{ pricing_tiers.first.price|floatformat:2|default:0.00 }}; 
+
+    // Función para actualizar la imagen principal y el estado 'active' de los swatches
+    function updateMainImage(colorSlug) {
+        const galleryElement = document.getElementById('product-images-data');
+        if (!galleryElement) return;
+
+        let gallery;
+        try {
+            gallery = JSON.parse(galleryElement.textContent);
+        } catch (e) {
+            console.error("Error al parsear datos de imágenes:", e);
+            return;
+        }
+
+        const mainImageElement = document.getElementById('main-product-image');
+        if (!mainImageElement) return;
+
+        // 1. Determinar el slug de color a buscar
+        const targetSlug = colorSlug || 'default'; 
+        
+        let primaryImage = null;
+
+        // 2. Buscar la imagen principal para el color objetivo
+        if (gallery[targetSlug]) {
+            primaryImage = gallery[targetSlug].find(img => img.is_primary);
+        }
+        
+        // 3. Fallback a la imagen principal por defecto
+        if (!primaryImage && targetSlug !== 'default' && gallery['default']) {
+            primaryImage = gallery['default'].find(img => img.is_primary);
+        }
+
+        // 4. Actualizar la fuente de la imagen
+        if (primaryImage) {
+            mainImageElement.src = primaryImage.image;
+        }
+        
+        // 5. Actualizar el estado 'active' de los swatches y el nombre del color
+        let selectedColorName = "Por defecto";
+        document.querySelectorAll('.color-dot').forEach(dot => {
+            dot.classList.remove('active');
+            if (dot.dataset.colorSlug === colorSlug) {
+                dot.classList.add('active');
+                selectedColorName = dot.dataset.colorName;
             }
         });
-        
-        // Trigger initial selection
-        if (input.checked) {
-            input.dispatchEvent(new Event('change'));
-        }
-    });
-    
-    // Size selection
-    document.querySelectorAll('input[name="size"]').forEach(function(input) {
-        input.addEventListener('change', function() {
-            const sizeName = this.getAttribute('data-size-name');
-            document.getElementById('selected-size-name').textContent = sizeName;
-        });
-        
-        if (input.checked) {
-            input.dispatchEvent(new Event('change'));
-        }
-    });
-    
-    // Quantity update
-    document.getElementById('quantity-input').addEventListener('change', function() {
-        updateTotal();
-    });
-    
-    // Thumbnail gallery
-    document.querySelectorAll('.thumbnail').forEach(function(thumb) {
-        thumb.addEventListener('click', function() {
-            const imageUrl = this.getAttribute('data-image');
-            document.getElementById('main-product-image').src = imageUrl;
-            
-            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-    
-    // Size guide link
-    document.querySelector('.size-guide-link')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('size-guide-modal').classList.add('active');
-    });
-    
-    // File upload
-    const uploadArea = document.getElementById('upload-area');
-    const fileInput = document.getElementById('design-file');
-    
-    uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('dragover');
-    });
-    
-    uploadArea.addEventListener('dragleave', function() {
-        this.classList.remove('dragover');
-    });
-    
-    uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('dragover');
-        if (e.dataTransfer.files.length) {
-            fileInput.files = e.dataTransfer.files;
-            showPreview(e.dataTransfer.files[0]);
-        }
-    });
-    
-    fileInput.addEventListener('change', function() {
-        if (this.files.length) {
-            showPreview(this.files[0]);
-        }
-    });
-    
-    // Form submission
-    document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        
-        fetch('{% url "shop:add_clothing_to_cart" %}', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update cart counter
-                const cartCounter = document.querySelector('.cart-counter');
-                if (cartCounter) {
-                    cartCounter.textContent = data.cart_items_counter;
-                }
-                
-                // Show success message
-                alert('¡Producto agregado al carrito!');
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
-});
+        document.getElementById('selected-color-name').textContent = selectedColorName;
 
-function updateQuantity(change) {
-    const input = document.getElementById('quantity-input');
-    const minQty = parseInt(input.min);
-    let newValue = parseInt(input.value) + change;
+        // Opcional: Actualizar thumbnails de galería (requeriría más lógica aquí)
+    }
     
-    if (newValue < minQty) newValue = minQty;
-    if (newValue > 1000) newValue = 1000;
-    
-    input.value = newValue;
-    updateTotal();
-}
+    // --------------------------------------------------------------------------
+    // FUNCIONES DEL PRODUCTO
+    // --------------------------------------------------------------------------
 
-function updateTotal() {
-    const quantity = parseInt(document.getElementById('quantity-input').value);
-    const basePrice = {{ product.current_price }};
-    const subtotal = quantity * basePrice;
+    function updatePrice() {
+        const quantity = parseInt(document.getElementById('quantity-input').value) || 0;
+        // Lógica de cálculo de subtotal usando basePrice (simple)
+        const subtotal = quantity * basePrice; 
+        
+        document.getElementById('subtotal').textContent = 'S/ ' + subtotal.toFixed(2);
+    }
     
-    document.getElementById('subtotal').textContent = 'S/ ' + subtotal.toFixed(2);
-}
-
-function showPreview(file) {
-    const preview = document.getElementById('upload-preview');
-    const placeholder = document.querySelector('.upload-placeholder');
-    const previewImage = document.getElementById('preview-image');
-    
-    if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            previewImage.src = e.target.result;
+    function showPreview(file) {
+        const preview = document.getElementById('upload-preview');
+        const placeholder = document.querySelector('.upload-placeholder');
+        const previewImage = document.getElementById('preview-image');
+        
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // For non-image files, show a file icon
+            previewImage.src = '{% static "img/file-icon.png" %}';
             preview.style.display = 'block';
             placeholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    } else {
-        // For non-image files, show a file icon
-        previewImage.src = '{% static "img/file-icon.png" %}';
-        preview.style.display = 'block';
-        placeholder.style.display = 'none';
+        }
     }
-}
-
-function removeFile() {
-    document.getElementById('design-file').value = '';
-    document.getElementById('upload-preview').style.display = 'none';
-    document.querySelector('.upload-placeholder').style.display = 'flex';
-}
-
-function closeSizeGuide() {
-    document.getElementById('size-guide-modal').classList.remove('active');
-}
-
-// Close modal on outside click
-document.getElementById('size-guide-modal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeSizeGuide();
+    
+    function removeFile() {
+        document.getElementById('design-file').value = '';
+        document.getElementById('upload-preview').style.display = 'none';
+        document.querySelector('.upload-placeholder').style.display = 'flex';
     }
-});
+    
+    function closeSizeGuide() {
+        document.getElementById('size-guide-modal').classList.remove('active');
+    }
+    
+    // --------------------------------------------------------------------------
+    // MANEJADORES DE EVENTOS
+    // --------------------------------------------------------------------------
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Inicializa la imagen principal y el swatch activo al cargar la página
+        updateMainImage(colorFromUrl);
+        updatePrice(); // Inicializa el precio
+        
+        // Evento click en los swatches de color
+        document.querySelectorAll('.color-dot').forEach(dot => {
+            dot.addEventListener('click', function(e) {
+                e.preventDefault();
+                const colorSlug = this.dataset.colorSlug;
+                
+                // 1. Actualiza la imagen y el estado 'active'
+                updateMainImage(colorSlug);
+                
+                // 2. Actualizar la URL de la página sin recargar
+                const url = new URL(window.location.href);
+                url.searchParams.set('color', colorSlug);
+                history.pushState(null, '', url.toString());
+            });
+        });
+        
+        // Evento para mostrar la guía de tallas
+        document.getElementById('size-guide-btn').addEventListener('click', () => {
+            document.getElementById('size-guide-modal').classList.add('active');
+        });
+
+        // Evento para cerrar la guía de tallas al clickear fuera
+        document.getElementById('size-guide-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('size-guide-modal')) {
+                closeSizeGuide();
+            }
+        });
+    });
 </script>
 {% endblock %}

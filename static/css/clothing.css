@@ -609,8 +609,8 @@
     transition: var(--clothing-transition);
 }
 
-.product-image.hover {
-    opacity: 0;
+/*.product-image.hover {
+   opacity: 0;
 }
 
 .product-card:hover .product-image.primary {
@@ -619,7 +619,7 @@
 
 .product-card:hover .product-image.hover {
     opacity: 1;
-}
+}*/
 
 /* Product Info */
 .product-info {

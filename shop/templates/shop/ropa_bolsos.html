@@ -7,6 +7,7 @@
 <style>
 /* ============================================
    ROPA Y BOLSOS - VISTAPRINT STYLE
+   Sistema Unificado: Usa Subcategory en lugar de ClothingCategory
    ============================================ */
 
 :root {
@@ -180,7 +181,7 @@
     align-items: center;
     text-decoration: none;
     transition: all 0.3s ease;
-    width: 140px;
+    width: 180px;
 }
 
 .subcategory-circle:hover {
@@ -188,8 +189,8 @@
 }
 
 .circle-image {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     overflow: hidden;
     border: 4px solid var(--border-color);
@@ -224,12 +225,12 @@
 }
 
 .circle-placeholder i {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     color: white;
 }
 
 .subcategory-circle span {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--dark);
     text-align: center;
@@ -479,163 +480,11 @@
 }
 
 /* ============================================
-   COLLECTIONS SECTION
-   ============================================ */
-.cb-collections {
-    padding: 60px 0;
-    background: white;
-}
-
-.cb-collections .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.collections-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-}
-
-.collection-card {
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    aspect-ratio: 4/3;
-    text-decoration: none;
-}
-
-.collection-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.collection-card:hover img {
-    transform: scale(1.05);
-}
-
-.collection-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 25px;
-}
-
-.collection-overlay h3 {
-    color: white;
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.collection-overlay p {
-    color: rgba(255,255,255,0.85);
-    font-size: 0.95rem;
-}
-
-.collection-arrow {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
-}
-
-.collection-card:hover .collection-arrow {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.collection-arrow i {
-    color: var(--dark);
-}
-
-/* ============================================
-   USE CASES SECTION
-   ============================================ */
-.cb-use-cases {
-    padding: 60px 0;
-    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-}
-
-.cb-use-cases .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.use-cases-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
-
-.use-case-card {
-    background: white;
-    border-radius: 12px;
-    padding: 30px 20px;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.use-case-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.use-case-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--primary), #0088ff);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 15px;
-}
-
-.use-case-icon i {
-    font-size: 1.5rem;
-    color: white;
-}
-
-.use-case-card h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 8px;
-}
-
-.use-case-card p {
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.4;
-}
-
-/* ============================================
    FEATURES SECTION
    ============================================ */
 .cb-features {
+    padding: 40px 0;
     background: white;
-    padding: 60px 0;
     border-top: 1px solid var(--border-color);
 }
 
@@ -663,24 +512,25 @@
     color: var(--primary);
 }
 
-.feature-inline-item div h4 {
+.feature-inline-item h4 {
     font-size: 1rem;
     font-weight: 600;
     color: var(--dark);
     margin-bottom: 4px;
 }
 
-.feature-inline-item div p {
+.feature-inline-item p {
     font-size: 0.85rem;
     color: #666;
+    margin: 0;
 }
 
 /* ============================================
-   CTA FINAL
+   FINAL CTA
    ============================================ */
 .cb-final-cta {
-    background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
-    padding: 70px 0;
+    padding: 60px 0;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
     text-align: center;
 }
 
@@ -691,22 +541,22 @@
 }
 
 .cb-final-cta h2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 700;
     color: white;
     margin-bottom: 15px;
 }
 
 .cb-final-cta p {
-    font-size: 1.15rem;
     color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
     margin-bottom: 30px;
 }
 
 .cta-buttons {
     display: flex;
-    justify-content: center;
     gap: 20px;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
@@ -714,83 +564,45 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: var(--secondary);
+    padding: 15px 30px;
+    background: #25d366;
     color: white;
-    padding: 16px 35px;
-    border-radius: 50px;
-    font-size: 1.05rem;
     font-weight: 600;
+    border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .cta-btn-primary:hover {
-    background: #d62839;
+    background: #128c7e;
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(230,57,70,0.4);
 }
 
 .cta-btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    padding: 15px 30px;
     background: transparent;
     color: white;
-    padding: 16px 35px;
-    border-radius: 50px;
-    border: 2px solid rgba(255,255,255,0.3);
-    font-size: 1.05rem;
     font-weight: 600;
+    border: 2px solid white;
+    border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .cta-btn-secondary:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: white;
+    background: white;
+    color: var(--dark);
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 992px) {
-    .cb-hero h1 {
-        font-size: 2.2rem;
-    }
-    
-    .subcategories-circles {
-        gap: 25px;
-    }
-    
-    .subcategory-circle {
-        width: 110px;
-    }
-    
-    .circle-image {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .collections-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .use-cases-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
 @media (max-width: 768px) {
-    .cb-hero {
-        padding: 50px 0;
-    }
-    
     .cb-hero h1 {
-        font-size: 1.8rem;
-    }
-    
-    .cb-hero p {
-        font-size: 1rem;
+        font-size: 2rem;
     }
     
     .hero-badges {
@@ -803,45 +615,21 @@
     }
     
     .subcategory-circle {
-        width: 90px;
+        width: 140px;
     }
     
     .circle-image {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .subcategory-circle span {
-        font-size: 0.85rem;
-    }
-    
-    .carousel-header {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .collections-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .use-cases-grid {
-        grid-template-columns: 1fr;
+        width: 120px;
+        height: 120px;
     }
     
     .features-inline {
         flex-direction: column;
         align-items: center;
-        text-align: center;
     }
     
-    .feature-inline-item {
-        flex-direction: column;
-    }
-    
-    .cta-buttons {
-        flex-direction: column;
-        align-items: center;
+    .carousel-nav-btn {
+        display: none;
     }
 }
 </style>
@@ -882,7 +670,7 @@
         </div>
     </nav>
 
-    <!-- Subcategories Circles -->
+    <!-- Subcategories Circles - REFACTORIZADO: Usa subcategories del sistema unificado -->
     <section class="cb-subcategories">
         <div class="container">
             <div class="section-title-center">
@@ -891,21 +679,37 @@
             </div>
             
             <div class="subcategories-circles">
-                {% for category in categories %}
-                <a href="{% url 'shop:clothing_category' category.slug %}" class="subcategory-circle {% if selected_category == category.slug %}active{% endif %}">
+                {# CAMBIO PRINCIPAL: Iterar sobre subcategories en lugar de categories #}
+                {% for subcategory in subcategories %}
+                <a href="{% url 'shop:clothing_category' subcategory.slug %}" 
+                   class="subcategory-circle {% if selected_subcategory == subcategory.slug %}active{% endif %}">
                     <div class="circle-image">
-                        {% if category.image %}
-                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                        {# Usar image_url del CSV (sistema unificado) #}
+                        {% if subcategory.image_url %}
+                        <img src="{{ subcategory.image_url }}" alt="{{ subcategory.name }}">
                         {% else %}
-                        <div class="circle-placeholder">
-                            <i class="fas {{ category.icon|default:'fa-tshirt' }}"></i>
+                        {# Placeholder con icono según el slug #}
+                        <div class="circle-placeholder" style="
+                            {% if 'polo' in subcategory.slug %}
+                            background: linear-gradient(135deg, #0066cc, #0088ff);
+                            {% elif 'camisa' in subcategory.slug %}
+                            background: linear-gradient(135deg, #f59e0b, #d97706);
+                            {% elif 'gorro' in subcategory.slug or 'gorra' in subcategory.slug %}
+                            background: linear-gradient(135deg, #10b981, #059669);
+                            {% elif 'bolso' in subcategory.slug or 'bolsa' in subcategory.slug %}
+                            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+                            {% else %}
+                            background: linear-gradient(135deg, var(--primary), #0088ff);
+                            {% endif %}
+                        ">
+                            <i class="fas {% if subcategory.icon %}{{ subcategory.icon }}{% elif 'polo' in subcategory.slug %}fa-tshirt{% elif 'camisa' in subcategory.slug %}fa-user-tie{% elif 'gorro' in subcategory.slug or 'gorra' in subcategory.slug %}fa-hat-cowboy{% elif 'bolso' in subcategory.slug or 'bolsa' in subcategory.slug %}fa-shopping-bag{% else %}fa-tshirt{% endif %}"></i>
                         </div>
                         {% endif %}
                     </div>
-                    <span>{{ category.name }}</span>
+                    <span>{{ subcategory.name }}</span>
                 </a>
                 {% empty %}
-                <!-- Default categories -->
+                <!-- Categorías por defecto si no hay datos en la BD -->
                 <a href="#" class="subcategory-circle">
                     <div class="circle-image">
                         <div class="circle-placeholder">
@@ -960,9 +764,7 @@
                     {% for product in products %}
                     <a href="{{ product.get_absolute_url }}" class="product-carousel-card">
                         <div class="product-carousel-image">
-                            {% if product.main_image %}
-                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
-                            {% elif product.base_image_url %}
+                            {% if product.base_image_url %}
                             <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
                             {% else %}
                             <img src="{% static 'images/placeholder-product.jpg' %}" alt="{{ product.name }}">
@@ -1009,7 +811,7 @@
                         </div>
                     </a>
                     {% empty %}
-                    <!-- Productos de ejemplo -->
+                    <!-- Productos de ejemplo cuando no hay datos -->
                     <div class="product-carousel-card">
                         <div class="product-carousel-image">
                             <img src="{% static 'images/placeholder-polo.jpg' %}" alt="Polo Básico">
@@ -1039,95 +841,6 @@
                 <button class="carousel-nav-btn next" onclick="scrollCarousel('featured', 1)">
                     <i class="fas fa-chevron-right"></i>
                 </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Collections -->
-    <section class="cb-collections">
-        <div class="container">
-            <div class="section-title-center">
-                <h2>Colecciones Populares</h2>
-                <p>Inspiración para tu próximo proyecto</p>
-            </div>
-            
-            <div class="collections-grid">
-                <a href="#" class="collection-card">
-                    <img src="{% static 'images/collection-corporate.jpg' %}" alt="Uniformes Corporativos">
-                    <div class="collection-overlay">
-                        <h3>Uniformes Corporativos</h3>
-                        <p>Profesionaliza tu equipo de trabajo</p>
-                    </div>
-                    <div class="collection-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-                
-                <a href="#" class="collection-card">
-                    <img src="{% static 'images/collection-events.jpg' %}" alt="Eventos y Promociones">
-                    <div class="collection-overlay">
-                        <h3>Eventos y Promociones</h3>
-                        <p>Destaca en ferias y activaciones</p>
-                    </div>
-                    <div class="collection-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-                
-                <a href="#" class="collection-card">
-                    <img src="{% static 'images/collection-sports.jpg' %}" alt="Equipos Deportivos">
-                    <div class="collection-overlay">
-                        <h3>Equipos Deportivos</h3>
-                        <p>Camisetas y uniformes deportivos</p>
-                    </div>
-                    <div class="collection-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Use Cases -->
-    <section class="cb-use-cases">
-        <div class="container">
-            <div class="section-title-center">
-                <h2>¿Para qué lo necesitas?</h2>
-                <p>Tenemos soluciones para cada ocasión</p>
-            </div>
-            
-            <div class="use-cases-grid">
-                <a href="#" class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h4>Empresas</h4>
-                    <p>Uniformes y merchandising corporativo</p>
-                </a>
-                
-                <a href="#" class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-store"></i>
-                    </div>
-                    <h4>Tiendas</h4>
-                    <p>Bolsas personalizadas para tu negocio</p>
-                </a>
-                
-                <a href="#" class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <h4>Eventos</h4>
-                    <p>Merchandising para conferencias y ferias</p>
-                </a>
-                
-                <a href="#" class="use-case-card">
-                    <div class="use-case-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h4>Grupos</h4>
-                    <p>Camisetas para viajes y reuniones</p>
-                </a>
             </div>
         </div>
     </section>
@@ -1204,7 +917,7 @@ function scrollCarousel(carouselId, direction) {
     });
 }
 
-// Initialize all carousels with touch/drag support
+// Initialize carousels with touch/drag support
 document.addEventListener('DOMContentLoaded', function() {
     const carousels = document.querySelectorAll('.products-carousel');
     

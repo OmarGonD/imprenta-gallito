@@ -5,11 +5,32 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/clothing.css' %}">
+<style>
+    .filter-options-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-option-btn input[type="checkbox"] { display: none; }
+    .filter-option-btn span { padding: 8px 14px; border: 1px solid #ddd; border-radius: 20px; font-size: 0.85rem; color: #555; background: #fff; transition: all 0.2s ease; }
+    .filter-option-btn:hover span { border-color: #0066cc; color: #0066cc; }
+    .filter-option-btn input[type="checkbox"]:checked+span { background: #0066cc; border-color: #0066cc; color: #fff; }
+
+    .product-colors { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; justify-content: center; }
+    .color-dot {
+        width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
+        border: 2px solid transparent; box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+        transition: all 0.25s ease;
+    }
+    .color-dot:hover { transform: scale(1.2); }
+    .color-dot.active {
+        border-color: #0066cc;
+        box-shadow: 0 0 0 3px #e3f2fd, 0 0 0 1px #0066cc;
+    }
+
+    .no-products { text-align: center; padding: 60px 20px; color: #666; }
+    .no-products i { font-size: 64px; margin-bottom: 20px; opacity: 0.3; }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="clothing-page">
-    <!-- Hero Banner -->
     <section class="clothing-hero" style="padding: 40px 20px;">
         <div class="hero-content">
             <h1>{{ category.name }}</h1>
@@ -17,36 +38,28 @@
         </div>
     </section>
 
-    <!-- Breadcrumb -->
     <nav class="breadcrumb-nav">
         <div class="container">
             <ol class="breadcrumb">
                 <li><a href="{% url 'shop:home' %}">Inicio</a></li>
-                <li><a href="{% url 'shop:ropa_bolsas' %}">Ropa y Bolsas</a></li>
+                <li><a href="{% url 'shop:ropa_bolsos' %}">Ropa y Bolsas</a></li>
                 <li class="active">{{ category.name }}</li>
             </ol>
         </div>
     </nav>
 
-    <!-- Subcategories Navigation -->
     {% if subcategories %}
     <section class="categories-nav">
         <div class="container">
             <div class="categories-grid">
-                <a href="{% url 'shop:clothing_category' category.slug %}" class="category-card {% if not selected_subcategory %}active{% endif %}">
-                    <div class="category-icon">
-                        <i class="fas fa-th-large"></i>
-                    </div>
-                    <span class="category-name">Todos</span>
-                </a>
                 {% for sub in subcategories %}
-                <a href="{% url 'shop:clothing_category' category.slug %}?subcategory={{ sub.slug }}" 
-                   class="category-card {% if selected_subcategory == sub.slug %}active{% endif %}">
+                <a href="{% url 'shop:clothing_category' sub.slug %}"
+                   class="category-card {% if sub.slug == category.slug %}active{% endif %}">
                     <div class="category-icon">
-                        {% if sub.image %}
-                        <img src="{{ sub.image.url }}" alt="{{ sub.name }}">
+                        {% if sub.image_url %}
+                            <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
                         {% else %}
-                        <i class="fas {{ category.icon|default:'fa-tag' }}"></i>
+                            <i class="fas fa-tshirt"></i>
                         {% endif %}
                     </div>
                     <span class="category-name">{{ sub.name }}</span>
@@ -57,110 +70,25 @@
     </section>
     {% endif %}
 
-    <!-- Main Content with Sidebar -->
     <main class="clothing-main">
         <div class="container">
             <div class="clothing-layout">
-                <!-- Filter Sidebar -->
                 <aside class="filter-sidebar">
                     <div class="filter-header">
-                        <h3><i class="fas fa-filter"></i> Filtros</h3>
+                        <h3>Filtros</h3>
                         <a href="{% url 'shop:clothing_category' category.slug %}" class="clear-filters">Limpiar todo</a>
                     </div>
-
                     <form id="filter-form" method="GET" action="{% url 'shop:clothing_category' category.slug %}">
-                        {% if selected_subcategory %}
-                        <input type="hidden" name="subcategory" value="{{ selected_subcategory }}">
-                        {% endif %}
-                        
-                        <!-- Price Filter -->
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="price">
-                                Precio
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-price">
-                                <div class="price-inputs">
-                                    <div class="price-field">
-                                        <label>Mín</label>
-                                        <input type="number" name="price_min" placeholder="S/ 0" 
-                                               value="{{ price_min }}" min="0">
-                                    </div>
-                                    <span class="price-separator">-</span>
-                                    <div class="price-field">
-                                        <label>Máx</label>
-                                        <input type="number" name="price_max" placeholder="S/ 500" 
-                                               value="{{ price_max }}" min="0">
-                                    </div>
-                                </div>
-                                <div class="price-presets">
-                                    <button type="button" class="price-preset" data-min="0" data-max="25">Hasta S/25</button>
-                                    <button type="button" class="price-preset" data-min="25" data-max="50">S/25 - S/50</button>
-                                    <button type="button" class="price-preset" data-min="50" data-max="100">S/50 - S/100</button>
-                                    <button type="button" class="price-preset" data-min="100" data-max="">Más de S/100</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Color Filter -->
-                        {% if all_colors %}
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="color">
-                                Color
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-color">
-                                <div class="color-grid">
-                                    {% for color in all_colors %}
-                                    <label class="color-option" title="{{ color.name }}">
-                                        <input type="checkbox" name="color" value="{{ color.slug }}"
-                                               {% if color.slug in selected_colors %}checked{% endif %}>
-                                        <span class="color-swatch" style="background-color: {{ color.hex_code }};"></span>
-                                        <span class="color-name">{{ color.name }}</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- Size Filter -->
-                        {% if all_sizes %}
-                        <div class="filter-section">
-                            <h4 class="filter-title" data-toggle="size">
-                                Talla
-                                <i class="fas fa-chevron-down"></i>
-                            </h4>
-                            <div class="filter-content" id="filter-size">
-                                <div class="size-grid">
-                                    {% for size in all_sizes %}
-                                    <label class="size-option">
-                                        <input type="checkbox" name="size" value="{{ size.name }}"
-                                               {% if size.name in selected_sizes %}checked{% endif %}>
-                                        <span class="size-box">{{ size.name }}</span>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <button type="submit" class="btn-apply-filters">
-                            <i class="fas fa-check"></i> Aplicar Filtros
-                        </button>
+                        <!-- Aquí van tus filtros de género, cuello, manga, etc. -->
+                        <button type="submit" class="btn-apply-filters">Aplicar Filtros</button>
                     </form>
                 </aside>
 
-                <!-- Products Grid -->
                 <section class="products-section">
-                    <!-- Sort and Results Bar -->
                     <div class="results-bar">
-                        <div class="results-count">
-                            <strong>{{ product_count }}</strong> productos en {{ category.name }}
-                        </div>
+                        <div class="results-count"><strong>{{ product_count }}</strong> productos</div>
                         <div class="sort-options">
-                            <label for="sort-select">Ordenar por:</label>
-                            <select id="sort-select" name="sort" onchange="updateSort(this.value)">
+                            <select id="sort-select" onchange="updateSort(this.value)">
                                 <option value="featured" {% if sort_by == 'featured' %}selected{% endif %}>Destacados</option>
                                 <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Menor precio</option>
                                 <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Mayor precio</option>
@@ -168,81 +96,79 @@
                                 <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nombre A-Z</option>
                             </select>
                         </div>
-                        <div class="view-options">
-                            <button type="button" class="view-btn active" data-view="grid" title="Vista de cuadrícula">
-                                <i class="fas fa-th"></i>
-                            </button>
-                            <button type="button" class="view-btn" data-view="list" title="Vista de lista">
-                                <i class="fas fa-list"></i>
-                            </button>
-                        </div>
                     </div>
 
-                    <!-- Products Grid -->
                     <div class="products-grid" id="products-container">
                         {% for product in products %}
-                        <article class="product-card" data-product-id="{{ product.id }}">
-                            {% if product.is_new %}
-                            <span class="badge badge-new">Nuevo</span>
-                            {% endif %}
-                            {% if product.discount_percentage %}
-                            <span class="badge badge-sale">-{{ product.discount_percentage }}%</span>
-                            {% endif %}
-                            {% if product.is_bestseller %}
-                            <span class="badge badge-best">Más vendido</span>
-                            {% endif %}
-                            
-                            <a href="{{ product.get_absolute_url }}" class="product-image-wrapper">
-                                <img src="{% if product.main_image %}{{ product.main_image.url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}" 
-                                     alt="{{ product.name }}" 
-                                     class="product-image primary">
-                                {% if product.hover_image %}
-                                <img src="{{ product.hover_image.url }}" 
-                                     alt="{{ product.name }}" 
-                                     class="product-image hover">
-                                {% endif %}
+                        <article class="product-card"
+                                 data-product-id="{{ product.id }}"
+                                 data-product-slug="{{ product.slug }}"
+                                 data-base-image="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}">
+                            {% if product.is_new %}<span class="badge badge-new">Nuevo</span>{% endif %}
+                            {% if product.discount_percentage %}<span class="badge badge-sale">-{{ product.discount_percentage }}%</span>{% endif %}
+                            {% if product.is_bestseller %}<span class="badge badge-best">Más vendido</span>{% endif %}
+
+                            <!-- IMAGEN + NOMBRE + BOTÓN: todos llevan el color seleccionado -->
+                            <a href="#" class="product-image-wrapper"
+                                onclick="event.preventDefault(); goToDetailWithColor(this.closest('.product-card'))">
+                                <img src="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}"
+                                     alt="{{ product.name }}" class="product-image primary"
+                                     id="product-img-{{ product.id }}">
                             </a>
-                            
+
                             <div class="product-info">
-                                <h3 class="product-name">
-                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                                </h3>
-                                
-                                {% if product.short_description %}
-                                <p class="product-description">{{ product.short_description }}</p>
+                                {% if product.material %}
+                                    <span class="product-brand">{{ product.material }}</span>
                                 {% endif %}
-                                
-                                <div class="product-colors">
-                                    {% for color in product.available_colors.all|slice:":6" %}
-                                    <span class="color-dot" style="background-color: {{ color.hex_code }};" title="{{ color.name }}"></span>
-                                    {% endfor %}
-                                    {% if product.available_colors.count > 6 %}
-                                    <span class="more-colors">+{{ product.available_colors.count|add:"-6" }}</span>
+
+                                <h3 class="product-name">
+                                    <a href="#" onclick="event.preventDefault(); goToDetailWithColor(this.closest('.product-card'))">
+                                        {{ product.name }}
+                                    </a>
+                                </h3>
+
+                                <!-- COLORES -->
+                                {% with colors=product.available_colors.all %}
+                                    {% if colors %}
+                                    <div class="product-colors">
+                                        {% for color in colors %}
+                                        <span class="color-dot"
+                                              style="background-color: {{ color.hex_code }}; 
+                                                     border: 1px solid {% if color.hex_code|lower in '#ffffff,#f5f5f5,#ffff00,#fcfcfc,#fff' %}#ccc{% else %}{{ color.hex_code }}{% endif %};"
+                                              title="{{ color.name }}"
+                                              data-color-slug="{{ color.slug }}"
+                                              data-product-id="{{ product.id }}"></span>
+                                        {% endfor %}
+                                    </div>
                                     {% endif %}
-                                </div>
-                                
+                                {% endwith %}
+
+                                <!-- PRECIO -->
                                 <div class="product-pricing">
                                     {% if product.sale_price %}
-                                    <span class="price-original">S/ {{ product.base_price }}</span>
-                                    <span class="price-current">S/ {{ product.sale_price }}</span>
+                                        <span class="price-original">S/ {{ product.base_price }}</span>
+                                        <span class="price-current">S/ {{ product.sale_price }}</span>
                                     {% else %}
-                                    <span class="price-current">Desde S/ {{ product.base_price }}</span>
+                                        <span class="price-current">Desde S/ {{ product.base_price|default:"25.00" }}</span>
                                     {% endif %}
                                 </div>
-                                
+
+                                <!-- BOTÓN PERSONALIZAR -->
                                 <div class="product-actions">
-                                    <a href="{{ product.get_absolute_url }}" class="btn-customize">
-                                        <i class="fas fa-paint-brush"></i> Personalizar
+                                    <a href="#" 
+                                       onclick="event.preventDefault(); goToDetailWithColor(this.closest('.product-card'))"
+                                       class="btn-customize">
+                                        Personalizar
                                     </a>
                                 </div>
                             </div>
                         </article>
+
                         {% empty %}
                         <div class="no-products">
                             <i class="fas fa-box-open"></i>
                             <h3>No hay productos disponibles</h3>
-                            <p>No encontramos productos que coincidan con tus filtros. Intenta con otros criterios.</p>
-                            <a href="{% url 'shop:clothing_category' category.slug %}" class="btn-customize">Ver todos los productos</a>
+                            <p>Intenta con otros filtros o regresa más tarde.</p>
                         </div>
                         {% endfor %}
                     </div>
@@ -250,114 +176,118 @@
             </div>
         </div>
     </main>
-
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="container">
-            <div class="features-grid">
-                <div class="feature-item">
-                    <i class="fas fa-shipping-fast"></i>
-                    <h4>Envío Rápido</h4>
-                    <p>Entrega en 3-5 días hábiles a todo el Perú</p>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-paint-brush"></i>
-                    <h4>Diseño Gratis</h4>
-                    <p>Te ayudamos a crear tu diseño sin costo adicional</p>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-undo"></i>
-                    <h4>Garantía de Calidad</h4>
-                    <p>Si no estás satisfecho, lo reimprimimos gratis</p>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-headset"></i>
-                    <h4>Soporte Experto</h4>
-                    <p>Atención personalizada por WhatsApp</p>
-                </div>
-            </div>
-        </div>
-    </section>
 </div>
 
-<!-- Mobile Filter Button -->
 <button type="button" class="mobile-filter-btn" id="mobile-filter-toggle">
-    <i class="fas fa-filter"></i> Filtros
+    Filtros {% if has_active_filters %}<span class="filter-badge">!</span>{% endif %}
 </button>
-
-<!-- Mobile Filter Overlay -->
 <div class="filter-overlay" id="filter-overlay"></div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle filter sections
-    document.querySelectorAll('.filter-title').forEach(function(title) {
-        title.addEventListener('click', function() {
-            const target = this.getAttribute('data-toggle');
-            const content = document.getElementById('filter-' + target);
-            const icon = this.querySelector('i');
-            
-            if (content) {
-                content.classList.toggle('collapsed');
-                icon.classList.toggle('fa-chevron-down');
-                icon.classList.toggle('fa-chevron-up');
+document.addEventListener('DOMContentLoaded', function () {
+    // Para cada tarjeta de producto, inicializar el color correcto
+    document.querySelectorAll('.product-card').forEach(card => {
+        const dots = card.querySelectorAll('.color-dot');
+        const img = card.querySelector('.product-image-wrapper img');
+        const baseImage = card.dataset.baseImage;
+        const productSlug = card.dataset.productSlug;
+        
+        if (!dots.length) return;
+        
+        // Buscar qué color corresponde a la imagen base usando la API
+        // Mientras tanto, NO marcar ningún color como activo hasta verificar
+        
+        // Cargar los colores del producto y encontrar cuál corresponde a la imagen actual
+        fetch(`/api/product/${productSlug}/colors/`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.colors && data.colors.length > 0) {
+                    // Buscar el color que coincida con la imagen base
+                    let matchingColor = null;
+                    
+                    for (const color of data.colors) {
+                        if (color.image_url === baseImage) {
+                            matchingColor = color.slug;
+                            break;
+                        }
+                    }
+                    
+                    // Si no encontramos coincidencia exacta, usar el primer color
+                    // y actualizar la imagen para que coincidan
+                    if (!matchingColor) {
+                        matchingColor = data.colors[0].slug;
+                        // Actualizar la imagen al primer color disponible
+                        if (data.colors[0].image_url && img) {
+                            img.src = data.colors[0].image_url;
+                        }
+                    }
+                    
+                    // Marcar el color correcto como activo
+                    dots.forEach(dot => {
+                        if (dot.dataset.colorSlug === matchingColor) {
+                            dot.classList.add('active');
+                        }
+                    });
+                } else {
+                    // Si no hay datos de la API, marcar el primer color
+                    if (dots[0]) dots[0].classList.add('active');
+                }
+            })
+            .catch(() => {
+                // En caso de error, marcar el primer color como activo
+                if (dots[0]) dots[0].classList.add('active');
+            });
+    });
+
+    // Cambio de imagen al hacer clic en color
+    document.querySelectorAll('.color-dot').forEach(swatch => {
+        swatch.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const card = this.closest('.product-card');
+            if (!card) return;
+
+            // Quitar clase active de todos los dots de esta tarjeta
+            card.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+            this.classList.add('active');
+
+            const slug = card.dataset.productSlug;
+            const colorSlug = this.dataset.colorSlug;
+            const img = card.querySelector('.product-image-wrapper img');
+
+            if (!slug || !colorSlug || !img) return;
+
+            // Guardar imagen original
+            if (!img.dataset.originalSrc) {
+                img.dataset.originalSrc = img.src;
             }
-        });
-    });
 
-    // Price presets
-    document.querySelectorAll('.price-preset').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const minInput = document.querySelector('input[name="price_min"]');
-            const maxInput = document.querySelector('input[name="price_max"]');
-            
-            minInput.value = this.getAttribute('data-min');
-            maxInput.value = this.getAttribute('data-max');
-            
-            document.querySelectorAll('.price-preset').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-
-    // Mobile filter toggle
-    const mobileFilterBtn = document.getElementById('mobile-filter-toggle');
-    const filterSidebar = document.querySelector('.filter-sidebar');
-    const filterOverlay = document.getElementById('filter-overlay');
-
-    if (mobileFilterBtn) {
-        mobileFilterBtn.addEventListener('click', function() {
-            filterSidebar.classList.toggle('open');
-            filterOverlay.classList.toggle('active');
-            document.body.classList.toggle('filter-open');
-        });
-    }
-
-    if (filterOverlay) {
-        filterOverlay.addEventListener('click', function() {
-            filterSidebar.classList.remove('open');
-            filterOverlay.classList.remove('active');
-            document.body.classList.remove('filter-open');
-        });
-    }
-
-    // View toggle (grid/list)
-    document.querySelectorAll('.view-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const view = this.getAttribute('data-view');
-            const container = document.getElementById('products-container');
-            
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            container.classList.remove('grid-view', 'list-view');
-            container.classList.add(view + '-view');
+            // Cargar nueva imagen desde la API
+            fetch(`/api/product/${slug}/colors/?color=${encodeURIComponent(colorSlug)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.image) img.src = data.image;
+                })
+                .catch(() => {});
         });
     });
 });
 
-// Sort function
+// Redirigir al detalle con el color seleccionado
+// CORREGIDO: Ahora incluye /producto/ en la URL
+function goToDetailWithColor(card) {
+    const productSlug = card.dataset.productSlug;
+    const categorySlug = "{{ category.slug }}";
+    const activeSwatch = card.querySelector('.color-dot.active') || card.querySelector('.color-dot');
+    const colorSlug = activeSwatch ? activeSwatch.dataset.colorSlug : '';
+    
+    // URL CORRECTA: /ropa-bolsos/categoria/producto/slug-producto/?color=color
+    window.location.href = `/ropa-bolsos/${categorySlug}/producto/${encodeURIComponent(productSlug)}/?color=${colorSlug}`;
+}
+
 function updateSort(value) {
     const url = new URL(window.location);
     url.searchParams.set('sort', value);

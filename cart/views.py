@@ -13,6 +13,7 @@ from django.core.mail import EmailMessage
 from marketing.models import Cupons
 from decimal import Decimal
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -331,7 +332,7 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
 
     
     for cart_item in cart_items:
-        total += Decimal(cart_item.sub_total())
+        total += Decimal(cart_item.sub_total) #quité parentesis
 
     categories = Category.objects.exclude(name='Muestras')
 
@@ -483,5 +484,88 @@ def upload_design(request, item_id):
         except Exception as e:
             print(f"Error: {str(e)}")
             return JsonResponse({'success': False, 'error': str(e)})
+    
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+
+@csrf_exempt
+def update_contact(request, item_id):
+    if request.method == 'POST':
+        cart_item = CartItem.objects.get(id=item_id)
+        cart_item.contact_name = request.POST.get('contact_name', '').strip() or None
+        cart_item.contact_phone = request.POST.get('contact_phone', '').strip() or None
+        # ... demás campos
+        cart_item.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+
+@csrf_exempt
+def update_contact(request, item_id):
+    """
+    Vista AJAX para actualizar los datos de contacto de un CartItem.
+    Se llama desde el modal de edición en cart.html
+    """
+    if request.method == 'POST':
+        try:
+            cart_item = CartItem.objects.get(id=item_id)
+            
+            # Actualizar datos de contacto
+            cart_item.contact_name = request.POST.get('contact_name', '').strip() or None
+            cart_item.contact_phone = request.POST.get('contact_phone', '').strip() or None
+            cart_item.contact_email = request.POST.get('contact_email', '').strip() or None
+            cart_item.contact_job_title = request.POST.get('contact_job_title', '').strip() or None
+            cart_item.contact_company = request.POST.get('contact_company', '').strip() or None
+            cart_item.contact_social = request.POST.get('contact_social', '').strip() or None
+            cart_item.contact_address = request.POST.get('contact_address', '').strip() or None
+            
+            cart_item.save()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Datos actualizados correctamente'
+            })
+            
+        except CartItem.DoesNotExist:
+            return JsonResponse({
+                'success': False, 
+                'error': 'Item no encontrado'
+            })
+        except Exception as e:
+            print(f"Error en update_contact: {str(e)}")
+            return JsonResponse({
+                'success': False, 
+                'error': str(e)
+            })
+    
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+@csrf_exempt
+def update_template(request):
+    """Actualiza SOLO la plantilla de un CartItem existente."""
+    if request.method == 'POST':
+        try:
+            item_id = request.POST.get('item_id')
+            template_slug = request.POST.get('template_slug', '')
+            
+            cart_item = CartItem.objects.get(id=item_id)
+            
+            if template_slug == 'custom':
+                cart_item.comment = 'custom'
+                if request.FILES.get('design_file'):
+                    if cart_item.design_file:
+                        cart_item.design_file.delete(save=False)
+                    cart_item.design_file = request.FILES.get('design_file')
+            else:
+                cart_item.comment = f'template:{template_slug[:80]}'
+                if cart_item.design_file:
+                    cart_item.design_file.delete(save=False)
+                    cart_item.design_file = None
+            
+            cart_item.save()
+            return JsonResponse({'success': True})
+            
+        except CartItem.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Item no encontrado'})
     
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
