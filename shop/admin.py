@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
     Product, Profile, Peru, Category, Subcategory,
+    ProductColor, ProductSize, ProductImage,
     VariantType, VariantOption, ProductVariantType, PriceTier,
     DesignTemplate  # NUEVO
 )
@@ -247,6 +248,54 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile, ProfileAdmin)
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+
+
+class ProductColorInline(admin.TabularInline):
+    model = Product.available_colors.through
+    verbose_name = "Color"
+    verbose_name_plural = "Colores"
+
+
+class ProductSizeInline(admin.TabularInline):
+    model = Product.available_sizes.through
+    verbose_name = "Talla"
+    verbose_name_plural = "Tallas"
+
+
+@admin.register(ProductColor)
+class ProductColorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'hex_code', 'display_order', 'is_active']
+    list_editable = ['display_order', 'is_active']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name']
+
+
+@admin.register(ProductSize)
+class ProductSizeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'display_name', 'size_type', 'display_order', 'is_active']
+    list_editable = ['display_order', 'is_active']
+    list_filter = ['size_type']
+    search_fields = ['name', 'display_name']
+
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = ['product', 'color', 'is_primary', 'display_order']
+    list_filter = ['product__category', 'product__subcategory', 'color', 'is_primary']
+    list_editable = ['is_primary', 'display_order']
+    search_fields = ['product__name', 'alt_text']
+    autocomplete_fields = ['product', 'color']
+    inlines = []
+
+
+# Update ProductAdmin to include new inlines
+class ProductAdmin(ProductAdmin):  # Inherit existing
+    inlines = [PriceTierInline, ProductVariantTypeInline, ProductImageInline, ProductColorInline, ProductSizeInline]
 
 
 # ===========================

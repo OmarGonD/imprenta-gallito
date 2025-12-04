@@ -729,7 +729,7 @@ def clothing_product_detail(request, category_slug, product_slug):
         subcategory=category,
         status='active'
     ).exclude(
-    pk=product.pk
+        id=product.id
     ).prefetch_related(
         'available_colors',
         'available_sizes',
@@ -833,10 +833,10 @@ def add_clothing_to_cart(request):
                 cart = Cart.objects.filter(id=cart_id, status='active').first()
                 if not cart:
                     cart = Cart.objects.create(status='active')
-                    request.session['cart_id'] = cart.pk
+                    request.session['cart_id'] = cart.id
             else:
                 cart = Cart.objects.create(status='active')
-                request.session['cart_id'] = cart.pk
+                request.session['cart_id'] = cart.id
         
         # Buscar si ya existe un item con el mismo producto, color y talla
         cart_item = CartItem.objects.filter(
@@ -895,12 +895,12 @@ def add_clothing_to_cart(request):
         cart_id = request.COOKIES.get('cart_id')
         if cart_id:
             try:
-                cart = Cart.objects.get(pk=cart_id)
+                cart = Cart.objects.get(id=cart_id)
             except Cart.DoesNotExist:
                 cart = Cart.objects.create(cart_id="Random")
         else:
             cart = Cart.objects.create(cart_id="Random")
-            cart_id = cart.pk
+            cart_id = cart.id
         
         product_slug = request.POST.get('product_slug')
         color_slug = request.POST.get('color')
@@ -971,12 +971,12 @@ def add_product_to_cart(request):
         cart_id = request.COOKIES.get('cart_id')
         if cart_id:
             try:
-                cart = Cart.objects.get(pk=cart_id)
+                cart = Cart.objects.get(id=cart_id)
             except Cart.DoesNotExist:
                 cart = Cart.objects.create(cart_id="Random")
         else:
             cart = Cart.objects.create(cart_id="Random")
-            cart_id = cart.pk
+            cart_id = cart.id
         
         # Get form data
         category_slug = request.POST.get('category_slug')
@@ -1000,7 +1000,7 @@ def add_product_to_cart(request):
         
         if edit_item_id:
             try:
-                cart_item = CartItem.objects.get(pk=edit_item_id)
+                cart_item = CartItem.objects.get(id=edit_item_id)
                 
                 cart_item.contact_name = contact_name or None
                 cart_item.contact_phone = contact_phone or None
@@ -1033,7 +1033,7 @@ def add_product_to_cart(request):
                     'success': True,
                     'message': 'Datos actualizados correctamente',
                     'action': 'updated',
-                    'item_id': cart_item.pk
+                    'item_id': cart_item.id
                 })
                 response.set_cookie("cart_id", cart_id)
                 return response
@@ -1093,10 +1093,10 @@ def add_product_to_cart(request):
                 'cart_items_counter': total_items,
                 'message': 'Producto agregado al carrito',
                 'action': 'created',
-                'item_id': cart_item.pk
+                'item_id': cart_item.id
             })
             response.set_cookie("cart_id", cart_id)
-            response.set_cookie("item_id", cart_item.pk)
+            response.set_cookie("item_id", cart_item.id)
             return response
             
         except Product.DoesNotExist:
@@ -1175,9 +1175,9 @@ def template_gallery_view(request, category_slug, product_slug):
     
     if edit_item_id:
         try:
-            cart_item = CartItem.objects.get(pk=edit_item_id)
+            cart_item = CartItem.objects.get(id=edit_item_id)
             edit_item_data = json.dumps({
-                'id': cart_item.pk,
+                'id': cart_item.id,
                 'contact_name': cart_item.contact_name or '',
                 'contact_phone': cart_item.contact_phone or '',
                 'contact_email': cart_item.contact_email or '',
@@ -1361,7 +1361,7 @@ def update_template_only(request):
                     'error': 'No se especificó el item'
                 })
             
-            cart_item = CartItem.objects.get(pk=item_id)
+            cart_item = CartItem.objects.get(id=item_id)
             
             if template_slug == 'custom':
                 cart_item.comment = 'custom'
@@ -1481,13 +1481,13 @@ class StepOneView(FormView):
         cart_id = self.request.COOKIES.get('cart_id')
         if cart_id:
             try:
-                cart = Cart.objects.get(pk=cart_id)
+                cart = Cart.objects.get(id=cart_id)
             except ObjectDoesNotExist:
                 # supplied ID doesn't match a Cart from your BD
                 cart = Cart.objects.create(cart_id="Random")
         else:
             cart = Cart.objects.create(cart_id="Random")
-            cart_id = cart.pk
+            cart_id = cart.id
         item = CartItem.objects.create(
             size=form.cleaned_data.get('size'),
             quantity=form.cleaned_data.get('quantity'),
@@ -1500,7 +1500,7 @@ class StepOneView(FormView):
 
         response = HttpResponseRedirect(self.get_success_url())
         response.set_cookie("cart_id", cart_id)
-        response.set_cookie("item_id", item.pk)
+        response.set_cookie("item_id", item.id)
         return response
 
 
@@ -1524,7 +1524,7 @@ class StepTwoView(FormView):
     def form_valid(self, form):
         item_id = self.request.COOKIES.get("item_id")
 
-        cart_item = CartItem.objects.get(pk=item_id)
+        cart_item = CartItem.objects.get(id=item_id)
         cart_item.file_a = form.cleaned_data["file_a"]
         cart_item.file_b = form.cleaned_data["file_b"]
         cart_item.comment = form.cleaned_data["comment"]
@@ -1572,13 +1572,13 @@ class StepOneView_Sample(FormView):
         cart_id = self.request.COOKIES.get('cart_id')
         if cart_id:
             try:
-                cart = Cart.objects.get(pk=cart_id)
+                cart = Cart.objects.get(id=cart_id)
             except ObjectDoesNotExist:
                 # supplied ID doesn't match a Cart from your BD
                 cart = Cart.objects.create(cart_id="Random")
         else:
             cart = Cart.objects.create(cart_id="Random")
-            cart_id = cart.pk
+            cart_id = cart.id
         item = SampleItem.objects.create(
             size=form.cleaned_data.get('size'),
             quantity=2,
@@ -1591,7 +1591,7 @@ class StepOneView_Sample(FormView):
 
         response = HttpResponseRedirect(self.get_success_url())
         response.set_cookie("cart_id", cart_id)
-        response.set_cookie("item_id", item.pk)
+        response.set_cookie("item_id", item.id)
         return response
 
 
@@ -1616,7 +1616,7 @@ class StepTwoView_Sample(FormView):
     def form_valid(self, form):
         item_id = self.request.COOKIES.get("item_id")
 
-        sample_item = SampleItem.objects.get(pk=item_id)
+        sample_item = SampleItem.objects.get(id=item_id)
         sample_item.file_a = form.cleaned_data["file_a"]
         sample_item.file_b = form.cleaned_data["file_b"]
         sample_item.comment = form.cleaned_data["comment"]
@@ -1702,10 +1702,10 @@ def activate(request, uidb64, token):
         login(request, user)
         '''send email to admin when a new user has activate his/her account'''
         print("############")
-        print(user.pk)
-        print(type(user.pk))
+        print(user.id)
+        print(type(user.id))
         print("############")
-        send_email_new_registered_user(user.pk)
+        send_email_new_registered_user(user.id)
         return redirect('shop:home')
     else:
         return HttpResponse('¡Enlace de activación inválido! Intente registrarse nuevamente.')
@@ -1719,11 +1719,11 @@ def send_email_new_registered_user(user_id):
         if profile:
             print("Se obtuvo profile")
         '''sending the order to the customer'''
-        subject = f"Imprenta Gallito Perú - Nuevo usuario registrado #{profile.pk}"
+        subject = f"Imprenta Gallito Perú - Nuevo usuario registrado #{profile.id}"
         to = [f'{profile.user.email}', 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
         from_email = 'imprentagallito@imprentagallito.pe'
         user_information = {
-            'user_id': profile.user.pk,
+            'user_id': profile.user.id,
             'user_name': profile.user.username,
             'user_full_name': profile.user.get_full_name,
             'user_dni': profile.dni,
@@ -1809,7 +1809,7 @@ def signupView(request):
                                        instance=user.profile)  # Reload the profile form with the profile instance
             profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
             profile_form.save()  # Gracefully save the form
-            send_email_new_registered_user(user.pk) # send email to admin when a new user registers himself
+            send_email_new_registered_user(user.id) # send email to admin when a new user registers himself
             login(request, user)
 
             return redirect('carrito-de-compras:cart_detail')
@@ -1999,7 +1999,7 @@ def clothing_product_detail(request, category_slug, product_slug):
         subcategory=subcategory,
         status='active'
     ).exclude(
-    pk=product.pk
+        id=product.id
     ).prefetch_related(
         'available_colors',
         'available_sizes',
@@ -2074,7 +2074,7 @@ def add_clothing_to_cart(request):
         
         if cart_id:
             try:
-                cart = Cart.objects.get(pk=cart_id)
+                cart = Cart.objects.get(id=cart_id)
             except Cart.DoesNotExist:
                 cart = Cart.objects.create()
         else:
@@ -2123,7 +2123,7 @@ def add_clothing_to_cart(request):
         }
         
         response = JsonResponse(response_data)
-        response.set_cookie('cart_id', cart.pk, max_age=30*24*60*60)
+        response.set_cookie('cart_id', cart.id, max_age=30*24*60*60)
         return response
         
     except Exception as e:
@@ -2506,7 +2506,7 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         subcategory=subcategory,
         status='active'
     ).exclude(
-    pk=product.pk
+        id=product.pk
     ).prefetch_related(
         'available_colors',
         'available_sizes',

@@ -58,4 +58,28 @@ urlpatterns = [
     path('api/product-pricing/<str:product_slug>/<int:quantity>/', views.get_product_pricing, name='get_product_pricing'),
     path('api/product/<str:product_slug>/colors/', views.get_product_colors, name='get_product_colors'),
     path('api/clothing/add-to-cart/', views.add_clothing_to_cart, name='add_clothing_to_cart'),
+    path('ropa-bolsos/<slug:category_slug>/', 
+         views.clothing_category, 
+         name='clothing_category'),
+    
+    # Vista de detalle de producto de ropa
+    path('ropa-bolsos/<slug:category_slug>/<slug:product_slug>/', 
+         views.clothing_product_detail, 
+         name='clothing_product_detail'),
+    
+    # API para agregar al carrito
+    path('api/clothing/add-to-cart/', 
+         views.add_clothing_to_cart, 
+         name='add_clothing_to_cart'),
+     path('<slug:category_slug>/<slug:subcategory_slug>/', 
+         views.product_category_list, 
+         name='product_category_list'),
+    
+    path('<slug:category_slug>/<slug:subcategory_slug>/<slug:product_slug>/', 
+         views.product_detail, 
+         name='product_detail'),
+    
+    path('api/cart/add/', 
+         views.add_to_cart_api, 
+         name='add_to_cart_api'),
 ]

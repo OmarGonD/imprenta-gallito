@@ -279,12 +279,14 @@ document.addEventListener('DOMContentLoaded', function () {
 // Redirigir al detalle con el color seleccionado
 function goToDetailWithColor(card) {
     const productSlug = card.dataset.productSlug;
-    const categorySlug = "{{ category.slug }}";
+    const categorySlug = "{{ category.slug }}";          // ej: "ropa-bolsos"
+    const subcategorySlug = "{{ subcategory.slug }}";    // ej: "polos"
+    
     const activeSwatch = card.querySelector('.color-dot.active') || card.querySelector('.color-dot');
     const colorSlug = activeSwatch ? activeSwatch.dataset.colorSlug : '';
     
-    // URL limpia: /ropa-bolsos/categoria/slug-producto/?color=color
-    window.location.href = `/ropa-bolsos/${categorySlug}/${encodeURIComponent(productSlug)}/?color=${colorSlug}`;
+    // URL dinámica para cualquier categoría
+    window.location.href = `/${encodeURIComponent(categorySlug)}/${encodeURIComponent(subcategorySlug)}/${encodeURIComponent(productSlug)}/?color=${colorSlug}`;
 }
 
 function updateSort(value) {
