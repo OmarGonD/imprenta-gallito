@@ -1,681 +1,175 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ product.name }} | Imprenta Gallito{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/clothing.css' %}">
-<link rel="stylesheet" href="{% static 'css/clothing-detail.css' %}">
-<style>
-    /* Estilos adicionales para mejorar la UI */
-    .color-swatches-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin: 15px 0;
-    }
-
-    .color-dot {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 3px solid transparent;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .color-dot:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .color-dot.active {
-        border-color: #0066cc;
-        box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
-    }
-
-    .size-options-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin: 15px 0;
-    }
-
-    .size-dot {
-        padding: 10px 20px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 500;
-    }
-
-    .size-dot:hover {
-        border-color: #0066cc;
-        color: #0066cc;
-    }
-
-    .size-dot.active {
-        background: #0066cc;
-        border-color: #0066cc;
-        color: white;
-    }
-
-    .size-dot.out-of-stock {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
-
-    .thumbnail-list {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-        overflow-x: auto;
-    }
-
-    .thumbnail-item {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        cursor: pointer;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .thumbnail-item:hover,
-    .thumbnail-item.active {
-        border-color: #0066cc;
-    }
-
-    .thumbnail-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .main-image-container {
-        position: relative;
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        border-radius: 12px;
-        overflow: hidden;
-        background: #f8f9fa;
-    }
-
-    .main-image-container img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    .add-to-cart-section {
-        margin-top: 30px;
-        padding: 20px;
-        background: #f8f9fa;
-        border-radius: 12px;
-    }
-
-    .subtotal-value {
-        font-size: 1.8rem;
-        color: #0066cc;
-    }
-
-    .option-section {
-        margin: 25px 0;
-        padding: 15px 0;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .option-section:last-of-type {
-        border-bottom: none;
-    }
-
-    .option-section h4 {
-        font-size: 1.1rem;
-        margin-bottom: 10px;
-        color: #333;
-    }
-
-    .product-pricing {
-        margin: 20px 0;
-    }
-
-    .main-price {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #0066cc;
-    }
-
-    .unit-price {
-        color: #666;
-        font-size: 0.9rem;
-    }
-</style>
-{% endblock %}
+{% block title %}{{ product.name }} - {{ category.name }} | {{ block.super }}{% endblock %}
 
 {% block content %}
-<div class="product-detail-page">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="#">{{ category.name }}</a></li>
-            <li><a href="{% url 'shop:product_category_list' category.slug subcategory.slug %}">
-                    {{ subcategory.name }}
-                </a></li>
-            <li class="active">{{ product.name }}</li>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- BREADCRUMB -->
+    <nav class="mb-6" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600">
+            <li><a href="/" class="hover:text-blue-600">Inicio</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{% url 'shop:clothing_category' %}" class="hover:text-blue-600">{{ product.category.name }}</a>
+            </li>
+            <li><span class="mx-2">/</span></li>
+            <li>
+                <a href="{% url 'shop:clothing_subcategory' product.category.slug product.subcategory.slug %}"
+                    class="hover:text-blue-600">{{ product.subcategory.name }}</a>
+            </li>
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-900 font-medium">{{ product.name }}</li>
         </ol>
     </nav>
 
-    <main class="product-main">
-        <div class="container">
-            <div class="product-detail-layout">
-                <!-- GALERÍA DE IMÁGENES -->
-                <div class="product-gallery">
-                    <div class="main-image-container">
-                        <img id="main-product-image" src="{{ base_image_url }}" alt="{{ product.name }}"
-                            onerror="this.src='{% static 'img/placeholder-product.png' %}'">
-                    </div>
+    <!-- PRODUCT GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
 
-                    <div class="thumbnail-list" id="thumbnail-container">
-                        <!-- Los thumbnails se llenarán dinámicamente con JavaScript -->
-                    </div>
+        <!-- LEFT: IMAGE -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="w-full h-auto object-contain"
+                style="max-height: 600px;">
+        </div>
+
+        <!-- RIGHT: PRODUCT INFO -->
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+
+            {% if product.sku %}
+            <p class="text-sm text-gray-500 mb-4">SKU: {{ product.sku }}</p>
+            {% endif %}
+
+            {% if product.short_description %}
+            <p class="text-gray-700 mb-6">{{ product.short_description }}</p>
+            {% endif %}
+
+            <!-- PRICE -->
+            <div class="mb-6">
+                <p class="text-sm text-gray-600">Precio:</p>
+                <p class="text-3xl font-bold text-blue-600">
+                    S/ {{ safe_starting_price|floatformat:2 }}
+                </p>
+            </div>
+
+            <hr class="my-6">
+
+            <!-- FORM -->
+            <form id="add-to-cart-form" method="POST" action="{% url 'carrito-de-compras:add_to_cart' product.slug %}">
+                {% csrf_token %}
+
+                <!-- COLOR -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Color: <span class="text-red-500">*</span>
+                    </label>
+                    <select name="color" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecciona un color</option>
+                        <option value="Azul Marino">Azul Marino</option>
+                        <option value="Azul Real">Azul Real</option>
+                        <option value="Blanco">Blanco</option>
+                        <option value="Carbon">Carbon</option>
+                        <option value="Gris">Gris</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Rojo">Rojo</option>
+                    </select>
                 </div>
 
-                <!-- INFORMACIÓN DEL PRODUCTO -->
-                <div class="product-info">
-                    <h1 class="product-title">{{ product.name }}</h1>
+                <!-- ============================================================
+                 COLOR SWATCHES
+                 ============================================================ -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Color:
+                        <span id="selected-color-name" class="text-gray-900 font-semibold">
+                            {{ selected_color.name|default:"Selecciona un color" }}
+                        </span>
+                    </label>
 
-                    {% if product.sku %}
-                    <p class="product-code">SKU: {{ product.sku }}</p>
-                    {% endif %}
-
-                    {% if product.material %}
-                    <p class="product-brand"><strong>Marca:</strong> {{ product.material }}</p>
-                    {% endif %}
-
-                    <!-- PRECIO -->
-                    <div class="product-pricing">
-                        {% if pricing_tiers %}
-                        {% with first_tier=pricing_tiers.0 %}
-                        <span class="price-label">Precio desde:</span>
-                        <span class="main-price" id="display-price">S/ {{ first_tier.unit_price|floatformat:2 }}</span>
-                        <span class="unit-price">/unidad (Mín. {{ first_tier.min_quantity }})</span>
-                        {% endwith %}
-                        {% else %}
-                        <span class="main-price">S/ {{ product.base_price|floatformat:2 }}</span>
-                        {% endif %}
-                    </div>
-
-                    <!-- SELECTOR DE COLOR -->
-                    <div class="option-section">
-                        <h4>Color: <span id="selected-color-name">
-                                {% if selected_color %}
-                                {{ selected_color.name }}
-                                {% else %}
-                                Selecciona un color
-                                {% endif %}
-                            </span></h4>
-                        <div class="color-swatches-container">
-                            {% for color in available_colors %}
-                            <div class="color-dot {% if color.slug == selected_color_slug %}active{% endif %}"
-                                data-color-slug="{{ color.slug }}" data-color-name="{{ color.name }}"
-                                style="background-color: {{ color.hex_code }}; border: 2px solid {% if color.hex_code|lower in '#ffffff,#f5f5f5,#ffff00,#fcfcfc,#fff' %}#ccc{% else %}{{ color.hex_code }}{% endif %};"
-                                title="{{ color.name }}">
-                            </div>
-                            {% empty %}
-                            <p>No hay colores disponibles</p>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <!-- SELECTOR DE TALLA -->
-                    <div class="option-section">
-                        <h4>Talla: <span id="selected-size-name">Selecciona una talla</span></h4>
-                        <div class="size-options-grid">
-                            {% for size in available_sizes %}
-                            <div class="size-dot" data-size-slug="{{ size.slug }}" data-size-name="{{ size.name }}">
-                                {{ size.name }}
-                            </div>
-                            {% empty %}
-                            <p>No hay tallas disponibles</p>
-                            {% endfor %}
-                        </div>
-                        <button type="button" id="size-guide-btn" class="text-link mt-2">
-                            <i class="fas fa-ruler"></i> Guía de Tallas
+                    {% if available_colors %}
+                    <div class="color-swatches-container flex flex-wrap gap-3">
+                        {% for color in available_colors %}
+                        <button type="button"
+                            class="color-swatch {% if color.slug == selected_color_slug %}active{% endif %}"
+                            data-color-slug="{{ color.slug }}" data-color-name="{{ color.name }}"
+                            title="{{ color.name }}" style="background-color: {{ color.hex_code }};">
+                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"
+                                stroke="white" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
                         </button>
+                        {% endfor %}
                     </div>
-
-                    <!-- SELECTOR DE CANTIDAD -->
-                    <div class="option-section">
-                        <h4>Cantidad:</h4>
-                        <input type="number" id="quantity-input" value="1" min="1"
-                            class="form-control d-inline-block w-auto" style="width: 100px !important;"
-                            oninput="updatePrice()">
-
-                        <!-- Mostrar tabla de precios por volumen -->
-                        {% if pricing_tiers|length > 1 %}
-                        <div class="price-tiers-info mt-3">
-                            <p><strong>Precios por volumen:</strong></p>
-                            <ul class="list-unstyled">
-                                {% for tier in pricing_tiers %}
-                                <li>
-                                    <small>
-                                        {{ tier.min_quantity }}{% if tier.max_quantity < 999999 %}-{{ tier.max_quantity
-                                            }}{% else %}+{% endif %} unidades: <strong>S/ {{
-                                            tier.unit_price|floatformat:2 }}</strong>/u
-                                            {% if tier.discount_percentage > 0 %}
-                                            <span class="text-success">({{ tier.discount_percentage }}% desc.)</span>
-                                            {% endif %}
-                                    </small>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <!-- AGREGAR AL CARRITO -->
-                    <div class="add-to-cart-section">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="subtotal-label">Subtotal:</span>
-                            <span id="subtotal" class="subtotal-value font-weight-bold">S/ 0.00</span>
-                        </div>
-                        <button class="btn btn-lg btn-primary btn-block" id="add-to-cart-btn" onclick="addToCart()">
-                            <i class="fas fa-shopping-cart"></i> Añadir al Carrito
-                        </button>
-                        <div id="cart-message" class="mt-2"></div>
-                    </div>
-
-                    <!-- DESCRIPCIÓN DEL PRODUCTO -->
-                    {% if product.description %}
-                    <div class="product-description mt-4">
-                        <h4>Descripción</h4>
-                        <div class="description-content">
-                            {{ product.description|linebreaksbr }}
-                        </div>
-                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">No hay colores disponibles</p>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-    </main>
 
-    <!-- PRODUCTOS RELACIONADOS -->
-    {% if related_products %}
-    <section class="related-products py-5">
-        <div class="container">
-            <h3 class="mb-4">Productos Relacionados</h3>
-            <div class="products-grid">
-                {% for rel_product in related_products %}
-                <article class="product-card">
-                    <a href="{% url 'shop:clothing_product_detail' category_slug=category.slug product_slug=rel_product.slug %}"
-                        class="product-image-wrapper">
-                        <img src="{% if rel_product.base_image_url %}{{ rel_product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}"
-                            alt="{{ rel_product.name }}" class="product-image">
-                    </a>
-                    <div class="product-info">
-                        <h3 class="product-name">
-                            <a
-                                href="{% url 'shop:clothing_product_detail' category_slug=category.slug product_slug=rel_product.slug %}">
-                                {{ rel_product.name }}
-                            </a>
-                        </h3>
-                        <div class="product-pricing">
-                            <span class="price-current">Desde S/ {{ rel_product.base_price|floatformat:2 }}</span>
-                        </div>
-                    </div>
-                </article>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-</div>
+                <!-- TALLA -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Talla: <span class="text-red-500">*</span>
+                    </label>
+                    <select name="size" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecciona una talla</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                        <option value="XXXL">XXXL</option>
+                    </select>
+                </div>
 
-<!-- MODAL: GUÍA DE TALLAS -->
-<div id="size-guide-modal" class="modal-guide" style="display: none;">
-    <div class="modal-content-guide">
-        <span class="close-guide" onclick="closeSizeGuide()">&times;</span>
-        <h3>Guía de Tallas</h3>
-        <p>Información de tallas para {{ product.name }}</p>
-        <!-- Aquí puedes agregar tu tabla de tallas -->
+                <!-- CANTIDAD -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cantidad:</label>
+                    <input type="number" name="quantity" value="1" min="1" max="10000" required
+                        class="w-32 px-4 py-2 border border-gray-300 rounded-lg">
+                </div>
+
+                <!-- BUTTON -->
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all">
+                    🛒 Añadir al Carrito
+                </button>
+            </form>
+
+        </div>
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
 <script>
-    // ========================================================================
-    // VARIABLES GLOBALES
-    // ========================================================================
-    
-    let selectedColorSlug = '{{ selected_color_slug }}' || '';
-    let selectedSizeSlug = '';
-    
-    // Parsear las imágenes por color desde el contexto Django
-    let imagesByColor = {};
-    try {
-        imagesByColor = JSON.parse('{{ images_by_color|escapejs }}' || '{}');
-        console.log('Imágenes por color cargadas:', imagesByColor);
-    } catch (e) {
-        console.error('Error al parsear images_by_color:', e);
-    }
-    
-    // Pricing tiers para cálculo de precios
-    const pricingTiers = [
-        {% for tier in pricing_tiers %}
-        {
-            min: {{ tier.min_quantity }},
-            max: {{ tier.max_quantity }},
-            price: {{ tier.unit_price }}
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
-    
-    const basePrice = {{ product.base_price }};
-    
-    // ========================================================================
-    // FUNCIÓN: selectColor - Cambiar color seleccionado
-    // ========================================================================
-    
-    function selectColor(colorSlug, colorName) {
-        console.log('selectColor llamado:', colorSlug, colorName);
-        
-        // Actualizar variable global
-        selectedColorSlug = colorSlug;
-        
-        // Actualizar swatches activos
-        document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.classList.remove('active');
-        });
-        
-        const activeSwatch = document.querySelector(`.color-swatch[data-color-slug="${colorSlug}"]`);
-        if (activeSwatch) {
-            activeSwatch.classList.add('active');
-        }
-        
-        // Actualizar nombre del color seleccionado
-        const colorNameDisplay = document.getElementById('selected-color-name');
-        if (colorNameDisplay) {
-            colorNameDisplay.textContent = colorName;
-        }
-        
-        // Actualizar imagen principal y thumbnails
-        updateMainImage(colorSlug);
-        updateThumbnails(colorSlug);
-        
-        // Actualizar URL sin recargar
-        const url = new URL(window.location);
-        url.searchParams.set('color', colorSlug);
-        window.history.pushState({}, '', url);
-    }
-    
-    // ========================================================================
-    // FUNCIÓN: updateMainImage - Actualizar imagen principal
-    // ========================================================================
-    
-    function updateMainImage(colorSlug) {
-        console.log('updateMainImage:', colorSlug);
-        
-        const mainImage = document.getElementById('main-product-image');
-        if (!mainImage) {
-            console.error('No se encontró #main-product-image');
-            return;
-        }
-        
-        // Buscar imágenes de este color
-        const images = imagesByColor[colorSlug];
-        
-        if (!images || images.length === 0) {
-            console.warn('No hay imágenes para el color:', colorSlug);
-            return;
-        }
-        
-        // Buscar imagen principal (is_primary: true)
-        let mainImageData = images.find(img => img.is_primary);
-        
-        // Si no hay imagen principal, usar la primera
-        if (!mainImageData) {
-            mainImageData = images[0];
-        }
-        
-        // Actualizar la imagen con efecto de fade
-        mainImage.style.opacity = '0.5';
-        
-        setTimeout(() => {
-            mainImage.src = mainImageData.image;
-            mainImage.alt = mainImageData.alt_text || '{{ product.name }}';
-            mainImage.style.opacity = '1';
-        }, 150);
-        
-        console.log('Imagen actualizada:', mainImageData.image);
-    }
-    
-    // ========================================================================
-    // FUNCIÓN: updateThumbnails - Actualizar thumbnails
-    // ========================================================================
-    
-    function updateThumbnails(colorSlug) {
-        console.log('updateThumbnails:', colorSlug);
-        
-        const thumbnailContainer = document.getElementById('thumbnail-container');
-        if (!thumbnailContainer) {
-            console.log('No hay contenedor de thumbnails');
-            return;
-        }
-        
-        // Buscar imágenes de este color
-        const images = imagesByColor[colorSlug];
-        
-        if (!images || images.length <= 1) {
-            // Si solo hay 1 imagen o ninguna, ocultar thumbnails
-            thumbnailContainer.innerHTML = '';
-            return;
-        }
-        
-        // Generar thumbnails
-        let thumbnailsHTML = '';
-        images.forEach((img, index) => {
-            const activeClass = index === 0 ? 'active' : '';
-            thumbnailsHTML += `
-                <button type="button" 
-                        class="thumbnail-btn ${activeClass}" 
-                        onclick="changeMainImage('${img.image.replace(/'/g, "\\'")}', this)">
-                    <img src="${img.image}" 
-                         alt="${img.alt_text || '{{ product.name }}'}"
-                         class="thumbnail-image">
-                </button>
-            `;
-        });
-        
-        thumbnailContainer.innerHTML = thumbnailsHTML;
-    }
-    
-    // ========================================================================
-    // FUNCIÓN: changeMainImage - Cambiar imagen desde thumbnail
-    // ========================================================================
-    
-    function changeMainImage(imageUrl, thumbnailBtn) {
-        const mainImage = document.getElementById('main-product-image');
-        if (!mainImage) return;
-        
-        // Actualizar imagen principal
-        mainImage.style.opacity = '0.5';
-        setTimeout(() => {
-            mainImage.src = imageUrl;
-            mainImage.style.opacity = '1';
-        }, 150);
-        
-        // Actualizar thumbnails activos
-        document.querySelectorAll('.thumbnail-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        if (thumbnailBtn) {
-            thumbnailBtn.classList.add('active');
-        }
-    }
-    
-    // ========================================================================
-    // FUNCIÓN: selectSize - Seleccionar talla
-    // ========================================================================
-    
-    function selectSize(sizeSlug, sizeName) {
-        console.log('selectSize:', sizeSlug, sizeName);
-        
-        // Actualizar variable global
-        selectedSizeSlug = sizeSlug;
-        
-        // Actualizar botones activos
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        const activeBtn = document.querySelector(`.size-btn[data-size-slug="${sizeSlug}"]`);
-        if (activeBtn) {
-            activeBtn.classList.add('active');
-        }
-    }
-    
-    // ========================================================================
-    // FUNCIÓN: updatePrice - Actualizar precio según cantidad
-    // ========================================================================
-    
-    function updatePrice() {
-        const quantityInput = document.getElementById('quantity');
-        const subtotalDisplay = document.getElementById('subtotal-price');
-        
-        if (!quantityInput || !subtotalDisplay) return;
-        
-        const quantity = parseInt(quantityInput.value) || 1;
-        
-        // Buscar el tier de precio correspondiente
-        let unitPrice = basePrice;
-        
-        for (const tier of pricingTiers) {
-            if (quantity >= tier.min && quantity <= tier.max) {
-                unitPrice = tier.price;
-                break;
-            }
-        }
-        
-        const subtotal = unitPrice * quantity;
-        
-        // Actualizar display
-        subtotalDisplay.textContent = `S/ ${subtotal.toFixed(2)}`;
-        
-        // Actualizar precio unitario si hay display
-        const unitPriceDisplay = document.getElementById('unit-price');
-        if (unitPriceDisplay) {
-            unitPriceDisplay.textContent = `S/ ${unitPrice.toFixed(2)}`;
-        }
-    }
-    
-    // ========================================================================
-    // FUNCIÓN: addToCart - Agregar al carrito
-    // ========================================================================
-    
-    function addToCart() {
-        console.log('addToCart llamado');
-        
-        // Validar color
-        if (!selectedColorSlug) {
-            alert('Por favor selecciona un color');
-            return;
-        }
-        
-        // Validar talla
-        if (!selectedSizeSlug) {
-            alert('Por favor selecciona una talla');
-            return;
-        }
-        
-        // Validar cantidad
-        const quantityInput = document.getElementById('quantity');
-        const quantity = parseInt(quantityInput.value);
-        
-        if (!quantity || quantity < 1) {
-            alert('Por favor ingresa una cantidad válida');
-            return;
-        }
-        
-        // Deshabilitar botón
-        const addBtn = document.getElementById('add-to-cart-btn');
-        if (!addBtn) return;
-        
-        const originalText = addBtn.innerHTML;
-        addBtn.disabled = true;
-        addBtn.innerHTML = '<span class="animate-spin">⏳</span> Agregando...';
-        
-        // Hacer la petición
-        fetch('/api/cart/add/', {
+    document.getElementById('add-to-cart-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.innerHTML;
+
+        button.disabled = true;
+        button.innerHTML = '⏳ Agregando...';
+
+        fetch(this.action, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'product_slug': '{{ product.slug }}',
-                'color_slug': selectedColorSlug,
-                'size_slug': selectedSizeSlug,
-                'quantity': quantity
-            })
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Mensaje de éxito
-                alert(`✅ ${data.message}\n\nColor: ${data.item.color}\nTalla: ${data.item.size}\nCantidad: ${data.item.quantity}`);
-                
-                // Actualizar contador del carrito
-                const cartCounter = document.getElementById('cart-count');
-                if (cartCounter) {
-                    cartCounter.textContent = data.cart_count;
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`✅ ${data.message}\n\nProducto: ${data.product_name}\nColor: ${data.color}\nTalla: ${data.size}\nCantidad: ${data.quantity}`);
+                } else {
+                    alert('❌ ' + data.message);
                 }
-                
-                // Opcional: redirigir al carrito
-                // window.location.href = '/carrito-de-compras/';
-            } else {
-                alert('❌ Error: ' + (data.error || 'No se pudo agregar al carrito'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Error al agregar al carrito. Por favor intenta de nuevo.');
-        })
-        .finally(() => {
-            // Rehabilitar botón
-            addBtn.disabled = false;
-            addBtn.innerHTML = originalText;
-        });
-    }
-    
-    // ========================================================================
-    // INICIALIZACIÓN
-    // ========================================================================
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM cargado - Inicializando...');
-        
-        // Inicializar thumbnails del color seleccionado
-        if (selectedColorSlug) {
-            updateThumbnails(selectedColorSlug);
-        }
-        
-        // Event listener para cantidad
-        const quantityInput = document.getElementById('quantity');
-        if (quantityInput) {
-            quantityInput.addEventListener('input', updatePrice);
-            quantityInput.addEventListener('change', updatePrice);
-        }
-        
-        // Calcular precio inicial
-        updatePrice();
-        
-        console.log('✅ Inicialización completa');
-        console.log('Color seleccionado:', selectedColorSlug);
-        console.log('Talla seleccionada:', selectedSizeSlug);
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
     });
 </script>
 {% endblock %}

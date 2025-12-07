@@ -433,14 +433,14 @@
                                     S/ {{ product.get_base_price|default:"--" }}
                                 </p>
                             </div>
-                            {% if product.category %}
-                            <a href="{% url 'shop:product_detail' product.category.slug product.slug %}" 
+                            <!--{% if product.category %}
+                            <a href="{% url 'shop:product_detail' product.category.slug product.subcategory.slug product.slug %}" 
                                class="p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-110">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                 </svg>
                             </a>
-                            {% endif %}
+                            {% endif %}-->
                         </div>
                     </div>
                 </div>
@@ -515,8 +515,8 @@
                             </span>
                             <span class="text-lg text-gray-400 line-through mb-1">S/ XX</span>
                         </div>
-                        {% if product.category %}
-                        <a href="{% url 'shop:product_detail' product.category.slug product.slug %}" 
+                        <!--{% if product.category %}
+                        <a href="{% url 'shop:product_detail' product.category.slug product.subcategory.slug product.slug %}" 
                            class="block w-full text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-2xl font-bold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
                             Ver Oferta
                         </a>
@@ -524,7 +524,7 @@
                         <button class="block w-full text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-2xl font-bold">
                             Ver Oferta
                         </button>
-                        {% endif %}
+                        {% endif %}-->
                     </div>
                 </div>
                 {% empty %}

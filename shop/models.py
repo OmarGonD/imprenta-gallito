@@ -295,7 +295,44 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('shop:product_detail', args=[self.category.slug, self.slug])
+        # Ropa y bolsos
+        if hasattr(self.category, 'parent') and self.category.parent and self.category.parent.slug == "ropa-bolsos":
+            return reverse('shop:clothing_product_detail', 
+                        kwargs={
+                            'category_slug': self.category.slug,
+                            'subcategory_slug': self.subcategory.slug,
+                            'product_slug': self.slug
+                        })
+        
+        # Catálogos especiales sin subcategoría real
+        special_categories = [
+            'tarjetas-presentacion', 'empaques', 'folletos', 'posters',
+            'invitaciones-regalos', 'bodas', 'productos-promocionales'
+        ]
+        if self.category and self.category.slug in special_categories:
+            return reverse('shop:product_detail', 
+                        kwargs={
+                            'category_slug': self.category.slug,
+                            'subcategory_slug': self.subcategory.slug,
+                            'product_slug': self.slug
+                        })
+                        
+        # Productos con subcategoría real
+        if hasattr(self, 'subcategory') and self.subcategory:
+            return reverse('shop:product_detail', 
+                        kwargs={
+                            'category_slug': self.category.slug,
+                            'subcategory_slug': self.subcategory.slug,
+                            'product_slug': self.slug
+                        })
+        
+        # Fallback → siempre 3 niveles
+        return reverse('shop:product_detail', 
+                    kwargs={
+                        'category_slug': self.category.slug,
+                        'subcategory_slug': self.subcategory.slug if self.subcategory else 'default',
+                        'product_slug': self.slug
+                    })
 
     @property
     def current_price(self):
@@ -306,6 +343,17 @@ class Product(models.Model):
             return self.base_price
         first_tier = self.price_tiers.order_by('min_quantity').first()
         return first_tier.unit_price if first_tier else Decimal('0.00')
+    
+    @property
+    def starting_price(self):
+        """Retorna el precio inicial más bajo (para mostrar 'Desde S/ X')"""
+        # Si tiene precio base directo, úsalo
+        if self.base_price:
+            return self.base_price
+        
+        # Si no, obtén el precio del tier con cantidad mínima más baja
+        first_tier = self.price_tiers.order_by('min_quantity').first()
+        return first_tier.unit_price if first_tier else None
     
     @property
     def discount_percentage(self):

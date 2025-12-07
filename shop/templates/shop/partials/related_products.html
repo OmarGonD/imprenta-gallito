@@ -6,7 +6,7 @@
             {% for product in related_products %}
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="product-card-related">
-                    <a href="{% url 'shop:clothing_product_detail' category_slug=category.slug product_slug=product.slug %}">
+                    <a href="{% url 'shop:clothing_product_detail' category_slug=category.slug subcategory_slug=subcategory.slug product_slug=product.slug %}">
                         <img src="{{ product.base_image_url|default:'/static/img/placeholder-product-image.png' }}" 
                              alt="{{ product.name }}" 
                              class="img-fluid">

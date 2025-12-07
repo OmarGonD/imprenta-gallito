@@ -59,9 +59,12 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=20, choices=TAMANIOS, blank=True, null=True)
-    quantity = models.CharField(max_length=20, choices=CANTIDADES, blank=True, null=True)
+    quantity = models.IntegerField(default=1)
     design_file = models.FileField(upload_to='designs/%Y/%m/%d/', blank=True, null=True, max_length=500)
     comment = models.CharField(max_length=100, blank=True, null=True, default='')
+    color = models.CharField(max_length=100, blank=True, null=True, verbose_name="Color")
+    color_image_url = models.URLField(max_length=500, blank=True, null=True, 
+                                       verbose_name="URL de imagen del color")
     uploaded_at = models.DateTimeField(auto_now_add=True)
     step_two_complete = models.BooleanField(default=False)
     

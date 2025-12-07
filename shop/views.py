@@ -148,16 +148,12 @@ def category_view(request, category_slug):
     Vista genérica para mostrar una categoría y sus productos.
     Detecta si la categoría tiene un template personalizado.
     """
+    print(f"🔍 Vista ejecutada: Entra a Category View")
     try:
         category = Category.objects.get(slug=category_slug, status='active')
     except Category.DoesNotExist:
         raise Http404("Categoría no encontrada")
     
-    # Si la categoría tiene un template personalizado, usarlo
-    if category.custom_template:
-        # Redirigir a la vista específica según el template
-        if 'ropa_bolsos' in category.custom_template:
-            return ropa_bolsos(request)
     
     subcategories = category.subcategories.filter(status='active').order_by('display_order')
     
@@ -262,511 +258,314 @@ def subcategory_view(request, category_slug, subcategory_slug):
     return render(request, 'shop/subcategory.html', context)
 
 
-def product_detail_view(request, category_slug, product_slug):
+def product_detail(request, category_slug, subcategory_slug, product_slug):
     """
-    Vista para mostrar el detalle de un producto.
-    Soporta tanto productos de imprenta como ropa.
+    Vista unificada para detalle de producto (Ropa/Imprenta) - VERSIÓN FINAL CORREGIDA
     """
+    
+    # -------------------------------------------------------------------------
+    # 1. OBTENCIÓN INICIAL
+    # -------------------------------------------------------------------------
+    
+    category = get_object_or_404(Category, slug=category_slug, status='active')
+
     try:
-        category = Category.objects.get(slug=category_slug, status='active')
         product = Product.objects.get(
             category=category,
+            subcategory__slug=subcategory_slug,
             slug=product_slug,
             status='active'
         )
-    except (Category.DoesNotExist, Product.DoesNotExist):
+    except Product.DoesNotExist:
         raise Http404("Producto no encontrado")
     
-    pricing_service = PricingService()
-    all_tiers = pricing_service.price_tiers.get(product.slug, [])
+    # -------------------------------------------------------------------------
+    # 2. PROCESAR PRECIOS DE FORMA SEGURA (CRÍTICO)
+    # -------------------------------------------------------------------------
     
-    if all_tiers:
-        base_price = all_tiers[0]['unit_price']
-        for tier in all_tiers:
-            tier['savings'] = base_price - tier['unit_price']
+    # Obtener starting_price y base_price, asegurando que nunca sean None
+    raw_starting_price = product.starting_price  # Puede ser None
+    raw_base_price = product.base_price  # Puede ser None
     
-    variant_types = product.get_available_variant_types()
+    # Estrategia de fallback para precios
+    if raw_starting_price is not None:
+        safe_starting_price = float(raw_starting_price)
+    elif raw_base_price is not None:
+        safe_starting_price = float(raw_base_price)
+    else:
+        # Último recurso: buscar en el primer tier
+        first_tier = product.price_tiers.order_by('min_quantity').first()
+        safe_starting_price = float(first_tier.unit_price) if first_tier else 0.0
     
-    related_products = Product.objects.filter(
-        category=category,
-        status='active'
-    ).exclude(pk=product.pk)[:4]
+    # Base price con el mismo fallback
+    if raw_base_price is not None:
+        safe_base_price = float(raw_base_price)
+    elif raw_starting_price is not None:
+        safe_base_price = float(raw_starting_price)
+    else:
+        safe_base_price = safe_starting_price
     
-    # Datos adicionales para productos de ropa
-    product_images = product.images.all().order_by('display_order')
+    # -------------------------------------------------------------------------
+    # 3. INICIALIZAR CONTEXTO BASE CON VALORES SEGUROS
+    # -------------------------------------------------------------------------
     
     context = {
         'category': category,
         'product': product,
-        'tiers': all_tiers,
-        'variant_types': variant_types,
-        'related_products': related_products,
-        'product_images': product_images,
-        'has_colors': product.has_colors(),
-        'has_sizes': product.has_sizes(),
+        'tiers': [],
+        'related_products': None,
+        'template_name': 'shop/product_detail.html',
+        # Valores seguros para JavaScript (siempre float, nunca None)
+        'pricing_tiers': [],
+        'images_by_color': '{}',
+        'selected_color_slug': '',
+        'base_image_url': product.base_image_url or '',
+        # Precios seguros como float para evitar problemas de localización
+        'safe_starting_price': safe_starting_price,
+        'safe_base_price': safe_base_price,
     }
+
+    # -------------------------------------------------------------------------
+    # 4. LÓGICA PARA ROPA-BOLSOS
+    # -------------------------------------------------------------------------
+
+    if category_slug == 'ropa-bolsos':
+        
+        subcategory = product.subcategory
+
+        # TALLAS Y PRECIOS
+        available_sizes = product.available_sizes.filter(is_active=True).order_by('display_order')
+        pricing_tiers_qs = product.price_tiers.all().order_by('min_quantity')
+        
+        # ✅ CONVERTIR PRICING TIERS A DICCIONARIOS CON VALORES FLOAT
+        pricing_tiers_list = []
+        for tier in pricing_tiers_qs:
+            pricing_tiers_list.append({
+                'min_quantity': int(tier.min_quantity),
+                'max_quantity': int(tier.max_quantity),
+                'unit_price': float(tier.unit_price),  # Convertir a float
+                'discount_percentage': tier.discount_percentage,
+            })
+        
+        # Si no hay tiers, crear uno por defecto
+        if not pricing_tiers_list:
+            pricing_tiers_list = [{
+                'min_quantity': 1,
+                'max_quantity': 999999,
+                'unit_price': safe_starting_price,
+                'discount_percentage': 0,
+            }]
+        
+        context.update({
+            'available_sizes': available_sizes,
+            'pricing_tiers': pricing_tiers_list,  # Lista de diccionarios
+            'pricing_tiers_json': json.dumps(pricing_tiers_list),  # ✅ JSON string para JavaScript
+            'pricing_tiers_qs': pricing_tiers_qs,  # Queryset original para el template HTML
+            'subcategory': subcategory,
+            'category_slug': subcategory.slug,
+        })
+        
+        # PRODUCTOS RELACIONADOS
+        context['related_products'] = Product.objects.filter(
+            subcategory=subcategory,
+            status='active'
+        ).exclude(pk=product.pk)[:4]
+        
+        # MANEJO DE COLORES E IMÁGENES
+        selected_color_slug = request.GET.get('color', '')
+        available_colors = product.available_colors.filter(is_active=True).order_by('display_order')
+        
+        # Determinar selected_color
+        selected_color = None
+        if selected_color_slug:
+            selected_color = available_colors.filter(slug=selected_color_slug).first()
+        if not selected_color and available_colors.exists():
+            selected_color = available_colors.first()
+            selected_color_slug = selected_color.slug
+            
+        context.update({
+            'available_colors': available_colors,
+            'selected_color': selected_color,
+            'selected_color_slug': selected_color_slug or '',
+        })
+
+        # OBTENER Y ORGANIZAR IMÁGENES POR COLOR
+        images_by_color = {}
+        base_image_url = product.base_image_url or ''
+        
+        all_images = product.images.select_related('color').order_by(
+            'color__slug', '-is_primary', 'display_order'
+        )
+        
+        for img in all_images:
+            color_key = img.color.slug if img.color else 'default'
+            if color_key not in images_by_color:
+                images_by_color[color_key] = []
+            
+            images_by_color[color_key].append({
+                'image': img.image_url or '',
+                'is_primary': img.is_primary,
+                'alt_text': img.alt_text or product.name
+            })
+        
+        # Determinar imagen principal
+        if selected_color:
+            primary_image = product.images.filter(
+                color=selected_color, 
+                is_primary=True
+            ).first()
+            
+            if primary_image:
+                base_image_url = primary_image.image_url or base_image_url
+            else:
+                first_image = product.images.filter(color=selected_color).first()
+                if first_image:
+                    base_image_url = first_image.image_url or base_image_url
+
+        context.update({
+            'base_image_url': base_image_url,
+            'images_by_color': json.dumps(images_by_color),
+        })
+
+        context['template_name'] = 'shop/clothing_product_detail.html'
+        
+    else:
+        # -------------------------------------------------------------------------
+        # 5. LÓGICA PARA IMPRENTA Y OTROS
+        # -------------------------------------------------------------------------
+        
+        pricing_service = PricingService()
+        all_tiers = pricing_service.price_tiers.get(product.slug, [])
+        
+        if all_tiers:
+            base_price = all_tiers[0]['unit_price']
+            for tier in all_tiers:
+                tier['savings'] = base_price - tier['unit_price']
+        
+        context['tiers'] = all_tiers
+        context['variant_types'] = product.get_available_variant_types()
+        
+        # PRODUCTOS RELACIONADOS
+        context['related_products'] = Product.objects.filter(
+            category=category,
+            status='active'
+        ).exclude(pk=product.pk)[:4]
+        
+        # Datos adicionales
+        context.update({
+            'product_images': product.images.all().order_by('display_order'),
+            'has_colors': product.has_colors(),
+            'has_sizes': product.has_sizes(),
+        })
     
-    # Usar template específico si es ropa
-    if category.slug == 'ropa-bolsos':
-        return render(request, 'shop/clothing_product_detail.html', context)
+    # -------------------------------------------------------------------------
+    # 6. DEBUGGING (TEMPORAL - REMOVER EN PRODUCCIÓN)
+    # -------------------------------------------------------------------------
     
-    return render(request, 'shop/product_detail.html', context)
+    print("\n" + "="*70)
+    print(f"🔍 DEBUGGING: {product.name}")
+    print("="*70)
+    print(f"  Base Price (raw): {raw_base_price} (type: {type(raw_base_price)})")
+    print(f"  Starting Price (raw): {raw_starting_price} (type: {type(raw_starting_price)})")
+    print(f"  Base Price (safe): {safe_base_price} (type: {type(safe_base_price)})")
+    print(f"  Starting Price (safe): {safe_starting_price} (type: {type(safe_starting_price)})")
+    print(f"  Selected Color: '{context.get('selected_color_slug', 'N/A')}'")
+    print(f"  Images by Color: {len(json.loads(context['images_by_color']))} colores")
+    print(f"  Pricing Tiers: {len(context['pricing_tiers'])} tiers")
+    
+    if context['pricing_tiers']:
+        print(f"\n  📊 Tiers procesados:")
+        for i, tier in enumerate(context['pricing_tiers'][:3]):
+            print(f"    Tier {i}: min={tier['min_quantity']}, "
+                  f"max={tier['max_quantity']}, "
+                  f"price={tier['unit_price']} (type: {type(tier['unit_price'])})")
+    
+    print("="*70 + "\n")
+    
+    # -------------------------------------------------------------------------
+    # 7. RENDERIZADO FINAL
+    # -------------------------------------------------------------------------
+    
+    return render(request, context['template_name'], context)
 
 
 # ============================================================================
 # ROPA Y BOLSOS - VISTAS REFACTORIZADAS (Usando sistema unificado)
 # ============================================================================
 
-def ropa_bolsos(request):
+# =============================================================================
+# VISTAS ESPECÍFICAS PARA ROPA/BOLSOS (MODIFICADAS POR EL USUARIO)
+# =============================================================================
+
+def clothing_category(request):
     """
-    Página principal de Ropa y Bolsos - Estilo VistaPrint.
-    Ahora usa el sistema unificado Category/Subcategory/Product.
+    Vista de categoría para 'ropa-bolsos/' (Nivel 1).
+    Renderiza clothing_category.html.
+    
+    Esta vista no recibe argumentos de slug porque la URL está fijada en 'ropa-bolsos/'.
     """
-    # Obtener la categoría principal de ropa
+    # Busca la categoría 'ropa-bolsos'
     try:
-        category = Category.objects.get(slug='ropa-bolsos', status='active')
+        category = Category.objects.get(slug='ropa-bolsos')
     except Category.DoesNotExist:
-        category = None
-    
-    # Obtener subcategorías (Polos, Camisas, Gorros, Bolsos)
-    if category:
-        subcategories = category.subcategories.filter(
-            status='active'
-        ).order_by('display_order')
-    else:
-        subcategories = Subcategory.objects.none()
-    
-    # Get filter parameters
-    subcategory_filter = request.GET.get('subcategory', '')
-    color_filter = request.GET.getlist('color')
-    size_filter = request.GET.getlist('size')
-    price_min = request.GET.get('price_min', '')
-    price_max = request.GET.get('price_max', '')
-    sort_by = request.GET.get('sort', 'featured')
-    
-    # Base queryset
-    if category:
-        products = Product.objects.filter(
-            category=category,
-            status='active'
-        ).select_related('category', 'subcategory').prefetch_related(
-            'available_colors', 'available_sizes', 'price_tiers', 'images'
-        )
-    else:
-        products = Product.objects.none()
-    
-    # Apply filters
-    if subcategory_filter:
-        products = products.filter(subcategory__slug=subcategory_filter)
-    
-    if color_filter:
-        products = products.filter(available_colors__slug__in=color_filter).distinct()
-    
-    if size_filter:
-        products = products.filter(available_sizes__name__in=size_filter).distinct()
-    
-    if price_min:
-        try:
-            products = products.filter(base_price__gte=float(price_min))
-        except ValueError:
-            pass
-    
-    if price_max:
-        try:
-            products = products.filter(base_price__lte=float(price_max))
-        except ValueError:
-            pass
-    
-    # Apply sorting
-    if sort_by == 'price_low':
-        products = products.order_by('base_price')
-    elif sort_by == 'price_high':
-        products = products.order_by('-base_price')
-    elif sort_by == 'newest':
-        products = products.order_by('-created_at')
-    elif sort_by == 'name':
-        products = products.order_by('name')
-    else:  # featured
-        products = products.order_by('-is_featured', '-is_bestseller', 'name')
-    
-    # Get all colors and sizes for filter sidebar
-    all_colors = ProductColor.objects.filter(is_active=True).order_by('display_order')
-    all_sizes = ProductSize.objects.filter(
-        size_type='clothing', is_active=True
-    ).order_by('display_order')
+        # En caso de que el slug 'ropa-bolsos' no exista en la base de datos
+        raise Http404("La categoría 'Ropa y Bolsos' no fue encontrada.")
+        
+    # Obtener subcategorías relevantes (polos, camisas, etc.)
+    subcategories = Subcategory.objects.filter(category=category)
     
     context = {
         'category': category,
-        'subcategories': subcategories,  # Antes era 'categories'
-        'products': products,
-        'all_colors': all_colors,
-        'all_sizes': all_sizes,
-        'selected_subcategory': subcategory_filter,
-        'selected_colors': color_filter,
-        'selected_sizes': size_filter,
-        'price_min': price_min,
-        'price_max': price_max,
-        'sort_by': sort_by,
-        'product_count': products.count(),
+        'subcategories': subcategories,
     }
-    
-    return render(request, 'shop/ropa_bolsos.html', context)
-
-
-def clothing_category(request, category_slug):
-    """
-    Vista para mostrar productos de una subcategoría de ropa.
-    
-    URL: /ropa-bolsos/{subcategory_slug}/
-    Ejemplo: /ropa-bolsos/polos/
-    
-    IMPORTANTE: category_slug es en realidad el slug de la SUBCATEGORÍA
-    (nombre confuso pero así está en urls.py)
-    """
-    
-    # =========================================================================
-    # OBTENER CATEGORÍAS
-    # =========================================================================
-    
-    # Categoría padre (siempre es ropa-bolsos)
-    category = get_object_or_404(Category, slug='ropa-bolsos', status='active')
-    
-    # Subcategoría actual (la que el usuario está viendo)
-    subcategory = get_object_or_404(
-        Subcategory,
-        slug=category_slug,  # Este es el slug de la subcategoría (ej: "polos")
-        category=category,
-        status='active'
-    )
-    
-    # Obtener todas las subcategorías de ropa (para el menú de navegación)
-    subcategories = Subcategory.objects.filter(
-        category=category,
-        status='active'
-    ).order_by('display_order')
-    
-    # =========================================================================
-    # OBTENER PRODUCTOS
-    # =========================================================================
-    
-    products = Product.objects.filter(
-        subcategory=subcategory,
-        status='active'
-    ).select_related(
-        'category',
-        'subcategory'
-    ).prefetch_related(
-        'available_colors',
-        'available_sizes',
-        'price_tiers'
-    )
-    
-    # =========================================================================
-    # FILTROS
-    # =========================================================================
-    
-    # Filtros de URL
-    color_filter = request.GET.getlist('color')
-    size_filter = request.GET.getlist('size')
-    price_min = request.GET.get('price_min', '')
-    price_max = request.GET.get('price_max', '')
-    search_query = request.GET.get('q', '')
-    sort_by = request.GET.get('sort', 'featured')
-    
-    # Aplicar filtros
-    if color_filter:
-        products = products.filter(available_colors__slug__in=color_filter).distinct()
-    
-    if size_filter:
-        products = products.filter(available_sizes__slug__in=size_filter).distinct()
-    
-    if price_min:
-        try:
-            products = products.filter(base_price__gte=float(price_min))
-        except ValueError:
-            pass
-    
-    if price_max:
-        try:
-            products = products.filter(base_price__lte=float(price_max))
-        except ValueError:
-            pass
-    
-    if search_query:
-        products = products.filter(
-            Q(name__icontains=search_query) |
-            Q(description__icontains=search_query) |
-            Q(sku__icontains=search_query)
-        )
-    
-    # =========================================================================
-    # ORDENAMIENTO
-    # =========================================================================
-    
-    if sort_by == 'price_low':
-        products = products.order_by('base_price')
-    elif sort_by == 'price_high':
-        products = products.order_by('-base_price')
-    elif sort_by == 'newest':
-        products = products.order_by('-created_at')
-    elif sort_by == 'name':
-        products = products.order_by('name')
-    else:  # featured
-        products = products.order_by('display_order', 'name')
-    
-    # =========================================================================
-    # OPCIONES DE FILTRO DISPONIBLES
-    # =========================================================================
-    
-    # Colores disponibles en esta subcategoría
-    all_colors = ProductColor.objects.filter(
-        products__subcategory=subcategory,
-        products__status='active',
-        is_active=True
-    ).distinct().order_by('display_order', 'name')
-    
-    # Tallas disponibles
-    all_sizes = ProductSize.objects.filter(
-        products__subcategory=subcategory,
-        products__status='active',
-        is_active=True
-    ).distinct().order_by('display_order')
-    
-    # Marcas disponibles (del campo material)
-    all_brands = Product.objects.filter(
-        subcategory=subcategory,
-        status='active',
-        material__isnull=False
-    ).exclude(
-        material=''
-    ).values_list('material', flat=True).distinct()
-    all_brands = sorted(set(all_brands))
-    
-    # =========================================================================
-    # PAGINACIÓN
-    # =========================================================================
-    
-    from django.core.paginator import Paginator
-    
-    paginator = Paginator(products, 12)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
-    
-    # =========================================================================
-    # VERIFICAR FILTROS ACTIVOS
-    # =========================================================================
-    
-    has_active_filters = any([
-        color_filter,
-        size_filter,
-        price_min,
-        price_max,
-        search_query,
-    ])
-    
-    # =========================================================================
-    # CONTEXTO - NOMENCLATURA CORRECTA
-    # =========================================================================
-    
-    context = {
-        # Categorías (nomenclatura correcta)
-        'category': category,           # Category: ropa-bolsos
-        'subcategory': subcategory,     # Subcategory: polos, gorros, etc.
-        'subcategories': subcategories, # Todas las subcategorías (para navegación)
-        
-        # Productos
-        'products': page_obj,
-        'page_obj': page_obj,
-        'product_count': paginator.count,
-        
-        # Opciones de filtro
-        'all_colors': all_colors,
-        'all_sizes': all_sizes,
-        'all_brands': all_brands,
-        
-        # Filtros seleccionados
-        'selected_colors': color_filter,
-        'selected_sizes': size_filter,
-        'price_min': price_min,
-        'price_max': price_max,
-        'search_query': search_query,
-        'sort_by': sort_by,
-        
-        # Helper
-        'has_active_filters': has_active_filters,
-    }
-    
     return render(request, 'shop/clothing_category.html', context)
 
+    return render(request, 'shop/clothing_category.html', context)
+    
+from django.shortcuts import render, get_object_or_404
+from .models import Subcategory, Product # Asume que también tienes un modelo Product
 
 def clothing_subcategory(request, category_slug, subcategory_slug):
     """
-    Vista de sub-subcategoría de ropa (si se necesita más anidamiento).
-    Por ahora redirige a clothing_category.
+    Muestra los productos que pertenecen a una subcategoría específica,
+    validando que la subcategoría pertenezca a la categoría dada en la URL.
     """
-    return clothing_category(request, subcategory_slug)
+    print(f"🔍 Vista ejecutada: {category_slug}/{subcategory_slug}")
+    # 1. Recuperar la Subcategoría o lanzar 404 (No Subcategory matches the given query)
+    #    Aquí es donde la combinación de slugs debe ser correcta.
+    #    'category__slug' filtra a través de la relación de clave foránea.
+    try:
+        subcategory = get_object_or_404(
+            Subcategory, 
+            slug=subcategory_slug,           # Ej: 'polos'
+            category__slug=category_slug     # Ej: 'ropa-bolsos'
+        )
+    except Exception as e:
+        # Aunque get_object_or_404 debería manejarlo, este bloque es para depuración
+        print(f"Error al buscar subcategoría: {e}")
+        # Lanza el 404 si no se encuentra
+        raise
+        
+    # 2. Obtener los Productos relacionados
+    #    Asumiendo que tu modelo Product tiene una ForeignKey a Subcategory
+    #    llamada 'subcategory' o que usas el related_name
+    products = Product.objects.filter(subcategory=subcategory,status='active')
 
-
-# =============================================================================
-# VISTA: Detalle de producto de ropa (AGREGAR AL FINAL DE views.py)
-# =============================================================================
-def clothing_product_detail(request, category_slug, product_slug):
-    """
-    Vista detallada de un producto de ropa con soporte para:
-    - Colores seleccionables
-    - Imágenes por color
-    - Tallas disponibles
-    - Precio por volumen
-    """
-    # Obtener la categoría padre (ropa-bolsos)
-    parent_category = get_object_or_404(Category, slug='ropa-bolsos')
-    
-    # Obtener la subcategoría (polos, gorros, etc.)
-    category = get_object_or_404(
-        Subcategory, 
-        slug=category_slug,
-        category=parent_category,
-        status='active'
-    )
-    
-    # Obtener el producto
-    product = get_object_or_404(
-        Product,
-        slug=product_slug,
-        subcategory=category,
-        status='active'
-    )
-    
-    # =========================================================================
-    # MANEJO DE COLORES
-    # =========================================================================
-    
-    # Obtener el color seleccionado desde URL (?color=azul-real)
-    selected_color_slug = request.GET.get('color', '')
-    
-    # Obtener todos los colores disponibles del producto
-    available_colors = product.available_colors.filter(is_active=True).order_by('display_order')
-    
-    # Determinar el color actual
-    selected_color = None
-    if selected_color_slug:
-        # Intentar encontrar el color especificado
-        selected_color = available_colors.filter(slug=selected_color_slug).first()
-    
-    # Si no hay color seleccionado o no es válido, usar el primer color disponible
-    if not selected_color and available_colors.exists():
-        selected_color = available_colors.first()
-        selected_color_slug = selected_color.slug
-    
-    # =========================================================================
-    # OBTENER IMÁGENES POR COLOR
-    # =========================================================================
-    
-    # Crear diccionario de imágenes agrupadas por color
-    images_by_color = {}
-    
-    # Obtener todas las imágenes del producto
-    all_images = ProductImage.objects.filter(
-        product=product,
-        is_active=True
-    ).select_related('color').order_by('color__slug', '-is_primary', 'display_order')
-    
-    # Agrupar por color
-    for img in all_images:
-        color_key = img.color.slug if img.color else 'default'
-        
-        if color_key not in images_by_color:
-            images_by_color[color_key] = []
-        
-        images_by_color[color_key].append({
-            'image': img.image_url,
-            'is_primary': img.is_primary,
-            'alt_text': img.alt_text or f"{product.name} - {img.color.name if img.color else 'Default'}",
-        })
-    
-    # Determinar la imagen base (principal del color seleccionado)
-    base_image_url = ''
-    if selected_color:
-        # Buscar imagen principal del color seleccionado
-        primary_image = ProductImage.objects.filter(
-            product=product,
-            color=selected_color,
-            is_primary=True,
-            #is_active=True
-        ).first()
-        
-        if primary_image:
-            base_image_url = primary_image.image_url
-        else:
-            # Si no hay imagen principal, usar la primera imagen de ese color
-            first_image = ProductImage.objects.filter(
-                product=product,
-                color=selected_color,
-                #is_active=True
-            ).first()
-            if first_image:
-                base_image_url = first_image.image_url
-    
-    # Fallback a imagen por defecto del producto
-    if not base_image_url:
-        base_image_url = product.base_image_url or ''
-    
-    # =========================================================================
-    # TALLAS Y PRECIOS
-    # =========================================================================
-    
-    # Obtener tallas disponibles
-    available_sizes = product.available_sizes.filter(is_active=True).order_by('display_order')
-    
-    # Obtener tiers de precios
-    pricing_tiers = product.price_tiers.all().order_by('min_quantity')
-    
-    # =========================================================================
-    # PRODUCTOS RELACIONADOS
-    # =========================================================================
-    
-    related_products = Product.objects.filter(
-        subcategory=category,
-        status='active'
-    ).exclude(
-    pk=product.pk
-    ).prefetch_related(
-        'available_colors',
-        'available_sizes',
-        'price_tiers'
-    )[:4]
-    
-    # =========================================================================
-    # CONTEXTO
-    # =========================================================================
-    
+    # 3. Preparar el Contexto y Renderizar
     context = {
-        # Navegación
-        'parent_category': parent_category,
-        'category': category,
-        'category_slug': category_slug,
-        
-        # Producto
-        'product': product,
-        
-        # Colores
-        'available_colors': available_colors,
-        'selected_color': selected_color,
-        'selected_color_slug': selected_color_slug,
-        
-        # Imágenes
-        'base_image_url': base_image_url,
-        'images_by_color': json.dumps(images_by_color),  # Para JavaScript
-        
-        # Tallas y precios
-        'available_sizes': available_sizes,
-        'pricing_tiers': pricing_tiers,
-        
-        # Relacionados
-        'related_products': related_products,
+        'category': subcategory.category,
+        'subcategory': subcategory,
+        'products': products,
+        # Puedes añadir los slugs al contexto por si los necesitas en la plantilla
+        'current_category_slug': category_slug, 
+        'current_subcategory_slug': subcategory_slug,
     }
+
+    return render(request, 'shop/clothing_subcategory.html', context)
+
+
     
-    return render(request, 'shop/clothing_product_detail.html', context)
+
 
 
 # =============================================================================
@@ -1111,44 +910,6 @@ def add_product_to_cart(request):
 # ============================================================================
 # TARJETAS DE PRESENTACIÓN
 # ============================================================================
-
-class TarjetasPresentacionListView(ListView):
-    model = Product
-    template_name = 'shop/tarjetas_presentacion.html'
-    context_object_name = 'products'
-
-    def get_queryset(self):
-        queryset = Product.objects.filter(
-            category__slug='tarjetas-presentacion',
-            status='active'
-        ).select_related('category', 'subcategory').prefetch_related('price_tiers')
-        
-        return queryset.order_by('subcategory__display_order', 'name')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        try:
-            category = Category.objects.get(slug='tarjetas-presentacion')
-            context['category'] = category
-            context['subcategories'] = category.subcategories.filter(
-                status='active'
-            ).order_by('display_order')
-        except Category.DoesNotExist:
-            context['category'] = None
-            context['subcategories'] = []
-        
-        tier_param = self.request.GET.get('tier', '')
-        context['selected_subcategory'] = tier_param if tier_param != 'all' else ''
-        
-        if context['selected_subcategory']:
-            try:
-                selected_sub = Subcategory.objects.get(slug=context['selected_subcategory'])
-                context['selected_subcategory_name'] = selected_sub.name
-            except Subcategory.DoesNotExist:
-                context['selected_subcategory_name'] = ''
-        
-        return context
 
 
 # ============================================================================
@@ -1886,276 +1647,6 @@ def get_product_feature(product, feature_name):
 
 
 # =============================================================================
-# VISTA PRINCIPAL: clothing_category CON FILTROS AVANZADOS
-# =============================================================================
-# =============================================================================
-# VISTA: Detalle de producto de ropa (AGREGAR AL FINAL DE views.py)
-# =============================================================================
-def clothing_product_detail(request, category_slug, product_slug):
-    """
-    Vista detallada de un producto de ropa.
-    
-    URL: /ropa-bolsos/{subcategory_slug}/{product_slug}/
-    Ejemplo: /ropa-bolsos/polos/producto-abc/
-    
-    IMPORTANTE: category_slug es en realidad el slug de la SUBCATEGORÍA
-    (nombre confuso pero así está en urls.py)
-    """
-    
-    # Obtener la categoría padre (siempre es ropa-bolsos)
-    category = get_object_or_404(Category, slug='ropa-bolsos', status='active')
-    
-    # Obtener la subcategoría usando category_slug
-    # (sí, el parámetro se llama category_slug pero es el slug de una subcategoría)
-    subcategory = get_object_or_404(
-        Subcategory,
-        slug=category_slug,  # Este es realmente el slug de la subcategoría (ej: "polos")
-        category=category,
-        status='active'
-    )
-    
-    # Obtener el producto
-    product = get_object_or_404(
-        Product,
-        slug=product_slug,
-        subcategory=subcategory,
-        status='active'
-    )
-    
-    # =========================================================================
-    # MANEJO DE COLORES
-    # =========================================================================
-    
-    selected_color_slug = request.GET.get('color', '')
-    available_colors = product.available_colors.filter(is_active=True).order_by('display_order')
-    
-    selected_color = None
-    if selected_color_slug:
-        selected_color = available_colors.filter(slug=selected_color_slug).first()
-    
-    if not selected_color and available_colors.exists():
-        selected_color = available_colors.first()
-        selected_color_slug = selected_color.slug
-    
-    # =========================================================================
-    # OBTENER IMÁGENES POR COLOR
-    # =========================================================================
-    
-    images_by_color = {}
-    
-    all_images = ProductImage.objects.filter(
-        product=product,
-        #is_active=True
-    ).select_related('color').order_by('color__slug', '-is_primary', 'display_order')
-    
-    for img in all_images:
-        color_key = img.color.slug if img.color else 'default'
-        
-        if color_key not in images_by_color:
-            images_by_color[color_key] = []
-        
-        images_by_color[color_key].append({
-            'image': img.image_url,
-            'is_primary': img.is_primary,
-            'alt_text': img.alt_text or f"{product.name} - {img.color.name if img.color else 'Default'}",
-        })
-    
-    # Determinar la imagen base
-    base_image_url = ''
-    if selected_color:
-        primary_image = ProductImage.objects.filter(
-            product=product,
-            color=selected_color,
-            is_primary=True,
-            #is_active=True
-        ).first()
-        
-        if primary_image:
-            base_image_url = primary_image.image_url
-        else:
-            first_image = ProductImage.objects.filter(
-                product=product,
-                color=selected_color,
-                is_active=True
-            ).first()
-            if first_image:
-                base_image_url = first_image.image_url
-    
-    if not base_image_url:
-        base_image_url = product.base_image_url or ''
-    
-    # =========================================================================
-    # TALLAS Y PRECIOS
-    # =========================================================================
-    
-    available_sizes = product.available_sizes.filter(is_active=True).order_by('display_order')
-    pricing_tiers = product.price_tiers.all().order_by('min_quantity')
-    
-    # =========================================================================
-    # PRODUCTOS RELACIONADOS
-    # =========================================================================
-    
-    related_products = Product.objects.filter(
-        subcategory=subcategory,
-        status='active'
-    ).exclude(
-    pk=product.pk
-    ).prefetch_related(
-        'available_colors',
-        'available_sizes',
-        'price_tiers'
-    )[:4]
-    
-    # =========================================================================
-    # CONTEXTO - NOMENCLATURA CLARA
-    # =========================================================================
-    
-    context = {
-        # Categorías (nomenclatura correcta)
-        'category': category,              # Category: ropa-bolsos
-        'subcategory': subcategory,        # Subcategory: polos, gorros, etc.
-        'category_slug': subcategory.slug, # Para construir URLs en template
-        
-        # Producto
-        'product': product,
-        
-        # Colores
-        'available_colors': available_colors,
-        'selected_color': selected_color,
-        'selected_color_slug': selected_color_slug,
-        
-        # Imágenes
-        'base_image_url': base_image_url,
-        'images_by_color': json.dumps(images_by_color),
-        
-        # Tallas y precios
-        'available_sizes': available_sizes,
-        'pricing_tiers': pricing_tiers,
-        
-        # Relacionados
-        'related_products': related_products,
-    }
-    
-    return render(request, 'shop/clothing_product_detail.html', context)
-
-
-# =============================================================================
-# API: Agregar producto de ropa al carrito
-# =============================================================================
-@csrf_exempt
-def add_clothing_to_cart(request):
-    """API para agregar productos de ropa al carrito"""
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Método no permitido'}, status=405)
-    
-    try:
-        product_slug = request.POST.get('product_slug')
-        color_slug = request.POST.get('color_slug')
-        size_slug = request.POST.get('size_slug')
-        quantity = int(request.POST.get('quantity', 1))
-        
-        if not all([product_slug, color_slug, size_slug]):
-            return JsonResponse({
-                'error': 'Faltan datos requeridos (producto, color, talla)'
-            }, status=400)
-        
-        product = get_object_or_404(Product, slug=product_slug)
-        color = get_object_or_404(ProductColor, slug=color_slug)
-        size = get_object_or_404(ProductSize, slug=size_slug)
-        
-        if color not in product.available_colors.all():
-            return JsonResponse({'error': 'Color no disponible'}, status=400)
-        
-        if size not in product.available_sizes.all():
-            return JsonResponse({'error': 'Talla no disponible'}, status=400)
-        
-        # Obtener o crear carrito
-        cart_id = request.COOKIES.get('cart_id')
-        
-        if cart_id:
-            try:
-                cart = Cart.objects.get(pk=cart_id)
-            except Cart.DoesNotExist:
-                cart = Cart.objects.create()
-        else:
-            cart = Cart.objects.create()
-        
-        # Buscar o crear CartItem
-        from cart.models import CartItem
-        
-        cart_item = CartItem.objects.filter(
-            cart=cart,
-            product=product,
-            clothing_color=color,
-            clothing_size=size
-        ).first()
-        
-        if cart_item:
-            cart_item.clothing_quantity = (cart_item.clothing_quantity or 0) + quantity
-            cart_item.save()
-        else:
-            cart_item = CartItem.objects.create(
-                cart=cart,
-                product=product,
-                clothing_color=color,
-                clothing_size=size,
-                clothing_quantity=quantity
-            )
-        
-        # Calcular totales
-        cart_items = CartItem.objects.filter(cart=cart)
-        cart_total = sum(item.sub_total for item in cart_items)
-        cart_count = sum(item.get_quantity_int() for item in cart_items)
-        
-        response_data = {
-            'success': True,
-            'message': f'{product.name} agregado al carrito',
-            'cart_count': cart_count,
-            'cart_total': float(cart_total),
-            'item': {
-                'product_name': product.name,
-                'color': color.name,
-                'size': size.name,
-                'quantity': cart_item.clothing_quantity,
-                'unit_price': cart_item.get_unit_price(),
-                'total': cart_item.sub_total,
-            }
-        }
-        
-        response = JsonResponse(response_data)
-        response.set_cookie('cart_id', cart.pk, max_age=30*24*60*60)
-        return response
-        
-    except Exception as e:
-        return JsonResponse({
-            'error': f'Error al agregar al carrito: {str(e)}'
-        }, status=500)
-
-
-
-# =============================================================================
-# VISTA: clothing_subcategory (alternativa si usas 2 niveles)
-# =============================================================================
-def clothing_subcategory(request, category_slug, subcategory_slug):
-    """
-    Vista para subcategorías anidadas (si tu estructura lo requiere)
-    URL: /ropa-bolsos/polos/hombre/
-    """
-    parent_category = get_object_or_404(Category, slug='ropa-bolsos')
-    
-    # En este caso category_slug sería la subcategoría principal
-    # y subcategory_slug sería un filtro adicional
-    subcategory = get_object_or_404(Subcategory, slug=category_slug, category=parent_category)
-    
-    # Redirigir a clothing_category con el filtro de género
-    from django.shortcuts import redirect
-    from django.urls import reverse
-    
-    url = reverse('shop:clothing_category', kwargs={'category_slug': category_slug})
-    return redirect(f'{url}?genero={subcategory_slug}')
-
-
-# =============================================================================
 # API: Obtener colores disponibles (para filtros dinámicos)
 # =============================================================================
 def get_available_colors(request):
@@ -2238,306 +1729,8 @@ def get_product_colors(request, product_slug):
     })
 
 
-# =============================================================================
-# VISTAS GENÉRICAS - Funcionan para CUALQUIER categoría
-# =============================================================================
-# AGREGAR AL FINAL DE shop/views.py
-
-import json
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
-from .models import (
-    Category, Subcategory, Product, ProductImage, 
-    ProductColor, ProductSize, PriceTier
-)
-from cart.models import Cart, CartItem
 
 
-def product_category_list(request, category_slug, subcategory_slug):
-    """
-    Vista GENÉRICA para mostrar productos de cualquier categoría/subcategoría.
-    
-    URL: /{category}/{subcategory}/
-    Ejemplos:
-    - /ropa-bolsos/polos/
-    - /calendarios-regalos/agendas-personalizadas/
-    - /impresion-digital/volantes/
-    """
-    
-    # Obtener categoría y subcategoría
-    category = get_object_or_404(Category, slug=category_slug, status='active')
-    subcategory = get_object_or_404(
-        Subcategory,
-        slug=subcategory_slug,
-        category=category,
-        status='active'
-    )
-    
-    # Obtener todas las subcategorías de esta categoría (para navegación)
-    subcategories = Subcategory.objects.filter(
-        category=category,
-        status='active'
-    ).order_by('display_order')
-    
-    # Obtener productos
-    products = Product.objects.filter(
-        subcategory=subcategory,
-        status='active'
-    ).select_related(
-        'category',
-        'subcategory'
-    ).prefetch_related(
-        'available_colors',
-        'available_sizes',
-        'price_tiers'
-    )
-    
-    # =========================================================================
-    # FILTROS
-    # =========================================================================
-    
-    color_filter = request.GET.getlist('color')
-    size_filter = request.GET.getlist('size')
-    price_min = request.GET.get('price_min', '')
-    price_max = request.GET.get('price_max', '')
-    search_query = request.GET.get('q', '')
-    sort_by = request.GET.get('sort', 'featured')
-    
-    if color_filter:
-        products = products.filter(available_colors__slug__in=color_filter).distinct()
-    
-    if size_filter:
-        products = products.filter(available_sizes__slug__in=size_filter).distinct()
-    
-    if price_min:
-        try:
-            products = products.filter(base_price__gte=float(price_min))
-        except ValueError:
-            pass
-    
-    if price_max:
-        try:
-            products = products.filter(base_price__lte=float(price_max))
-        except ValueError:
-            pass
-    
-    if search_query:
-        products = products.filter(
-            Q(name__icontains=search_query) |
-            Q(description__icontains=search_query) |
-            Q(sku__icontains=search_query)
-        )
-    
-    # Ordenamiento
-    if sort_by == 'price_low':
-        products = products.order_by('base_price')
-    elif sort_by == 'price_high':
-        products = products.order_by('-base_price')
-    elif sort_by == 'newest':
-        products = products.order_by('-created_at')
-    elif sort_by == 'name':
-        products = products.order_by('name')
-    else:
-        products = products.order_by('display_order', 'name')
-    
-    # =========================================================================
-    # OPCIONES DE FILTRO
-    # =========================================================================
-    
-    all_colors = ProductColor.objects.filter(
-        products__subcategory=subcategory,
-        products__status='active',
-        is_active=True
-    ).distinct().order_by('display_order', 'name')
-    
-    all_sizes = ProductSize.objects.filter(
-        products__subcategory=subcategory,
-        products__status='active',
-        is_active=True
-    ).distinct().order_by('display_order')
-    
-    # =========================================================================
-    # PAGINACIÓN
-    # =========================================================================
-    
-    from django.core.paginator import Paginator
-    
-    paginator = Paginator(products, 12)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
-    
-    # =========================================================================
-    # CONTEXTO
-    # =========================================================================
-    
-    context = {
-        'category': category,
-        'subcategory': subcategory,
-        'subcategories': subcategories,
-        'products': page_obj,
-        'page_obj': page_obj,
-        'product_count': paginator.count,
-        'all_colors': all_colors,
-        'all_sizes': all_sizes,
-        'selected_colors': color_filter,
-        'selected_sizes': size_filter,
-        'price_min': price_min,
-        'price_max': price_max,
-        'search_query': search_query,
-        'sort_by': sort_by,
-        'has_active_filters': any([color_filter, size_filter, price_min, price_max, search_query]),
-    }
-    
-    # Determinar qué template usar según la categoría
-    # Si es ropa, usar template específico de ropa
-    # Si no, usar template genérico
-    if category.slug == 'ropa-bolsos':
-        template = 'shop/clothing_category.html'
-    else:
-        template = 'shop/product_category.html'  # Template genérico
-    
-    return render(request, template, context)
-
-
-def product_detail(request, category_slug, subcategory_slug, product_slug):
-    """
-    Vista GENÉRICA de detalle de producto para cualquier categoría.
-    
-    URL: /{category}/{subcategory}/{product}/
-    Ejemplos:
-    - /ropa-bolsos/polos/producto-abc/
-    - /calendarios-regalos/agendas-personalizadas/agenda-abc/
-    - /impresion-digital/volantes/volante-abc/
-    """
-    
-    # Obtener categoría, subcategoría y producto
-    category = get_object_or_404(Category, slug=category_slug, status='active')
-    
-    subcategory = get_object_or_404(
-        Subcategory,
-        slug=subcategory_slug,
-        category=category,
-        status='active'
-    )
-    
-    product = get_object_or_404(
-        Product,
-        slug=product_slug,
-        subcategory=subcategory,
-        status='active'
-    )
-    
-    # =========================================================================
-    # MANEJO DE COLORES (solo para productos con colores)
-    # =========================================================================
-    
-    selected_color_slug = request.GET.get('color', '')
-    available_colors = product.available_colors.filter(is_active=True).order_by('display_order')
-    
-    selected_color = None
-    if selected_color_slug:
-        selected_color = available_colors.filter(slug=selected_color_slug).first()
-    
-    if not selected_color and available_colors.exists():
-        selected_color = available_colors.first()
-        selected_color_slug = selected_color.slug
-    
-    # =========================================================================
-    # OBTENER IMÁGENES POR COLOR
-    # =========================================================================
-    
-    images_by_color = {}
-    
-    all_images = ProductImage.objects.filter(
-        product=product,
-        #is_active=True
-    ).select_related('color').order_by('color__slug', '-is_primary', 'display_order')
-    
-    for img in all_images:
-        color_key = img.color.slug if img.color else 'default'
-        
-        if color_key not in images_by_color:
-            images_by_color[color_key] = []
-        
-        images_by_color[color_key].append({
-            'image': img.image_url,
-            'is_primary': img.is_primary,
-            'alt_text': img.alt_text or f"{product.name} - {img.color.name if img.color else 'Default'}",
-        })
-    
-    # Determinar imagen base
-    base_image_url = ''
-    if selected_color:
-        primary_image = ProductImage.objects.filter(
-            product=product,
-            color=selected_color,
-            is_primary=True,
-            #is_active=True
-        ).first()
-        
-        if primary_image:
-            base_image_url = primary_image.image_url
-        else:
-            first_image = ProductImage.objects.filter(
-                product=product,
-                color=selected_color,
-                #is_active=True
-            ).first()
-            if first_image:
-                base_image_url = first_image.image_url
-    
-    if not base_image_url:
-        base_image_url = product.base_image_url or ''
-    
-    # =========================================================================
-    # TALLAS Y PRECIOS
-    # =========================================================================
-    
-    available_sizes = product.available_sizes.filter(is_active=True).order_by('display_order')
-    pricing_tiers = product.price_tiers.all().order_by('min_quantity')
-    
-    # =========================================================================
-    # PRODUCTOS RELACIONADOS
-    # =========================================================================
-    
-    related_products = Product.objects.filter(
-        subcategory=subcategory,
-        status='active'
-    ).exclude(
-    pk=product.pk
-    ).prefetch_related(
-        'available_colors',
-        'available_sizes',
-        'price_tiers'
-    )[:4]
-    
-    # =========================================================================
-    # CONTEXTO
-    # =========================================================================
-    
-    context = {
-        'category': category,
-        'subcategory': subcategory,
-        'product': product,
-        'available_colors': available_colors,
-        'selected_color': selected_color,
-        'selected_color_slug': selected_color_slug,
-        'base_image_url': base_image_url,
-        'images_by_color': json.dumps(images_by_color),
-        'available_sizes': available_sizes,
-        'pricing_tiers': pricing_tiers,
-        'related_products': related_products,
-    }
-    
-    # Determinar template según categoría
-    if category.slug == 'ropa-bolsos':
-        template = 'shop/clothing_product_detail.html'
-    else:
-        template = 'shop/product_detail.html'  # Template genérico
-    
-    return render(request, template, context)
 
 
 # =============================================================================
@@ -2655,14 +1848,6 @@ def add_to_cart_api(request):
 # COMPATIBILIDAD: Mantener las vistas específicas de ropa
 # =============================================================================
 
-def clothing_category(request, category_slug):
-    """Vista específica para ropa - redirige a vista genérica"""
-    return product_category_list(request, 'ropa-bolsos', category_slug)
-
-
-def clothing_product_detail(request, category_slug, product_slug):
-    """Vista específica para ropa - redirige a vista genérica"""
-    return product_detail(request, 'ropa-bolsos', category_slug, product_slug)
 
 
 def add_clothing_to_cart(request):

@@ -42,26 +42,28 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li><a href="{% url 'shop:home' %}">Inicio</a></li>
-                <li><a href="{% url 'shop:ropa_bolsos' %}">Ropa y Bolsas</a></li>
+                <li><a href="{% url 'shop:clothing_category' %}">Ropa y Bolsas</a></li>
                 <li class="active">{{ category.name }}</li>
             </ol>
         </div>
     </nav>
 
-    {% if subcategories %}
+   {% if subcategories %}
     <section class="categories-nav">
         <div class="container">
-            <div class="categories-grid">
+            <div class="categories-grid categories-grid-circles">
                 {% for sub in subcategories %}
-                <a href="{% url 'shop:clothing_category' sub.slug %}"
-                   class="category-card {% if sub.slug == category.slug %}active{% endif %}">
-                    <div class="category-icon">
+                <a href="{% url 'shop:clothing_subcategory' category.slug sub.slug %}"
+                class="subcategory-circle-link">
+                    
+                    <div class="category-icon subcategory-circle {% if sub.slug == category.slug %}active{% endif %}">
                         {% if sub.image_url %}
                             <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
                         {% else %}
-                            <i class="fas fa-tshirt"></i>
+                            <i class="fas fa-tshirt"></i> 
                         {% endif %}
                     </div>
+                    
                     <span class="category-name">{{ sub.name }}</span>
                 </a>
                 {% endfor %}
@@ -73,17 +75,7 @@
     <main class="clothing-main">
         <div class="container">
             <div class="clothing-layout">
-                <aside class="filter-sidebar">
-                    <div class="filter-header">
-                        <h3>Filtros</h3>
-                        <a href="{% url 'shop:clothing_category' category.slug %}" class="clear-filters">Limpiar todo</a>
-                    </div>
-                    <form id="filter-form" method="GET" action="{% url 'shop:clothing_category' category.slug %}">
-                        <!-- Aquí van tus filtros de género, cuello, manga, etc. -->
-                        <button type="submit" class="btn-apply-filters">Aplicar Filtros</button>
-                    </form>
-                </aside>
-
+                
                 <section class="products-section">
                     <div class="results-bar">
                         <div class="results-count"><strong>{{ product_count }}</strong> productos</div>

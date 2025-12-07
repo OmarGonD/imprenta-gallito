@@ -18,36 +18,119 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def add_to_cart(request, product_slug):
-    if request.method == 'POST':
-        product = get_object_or_404(Product, slug=product_slug)
-        quantity = int(request.POST.get('quantity', 1))
-        uploaded_file = request.FILES.get('uploaded_file')
-
-        # Get or create cart
-        cart_id = request.COOKIES.get('cart_id')
-        if cart_id:
-            try:
-                cart = Cart.objects.get(id=cart_id)
-            except Cart.DoesNotExist:
+    print("=" * 60)
+    print("🚀 add_to_cart iniciado")
+    print(f"Method: {request.method}")
+    print(f"Product slug: {product_slug}")
+    try:
+        if request.method == 'POST':
+            print("✅ Es POST")
+            print("\n📦 POST data:")
+            for key, value in request.POST.items():
+                print(f"   {key}: '{value}'")
+            product = get_object_or_404(Product, slug=product_slug)
+            print(f"✅ Producto encontrado: {product.name}")
+            quantity = int(request.POST.get('quantity', 1))
+            print(f"✅ Cantidad: {quantity}")
+            uploaded_file = request.FILES.get('uploaded_file')
+            
+            # ⭐ NUEVOS: Obtener color y talla
+            color = request.POST.get('color', '').strip()
+            size = request.POST.get('size', '').strip()
+            print(f"✅ Color recibido: '{color}'")
+            print(f"✅ Size recibido: '{size}'")
+            color_image_url = request.POST.get('color_image_url', '').strip()
+            # Get or create cart (TU LÓGICA EXISTENTE - NO CAMBIAR)
+            cart_id = request.COOKIES.get('cart_id')
+            print(f"🍪 Cart ID de cookie: {cart_id}")
+            if cart_id:
+                try:
+                    cart = Cart.objects.get(id=cart_id)
+                    print(f"✅ Cart encontrado: {cart.id}")
+                except Cart.DoesNotExist:
+                    print("⚠️ Cart no existe, creando nuevo...")
+                    cart = Cart.objects.create()
+                    print(f"✅ Nuevo cart creado: {cart.id}")
+            else:
+                print("⚠️ No hay cart_id, creando nuevo...")
                 cart = Cart.objects.create()
-        else:
-            cart = Cart.objects.create()
+                print(f"✅ Nuevo cart creado: {cart.id}")
 
-        # Create or update cart item
-        cart_item, created = CartItem.objects.get_or_create(
-            cart=cart,
-            product=product,
-            defaults={'quantity': quantity}
-        )
-        if not created:
-            cart_item.quantity += quantity
-        if uploaded_file:
-            cart_item.file_a = uploaded_file
-        cart_item.save()
+            # ⭐ MODIFICADO: Buscar item con mismo producto, color y talla
+            print("\n🔄 Intentando crear/obtener CartItem...")
+            from cart.models import CartItem
+            fields = [f.name for f in CartItem._meta.get_fields()]
+            print(f"Campos disponibles en CartItem: {fields}")
 
-        response = JsonResponse({'success': True, 'message': 'Producto agregado al carrito'})
-        response.set_cookie('cart_id', cart.id)
-        return response
+            if 'color' not in fields:
+                print("❌ ERROR: CartItem NO tiene campo 'color'")
+                return JsonResponse({
+                    'success': False,
+                    'error': 'CartItem no tiene campo color. Ejecuta: python manage.py makemigrations && python manage.py migrate'
+                }, status=500)
+
+            try:
+                cart_item = CartItem.objects.get(
+                    cart=cart,
+                    product=product,
+                    color=color if color else None,
+                    size=size if size else None
+                )
+                # Si existe, sumar cantidad
+                cart_item.quantity += quantity
+                cart_item.color_image_url = color_image_url
+                created = False
+                print(f"✅ CartItem existente actualizado")
+            except CartItem.DoesNotExist:
+                # Si no existe, crear nuevo
+                cart_item = CartItem.objects.create(
+                    cart=cart,
+                    product=product,
+                    color=color if color else None,
+                    size=size if size else None,
+                    quantity=quantity,
+                    color_image_url=color_image_url
+                )
+                created = True
+                print(f"✅ Nuevo CartItem creado: {cart_item.id}")
+            
+            # Manejar archivo (TU LÓGICA EXISTENTE)
+            if uploaded_file:
+                cart_item.file_a = uploaded_file
+                print(f"✅ Archivo adjuntado")
+            
+            cart_item.save()
+            print(f"💾 CartItem guardado - Color: '{cart_item.color}', Size: '{cart_item.size}'")
+
+            print("=" * 60)
+
+            # Respuesta mejorada
+            response = JsonResponse({
+                'success': True, 
+                'message': 'Producto agregado al carrito',
+                'product_name': product.name,
+                'color': color if color else 'N/A',
+                'size': size if size else 'N/A',
+                'quantity': quantity
+            })
+            response.set_cookie('cart_id', cart.id)
+            return response
+        
+    except Exception as e:
+        print("=" * 60)
+        print("❌ ERROR CAPTURADO:")
+        print(f"Tipo: {type(e).__name__}")
+        print(f"Mensaje: {str(e)}")
+        import traceback
+        print("\nTraceback completo:")
+        traceback.print_exc()
+        print("=" * 60)
+        
+        return JsonResponse({
+            'success': False,
+            'error': f'{type(e).__name__}: {str(e)}'
+        }, status=500)
+
     return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
 
 def full_remove(request, cart_item_id):
@@ -141,6 +224,7 @@ def cart_charge_credit_card(request):
                 sku=order_item.product.sku,
                 quantity=order_item.quantity,
                 size=order_item.size,
+                color=order_item.color,
                 price=order_item.product.price,
                 file_a=order_item.file_a,
                 file_b=order_item.file_b,
@@ -295,6 +379,7 @@ def cart_charge_deposit_payment(request):
             sku=order_item.product.sku,
             quantity=order_item.quantity,
             size=order_item.size,
+            color=order_item.color,
             price=order_item.sub_total(),
             file_a=order_item.file_a,
             file_b=order_item.file_b,

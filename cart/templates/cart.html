@@ -6,84 +6,120 @@
 {% block content %}
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8">
     <div class="container mx-auto px-4 max-w-7xl">
-        
+
         <!-- Header con contador de items -->
         <div class="flex items-center justify-between mb-8">
             <div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">Carrito de Compras</h1>
+                <h1 class="text-4xl font-bold text-gray-900 mb-2 leading-tight">Carrito de Compras</h1>
                 {% if cart_items %}
                 <p class="text-gray-600">
-                    <span class="font-semibold text-blue-600">{{ cart_items|length }}</span> 
+                    <span class="font-semibold text-blue-600">{{ cart_items|length }}</span>
                     {% if cart_items|length == 1 %}producto{% else %}productos{% endif %} en tu carrito
                 </p>
                 {% endif %}
             </div>
-            
+
             {% if cart_items %}
-            <a href="{% url 'shop:home' %}" 
-               class="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+            <a href="{% url 'shop:home' %}"
+                class="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
                 Seguir comprando
             </a>
             {% endif %}
         </div>
-        
+
         {% if cart_items %}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+
             <!-- COLUMNA IZQUIERDA: Items del carrito -->
             <div class="lg:col-span-2 space-y-6">
                 {% for item in cart_items %}
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+                <div
+                    class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
                     <div class="p-6">
                         <div class="flex flex-col md:flex-row gap-6">
-                            
+
                             <!-- Imagen del producto -->
                             <div class="flex-shrink-0">
                                 <div class="relative group">
-                                    {% if item.product.base_image_url %}
-                                        <img src="{{ item.product.base_image_url }}" 
-                                             alt="{{ item.product.name }}"
-                                             class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-xl border-4 border-gray-100 group-hover:border-blue-200 transition-all duration-300">
+                                    {% if item.color_image_url %}
+                                    <img src="{{ item.color_image_url }}"
+                                        alt="{{ item.product.name }} - {{ item.color }}"
+                                        class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-xl border-4 border-gray-100 group-hover:border-blue-200 transition-all duration-300">
+                                    {% elif item.product.base_image_url %}
+                                    <img src="{{ item.product.base_image_url }}" alt="{{ item.product.name }}"
+                                        class="w-32 h-32 md:w-40 md:h-40 object-cover rounded-xl border-4 border-gray-100 group-hover:border-blue-200 transition-all duration-300">
                                     {% else %}
-                                        <div class="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
-                                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                            </svg>
-                                        </div>
+                                    <div
+                                        class="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+                                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
                                     {% endif %}
                                 </div>
                             </div>
-                            
+
                             <!-- Info del producto -->
                             <div class="flex-grow">
                                 <div class="flex items-start justify-between mb-4">
                                     <div class="flex-grow">
-                                        <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                                        <h3
+                                            class="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors leading-snug">
                                             {{ item.product.name }}
                                         </h3>
-                                        
+
                                         <div class="flex flex-wrap gap-3 text-sm text-gray-600 mb-3">
                                             {% if item.product.type %}
-                                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">
+                                            <span
+                                                class="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                                                    <path
+                                                        d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
                                                 </svg>
                                                 {{ item.product.type }}
                                             </span>
                                             {% endif %}
-                                            <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 rounded-full font-medium">
+                                            {% if item.color %}
+                                            <span
+                                                class="inline-flex items-center gap-1 px-3 py-1 bg-purple-50 text-purple-700 rounded-full font-medium">
                                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"/>
+                                                    <path fill-rule="evenodd"
+                                                        d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                {{ item.color }}
+                                            </span>
+                                            {% endif %}
+
+                                            <!--  NUEVO: Mostrar Talla -->
+                                            {% if item.size %}
+                                            <span
+                                                class="inline-flex items-center gap-1 px-3 py-1 bg-amber-50 text-amber-700 rounded-full font-medium">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
+                                                </svg>
+                                                {{ item.size }}
+                                            </span>
+                                            {% endif %}
+                                            <span
+                                                class="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 rounded-full font-medium">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
                                                 </svg>
                                                 {{ item.get_quantity_int }} unidades
                                             </span>
                                         </div>
-                                        
+
                                         <div class="flex items-baseline gap-2">
-                                            <p class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                            <p
+                                                class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                                 S/ {{ item.sub_total|floatformat:2 }}
                                             </p>
                                             <p class="text-sm text-gray-500">
@@ -91,129 +127,160 @@
                                             </p>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Botón eliminar (desktop) -->
                                     <div class="hidden md:block">
-                                        <form method="POST" action="{% url 'carrito-de-compras:full_remove' item.id %}" 
-                                              onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                                        <form method="POST" action="{% url 'carrito-de-compras:full_remove' item.id %}"
+                                            onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                                             {% csrf_token %}
-                                            <button type="submit" 
-                                                    class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 group">
-                                                <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            <button type="submit"
+                                                class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 group">
+                                                <svg class="w-6 h-6 group-hover:scale-110 transition-transform"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </button>
                                         </form>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Sección de diseño -->
                                 <div class="border-t-2 border-gray-100 pt-4 mt-4">
                                     <div class="flex items-center gap-2 mb-3">
                                         <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd"
+                                                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                clip-rule="evenodd" />
                                         </svg>
-                                        <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">Tu Diseño</h4>
+                                        <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">Tu Diseño
+                                        </h4>
                                     </div>
-                                    
+
                                     <div id="design-container-{{ item.id }}">
-                                    
-                                    {% if item.get_template_slug %}
-                                    <!-- ===== TEMPLATE SELECCIONADO ===== -->
-                                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-100">
-                                        <div class="flex items-start gap-4">
-                                            <div class="flex-shrink-0 group">
-                                                <div class="relative">
-                                                    <img src="{{ item.get_template_thumbnail_url }}" 
-                                                         alt="Plantilla seleccionada"
-                                                         class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-lg group-hover:scale-105 transition-transform duration-300"
-                                                         onerror="this.src='/static/img/template-placeholder.png'">
-                                                    <div class="absolute -top-2 -right-2 bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
-                                                        ✓
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="flex-grow">
-                                                <p class="text-sm font-semibold text-gray-900 mb-1">
-                                                    {{ item.get_design_display }}
-                                                </p>
-                                                <div class="flex items-center gap-2 mb-3">
-                                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-indigo-700 shadow-sm">
-                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"/>
-                                                        </svg>
-                                                        Plantilla
-                                                    </span>
-                                                    <span class="text-xs text-gray-500">Personalizable</span>
-                                                </div>
-                                                
-                                                <div class="flex flex-wrap gap-2">
-                                                    <a href="{% url 'shop:template_gallery' item.product.category.slug item.product.slug %}?quantity={{ item.get_quantity_int }}&change_template={{ item.id }}"
-                                                       class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all shadow-sm hover:shadow">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                                        </svg>
-                                                        Cambiar plantilla
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    {% elif item.design_file %}
-                                    <!-- ===== ARCHIVO SUBIDO ===== -->
-                                        {% if item.is_image_file %}
-                                        <!-- Vista previa de imagen -->
-                                        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border-2 border-blue-100">
+
+                                        {% if item.get_template_slug %}
+                                        <!-- ===== TEMPLATE SELECCIONADO ===== -->
+                                        <div
+                                            class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-100">
                                             <div class="flex items-start gap-4">
                                                 <div class="flex-shrink-0 group">
                                                     <div class="relative">
-                                                        <img src="{{ item.design_file.url }}" 
-                                                             alt="Vista previa del diseño"
-                                                             class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-lg group-hover:scale-105 transition-transform duration-300">
-                                                        <div class="absolute inset-0 bg-blue-600 bg-opacity-0 group-hover:bg-opacity-10 rounded-lg transition-all duration-300"></div>
+                                                        <img src="{{ item.get_template_thumbnail_url }}"
+                                                            alt="Plantilla seleccionada"
+                                                            class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-lg group-hover:scale-105 transition-transform duration-300"
+                                                            onerror="this.src='/static/img/template-placeholder.png'">
+                                                        <div
+                                                            class="absolute -top-2 -right-2 bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
+                                                            ✓
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
+
+                                                <div class="flex-grow">
+                                                    <p class="text-sm font-semibold text-gray-900 mb-1">
+                                                        {{ item.get_design_display }}
+                                                    </p>
+                                                    <div class="flex items-center gap-2 mb-3">
+                                                        <span
+                                                            class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-indigo-700 shadow-sm">
+                                                            <svg class="w-3 h-3" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                                <path
+                                                                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                                                            </svg>
+                                                            Plantilla
+                                                        </span>
+                                                        <span class="text-xs text-gray-500">Personalizable</span>
+                                                    </div>
+
+                                                    <div class="flex flex-wrap gap-2">
+                                                        <a href="{% url 'shop:template_gallery' item.product.category.slug item.product.slug %}?quantity={{ item.get_quantity_int }}&change_template={{ item.id }}"
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all shadow-sm hover:shadow">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                            </svg>
+                                                            Cambiar plantilla
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% elif item.design_file %}
+                                        <!-- ===== ARCHIVO SUBIDO ===== -->
+                                        {% if item.is_image_file %}
+                                        <!-- Vista previa de imagen -->
+                                        <div
+                                            class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border-2 border-blue-100">
+                                            <div class="flex items-start gap-4">
+                                                <div class="flex-shrink-0 group">
+                                                    <div class="relative">
+                                                        <img src="{{ item.design_file.url }}"
+                                                            alt="Vista previa del diseño"
+                                                            class="w-24 h-24 object-cover rounded-lg border-2 border-white shadow-lg group-hover:scale-105 transition-transform duration-300">
+                                                        <div
+                                                            class="absolute inset-0 bg-blue-600 bg-opacity-0 group-hover:bg-opacity-10 rounded-lg transition-all duration-300">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div class="flex-grow">
                                                     <p class="text-sm font-semibold text-gray-900 mb-1 truncate">
                                                         {{ item.get_file_name }}
                                                     </p>
                                                     <div class="flex items-center gap-2 mb-3">
-                                                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">
-                                                            <svg class="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                                        <span
+                                                            class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-gray-700 shadow-sm">
+                                                            <svg class="w-3 h-3 text-blue-500" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                                    clip-rule="evenodd" />
                                                             </svg>
                                                             Imagen
                                                         </span>
-                                                        <span class="text-xs text-gray-600">{{ item.get_file_size_mb }} MB</span>
+                                                        <span class="text-xs text-gray-600">{{ item.get_file_size_mb }}
+                                                            MB</span>
                                                     </div>
-                                                    
+
                                                     <div class="flex flex-wrap gap-2">
-                                                        <a href="{{ item.design_file.url }}" 
-                                                           download
-                                                           class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-blue-600 text-xs font-semibold rounded-lg hover:bg-blue-50 transition-all shadow-sm hover:shadow">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                        <a href="{{ item.design_file.url }}" download
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-blue-600 text-xs font-semibold rounded-lg hover:bg-blue-50 transition-all shadow-sm hover:shadow">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                                             </svg>
                                                             Descargar
                                                         </a>
-                                                        
-                                                        <a href="{{ item.design_file.url }}" 
-                                                           target="_blank"
-                                                           class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-all shadow-sm hover:shadow">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+
+                                                        <a href="{{ item.design_file.url }}" target="_blank"
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-all shadow-sm hover:shadow">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                             </svg>
                                                             Ver
                                                         </a>
-                                                        
+
                                                         <button onclick="openChangeDesignModal({{ item.id }})"
-                                                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-sm hover:shadow">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-sm hover:shadow">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
                                                             Cambiar
                                                         </button>
@@ -221,53 +288,67 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         {% elif item.is_pdf_file %}
                                         <!-- Vista de PDF -->
-                                        <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-4 border-2 border-red-100">
+                                        <div
+                                            class="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-4 border-2 border-red-100">
                                             <div class="flex items-start gap-4">
                                                 <div class="flex-shrink-0">
-                                                    <div class="w-24 h-24 bg-gradient-to-br from-red-100 to-orange-100 rounded-lg flex items-center justify-center border-2 border-white shadow-lg">
-                                                        <svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
+                                                    <div
+                                                        class="w-24 h-24 bg-gradient-to-br from-red-100 to-orange-100 rounded-lg flex items-center justify-center border-2 border-white shadow-lg">
+                                                        <svg class="w-12 h-12 text-red-600" fill="currentColor"
+                                                            viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd"
+                                                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+                                                                clip-rule="evenodd" />
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="flex-grow">
                                                     <p class="text-sm font-semibold text-gray-900 mb-1 truncate">
                                                         📄 {{ item.get_file_name }}
                                                     </p>
                                                     <div class="flex items-center gap-2 mb-3">
-                                                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-red-700 shadow-sm">
+                                                        <span
+                                                            class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-red-700 shadow-sm">
                                                             PDF
                                                         </span>
-                                                        <span class="text-xs text-gray-600">{{ item.get_file_size_mb }} MB</span>
+                                                        <span class="text-xs text-gray-600">{{ item.get_file_size_mb }}
+                                                            MB</span>
                                                     </div>
-                                                    
+
                                                     <div class="flex flex-wrap gap-2">
-                                                        <a href="{{ item.design_file.url }}" 
-                                                           download
-                                                           class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-red-600 text-xs font-semibold rounded-lg hover:bg-red-50 transition-all shadow-sm">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                        <a href="{{ item.design_file.url }}" download
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-red-600 text-xs font-semibold rounded-lg hover:bg-red-50 transition-all shadow-sm">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                                             </svg>
                                                             Descargar
                                                         </a>
-                                                        
-                                                        <a href="{{ item.design_file.url }}" 
-                                                           target="_blank"
-                                                           class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-all shadow-sm">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+
+                                                        <a href="{{ item.design_file.url }}" target="_blank"
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-all shadow-sm">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                                             </svg>
                                                             Abrir
                                                         </a>
-                                                        
+
                                                         <button onclick="openChangeDesignModal({{ item.id }})"
-                                                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-sm">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-sm">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
                                                             Cambiar
                                                         </button>
@@ -275,44 +356,56 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         {% else %}
                                         <!-- Otros archivos -->
-                                        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-100">
+                                        <div
+                                            class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-100">
                                             <div class="flex items-start gap-4">
                                                 <div class="flex-shrink-0">
-                                                    <div class="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center border-2 border-white shadow-lg">
-                                                        <svg class="w-12 h-12 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+                                                    <div
+                                                        class="w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center border-2 border-white shadow-lg">
+                                                        <svg class="w-12 h-12 text-purple-600" fill="currentColor"
+                                                            viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd"
+                                                                d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                                                clip-rule="evenodd" />
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="flex-grow">
                                                     <p class="text-sm font-semibold text-gray-900 mb-1 truncate">
                                                         📎 {{ item.get_file_name }}
                                                     </p>
                                                     <div class="flex items-center gap-2 mb-3">
-                                                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-purple-700 shadow-sm">
+                                                        <span
+                                                            class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded-full text-xs font-medium text-purple-700 shadow-sm">
                                                             {{ item.get_file_extension|upper }}
                                                         </span>
-                                                        <span class="text-xs text-gray-600">{{ item.get_file_size_mb }} MB</span>
+                                                        <span class="text-xs text-gray-600">{{ item.get_file_size_mb }}
+                                                            MB</span>
                                                     </div>
-                                                    
+
                                                     <div class="flex flex-wrap gap-2">
-                                                        <a href="{{ item.design_file.url }}" 
-                                                           download
-                                                           class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-purple-600 text-xs font-semibold rounded-lg hover:bg-purple-50 transition-all shadow-sm">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                        <a href="{{ item.design_file.url }}" download
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-white text-purple-600 text-xs font-semibold rounded-lg hover:bg-purple-50 transition-all shadow-sm">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                                             </svg>
                                                             Descargar
                                                         </a>
-                                                        
+
                                                         <button onclick="openChangeDesignModal({{ item.id }})"
-                                                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-sm">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-sm">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                                             </svg>
                                                             Cambiar
                                                         </button>
@@ -321,15 +414,20 @@
                                             </div>
                                         </div>
                                         {% endif %}
-                                        
-                                    {% else %}
+
+                                        {% else %}
                                         <!-- Sin archivo ni template -->
-                                        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 rounded-lg p-4 shadow-sm">
+                                        <div
+                                            class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 rounded-lg p-4 shadow-sm">
                                             <div class="flex items-start gap-3">
                                                 <div class="flex-shrink-0">
-                                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                                                        <svg class="h-6 w-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                                    <div
+                                                        class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                                                        <svg class="h-6 w-6 text-yellow-600" fill="currentColor"
+                                                            viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd"
+                                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                                                clip-rule="evenodd" />
                                                         </svg>
                                                     </div>
                                                 </div>
@@ -342,16 +440,22 @@
                                                     </p>
                                                     <div class="flex flex-wrap gap-2">
                                                         <a href="{% url 'shop:template_gallery' item.product.category.slug item.product.slug %}?quantity={{ item.get_quantity_int }}"
-                                                           class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"/>
+                                                            class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
                                                             </svg>
                                                             Elegir plantilla
                                                         </a>
                                                         <button onclick="openChangeDesignModal({{ item.id }})"
-                                                                class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-sm font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                                            class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-sm font-semibold rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                                             </svg>
                                                             Subir diseño
                                                         </button>
@@ -359,135 +463,170 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
-                                
+
                                 <!-- Sección de datos de contacto (para tarjetas de presentación) -->
                                 {% if item.has_contact_info %}
                                 <div class="border-t-2 border-gray-100 pt-4 mt-4">
                                     <div class="flex items-center gap-2 mb-3">
                                         <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                clip-rule="evenodd" />
                                         </svg>
-                                        <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">Datos para tu tarjeta</h4>
+                                        <h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">Datos para
+                                            tu tarjeta</h4>
                                     </div>
-                                    
-                                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-100">
+
+                                    <div
+                                        class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-100">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <!-- Logo (si existe) -->
                                             {% if item.has_logo %}
-                                            <div class="md:col-span-2 flex items-center gap-3 pb-3 border-b border-green-200">
-                                                <img src="{{ item.logo_file.url }}" 
-                                                     alt="Logo" 
-                                                     class="w-16 h-16 object-contain rounded-lg bg-white border-2 border-green-200 p-1">
+                                            <div
+                                                class="md:col-span-2 flex items-center gap-3 pb-3 border-b border-green-200">
+                                                <img src="{{ item.logo_file.url }}" alt="Logo"
+                                                    class="w-16 h-16 object-contain rounded-lg bg-white border-2 border-green-200 p-1">
                                                 <div>
                                                     <p class="text-xs text-gray-500">Logo de empresa</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.get_logo_name }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{ item.get_logo_name
+                                                        }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Nombre -->
                                             {% if item.contact_name %}
                                             <div class="flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Nombre</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_name }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_name
+                                                        }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Teléfono -->
                                             {% if item.contact_phone %}
                                             <div class="flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Celular</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_phone }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_phone
+                                                        }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Email -->
                                             {% if item.contact_email %}
                                             <div class="flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Email</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_email }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_email
+                                                        }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Cargo -->
                                             {% if item.contact_job_title %}
                                             <div class="flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                                                    <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z"
+                                                        clip-rule="evenodd" />
+                                                    <path
+                                                        d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Cargo</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_job_title }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{
+                                                        item.contact_job_title }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Empresa -->
                                             {% if item.contact_company %}
                                             <div class="flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Empresa</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_company }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{
+                                                        item.contact_company }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Red social -->
                                             {% if item.contact_social %}
                                             <div class="flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Web / Red social</p>
-                                                    <p class="text-sm font-semibold text-gray-900 break-all">{{ item.contact_social }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900 break-all">{{
+                                                        item.contact_social }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            
+
                                             <!-- Dirección -->
                                             {% if item.contact_address %}
                                             <div class="md:col-span-2 flex items-start gap-2">
-                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                                <svg class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"
+                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                                 <div>
                                                     <p class="text-xs text-gray-500">Dirección</p>
-                                                    <p class="text-sm font-semibold text-gray-900">{{ item.contact_address }}</p>
+                                                    <p class="text-sm font-semibold text-gray-900">{{
+                                                        item.contact_address }}</p>
                                                 </div>
                                             </div>
                                             {% endif %}
                                         </div>
-                                        
+
                                         <!-- Botón editar datos -->
                                         <div class="mt-4 pt-3 border-t border-green-200">
                                             <button onclick="openEditContactModal({{ item.id }})"
-                                               class="inline-flex items-center gap-2 px-4 py-2 bg-white text-green-700 text-sm font-semibold rounded-lg hover:bg-green-100 transition-all border border-green-300 cursor-pointer">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                class="inline-flex items-center gap-2 px-4 py-2 bg-white text-green-700 text-sm font-semibold rounded-lg hover:bg-green-100 transition-all border border-green-300 cursor-pointer">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
                                                 Editar datos
                                             </button>
@@ -495,55 +634,57 @@
                                     </div>
                                 </div>
                                 {% endif %}
-                                
+
                                 <!-- Botón eliminar (móvil) -->
                                 <div class="md:hidden mt-4 pt-4 border-t border-gray-200">
-                                    <form method="POST" action="{% url 'carrito-de-compras:full_remove' item.id %}" 
-                                          onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                                    <form method="POST" action="{% url 'carrito-de-compras:full_remove' item.id %}"
+                                        onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                                         {% csrf_token %}
-                                        <button type="submit" 
-                                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition-all">
+                                        <button type="submit"
+                                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition-all">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
                                             Eliminar del carrito
                                         </button>
                                     </form>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Modal cambiar diseño -->
-                <div id="change-design-modal-{{ item.id }}" 
-                     class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
-                    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all animate-slideUp">
+                <div id="change-design-modal-{{ item.id }}"
+                    class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
+                    <div
+                        class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all animate-slideUp">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-xl font-bold text-gray-900">Cambiar diseño</h3>
-                            <button onclick="closeChangeDesignModal({{ item.id }})" 
-                                    class="text-gray-400 hover:text-gray-600 transition-colors">
+                            <button onclick="closeChangeDesignModal({{ item.id }})"
+                                class="text-gray-400 hover:text-gray-600 transition-colors">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
-                        
-                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-6 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer group">
-                            <input type="file" 
-                                   name="design_file" 
-                                   accept="image/*,.pdf,.ai,.psd,.svg"
-                                   required
-                                   class="hidden"
-                                   id="modal-file-{{ item.id }}"
-                                   onchange="updateFileName(this, {{ item.id }})">
-                            <label for="modal-file-{{ item.id }}" 
-                                   class="cursor-pointer block">
-                                <svg class="mx-auto h-16 w-16 text-gray-400 group-hover:text-blue-500 transition-all duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+
+                        <div
+                            class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-6 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer group">
+                            <input type="file" name="design_file" accept="image/*,.pdf,.ai,.psd,.svg" required
+                                class="hidden" id="modal-file-{{ item.id }}"
+                                onchange="updateFileName(this, {{ item.id }})">
+                            <label for="modal-file-{{ item.id }}" class="cursor-pointer block">
+                                <svg class="mx-auto h-16 w-16 text-gray-400 group-hover:text-blue-500 transition-all duration-300 group-hover:scale-110"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                 </svg>
-                                <span id="file-label-{{ item.id }}" class="mt-3 block text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
+                                <span id="file-label-{{ item.id }}"
+                                    class="mt-3 block text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
                                     Click para seleccionar archivo
                                 </span>
                             </label>
@@ -551,47 +692,50 @@
                                 PDF, AI, PNG, JPG, SVG, PSD • Máximo 50MB
                             </p>
                         </div>
-                        
+
                         <div class="flex gap-3">
-                            <button type="button"
-                                    id="submit-change-{{ item.id }}"
-                                    onclick="submitChangeDesign({{ item.id }})" 
-                                    class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            <button type="button" id="submit-change-{{ item.id }}"
+                                onclick="submitChangeDesign({{ item.id }})"
+                                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                                 Subir archivo
                             </button>
-                            <button type="button" 
-                                    onclick="closeChangeDesignModal({{ item.id }})"
-                                    class="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 px-6 rounded-xl hover:bg-gray-200 transition-all">
+                            <button type="button" onclick="closeChangeDesignModal({{ item.id }})"
+                                class="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 px-6 rounded-xl hover:bg-gray-200 transition-all">
                                 Cancelar
                             </button>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Modal editar datos de contacto -->
-                <div id="edit-contact-modal-{{ item.id }}" 
-                     class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
-                    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto transform transition-all animate-slideUp">
+                <div id="edit-contact-modal-{{ item.id }}"
+                    class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn">
+                    <div
+                        class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto transform transition-all animate-slideUp">
                         <!-- Header -->
                         <div class="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4 rounded-t-2xl">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <div
+                                        class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
                                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd"
+                                                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                clip-rule="evenodd" />
                                         </svg>
                                     </div>
                                     <h3 class="text-xl font-bold text-white">Editar datos de contacto</h3>
                                 </div>
-                                <button onclick="closeEditContactModal({{ item.id }})" 
-                                        class="text-white hover:text-green-200 transition-colors p-1">
+                                <button onclick="closeEditContactModal({{ item.id }})"
+                                    class="text-white hover:text-green-200 transition-colors p-1">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Body -->
                         <div class="p-6 space-y-4">
                             <!-- Nombre -->
@@ -599,100 +743,92 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">
                                     Nombre completo <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" 
-                                       id="edit-name-{{ item.id }}" 
-                                       value="{{ item.contact_name|default:'' }}"
-                                       class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                       placeholder="Ej: Juan Pérez García">
+                                <input type="text" id="edit-name-{{ item.id }}"
+                                    value="{{ item.contact_name|default:'' }}"
+                                    class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    placeholder="Ej: Juan Pérez García">
                             </div>
-                            
+
                             <!-- Teléfono -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">
                                     Celular <span class="text-red-500">*</span>
                                 </label>
-                                <input type="tel" 
-                                       id="edit-phone-{{ item.id }}" 
-                                       value="{{ item.contact_phone|default:'' }}"
-                                       class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                       placeholder="Ej: 999 888 777">
+                                <input type="tel" id="edit-phone-{{ item.id }}"
+                                    value="{{ item.contact_phone|default:'' }}"
+                                    class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    placeholder="Ej: 999 888 777">
                             </div>
-                            
+
                             <!-- Email -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">
                                     Correo electrónico <span class="text-gray-400 text-xs">(opcional)</span>
                                 </label>
-                                <input type="email" 
-                                       id="edit-email-{{ item.id }}" 
-                                       value="{{ item.contact_email|default:'' }}"
-                                       class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                       placeholder="Ej: juan@empresa.com">
+                                <input type="email" id="edit-email-{{ item.id }}"
+                                    value="{{ item.contact_email|default:'' }}"
+                                    class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    placeholder="Ej: juan@empresa.com">
                             </div>
-                            
+
                             <!-- Cargo y Empresa en 2 columnas -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">
                                         Cargo <span class="text-gray-400 text-xs">(opcional)</span>
                                     </label>
-                                    <input type="text" 
-                                           id="edit-job-{{ item.id }}" 
-                                           value="{{ item.contact_job_title|default:'' }}"
-                                           class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                           placeholder="Ej: Gerente General">
+                                    <input type="text" id="edit-job-{{ item.id }}"
+                                        value="{{ item.contact_job_title|default:'' }}"
+                                        class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                        placeholder="Ej: Gerente General">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">
                                         Empresa <span class="text-gray-400 text-xs">(opcional)</span>
                                     </label>
-                                    <input type="text" 
-                                           id="edit-company-{{ item.id }}" 
-                                           value="{{ item.contact_company|default:'' }}"
-                                           class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                           placeholder="Ej: Mi Empresa S.A.C.">
+                                    <input type="text" id="edit-company-{{ item.id }}"
+                                        value="{{ item.contact_company|default:'' }}"
+                                        class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                        placeholder="Ej: Mi Empresa S.A.C.">
                                 </div>
                             </div>
-                            
+
                             <!-- Red social -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">
                                     Red social / Web <span class="text-gray-400 text-xs">(opcional)</span>
                                 </label>
-                                <input type="text" 
-                                       id="edit-social-{{ item.id }}" 
-                                       value="{{ item.contact_social|default:'' }}"
-                                       class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                       placeholder="Ej: instagram.com/miempresa">
+                                <input type="text" id="edit-social-{{ item.id }}"
+                                    value="{{ item.contact_social|default:'' }}"
+                                    class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    placeholder="Ej: instagram.com/miempresa">
                             </div>
-                            
+
                             <!-- Dirección -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">
                                     Dirección <span class="text-gray-400 text-xs">(opcional)</span>
                                 </label>
-                                <input type="text" 
-                                       id="edit-address-{{ item.id }}" 
-                                       value="{{ item.contact_address|default:'' }}"
-                                       class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                                       placeholder="Ej: Av. Principal 123, Lima">
+                                <input type="text" id="edit-address-{{ item.id }}"
+                                    value="{{ item.contact_address|default:'' }}"
+                                    class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                                    placeholder="Ej: Av. Principal 123, Lima">
                             </div>
                         </div>
-                        
+
                         <!-- Footer -->
                         <div class="px-6 pb-6 flex gap-3">
-                            <button type="button" 
-                                    onclick="closeEditContactModal({{ item.id }})"
-                                    class="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 px-6 rounded-xl hover:bg-gray-200 transition-all">
+                            <button type="button" onclick="closeEditContactModal({{ item.id }})"
+                                class="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 px-6 rounded-xl hover:bg-gray-200 transition-all">
                                 Cancelar
                             </button>
-                            <button type="button"
-                                    id="save-contact-{{ item.id }}"
-                                    onclick="saveContactData({{ item.id }})" 
-                                    class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <button type="button" id="save-contact-{{ item.id }}"
+                                onclick="saveContactData({{ item.id }})"
+                                class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl">
                                 <span class="flex items-center justify-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
                                     </svg>
                                     Guardar cambios
                                 </span>
@@ -701,102 +837,117 @@
                     </div>
                 </div>
                 {% endfor %}
-                
+
                 <!-- Botón seguir comprando (móvil) -->
-                <a href="{% url 'shop:home' %}" 
-                   class="md:hidden flex items-center justify-center gap-2 w-full px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+                <a href="{% url 'shop:home' %}"
+                    class="md:hidden flex items-center justify-center gap-2 w-full px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                     Seguir comprando
                 </a>
             </div>
-            
+
             <!-- COLUMNA DERECHA: Resumen del pedido -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-4 border border-gray-100">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b-2 border-gray-100">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b-2 border-gray-100 leading-normal">
                         Resumen del pedido
                     </h2>
-                    
+
                     <div class="space-y-4 mb-6">
                         <div class="flex justify-between items-center text-gray-700">
                             <span class="font-medium">Subtotal</span>
                             <span class="font-bold">S/ {{ total|floatformat:2 }}</span>
                         </div>
-                        
+
                         <div class="flex justify-between items-center text-gray-700">
                             <span class="font-medium">Envío</span>
                             <span class="text-sm text-gray-500">Calculado en el checkout</span>
                         </div>
-                        
+
                         <div class="border-t-2 border-gray-100 pt-4">
                             <div class="flex justify-between items-center">
                                 <span class="text-xl font-bold text-gray-900">Total</span>
-                                <span class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                <span
+                                    class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                     S/ {{ total|floatformat:2 }}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    
-                    <button class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 mb-3">
+
+                    <button
+                        class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 mb-3">
                         <div class="flex items-center justify-center gap-2">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Proceder al pago</span>
                         </div>
                     </button>
-                    
+
                     <!-- Garantías -->
                     <div class="mt-6 pt-6 border-t border-gray-200 space-y-3">
                         <div class="flex items-start gap-3 text-sm text-gray-600">
-                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                             <span>Pago 100% seguro</span>
                         </div>
                         <div class="flex items-start gap-3 text-sm text-gray-600">
-                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                             <span>Envío rápido y confiable</span>
                         </div>
                         <div class="flex items-start gap-3 text-sm text-gray-600">
-                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
                             </svg>
                             <span>Garantía de calidad</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
         </div>
-        
+
         {% else %}
         <!-- Carrito vacío -->
         <div class="text-center py-20 bg-white rounded-2xl shadow-lg">
             <div class="max-w-md mx-auto">
-                <div class="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
+                <div
+                    class="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
                     <svg class="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-3">Tu carrito está vacío</h2>
                 <p class="text-gray-600 mb-8">Descubre nuestros productos y comienza a crear</p>
-                <a href="{% url 'shop:home' %}" 
-                   class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <a href="{% url 'shop:home' %}"
+                    class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-8 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                     Explorar productos
                 </a>
             </div>
         </div>
         {% endif %}
-        
+
     </div>
 </div>
 
@@ -804,61 +955,67 @@
 {% csrf_token %}
 
 <style>
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+        to {
+            opacity: 1;
+        }
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-}
 
-.animate-fadeIn {
-    animation: fadeIn 0.3s ease-out;
-}
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+    }
 
-.animate-slideUp {
-    animation: slideUp 0.3s ease-out;
-}
+    .animate-slideUp {
+        animation: slideUp 0.3s ease-out;
+    }
 </style>
 
 <script>
-function openChangeDesignModal(itemId) {
-    const modal = document.getElementById('change-design-modal-' + itemId);
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Prevenir scroll
-}
-
-function closeChangeDesignModal(itemId) {
-    const modal = document.getElementById('change-design-modal-' + itemId);
-    modal.classList.add('hidden');
-    document.body.style.overflow = ''; // Restaurar scroll
-    
-    // Reset file input
-    const fileInput = document.getElementById('modal-file-' + itemId);
-    if (fileInput) fileInput.value = '';
-    
-    // Reset label
-    const label = document.getElementById('file-label-' + itemId);
-    if (label) {
-        label.textContent = 'Click para seleccionar archivo';
-        label.classList.remove('text-green-600');
+    function openChangeDesignModal(itemId) {
+        const modal = document.getElementById('change-design-modal-' + itemId);
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevenir scroll
     }
-}
 
-function updateFileName(input, itemId) {
-    const label = document.getElementById('file-label-' + itemId);
-    if (input.files && input.files.length > 0) {
-        const file = input.files[0];
-        const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-        label.innerHTML = `
+    function closeChangeDesignModal(itemId) {
+        const modal = document.getElementById('change-design-modal-' + itemId);
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Restaurar scroll
+
+        // Reset file input
+        const fileInput = document.getElementById('modal-file-' + itemId);
+        if (fileInput) fileInput.value = '';
+
+        // Reset label
+        const label = document.getElementById('file-label-' + itemId);
+        if (label) {
+            label.textContent = 'Click para seleccionar archivo';
+            label.classList.remove('text-green-600');
+        }
+    }
+
+    function updateFileName(input, itemId) {
+        const label = document.getElementById('file-label-' + itemId);
+        if (input.files && input.files.length > 0) {
+            const file = input.files[0];
+            const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+            label.innerHTML = `
             <div class="flex items-center justify-center gap-2">
                 <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -867,30 +1024,30 @@ function updateFileName(input, itemId) {
             </div>
             <div class="text-xs text-gray-500 mt-1">${sizeInMB} MB</div>
         `;
+        }
     }
-}
 
-function submitChangeDesign(itemId) {
-    const fileInput = document.getElementById('modal-file-' + itemId);
-    const submitBtn = document.getElementById('submit-change-' + itemId);
-    
-    if (!fileInput.files || fileInput.files.length === 0) {
-        alert('❌ Por favor selecciona un archivo primero');
-        return;
-    }
-    
-    const file = fileInput.files[0];
-    
-    // Validar tamaño (50MB max)
-    if (file.size > 50 * 1024 * 1024) {
-        alert('❌ El archivo es demasiado grande. Máximo 50MB.');
-        return;
-    }
-    
-    // Mostrar loading
-    const originalText = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `
+    function submitChangeDesign(itemId) {
+        const fileInput = document.getElementById('modal-file-' + itemId);
+        const submitBtn = document.getElementById('submit-change-' + itemId);
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert('❌ Por favor selecciona un archivo primero');
+            return;
+        }
+
+        const file = fileInput.files[0];
+
+        // Validar tamaño (50MB max)
+        if (file.size > 50 * 1024 * 1024) {
+            alert('❌ El archivo es demasiado grande. Máximo 50MB.');
+            return;
+        }
+
+        // Mostrar loading
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
         <div class="flex items-center justify-center gap-2">
             <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -899,102 +1056,102 @@ function submitChangeDesign(itemId) {
             <span>Subiendo...</span>
         </div>
     `;
-    
-    const formData = new FormData();
-    formData.append('design_file', file);
-    
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
-    fetch('/carrito-de-compras/upload-design/' + itemId + '/', {
-        method: 'POST',
-        headers: { 'X-CSRFToken': csrftoken },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-            alert('❌ Error: ' + (data.error || 'No se pudo actualizar'));
+
+        const formData = new FormData();
+        formData.append('design_file', file);
+
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('/carrito-de-compras/upload-design/' + itemId + '/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    alert('❌ Error: ' + (data.error || 'No se pudo actualizar'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                alert('❌ Error al actualizar. Intenta de nuevo.');
+            });
+    }
+
+    // Cerrar modal al hacer click fuera
+    document.addEventListener('click', function (e) {
+        if (e.target.id && e.target.id.startsWith('change-design-modal-')) {
+            const itemId = e.target.id.split('-').pop();
+            closeChangeDesignModal(itemId);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-        alert('❌ Error al actualizar. Intenta de nuevo.');
+        // También para el modal de editar contacto
+        if (e.target.id && e.target.id.startsWith('edit-contact-modal-')) {
+            const itemId = e.target.id.split('-').pop();
+            closeEditContactModal(itemId);
+        }
     });
-}
 
-// Cerrar modal al hacer click fuera
-document.addEventListener('click', function(e) {
-    if (e.target.id && e.target.id.startsWith('change-design-modal-')) {
-        const itemId = e.target.id.split('-').pop();
-        closeChangeDesignModal(itemId);
+    // Prevenir cierre al hacer click dentro del modal
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.bg-white.rounded-2xl')) {
+            e.stopPropagation();
+        }
+    });
+
+    // ===== FUNCIONES PARA MODAL DE EDICIÓN DE CONTACTO =====
+
+    function openEditContactModal(itemId) {
+        const modal = document.getElementById('edit-contact-modal-' + itemId);
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Focus en el primer campo
+        setTimeout(() => {
+            document.getElementById('edit-name-' + itemId).focus();
+        }, 100);
     }
-    // También para el modal de editar contacto
-    if (e.target.id && e.target.id.startsWith('edit-contact-modal-')) {
-        const itemId = e.target.id.split('-').pop();
-        closeEditContactModal(itemId);
+
+    function closeEditContactModal(itemId) {
+        const modal = document.getElementById('edit-contact-modal-' + itemId);
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
     }
-});
 
-// Prevenir cierre al hacer click dentro del modal
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.bg-white.rounded-2xl')) {
-        e.stopPropagation();
-    }
-});
+    function saveContactData(itemId) {
+        // Obtener valores
+        const contactName = document.getElementById('edit-name-' + itemId).value.trim();
+        const contactPhone = document.getElementById('edit-phone-' + itemId).value.trim();
+        const contactEmail = document.getElementById('edit-email-' + itemId).value.trim();
+        const contactJob = document.getElementById('edit-job-' + itemId).value.trim();
+        const contactCompany = document.getElementById('edit-company-' + itemId).value.trim();
+        const contactSocial = document.getElementById('edit-social-' + itemId).value.trim();
+        const contactAddress = document.getElementById('edit-address-' + itemId).value.trim();
 
-// ===== FUNCIONES PARA MODAL DE EDICIÓN DE CONTACTO =====
+        // Validar campos requeridos
+        if (!contactName) {
+            alert('❌ Por favor ingresa el nombre completo');
+            document.getElementById('edit-name-' + itemId).focus();
+            return;
+        }
 
-function openEditContactModal(itemId) {
-    const modal = document.getElementById('edit-contact-modal-' + itemId);
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus en el primer campo
-    setTimeout(() => {
-        document.getElementById('edit-name-' + itemId).focus();
-    }, 100);
-}
+        if (!contactPhone) {
+            alert('❌ Por favor ingresa el número de celular');
+            document.getElementById('edit-phone-' + itemId).focus();
+            return;
+        }
 
-function closeEditContactModal(itemId) {
-    const modal = document.getElementById('edit-contact-modal-' + itemId);
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-}
-
-function saveContactData(itemId) {
-    // Obtener valores
-    const contactName = document.getElementById('edit-name-' + itemId).value.trim();
-    const contactPhone = document.getElementById('edit-phone-' + itemId).value.trim();
-    const contactEmail = document.getElementById('edit-email-' + itemId).value.trim();
-    const contactJob = document.getElementById('edit-job-' + itemId).value.trim();
-    const contactCompany = document.getElementById('edit-company-' + itemId).value.trim();
-    const contactSocial = document.getElementById('edit-social-' + itemId).value.trim();
-    const contactAddress = document.getElementById('edit-address-' + itemId).value.trim();
-    
-    // Validar campos requeridos
-    if (!contactName) {
-        alert('❌ Por favor ingresa el nombre completo');
-        document.getElementById('edit-name-' + itemId).focus();
-        return;
-    }
-    
-    if (!contactPhone) {
-        alert('❌ Por favor ingresa el número de celular');
-        document.getElementById('edit-phone-' + itemId).focus();
-        return;
-    }
-    
-    // Mostrar loading
-    const saveBtn = document.getElementById('save-contact-' + itemId);
-    const originalText = saveBtn.innerHTML;
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = `
+        // Mostrar loading
+        const saveBtn = document.getElementById('save-contact-' + itemId);
+        const originalText = saveBtn.innerHTML;
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = `
         <span class="flex items-center justify-center gap-2">
             <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -1003,42 +1160,42 @@ function saveContactData(itemId) {
             Guardando...
         </span>
     `;
-    
-    // Preparar datos
-    const formData = new FormData();
-    formData.append('contact_name', contactName);
-    formData.append('contact_phone', contactPhone);
-    formData.append('contact_email', contactEmail);
-    formData.append('contact_job_title', contactJob);
-    formData.append('contact_company', contactCompany);
-    formData.append('contact_social', contactSocial);
-    formData.append('contact_address', contactAddress);
-    
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
-    // Enviar al servidor
-    fetch('/carrito-de-compras/update-contact/' + itemId + '/', {
-        method: 'POST',
-        headers: { 'X-CSRFToken': csrftoken },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Recargar página para mostrar cambios
-            location.reload();
-        } else {
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = originalText;
-            alert('❌ Error: ' + (data.error || 'No se pudieron guardar los cambios'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = originalText;
-        alert('❌ Error al guardar. Intenta de nuevo.');
-    });
-}
+
+        // Preparar datos
+        const formData = new FormData();
+        formData.append('contact_name', contactName);
+        formData.append('contact_phone', contactPhone);
+        formData.append('contact_email', contactEmail);
+        formData.append('contact_job_title', contactJob);
+        formData.append('contact_company', contactCompany);
+        formData.append('contact_social', contactSocial);
+        formData.append('contact_address', contactAddress);
+
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Enviar al servidor
+        fetch('/carrito-de-compras/update-contact/' + itemId + '/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Recargar página para mostrar cambios
+                    location.reload();
+                } else {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalText;
+                    alert('❌ Error: ' + (data.error || 'No se pudieron guardar los cambios'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+                alert('❌ Error al guardar. Intenta de nuevo.');
+            });
+    }
 </script>
 {% endblock %}
