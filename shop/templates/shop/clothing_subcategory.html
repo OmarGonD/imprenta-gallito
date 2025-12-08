@@ -5,111 +5,254 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/clothing.css' %}">
-<!-- Agregar estilos corregidos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-<div class="clothing-page">
-    <!-- Hero Banner, Breadcrumb, Filter Sidebar... (sin cambios) -->
-    
-    <!-- Products Grid -->
-    <div class="products-grid" id="products-container">
-        {% for item in products_with_images %}
-        {% with product=item.product images_by_color=item.images_by_color %}
-        <article class="product-card" data-product-slug="{{ product.slug }}">
-            <!-- Badges -->
-            {% if product.is_new %}<span class="badge badge-new">Nuevo</span>{% endif %}
-            {% if product.is_bestseller %}<span class="badge badge-best">Más vendido</span>{% endif %}
+<div class="vp-page-container">
 
-            <!-- IMAGEN QUE CAMBIA -->
-            <a href="{{ product.get_absolute_url }}" class="product-image-wrapper">
-                <img src="{{ product.base_image_url }}" 
-                    alt="{{ product.name }}"
-                    class="product-image primary active-color"
-                    id="img-{{ product.slug }}">
-            </a>
+    <section class="vp-hero-section">
+        <div class="vp-breadcrumb">
+            <a href="/">Inicio</a> <i class="fas fa-chevron-right"></i>
+            <a href="{{ category.get_absolute_url }}">{{ category.name }}</a> <i class="fas fa-chevron-right"></i>
+            <span>{{ subcategory.name }}</span>
+        </div>
+        <h1 class="vp-page-title">{{ subcategory.name }}</h1>
+        <p class="vp-page-description">
+            Diseña y personaliza tus propios {{ subcategory.name|lower }} con tu logo o diseño. 
+            Perfectos para uniformes, eventos o como ropa promocional de alta calidad.
+        </p>
+    </section>
 
-            <div class="product-info">
-                <h3 class="product-name">
-                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
-                </h3>
+    <div class="vp-main-layout">
+        
+        <aside class="vp-filter-sidebar" id="vp-filter-sidebar">
+            <button class="vp-close-sidebar-btn d-lg-none" aria-label="Cerrar Filtros">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="vp-filter-title">Filtros</h3>
 
-                <!-- COLOR SWATCHES -->
-                <div class="product-colors">
-                    {% for color in product.available_colors.all|slice:":6" %}
-                    <span class="color-dot {% if forloop.first %}active{% endif %}"
-                        style="background-color: {{ color.hex_code }};"
-                        data-color-slug="{{ color.slug }}"
-                        data-product-slug="{{ product.slug }}"
-                        title="{{ color.name }}"></span>
-                    {% endfor %}
-                    {% if product.available_colors.count > 6 %}
-                    <span class="more-colors">+{{ product.available_colors.count|add:"-6" }}</span>
-                    {% endif %}
+            <div class="vp-filter-group">
+                <div class="vp-filter-header" data-toggle="type-filter">
+                    <span>Tipo de Prenda</span>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
-
-                <!-- Precio y botón -->
-                <div class="product-pricing">
-                    <span class="price-current">Desde S/ {{ product.starting_price }}</span>
-                </div>
-                <div class="product-actions">
-                    <a href="{{ product.get_absolute_url }}" class="btn-customize">
-                        Personalizar
-                    </a>
+                <div class="vp-filter-body" id="type-filter">
+                    <label class="vp-checkbox-label"><input type="checkbox"> Playeras (120)</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> Polos (85)</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> Camisas (30)</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> Sudaderas (50)</label>
                 </div>
             </div>
-        </article>
-        {% endwith %}
-        {% endfor %}
+
+            <div class="vp-filter-group">
+                <div class="vp-filter-header" data-toggle="size-filter">
+                    <span>Talla</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="vp-filter-body" id="size-filter">
+                    <label class="vp-checkbox-label"><input type="checkbox"> XS</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> S</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> M</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> L</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> XL</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> 2XL</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> 3XL</label>
+                </div>
+            </div>
+
+            <div class="vp-filter-group">
+                <div class="vp-filter-header" data-toggle="gender-filter">
+                    <span>Género</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="vp-filter-body" id="gender-filter">
+                    <label class="vp-radio-label"><input type="radio" name="gender"> Unisex</label>
+                    <label class="vp-radio-label"><input type="radio" name="gender"> Hombre</label>
+                    <label class="vp-radio-label"><input type="radio" name="gender"> Mujer</label>
+                </div>
+            </div>
+
+            <div class="vp-filter-group">
+                <div class="vp-filter-header" data-toggle="color-filter">
+                    <span>Color</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="vp-filter-body vp-color-options" id="color-filter">
+                    <span class="vp-color-swatch" style="background-color: #ffffff; border: 1px solid #ccc;" title="Blanco"></span>
+                    <span class="vp-color-swatch" style="background-color: #000000;" title="Negro"></span>
+                    <span class="vp-color-swatch" style="background-color: #007bff;" title="Azul"></span>
+                    <span class="vp-color-swatch" style="background-color: #dc3545;" title="Rojo"></span>
+                    <span class="vp-color-swatch" style="background-color: #28a745;" title="Verde"></span>
+                    <span class="vp-color-swatch" style="background-color: #ffc107;" title="Amarillo"></span>
+                    <span class="vp-color-swatch" style="background-color: #6f42c1;" title="Morado"></span>
+                    <span class="vp-color-swatch" style="background-color: #fd7e14;" title="Naranja"></span>
+                    <span class="vp-color-swatch" style="background-color: #6c757d;" title="Gris"></span>
+                </div>
+            </div>
+
+            <div class="vp-filter-group">
+                <div class="vp-filter-header" data-toggle="price-filter">
+                    <span>Precio</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="vp-filter-body" id="price-filter">
+                    <div class="vp-price-inputs">
+                        <input type="number" placeholder="Min" class="form-control">
+                        <span>-</span>
+                        <input type="number" placeholder="Max" class="form-control">
+                    </div>
+                    <button class="vp-btn-apply-price">Aplicar</button>
+                    <div class="vp-price-range-slider-placeholder"></div>
+                </div>
+            </div>
+
+            <div class="vp-filter-group">
+                <div class="vp-filter-header" data-toggle="brand-filter">
+                    <span>Marca</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="vp-filter-body" id="brand-filter">
+                    <label class="vp-checkbox-label"><input type="checkbox"> Gildan (50)</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> Jerzees (30)</label>
+                    <label class="vp-checkbox-label"><input type="checkbox"> Next Level (20)</label>
+                </div>
+            </div>
+            
+            <button class="vp-clear-filters-btn">Limpiar Todos los Filtros</button>
+        </aside>
+
+        
+        <main class="vp-products-main-content">
+            
+            <div class="vp-toolbar">
+                <span class="vp-product-count">**{{ products_with_images|length }}** productos</span>
+                <div class="vp-sort-options">
+                    <label for="vp-sort-by">Ordenar por:</label>
+                    <select id="vp-sort-by">
+                        <option value="newest">Más reciente</option>
+                        <option value="price-asc">Precio: Menor a Mayor</option>
+                        <option value="price-desc">Precio: Mayor a Menor</option>
+                        <option value="rating-desc">Mejor valorados</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="vp-products-grid" id="products-container">
+                {% for item in products_with_images %}
+                {% with product=item.product images_by_color=item.images_by_color %}
+                <article class="vp-product-card" data-product-slug="{{ product.slug }}">
+                    <a href="{{ product.get_absolute_url }}" class="vp-product-image-link">
+                        <img src="{{ product.base_image_url }}" 
+                             alt="{{ product.name }}"
+                             class="vp-product-image primary active-color"
+                             id="img-{{ product.slug }}">
+                        <div class="vp-badges-container">
+                            {% if product.is_new %}<span class="vp-badge vp-badge-new">Nuevo</span>{% endif %}
+                            {% if product.is_bestseller %}<span class="vp-badge vp-badge-best">Más Vendido</span>{% endif %}
+                        </div>
+                    </a>
+
+                    <div class="vp-product-info">
+                        <h4 class="vp-product-name">
+                            <a href="{{ product.get_absolute_url }}" title="{{ product.name }}">{{ product.name }}</a>
+                        </h4>
+                        
+                        <div class="vp-product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="vp-rating-count">(128)</span>
+                        </div>
+
+                        <div class="vp-product-pricing">
+                            <span class="vp-price-from">Desde</span>
+                            <span class="vp-price-current">S/ **{{ product.starting_price }}**</span>
+                        </div>
+                        
+                        <div class="vp-product-colors">
+                            {% for color in product.available_colors.all|slice:":6" %}
+                            <span class="vp-color-dot {% if forloop.first %}active{% endif %}"
+                                style="background-color: {{ color.hex_code }};"
+                                data-color-slug="{{ color.slug }}"
+                                data-product-slug="{{ product.slug }}"
+                                title="{{ color.name }}"></span>
+                            {% endfor %}
+                            {% if product.available_colors.count > 6 %}
+                            <span class="vp-more-colors" title="{{ product.available_colors.count }} colores disponibles">+{{ product.available_colors.count|add:"-6" }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="vp-product-actions">
+                            <a href="{{ product.get_absolute_url }}" class="vp-btn-customize">
+                                Personalizar
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            
+            <div class="vp-pagination">
+                <a href="#" class="vp-pagination-link">&lt; Anterior</a>
+                <a href="#" class="vp-pagination-link">1</a>
+                <a href="#" class="vp-pagination-link active">2</a>
+                <a href="#" class="vp-pagination-link">3</a>
+                <span>...</span>
+                <a href="#" class="vp-pagination-link">10</a>
+                <a href="#" class="vp-pagination-link">Siguiente &gt;</a>
+            </div>
+            
+        </main>
     </div>
 </div>
 
-<!-- Mobile Filter Button -->
-<button type="button" class="mobile-filter-btn" id="mobile-filter-toggle">
-    <i class="fas fa-filter"></i> Filtros
+<button type="button" class="vp-mobile-filter-btn" id="vp-mobile-filter-toggle">
+    <i class="fas fa-filter"></i> <span class="d-none d-sm-inline">Filtros</span>
 </button>
 
-<!-- Mobile Filter Overlay -->
-<div class="filter-overlay" id="filter-overlay"></div>
+<div class="vp-filter-overlay" id="vp-filter-overlay"></div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// JavaScript ultra simple y funcional - igual que en el detalle, pero usando TU API
 document.addEventListener('DOMContentLoaded', function () {
-
-    // Al hacer clic en un color dot
-    document.querySelectorAll('.color-dot').forEach(function(dot) {
+    // ===============================================
+    // Lógica de cambio de color (ADAPTADA)
+    // ===============================================
+    document.querySelectorAll('.vp-color-dot').forEach(function(dot) {
         dot.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            const productCard = this.closest('.product-card');
+            const productCard = this.closest('.vp-product-card');
             const colorSlug = this.dataset.colorSlug;
             const productSlug = productCard.dataset.productSlug;
             const img = document.getElementById('img-' + productSlug);
             
-            // Elementos que deben actualizar su URL
-            const imageLink = productCard.querySelector('a.product-image-wrapper');
-            const customizeBtn = productCard.querySelector('.btn-customize');
-
+            // Clases de la nueva UI
+            const imageLink = productCard.querySelector('a.vp-product-image-link');
+            const customizeBtn = productCard.querySelector('.vp-btn-customize');
 
             if (!img || !productSlug || !colorSlug || !imageLink || !customizeBtn) return;
 
             // 1. Cambiar swatch activo
-            this.closest('.product-colors').querySelectorAll('.color-dot').forEach(d => {
+            this.closest('.vp-product-colors').querySelectorAll('.vp-color-dot').forEach(d => {
                 d.classList.remove('active');
             });
             this.classList.add('active');
 
-            // 2. Actualizar la URL de la imagen y el botón 'Personalizar' (sin recargar)
+            // 2. Actualizar la URL del enlace de la imagen y el botón 'Personalizar'
             [imageLink, customizeBtn].forEach(link => {
                 const url = new URL(link.href);
                 url.searchParams.set('color', colorSlug);
                 link.href = url.toString();
             });
 
-            // 3. Cambiar imagen (tu API ya funciona perfecto)
+            // 3. Cambiar imagen (mantiene tu lógica de fetch)
             fetch(`/api/product/${productSlug}/colors/?color=${colorSlug}`)
                 .then(response => response.json())
                 .then(data => {
@@ -127,23 +270,64 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Guardar URL base en data-attribute para fallback
-    document.querySelectorAll('.product-image.primary').forEach(img => {
+    // Guardar URL base y prevenir navegación (ADAPTADO)
+    document.querySelectorAll('.vp-product-image.primary').forEach(img => {
         img.dataset.baseUrl = img.src;
     });
 
-    // Prevenir navegación al hacer clic en el color
-    document.querySelectorAll('.product-image-wrapper').forEach(wrapper => {
+    document.querySelectorAll('.vp-product-image-link').forEach(wrapper => {
         wrapper.addEventListener('click', function(e) {
-            if (e.target.closest('.color-dot')) {
+            if (e.target.closest('.vp-color-dot')) {
                 e.preventDefault();
             }
         });
     });
 
-    // === TU CÓDIGO ORIGINAL DE FILTROS (sin cambios) ===
-    // (Todo lo de filtros móviles, toggle, etc. lo mantienes igual)
-    // ... aquí va el resto de tu JS original (mobile filter, sort, etc.)
+    // ===============================================
+    // Lógica para Sidebar Móvil (ADAPTADA)
+    // ===============================================
+    const mobileFilterToggle = document.getElementById('vp-mobile-filter-toggle');
+    const filterSidebar = document.getElementById('vp-filter-sidebar');
+    const filterOverlay = document.getElementById('vp-filter-overlay');
+    const closeSidebarBtn = filterSidebar.querySelector('.vp-close-sidebar-btn');
+
+    const toggleSidebar = () => {
+        filterSidebar.classList.toggle('active');
+        filterOverlay.classList.toggle('active');
+        document.body.classList.toggle('no-scroll');
+    };
+
+    if (mobileFilterToggle && filterSidebar && filterOverlay && closeSidebarBtn) {
+        mobileFilterToggle.addEventListener('click', toggleSidebar);
+        filterOverlay.addEventListener('click', toggleSidebar);
+        closeSidebarBtn.addEventListener('click', toggleSidebar);
+    }
+
+    // ===============================================
+    // Lógica de Toggles para grupos de filtros (NUEVA)
+    // ===============================================
+    document.querySelectorAll('.vp-filter-header').forEach(header => {
+        header.addEventListener('click', function() {
+            const bodyId = this.dataset.toggle;
+            const body = document.getElementById(bodyId);
+            const icon = this.querySelector('.fas');
+
+            if (body && icon) {
+                // Alternar la clase 'active' para el efecto de toggle
+                body.classList.toggle('active');
+                
+                // Cambiar el icono (flecha arriba/abajo)
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
+        });
+    });
+
+    // Inicializar los filtros como ABIERTOS al cargar (ajusta esta línea si quieres que estén cerrados)
+    document.querySelectorAll('.vp-filter-body').forEach(body => {
+        body.classList.add('active'); 
+    });
+    
 });
 </script>
 {% endblock %}

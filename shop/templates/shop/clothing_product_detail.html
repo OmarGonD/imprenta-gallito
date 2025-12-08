@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% load l10n %}
 
 {% block title %}{{ product.name }} - {{ category.name }} | {{ block.super }}{% endblock %}
+
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -41,9 +43,9 @@
         <!-- RIGHT: PRODUCT INFO -->
         <div class="product-info-column">
 
-            <h1 class="text-2xl font-bold text-gray-900 mb-4">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">
                 {{ product.name }}
-            </h1>
+            </h3>
 
             {% if product.sku %}
             <p class="text-sm text-gray-500 mb-4">
@@ -147,21 +149,60 @@
                 </p>
             </div>
 
-            <!-- Pricing Tiers -->
-            {% if pricing_tiers_qs %}
+            <!-- Pricing Tiers -->    
+            <!--* === NEW === -->
             <div class="mb-6">
-                <p class="text-sm font-medium text-gray-700 mb-2">Precios por volumen:</p>
-                <ul class="text-sm text-gray-600 space-y-1">
-                    {% for tier in pricing_tiers_qs %}
-                    <li class="flex justify-between">
-                        <span>{{ tier.min_quantity }}{% if tier.max_quantity < 999999 %} - {{ tier.max_quantity }}{%
-                                else %}+{% endif %} unidades:</span>
-                                <span class="font-semibold">S/ {{ tier.unit_price }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                    ⚡ Descuentos por volumen
+                </h3>
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-medium text-gray-700">Cantidad</th>
+                                <th class="px-4 py-3 text-left font-medium text-gray-700">Precio/unidad</th>
+                                <th class="px-4 py-3 text-left font-medium text-gray-700">Descuento</th>
+                                <th class="px-4 py-3 text-left font-medium text-gray-700">Ahorro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tiers-table">
+                            {% if pricing_tiers %}
+                                {% for tier in pricing_tiers %}
+                                <tr class="tier-row{% if tier.min_quantity == 1 %} tier-row-active{% endif %}" 
+                                    data-min="{{ tier.min_quantity }}"
+                                >
+                                    <td class="px-4 py-2 text-sm">
+                                        {{ tier.min_quantity }} - {{ tier.max_quantity|default:"o más" }}
+                                    </td>
+                                    
+                                    <td class="px-4 py-2 text-sm font-medium">
+                                        S/ {{ tier.unit_price|floatformat:2 }}
+                                    </td>
+                                    
+                                    <td class="px-4 py-2 text-sm text-green-600">
+                                        {% if tier.discount_percent > 0 %}
+                                            Ahorra {{ tier.discount_percent }}%
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    
+                                    <td class="px-4 py-2 text-sm text-gray-600">
+                                        S/ {{ tier.savings|floatformat:2 }} 
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="px-4 py-8 text-center text-gray-500">
+                                        No hay tiers de precio disponibles para este producto
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            {% endif %}
 
             <!-- ADD TO CART BUTTON -->
             <button id="add-to-cart-btn" onclick="addToCart()"
@@ -213,6 +254,10 @@
      EXTRA CSS STYLES
      ======================================================================== -->
 {% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/clothing.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
     /* ⭐ Color Swatches - RESTAURADO */
     .color-swatches-container {
@@ -326,6 +371,15 @@
     #main-product-image {
         transition: opacity 0.15s ease;
     }
+
+    .tier-row-active {
+        /* Un color de fondo claro (Ejemplo con Tailwind CSS blue-50) */
+        background-color: #eff6ff !important; 
+        /* Un borde a la izquierda para resaltarlo (blue-500) */
+        border-left: 4px solid #3b82f6; 
+        font-weight: 600;
+        transition: all 0.2s;
+    }
 </style>
 {% endblock %}
 
@@ -333,17 +387,16 @@
      JAVASCRIPT
      ======================================================================== -->
 {% block extra_js %}
+
 <script>
-    // ====================================================================
-    // FUNCIÓN ESTÁNDAR PARA OBTENER COOKIE (CSRF Token) 👈 **AGREGA ESTO**
-    // ====================================================================
+    // 1. FUNCIONES Y VARIABLES DE UTILIDAD (CRÍTICAS)
+    // Se mantiene getCookie aquí para el manejo de CSRF/AJAX.
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
-                let cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
+                const cookie = cookies[i].trim();
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -352,358 +405,18 @@
         }
         return cookieValue;
     }
-    // ====================================================================
-    // VARIABLES GLOBALES
-    // ====================================================================
-
-    window.selectedColorSlug = '{{ selected_color_slug|default:"" }}' || '';
-    window.selectedSizeSlug = '';
-    window.imagesByColor = {};
-    window.colorImageUrl = '{{ base_image_url }}';
-
-    // Parsear imágenes por color
-    try {
-        const imagesJson = '{{ images_by_color|escapejs }}';
-        window.imagesByColor = imagesJson ? JSON.parse(imagesJson) : {};
-        console.log('✅ Imágenes cargadas:', Object.keys(window.imagesByColor).length, 'colores');
-    } catch (e) {
-        console.error('❌ Error al parsear images_by_color:', e);
-        window.imagesByColor = {};
-    }
-
-    // Pricing tiers
-    let pricingTiers = [];
-    try {
-        pricingTiers = JSON.parse('{{ pricing_tiers_json|escapejs }}');
-        console.log('✅ Pricing tiers cargados:', pricingTiers.length, 'niveles');
-    } catch (e) {
-        console.error('❌ Error al parsear pricing_tiers:', e);
-        pricingTiers = [];
-    }
-
-    // Base price
-    const basePrice = parseFloat('{{ safe_starting_price }}'.replace(',', '.')) || 0;
-
-    // ====================================================================
-    // FUNCIÓN: selectColor - ⭐ RESTAURADA
-    // ====================================================================
-
-    function selectColor(colorSlug, colorName) {
-        console.log('🎨 selectColor:', colorSlug, colorName);
-
-        window.selectedColorSlug = colorSlug;
-
-        // Actualizar swatches activos
-        document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.classList.remove('active');
-        });
-
-        const activeSwatch = document.querySelector(`.color-swatch[data-color-slug="${colorSlug}"]`);
-        if (activeSwatch) {
-            activeSwatch.classList.add('active');
-        }
-
-        // Actualizar nombre del color
-        const colorNameDisplay = document.getElementById('selected-color-name');
-        if (colorNameDisplay) {
-            colorNameDisplay.textContent = colorName;
-        }
-
-        // Actualizar imágenes
-        updateMainImage(colorSlug);
-        updateThumbnails(colorSlug);
-
-        // Actualizar URL sin recargar
-        const url = new URL(window.location);
-        url.searchParams.set('color', colorSlug);
-        window.history.pushState({}, '', url);
-    }
-
-    // ====================================================================
-    // FUNCIÓN: updateMainImage
-    // ====================================================================
-
-    function updateMainImage(colorSlug) {
-        console.log('🖼️ updateMainImage:', colorSlug);
-
-        const mainImage = document.getElementById('main-product-image');
-        if (!mainImage) {
-            console.error('❌ No se encontró #main-product-image');
-            return;
-        }
-
-        const images = window.imagesByColor[colorSlug];
-        if (!images || !images.length) {
-            console.warn('⚠️ No hay imágenes para el color:', colorSlug);
-            return;
-        }
-
-        // 1. DECLARACIÓN E INICIALIZACIÓN: mainImageData
-        let mainImageData = images.find(img => img.is_primary);
-
-        // 2. USO POSTERIOR A LA DECLARACIÓN: Si no hay primaria, toma la primera.
-        if (!mainImageData) {
-            mainImageData = images[0];
-        }
-
-        // 3. ACTUALIZAR VARIABLE GLOBAL: DEBE ir después de (1) y (2).
-        window.colorImageUrl = mainImageData.image;
-
-        // Actualizar con efecto fade
-        mainImage.style.opacity = '0.5';
-        setTimeout(() => {
-            mainImage.src = mainImageData.image;
-            mainImage.alt = mainImageData.alt_text || '{{ product.name }}';
-            mainImage.style.opacity = '1';
-            console.log('✅ Imagen actualizada');
-        }, 150);
-    }
-    // ====================================================================
-    // FUNCIÓN: updateThumbnails
-    // ====================================================================
-
-    function updateThumbnails(colorSlug) {
-        const thumbnailContainer = document.getElementById('thumbnail-container');
-        if (!thumbnailContainer) return;
-
-        const images = window.imagesByColor[colorSlug];
-        if (!images || images.length <= 1) {
-            thumbnailContainer.innerHTML = '';
-            return;
-        }
-
-        // Generar thumbnails HTML
-        let thumbnailsHTML = '';
-        images.forEach((img, index) => {
-            const activeClass = index === 0 ? 'active' : '';
-            thumbnailsHTML += `
-                <button type="button" 
-                        class="thumbnail-btn ${activeClass}" 
-                        onclick="changeMainImage('${img.image.replace(/'/g, "\\'")}', this)">
-                    <img src="${img.image}" 
-                         alt="${img.alt_text || '{{ product.name }}'}"
-                         class="thumbnail-image">
-                </button>
-            `;
-        });
-
-        thumbnailContainer.innerHTML = thumbnailsHTML;
-    }
-
-    // ====================================================================
-    // FUNCIÓN: changeMainImage
-    // ====================================================================
-
-    function changeMainImage(imageUrl, thumbnailBtn) {
-        const mainImage = document.getElementById('main-product-image');
-        if (!mainImage) return;
-
-        mainImage.style.opacity = '0.5';
-        setTimeout(() => {
-            mainImage.src = imageUrl;
-            mainImage.style.opacity = '1';
-        }, 150);
-
-        // Actualizar thumbnails activos
-        document.querySelectorAll('.thumbnail-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        if (thumbnailBtn) {
-            thumbnailBtn.classList.add('active');
-        }
-    }
-
-    // ====================================================================
-    // FUNCIÓN: selectSize
-    // ====================================================================
-
-    function selectSize(sizeSlug, sizeName) {
-        console.log('📏 selectSize:', sizeSlug, sizeName);
-
-        window.selectedSizeSlug = sizeSlug;
-
-        // Actualizar botones activos
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        const activeBtn = document.querySelector(`.size-btn[data-size-slug="${sizeSlug}"]`);
-        if (activeBtn) {
-            activeBtn.classList.add('active');
-        }
-
-        // Actualizar nombre de la talla
-        const sizeNameDisplay = document.getElementById('selected-size-name');
-        if (sizeNameDisplay) {
-            sizeNameDisplay.textContent = sizeName;
-        }
-    }
-
-    // ====================================================================
-    // FUNCIÓN: updatePrice
-    // ====================================================================
-
-    function updatePrice() {
-        const quantityInput = document.getElementById('quantity');
-        const subtotalDisplay = document.getElementById('subtotal-price');
-        const unitPriceDisplay = document.getElementById('unit-price');
-
-        if (!quantityInput || !subtotalDisplay) return;
-
-        const quantity = parseInt(quantityInput.value) || 1;
-        let unitPrice = basePrice;
-
-        for (const tier of pricingTiers) {
-            if (quantity >= tier.min_quantity && quantity <= tier.max_quantity) {
-                unitPrice = tier.unit_price;
-                break;
-            }
-        }
-
-        const subtotal = unitPrice * quantity;
-
-        subtotalDisplay.textContent = `S/ ${subtotal.toFixed(2)}`;
-        if (unitPriceDisplay) {
-            unitPriceDisplay.textContent = `S/ ${unitPrice.toFixed(2)}`;
-        }
-    }
-
-    // ====================================================================
-    // FUNCIÓN: addToCart - Adaptada al sistema del usuario
-    // ====================================================================
-
-    function addToCart() {
-        console.log('🛒 addToCart llamado');
-
-        // Validar color
-        if (!window.selectedColorSlug) {
-            alert('❌ Por favor selecciona un color');
-            return;
-        }
-
-        // Validar talla
-        if (!window.selectedSizeSlug) {
-            alert('❌ Por favor selecciona una talla');
-            return;
-        }
-
-        // Validar cantidad
-        const quantityInput = document.getElementById('quantity');
-        const quantity = parseInt(quantityInput.value);
-
-        if (!quantity || quantity < 1) {
-            alert('❌ Por favor ingresa una cantidad válida');
-            return;
-        }
-
-        // Deshabilitar botón
-        const addBtn = document.getElementById('add-to-cart-btn');
-        if (!addBtn) return;
-
-        const originalText = addBtn.innerHTML;
-        addBtn.disabled = true;
-        addBtn.innerHTML = '⏳ Agregando...';
-
-        // ⭐ ADAPTAR A TU SISTEMA: Usar tu endpoint de carrito
-        const formData = new FormData();
-        formData.append('quantity', quantity);
-        formData.append('color', window.selectedColorSlug);
-        formData.append('size', window.selectedSizeSlug);
-        formData.append('color_image_url', window.colorImageUrl);
-
-        console.log('📤 Enviando:');
-        console.log('   color:', window.selectedColorSlug);
-        console.log('   size:', window.selectedSizeSlug);
-        console.log('   color_image_url:', colorImageUrl);
-
-        // En addToCart(), ANTES del fetch:
-        console.log('📤 Enviando:', {
-            color: window.selectedColorSlug,
-            size: window.selectedSizeSlug,
-            quantity: quantity
-        });
-
-        fetch('{% url "carrito-de-compras:add_to_cart" product.slug %}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': getCookie('csrftoken')  // ESTO SOLUCIONA EL 403
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(`✅ ${data.message}\n\nProducto: {{ product.name }}\nColor: ${window.selectedColorSlug}\nTalla: ${window.selectedSizeSlug}\nCantidad: ${quantity}`);
-
-                    // Opcional: Actualizar contador del carrito
-                    const cartCounter = document.getElementById('cart-count');
-                    if (cartCounter && data.cart_count) {
-                        cartCounter.textContent = data.cart_count;
-                    }
-
-                    // Opcional: Redirigir
-                    // window.location.href = '{% url "carrito-de-compras:cart_detail" %}';
-                } else {
-                    alert('❌ Error: ' + (data.message || 'No se pudo agregar al carrito'));
-                }
-            })
-            .catch(error => {
-                console.error('❌ Error:', error);
-                alert('❌ Error al agregar al carrito. Por favor intenta de nuevo.');
-            })
-            .finally(() => {
-                addBtn.disabled = false;
-                addBtn.innerHTML = originalText;
-            });
-    }
-
-    // ====================================================================
-    // INICIALIZACIÓN
-    // ====================================================================
-
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('🚀 Inicializando producto...');
-        console.log('   Color seleccionado:', window.selectedColorSlug);
-
-        // Inicializar thumbnails del color seleccionado
-        if (window.selectedColorSlug) {
-            updateThumbnails(window.selectedColorSlug);
-        }
-
-        // ⭐ EVENT LISTENERS PARA COLOR SWATCHES
-        document.querySelectorAll('.color-swatch').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const colorSlug = this.getAttribute('data-color-slug');
-                const colorName = this.getAttribute('data-color-name');
-                selectColor(colorSlug, colorName);
-            });
-        });
-
-        console.log('✅ Event listeners de color agregados:', document.querySelectorAll('.color-swatch').length, 'botones');
-
-        // EVENT LISTENERS PARA TALLAS
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const sizeSlug = this.getAttribute('data-size-slug');
-                const sizeName = this.getAttribute('data-size-name');
-                selectSize(sizeSlug, sizeName);
-            });
-        });
-
-        console.log('✅ Event listeners de talla agregados:', document.querySelectorAll('.size-btn').length, 'botones');
-
-        // Event listeners para cantidad
-        const quantityInput = document.getElementById('quantity');
-        if (quantityInput) {
-            quantityInput.addEventListener('input', updatePrice);
-            quantityInput.addEventListener('change', updatePrice);
-        }
-
-        // Calcular precio inicial
-        updatePrice();
-
-        console.log('✅ Inicialización completa');
-    });
 </script>
+
+<script id="product-tiers-data" type="application/json">
+{{ pricing_tiers_json|safe }}
+</script>
+
+<div id="product-data" 
+     style="display: none;"
+     data-base-price="{{ safe_starting_price|floatformat:2|unlocalize }}"
+     data-tiers-id="product-tiers-data">
+</div>
+
+<script src="{% static 'js/product_logic.js' %}"></script>
+
 {% endblock %}

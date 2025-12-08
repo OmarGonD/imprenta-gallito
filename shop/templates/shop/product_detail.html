@@ -253,19 +253,28 @@
                                 </tr>
                             </thead>
                             <tbody id="tiers-table">
-                                {% if tiers %}
-                                    {% for tier in tiers %}
-                                    <tr class="tier-row border-b border-gray-200 hover:bg-gray-50 transition-colors" data-min="{{ tier.min_quan }}" data-max="{{ tier.max_quan }}">
+                                {% if pricing_tiers %}
+                                    {% for tier in pricing_tiers %}
+                                    <tr class="tier-row border-b border-gray-200 hover:bg-gray-50 transition-colors" 
+                                        data-min="{{ tier.min_quantity }}" 
+                                        data-max="{{ tier.max_quantity }}">
+                                        
                                         <td class="px-4 py-3">
-                                            {% if tier.max_quan == 999999 %}
-                                                <span class="font-medium text-gray-900">{{ tier.min_quan }}+</span>
+                                            {% comment %} 
+                                                Usamos min_quantity y max_quantity para la condición
+                                                y mostramos '+' si es la cantidad máxima de 999999
+                                            {% endcomment %}
+                                            {% if tier.max_quantity == 999999 %}
+                                                <span class="font-medium text-gray-900">{{ tier.min_quantity }}+</span>
                                             {% else %}
-                                                <span class="font-medium text-gray-900">{{ tier.min_quan }}-{{ tier.max_quan }}</span>
+                                                <span class="font-medium text-gray-900">{{ tier.min_quantity }}-{{ tier.max_quantity }}</span>
                                             {% endif %}
                                         </td>
+                                        
                                         <td class="px-4 py-3">
                                             <span class="font-semibold text-gray-900">S/ {{ tier.unit_price|floatformat:2 }}</span>
                                         </td>
+                                        
                                         <td class="px-4 py-3">
                                             {% if tier.discount_percent > 0 %}
                                                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
@@ -275,6 +284,7 @@
                                                 <span class="text-gray-400">-</span>
                                             {% endif %}
                                         </td>
+                                        
                                         <td class="px-4 py-3">
                                             {% if tier.savings > 0 %}
                                                 <span class="text-green-600 font-medium">S/ {{ tier.savings|floatformat:2 }}</span>
@@ -475,400 +485,42 @@
     {% endif %}
 </div>
 
+
+{% block extra_js %}
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ========================================
-    // 1. ELEMENTOS DEL DOM
-    // ========================================
-    const quantityInput = document.getElementById('quantity');
-    const customQuantityHidden = document.getElementById('custom_quantity_hidden');
-    const unitPriceEl = document.getElementById('unit-price');
-    const discountPercentEl = document.getElementById('discount-percent');
-    const totalPriceEl = document.getElementById('total-price');
-    const tiersTable = document.getElementById('tiers-table');
-    const tierRows = document.querySelectorAll('.tier-row');
-    const suggestionBox = document.getElementById('suggestion-box');
-    const suggestionText = document.getElementById('suggestion-text');
-    const fileInput = document.getElementById('file-upload-input');
-    const fileUploadSection = document.getElementById('file-upload-section');
-    const previewContainer = document.getElementById('file-preview-container');
-    const addToCartBtn = document.getElementById('add-to-cart');
-    const fileRequiredMsg = document.getElementById('file-required-message');
-    const modal = document.getElementById('cart-success-modal');
-    const modalGoToCart = document.getElementById('modal-go-to-cart');
-    const modalContinueShopping = document.getElementById('modal-continue-shopping');
-    
-    // Design choice elements (solo para tarjetas de presentación)
-    const choiceGallery = document.getElementById('choice-gallery');
-    const choiceUpload = document.getElementById('choice-upload');
-    const designChoiceHidden = document.getElementById('design_choice_hidden');
-    const isTarjetasPage = '{{ category.slug }}' === 'tarjetas-presentacion';
-    
-    let selectedDesignChoice = null;
-    
-    // ========================================
-    // 2. DESIGN CHOICE HANDLING (Tarjetas)
-    // ========================================
-    // URL base para la galería (renderizada por Django)
-    const galleryBaseUrl = "{% url 'shop:template_gallery' category.slug product.slug %}";
-    
-    if (isTarjetasPage && choiceGallery && choiceUpload) {
-        console.log('✅ Inicializando botones de diseño para tarjetas');
-        console.log('📍 URL de galería:', galleryBaseUrl);
-        
-        choiceGallery.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('🎨 Click en "Elegir plantilla"');
-            
-            // Marcar como seleccionado visualmente
-            choiceUpload.classList.remove('selected');
-            choiceGallery.classList.add('selected');
-            
-            // Redirigir a la galería de templates
-            const quantity = quantityInput.value || 100;
-            const targetUrl = galleryBaseUrl + '?quantity=' + quantity;
-            console.log('🔗 Redirigiendo a:', targetUrl);
-            
-            window.location.href = targetUrl;
-        });
-        
-        choiceUpload.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('📤 Click en "Subir mi diseño"');
-            
-            // Seleccionar esta opción
-            choiceGallery.classList.remove('selected');
-            choiceUpload.classList.add('selected');
-            selectedDesignChoice = 'upload';
-            designChoiceHidden.value = 'upload';
-            
-            // Mostrar sección de upload
-            fileUploadSection.classList.remove('hidden');
-            
-            // Scroll suave al upload
-            setTimeout(() => {
-                fileUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-            
-            updateButtonState();
-        });
-    } else if (isTarjetasPage) {
-        console.warn('⚠️ Botones de diseño no encontrados:', {
-            choiceGallery: !!choiceGallery,
-            choiceUpload: !!choiceUpload
-        });
-    }
-    
-    // Datos de tiers desde Django
-    const priceTiers = [
-        {% for tier in tiers %}
-        {
-            min: {% localize off %}{{ tier.min_quan }}{% endlocalize %},
-            max: {% localize off %}{{ tier.max_quan }}{% endlocalize %},
-            price: {% localize off %}{{ tier.unit_price }}{% endlocalize %},
-            discount: {% localize off %}{{ tier.discount_percent }}{% endlocalize %}
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-    ];
-    
-    // ========================================
-    // 3. CÁLCULO DE PRECIOS
-    // ========================================
-    function calculatePrice(quantity) {
-        if (!priceTiers.length) return null;
-        
-        let currentTier = priceTiers[0];
-        for (const tier of priceTiers) {
-            if (quantity >= tier.min && quantity <= tier.max) {
-                currentTier = tier;
-                break;
-            }
-            if (quantity >= tier.min) {
-                currentTier = tier;
-            }
-        }
-        
-        return {
-            unitPrice: currentTier.price,
-            discount: currentTier.discount,
-            total: currentTier.price * quantity,
-            tier: currentTier
-        };
-    }
-    
-    function updatePricing() {
-        const quantity = parseInt(quantityInput.value) || 1;
-        customQuantityHidden.value = quantity;
-        
-        const pricing = calculatePrice(quantity);
-        
-        if (pricing) {
-            unitPriceEl.textContent = pricing.unitPrice.toFixed(2);
-            discountPercentEl.textContent = pricing.discount;
-            totalPriceEl.textContent = pricing.total.toFixed(2);
-            
-            // Highlight current tier
-            tierRows.forEach(row => {
-                const min = parseInt(row.dataset.min);
-                const max = parseInt(row.dataset.max);
-                
-                if (quantity >= min && quantity <= max) {
-                    row.classList.add('tier-row-active');
-                } else {
-                    row.classList.remove('tier-row-active');
+    // 1. FUNCIONES Y VARIABLES DE UTILIDAD (CRÍTICAS)
+    // Se mantiene getCookie aquí para el manejo de CSRF/AJAX.
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
-            });
-            
-            // Suggestion for next tier
-            updateSuggestion(quantity, pricing.tier);
-        }
-    }
-    
-    function updateSuggestion(quantity, currentTier) {
-        const nextTier = priceTiers.find(t => t.min > currentTier.max);
-        
-        if (nextTier) {
-            const unitsNeeded = nextTier.min - quantity;
-            const currentTotal = currentTier.price * quantity;
-            const nextTotal = nextTier.price * nextTier.min;
-            const savings = (currentTier.price - nextTier.price) * nextTier.min;
-            
-            if (unitsNeeded <= 20 && unitsNeeded > 0) {
-                suggestionText.textContent = `Compra ${unitsNeeded} unidades más (${nextTier.min} total) y ahorra S/ ${savings.toFixed(2)} adicionales`;
-                suggestionBox.classList.remove('hidden');
-                return;
             }
         }
-        
-        suggestionBox.classList.add('hidden');
+        return cookieValue;
     }
-    
-    // Event listener para cantidad
-    quantityInput.addEventListener('input', updatePricing);
-    
-    // Inicializar precio
-    updatePricing();
-    
-    // ========================================
-    // 4. ESTADO DEL BOTÓN
-    // ========================================
-    function updateButtonState() {
-        let canSubmit = false;
-        
-        if (isTarjetasPage) {
-            // Para tarjetas: necesita elegir opción Y subir archivo si eligió upload
-            if (selectedDesignChoice === 'upload' && fileInput.files.length > 0) {
-                canSubmit = true;
-            }
-            // Si eligió gallery, se redirige automáticamente
-        } else {
-            // Para otros productos: solo necesita archivo
-            canSubmit = fileInput.files.length > 0;
-        }
-        
-        if (canSubmit) {
-            addToCartBtn.disabled = false;
-            addToCartBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
-            addToCartBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-            fileRequiredMsg.classList.add('hidden');
-        } else {
-            addToCartBtn.disabled = true;
-            addToCartBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
-            addToCartBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
-            fileRequiredMsg.classList.remove('hidden');
-        }
-    }
-    
-    // ========================================
-    // 5. MANEJO DE ARCHIVOS
-    // ========================================
-    if (fileUploadSection) {
-        fileUploadSection.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.classList.add('dragover');
-        });
-        
-        fileUploadSection.addEventListener('dragleave', function() {
-            this.classList.remove('dragover');
-        });
-        
-        fileUploadSection.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.classList.remove('dragover');
-            fileInput.files = e.dataTransfer.files;
-            showFilePreview(e.dataTransfer.files);
-            updateButtonState();
-        });
-    }
-    
-    if (fileInput) {
-        fileInput.addEventListener('change', function() {
-            showFilePreview(this.files);
-            updateButtonState();
-        });
-    }
-    
-    function showFilePreview(files) {
-        if (!previewContainer) return;
-        
-        previewContainer.innerHTML = '';
-        
-        Array.from(files).forEach((file) => {
-            const filePreview = document.createElement('div');
-            filePreview.className = 'p-4 border-2 border-green-200 rounded-lg bg-white shadow-sm';
-            
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    filePreview.innerHTML = `
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="text-sm font-semibold text-gray-900 truncate">${file.name}</span>
-                                <span class="text-xs text-gray-500 ml-2 flex-shrink-0">${(file.size / 1024).toFixed(1)} KB</span>
-                            </div>
-                            <div class="rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-50">
-                                <img src="${e.target.result}" alt="Preview" 
-                                     class="w-full h-auto max-h-96 object-contain">
-                            </div>
-                            <div class="flex items-center justify-center text-sm text-green-600 font-medium">
-                                <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                Archivo cargado correctamente
-                            </div>
-                        </div>
-                    `;
-                };
-                
-                reader.readAsDataURL(file);
-            } else {
-                const icon = getFileIcon(file.name);
-                filePreview.innerHTML = `
-                    <div class="flex items-center space-x-4">
-                        ${icon}
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold text-gray-900 truncate">${file.name}</p>
-                            <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(1)} KB</p>
-                        </div>
-                        <div class="flex items-center text-green-600">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            previewContainer.appendChild(filePreview);
-        });
-    }
-    
-    function getFileIcon(fileName) {
-        const ext = fileName.split('.').pop().toLowerCase();
-        
-        const icons = {
-            'pdf': '<svg class="w-12 h-12 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path></svg>',
-            'ai': '<svg class="w-12 h-12 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>',
-            'psd': '<svg class="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>',
-            'svg': '<svg class="w-12 h-12 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>'
-        };
-        
-        return icons[ext] || '<svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"></path></svg>';
-    }
-    
-    // ========================================
-    // 6. AGREGAR AL CARRITO
-    // ========================================
-    if (addToCartBtn) {
-        addToCartBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const quantity = parseInt(quantityInput.value);
-            const files = fileInput.files;
-            
-            if (files.length === 0) {
-                alert('❌ Debes subir un archivo antes de agregar al carrito');
-                return;
-            }
-            
-            if (!quantity || quantity < 1) {
-                alert('❌ Por favor ingresa una cantidad válida');
-                return;
-            }
-            
-            // Mostrar loading
-            const originalText = addToCartBtn.innerHTML;
-            addToCartBtn.disabled = true;
-            addToCartBtn.innerHTML = `
-                <svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            `;
-            
-            const formData = new FormData();
-            formData.append('category_slug', '{{ category.slug }}');
-            formData.append('product_slug', '{{ product.slug }}');
-            formData.append('quantity_tier', 'custom');
-            formData.append('custom_quantity', quantity);
-            formData.append('design_file', files[0]);
-            formData.append('design_type', 'custom');
-            
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            
-            fetch('{% url "shop:add_product_to_cart" %}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                addToCartBtn.innerHTML = originalText;
-                addToCartBtn.disabled = false;
-                
-                if (data.success) {
-                    const cartCounter = document.getElementById('cart-items-counter');
-                    if (cartCounter) {
-                        cartCounter.textContent = data.cart_items_counter;
-                    }
-                    
-                    modal.classList.remove('hidden');
-                } else {
-                    alert('❌ Error: ' + (data.error || 'No se pudo agregar al carrito'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                addToCartBtn.innerHTML = originalText;
-                addToCartBtn.disabled = false;
-                alert('❌ Error al agregar al carrito. Por favor intenta de nuevo.');
-            });
-        });
-    }
-    
-    // ========================================
-    // 7. MODAL DE ÉXITO
-    // ========================================
-    if (modalGoToCart) {
-        modalGoToCart.addEventListener('click', function() {
-            window.location.href = "{% url 'carrito-de-compras:cart_detail' %}";
-        });
-    }
-    
-    if (modalContinueShopping) {
-        modalContinueShopping.addEventListener('click', function() {
-            modal.classList.add('hidden');
-        });
-    }
-    
-    // Inicializar estado del botón
-    updateButtonState();
-    
-    console.log('✅ Página de producto inicializada correctamente');
-});
 </script>
+
+<script id="product-tiers-data" type="application/json">
+{{ pricing_tiers_json|safe }}
+</script>
+
+<div id="product-data" 
+     style="display: none;"
+     data-base-price="{{ safe_starting_price|floatformat:2|unlocalize }}"
+     data-tiers-id="product-tiers-data">
+</div>
+
+<script src="{% static 'js/product_logic.js' %}"></script>
+
+{% endblock %}
+
+
 
 {% endblock %}

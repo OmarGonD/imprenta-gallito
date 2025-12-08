@@ -258,9 +258,20 @@ def subcategory_view(request, category_slug, subcategory_slug):
     return render(request, 'shop/subcategory.html', context)
 
 
+import json
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
+# from shop.models import ... (Asumimos que los imports están correctos)
+
+import json
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
+# from shop.models import ... (Asegúrate de importar todos los modelos necesarios: Product, Category, PriceTier, etc.)
+
+
 def product_detail(request, category_slug, subcategory_slug, product_slug):
     """
-    Vista unificada para detalle de producto (Ropa/Imprenta) - VERSIÓN FINAL CORREGIDA
+    Vista unificada para detalle de producto (Ropa/Imprenta) - VERSIÓN FINAL Y ROBUSTA
     """
     
     # -------------------------------------------------------------------------
@@ -280,30 +291,30 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         raise Http404("Producto no encontrado")
     
     # -------------------------------------------------------------------------
-    # 2. PROCESAR PRECIOS DE FORMA SEGURA (CRÍTICO)
+    # 2. PROCESAR PRECIOS DE FORMA SEGURA (Generar safe_base_price en float)
     # -------------------------------------------------------------------------
     
-    # Obtener starting_price y base_price, asegurando que nunca sean None
-    raw_starting_price = product.starting_price  # Puede ser None
-    raw_base_price = product.base_price  # Puede ser None
+    raw_starting_price = product.starting_price
+    raw_base_price = product.base_price
     
-    # Estrategia de fallback para precios
+    # Fallback para starting_price
     if raw_starting_price is not None:
         safe_starting_price = float(raw_starting_price)
     elif raw_base_price is not None:
         safe_starting_price = float(raw_base_price)
     else:
-        # Último recurso: buscar en el primer tier
         first_tier = product.price_tiers.order_by('min_quantity').first()
-        safe_starting_price = float(first_tier.unit_price) if first_tier else 0.0
+        # Asegura que unit_price no sea None antes de intentar float()
+        safe_starting_price = float(first_tier.unit_price) if first_tier and first_tier.unit_price is not None else 0.0
     
-    # Base price con el mismo fallback
+    # Fallback para base_price (Precio de referencia para los descuentos)
     if raw_base_price is not None:
         safe_base_price = float(raw_base_price)
     elif raw_starting_price is not None:
         safe_base_price = float(raw_starting_price)
     else:
-        safe_base_price = safe_starting_price
+        # Usa el precio inicial seguro si no hay base ni starting price
+        safe_base_price = safe_starting_price 
     
     # -------------------------------------------------------------------------
     # 3. INICIALIZAR CONTEXTO BASE CON VALORES SEGUROS
@@ -312,70 +323,78 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     context = {
         'category': category,
         'product': product,
-        'tiers': [],
         'related_products': None,
         'template_name': 'shop/product_detail.html',
-        # Valores seguros para JavaScript (siempre float, nunca None)
-        'pricing_tiers': [],
+        
+        # Variable UNIFICADA para los tiers (HTML y JS)
+        'pricing_tiers': [], 
         'images_by_color': '{}',
         'selected_color_slug': '',
         'base_image_url': product.base_image_url or '',
-        # Precios seguros como float para evitar problemas de localización
         'safe_starting_price': safe_starting_price,
-        'safe_base_price': safe_base_price,
+        'safe_base_price': safe_base_price, # El precio base ya está en float
     }
 
     # -------------------------------------------------------------------------
-    # 4. LÓGICA PARA ROPA-BOLSOS
+    # 4. LÓGICA DE TIERS UNIFICADA (Calcula y Formatea Tiers)
+    # -------------------------------------------------------------------------
+    
+    pricing_tiers_qs = product.price_tiers.all().order_by('min_quantity')
+    formatted_tiers = []
+    
+    for tier in pricing_tiers_qs:
+        savings = 0.0
+        current_unit_price = float(tier.unit_price) 
+        
+        # ✅ Cálculo Robusto de Ahorro: Usa el precio de referencia seguro (float)
+        if safe_base_price > 0 and safe_base_price > current_unit_price:
+            savings = safe_base_price - current_unit_price
+        
+        formatted_tiers.append({
+            'min_quantity': int(tier.min_quantity),      # Consistente: int
+            'max_quantity': int(tier.max_quantity),      # Consistente: int
+            'unit_price': current_unit_price,            # CRÍTICO: float
+            'discount_percent': tier.discount_percentage,
+            'savings': savings                           # CRÍTICO: float
+        })
+
+    # Si no hay tiers, asegurar que contenga el precio base
+    if not formatted_tiers:
+        formatted_tiers = [{
+            'min_quantity': 1,
+            'max_quantity': 999999,
+            'unit_price': safe_base_price,
+            'discount_percent': 0,
+            'savings': 0.0,
+        }]
+
+    # ✅ Asignamos la lista a la variable UNIFICADA 'pricing_tiers' para HTML y JS
+    context['pricing_tiers'] = formatted_tiers
+    context['pricing_tiers_json'] = json.dumps(formatted_tiers) # Ahora no fallará (solo floats)
+
+
+    # -------------------------------------------------------------------------
+    # 5. LÓGICA ESPECÍFICA (Ropa vs. Imprenta)
     # -------------------------------------------------------------------------
 
     if category_slug == 'ropa-bolsos':
         
         subcategory = product.subcategory
 
-        # TALLAS Y PRECIOS
+        # TALLAS
         available_sizes = product.available_sizes.filter(is_active=True).order_by('display_order')
-        pricing_tiers_qs = product.price_tiers.all().order_by('min_quantity')
-        
-        # ✅ CONVERTIR PRICING TIERS A DICCIONARIOS CON VALORES FLOAT
-        pricing_tiers_list = []
-        for tier in pricing_tiers_qs:
-            pricing_tiers_list.append({
-                'min_quantity': int(tier.min_quantity),
-                'max_quantity': int(tier.max_quantity),
-                'unit_price': float(tier.unit_price),  # Convertir a float
-                'discount_percentage': tier.discount_percentage,
-            })
-        
-        # Si no hay tiers, crear uno por defecto
-        if not pricing_tiers_list:
-            pricing_tiers_list = [{
-                'min_quantity': 1,
-                'max_quantity': 999999,
-                'unit_price': safe_starting_price,
-                'discount_percentage': 0,
-            }]
         
         context.update({
             'available_sizes': available_sizes,
-            'pricing_tiers': pricing_tiers_list,  # Lista de diccionarios
-            'pricing_tiers_json': json.dumps(pricing_tiers_list),  # ✅ JSON string para JavaScript
-            'pricing_tiers_qs': pricing_tiers_qs,  # Queryset original para el template HTML
+            'pricing_tiers_qs': pricing_tiers_qs, 
             'subcategory': subcategory,
             'category_slug': subcategory.slug,
         })
-        
-        # PRODUCTOS RELACIONADOS
-        context['related_products'] = Product.objects.filter(
-            subcategory=subcategory,
-            status='active'
-        ).exclude(pk=product.pk)[:4]
         
         # MANEJO DE COLORES E IMÁGENES
         selected_color_slug = request.GET.get('color', '')
         available_colors = product.available_colors.filter(is_active=True).order_by('display_order')
         
-        # Determinar selected_color
         selected_color = None
         if selected_color_slug:
             selected_color = available_colors.filter(slug=selected_color_slug).first()
@@ -389,7 +408,6 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             'selected_color_slug': selected_color_slug or '',
         })
 
-        # OBTENER Y ORGANIZAR IMÁGENES POR COLOR
         images_by_color = {}
         base_image_url = product.base_image_url or ''
         
@@ -408,7 +426,6 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
                 'alt_text': img.alt_text or product.name
             })
         
-        # Determinar imagen principal
         if selected_color:
             primary_image = product.images.filter(
                 color=selected_color, 
@@ -431,54 +448,38 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         
     else:
         # -------------------------------------------------------------------------
-        # 5. LÓGICA PARA IMPRENTA Y OTROS
+        # 5.1. LÓGICA PARA IMPRENTA Y OTROS
         # -------------------------------------------------------------------------
         
-        pricing_service = PricingService()
-        all_tiers = pricing_service.price_tiers.get(product.slug, [])
-        
-        if all_tiers:
-            base_price = all_tiers[0]['unit_price']
-            for tier in all_tiers:
-                tier['savings'] = base_price - tier['unit_price']
-        
-        context['tiers'] = all_tiers
         context['variant_types'] = product.get_available_variant_types()
         
-        # PRODUCTOS RELACIONADOS
         context['related_products'] = Product.objects.filter(
             category=category,
             status='active'
         ).exclude(pk=product.pk)[:4]
         
-        # Datos adicionales
         context.update({
             'product_images': product.images.all().order_by('display_order'),
             'has_colors': product.has_colors(),
             'has_sizes': product.has_sizes(),
         })
-    
+
     # -------------------------------------------------------------------------
-    # 6. DEBUGGING (TEMPORAL - REMOVER EN PRODUCCIÓN)
+    # 6. DEBUGGING
     # -------------------------------------------------------------------------
     
     print("\n" + "="*70)
-    print(f"🔍 DEBUGGING: {product.name}")
+    print(f"🔍 DEBUGGING: {product.name} (Template: {context['template_name']})")
     print("="*70)
-    print(f"  Base Price (raw): {raw_base_price} (type: {type(raw_base_price)})")
-    print(f"  Starting Price (raw): {raw_starting_price} (type: {type(raw_starting_price)})")
-    print(f"  Base Price (safe): {safe_base_price} (type: {type(safe_base_price)})")
-    print(f"  Starting Price (safe): {safe_starting_price} (type: {type(safe_starting_price)})")
-    print(f"  Selected Color: '{context.get('selected_color_slug', 'N/A')}'")
-    print(f"  Images by Color: {len(json.loads(context['images_by_color']))} colores")
-    print(f"  Pricing Tiers: {len(context['pricing_tiers'])} tiers")
+    print(f"  Tiers cargados: {len(context['pricing_tiers'])} tiers")
+    print(f"  Precio Base Seguro (float): {context['safe_base_price']}")
     
     if context['pricing_tiers']:
-        print(f"\n  📊 Tiers procesados:")
+        print(f"\n  📊 Tiers procesados (variable única):")
         for i, tier in enumerate(context['pricing_tiers'][:3]):
-            print(f"    Tier {i}: min={tier['min_quantity']}, "
+            print(f"    Tier {i}: min={tier['min_quantity']}, "
                   f"max={tier['max_quantity']}, "
-                  f"price={tier['unit_price']} (type: {type(tier['unit_price'])})")
+                  f"price={tier['unit_price']} (savings={tier['savings']})")
     
     print("="*70 + "\n")
     
@@ -487,8 +488,6 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     # -------------------------------------------------------------------------
     
     return render(request, context['template_name'], context)
-
-
 # ============================================================================
 # ROPA Y BOLSOS - VISTAS REFACTORIZADAS (Usando sistema unificado)
 # ============================================================================

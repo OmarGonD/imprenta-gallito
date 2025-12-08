@@ -1,83 +1,102 @@
-// 1. Al cargar la página o cambiar cantidad
-document.getElementById('quantity').addEventListener('input', function(e) {
-    const quantity = parseInt(e.target.value);
-    const productSlug = '{{ product.slug }}'; // Desde Django template
-    
-    // Llamar a la API o función local
-    updatePricing(productSlug, quantity);
-});
+/**
+ * product_pricing.js
+ * * Lógica compartida para cálculo y resaltado de niveles de precio (tiers).
+ * Depende de que las variables globales `window.priceTiers` y `window.basePrice` 
+ * sean definidas en la plantilla HTML antes de la carga de este script.
+ */
 
-// 2. Función para actualizar precios
-async function updatePricing(productSlug, quantity) {
-    // Opción A: Llamada AJAX
-    const response = await fetch(`/api/product-pricing/${productSlug}/${quantity}/`);
-    const data = await response.json();
+function updatePriceAndHighlight() {
+    const quantityInput = document.getElementById('quantity');
+    const subtotalDisplay = document.getElementById('subtotal-price');
+    const unitPriceDisplay = document.getElementById('unit-price');
+    const tierRows = document.querySelectorAll('#tiers-table .tier-row'); 
     
-    // O Opción B: Cálculo local si pasaste todos los tiers en el contexto
-    // const data = calculatePricing(allTiers, quantity);
-    
-    // Actualizar DOM
-    document.getElementById('unit-price').textContent = data.unit_price.toFixed(2);
-    document.getElementById('discount-percent').textContent = data.discount_percent;
-    document.getElementById('total-price').textContent = data.total_price.toFixed(2);
-    
-    // Actualizar tabla de tiers (resaltar tier actual)
-    updateTiersTable(data.all_tiers, data.current_tier);
-    
-    // Mostrar/ocultar sugerencia
-    updateSuggestion(data.next_tier);
-}
+    // Elementos específicos que pueden existir en product_detail.html (ej. el precio total y descuento separados)
+    const totalPriceEl = document.getElementById('totalPriceEl') || document.getElementById('total-price'); 
+    const discountPercentEl = document.getElementById('discountPercentEl') || document.getElementById('discount-percent');
 
-// 3. Actualizar tabla de tiers
-function updateTiersTable(allTiers, currentTier) {
-    const tbody = document.getElementById('tiers-table');
-    tbody.innerHTML = '';
-    
-    allTiers.forEach(tier => {
-        const row = document.createElement('tr');
-        const isActive = tier.min_quan === currentTier.min_quan;
-        
-        // Aplicar estilos si es el tier actual
-        if (isActive) {
-            row.className = 'bg-blue-100 border-l-4 border-blue-600';
+    // Usar las variables globales definidas en el template
+    const priceTiers = window.priceTiers || []; 
+    const basePrice = window.basePrice || 0;
+
+    if (!quantityInput || !subtotalDisplay) return;
+
+    const quantity = parseInt(quantityInput.value) || 1;
+    let unitPrice = basePrice;
+    let discount = 0;
+    let activeMinQuantity = null; 
+
+    // 1. Encontrar el Tier Activo y el Precio
+    for (const tier of priceTiers) {
+        // Usamos min_quantity y unit_price, asumiendo que son las propiedades estándar.
+        const min = tier.min_quantity || tier.min; 
+        const max = tier.max_quantity || tier.max; 
+
+        if (quantity >= min && quantity <= max) {
+            unitPrice = tier.unit_price || tier.price;
+            discount = tier.discount_percent || tier.discount || 0;
+            activeMinQuantity = min.toString();
+            break;
         }
-        
-        const rangeText = tier.max_quan === 999999 
-            ? `${tier.min_quan}+` 
-            : `${tier.min_quan}-${tier.max_quan}`;
-        
-        const basePrice = allTiers[0].unit_price;
-        const savings = (basePrice - tier.unit_price).toFixed(2);
-        
-        row.innerHTML = `
-            <td class="px-4 py-2">${rangeText}</td>
-            <td class="px-4 py-2 font-semibold">S/ ${tier.unit_price.toFixed(2)}</td>
-            <td class="px-4 py-2 text-green-600">${tier.discount_percent}%</td>
-            <td class="px-4 py-2">S/ ${savings}</td>
-        `;
-        
-        tbody.appendChild(row);
-    });
-}
-
-// 4. Mostrar sugerencia inteligente
-function updateSuggestion(nextTier) {
-    const suggestionBox = document.getElementById('suggestion-box');
-    const suggestionText = document.getElementById('suggestion-text');
+    }
     
-    if (nextTier && nextTier.units_needed > 0) {
-        suggestionText.textContent = 
-            `Compra ${nextTier.units_needed} unidades más (${nextTier.min_quan} total) ` +
-            `y ahorra S/ ${nextTier.savings.toFixed(2)} adicionales`;
-        suggestionBox.classList.remove('hidden');
-    } else {
-        suggestionBox.classList.add('hidden');
+    // 2. Aplicar el Highlight
+    tierRows.forEach(row => {
+        const rowMin = row.dataset.min;
+        
+        // El resaltado funciona comparando el min_quantity activo con el data-min de la fila
+        if (rowMin === activeMinQuantity) {
+            row.classList.add('tier-row-active');
+        } else {
+            row.classList.remove('tier-row-active');
+        }
+    });
+
+    // 3. Actualizar Precios en la UI
+    const subtotal = unitPrice * quantity;
+
+    subtotalDisplay.textContent = `S/ ${subtotal.toFixed(2)}`;
+    
+    // Actualizar elementos específicos si existen
+    if (totalPriceEl) {
+        // En algunos casos, subtotalDisplay y totalPriceEl podrían ser el mismo, ajusta según tu HTML
+        totalPriceEl.textContent = subtotal.toFixed(2);
+    }
+    if (discountPercentEl) {
+         discountPercentEl.textContent = discount;
+    }
+
+    // Actualizar precio por unidad
+    if (unitPriceDisplay) {
+        unitPriceDisplay.textContent = `S/ ${unitPrice.toFixed(2)}`;
     }
 }
 
-// Ejecutar al cargar
-document.addEventListener('DOMContentLoaded', function() {
-    const initialQuantity = parseInt(document.getElementById('quantity').value);
-    const productSlug = '{{ product.slug }}';
-    updatePricing(productSlug, initialQuantity);
+// ====================================================================
+// INICIALIZACIÓN Y EVENT LISTENERS COMPARTIDOS
+// ====================================================================
+
+document.addEventListener('DOMContentLoaded', function () {
+    const quantityInput = document.getElementById('quantity');
+    
+    if (quantityInput) {
+        // Event listeners para cálculo y highlight
+        quantityInput.addEventListener('input', updatePriceAndHighlight);
+        quantityInput.addEventListener('change', updatePriceAndHighlight);
+        
+        // Manejo de la tecla Enter para evitar la recarga de la página
+        quantityInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                updatePriceAndHighlight(); 
+                
+                // Enfoca el botón de agregar al carrito (adaptado para diferentes IDs)
+                const addBtn = document.getElementById('add-to-cart-btn') || document.getElementById('add-to-cart');
+                if (addBtn) addBtn.focus();
+            }
+        });
+
+        // Calcular precio inicial
+        updatePriceAndHighlight();
+    }
 });
