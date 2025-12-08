@@ -1,0 +1,443 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ subcategory.name }} | {{ category.name }} | Imprenta Gallito{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/clothing.css' %}">
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos para color dots interactivos */
+    .color-dot {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        /* Agregamos un color y tamaño para que sea visible en el ejemplo */
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: red;
+        margin: 5px;
+        display: inline-block;
+    }
+
+    .color-dot:hover {
+        transform: scale(1.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .color-dot.active {
+        transform: scale(1.3);
+        /* Asegúrate de que los colores de white y #3b82f6 contrasten con el fondo */
+        box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
+    }
+
+    /* Transición suave de imágenes */
+    .product-image {
+        transition: opacity 0.3s ease;
+        /* Agregamos un tamaño para que sea visible en el ejemplo */
+        width: 100%;
+        max-width: 300px;
+        opacity: 1;
+        /* Valor inicial */
+    }
+</style>
+
+<div class="clothing-page">
+    <!-- Hero Banner -->
+    <section class="clothing-hero" style="padding: 40px 20px;">
+        <div class="hero-content">
+            <h1>{{ subcategory.name }}</h1>
+            <p>{{ subcategory.description|default:category.description }}</p>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'shop:home' %}">Inicio</a></li>
+                <li><a href="{% url 'shop:clothing_category' %}">{{ category.name }}</a></li>
+                <li><a href="{% url 'shop:clothing_subcategory' category.slug subcategory.slug %}">{{ subcategory.name
+                        }}</a></li>
+                <li class="active">{{ subcategory.name }}</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content with Sidebar -->
+    <main class="clothing-main">
+        <div class="container">
+            <div class="clothing-layout">
+                <!-- Filter Sidebar -->
+                <aside class="filter-sidebar">
+                    <div class="filter-header">
+                        <h3><i class="fas fa-filter"></i> Filtros</h3>
+                        <a href="{% url 'shop:clothing_subcategory' category.slug subcategory.slug %}"
+                            class="clear-filters">Limpiar todo</a>
+                    </div>
+
+                    <form id="filter-form" method="GET"
+                        action="{% url 'shop:clothing_subcategory' category.slug subcategory.slug %}">
+                        <!-- Price Filter -->
+                        <div class="filter-section">
+                            <h4 class="filter-title" data-toggle="price">
+                                Precio
+                                <i class="fas fa-chevron-down"></i>
+                            </h4>
+                            <div class="filter-content" id="filter-price">
+                                <div class="price-inputs">
+                                    <div class="price-field">
+                                        <label>Mín</label>
+                                        <input type="number" name="price_min" placeholder="S/ 0" value="{{ price_min }}"
+                                            min="0">
+                                    </div>
+                                    <span class="price-separator">-</span>
+                                    <div class="price-field">
+                                        <label>Máx</label>
+                                        <input type="number" name="price_max" placeholder="S/ 500"
+                                            value="{{ price_max }}" min="0">
+                                    </div>
+                                </div>
+                                <div class="price-presets">
+                                    <button type="button" class="price-preset" data-min="0" data-max="25">Hasta
+                                        S/25</button>
+                                    <button type="button" class="price-preset" data-min="25" data-max="50">S/25 -
+                                        S/50</button>
+                                    <button type="button" class="price-preset" data-min="50" data-max="100">S/50 -
+                                        S/100</button>
+                                    <button type="button" class="price-preset" data-min="100" data-max="">Más de
+                                        S/100</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Color Filter -->
+                        {% if all_colors %}
+                        <div class="filter-section">
+                            <h4 class="filter-title" data-toggle="color">
+                                Color
+                                <i class="fas fa-chevron-down"></i>
+                            </h4>
+                            <div class="filter-content" id="filter-color">
+                                <div class="color-grid">
+                                    {% for color in all_colors %}
+                                    <label class="color-option" title="{{ color.name }}">
+                                        <input type="checkbox" name="color" value="{{ color.slug }}" {% if color.slug in selected_colors %}checked{% endif %}>
+                                        <span class="color-swatch"
+                                            style="background-color: {{ color.hex_code }};"></span>
+                                        <span class="color-name">{{ color.name }}</span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Size Filter -->
+                        {% if all_sizes %}
+                        <div class="filter-section">
+                            <h4 class="filter-title" data-toggle="size">
+                                Talla
+                                <i class="fas fa-chevron-down"></i>
+                            </h4>
+                            <div class="filter-content" id="filter-size">
+                                <div class="size-grid">
+                                    {% for size in all_sizes %}
+                                    <label class="size-option">
+                                        <input type="checkbox" name="size" value="{{ size.name }}" {% if size.name in selected_sizes %}checked{% endif %}>
+                                        <span class="size-box">{{ size.name }}</span>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn-apply-filters">
+                            <i class="fas fa-check"></i> Aplicar Filtros
+                        </button>
+                    </form>
+                </aside>
+
+                <!-- Products Grid -->
+                <section class="products-section">
+                    <!-- Sort and Results Bar -->
+                    <div class="results-bar">
+                        <div class="results-count">
+                            <strong>{{ product_count }}</strong> productos en {{ subcategory.name }}
+                        </div>
+                        <div class="sort-options">
+                            <label for="sort-select">Ordenar por:</label>
+                            <select id="sort-select" name="sort" onchange="updateSort(this.value)">
+                                <option value="featured" {% if sort_by == 'featured' %}selected{% endif %}>Destacados</option>
+                                <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Menor precio</option>
+                                <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Mayor precio</option>
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Más recientes</option>
+                                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nombre A-Z</option>
+                            </select>
+                        </div>
+                        <div class="view-options">
+                            <button type="button" class="view-btn active" data-view="grid" title="Vista de cuadrícula">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button type="button" class="view-btn" data-view="list" title="Vista de lista">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="products-grid" id="products-container">
+                        {% for product in products %}
+                        <article class="product-card" data-product-id="{{ product.id }}">
+                            {% if product.is_new %}
+                            <span class="badge badge-new">Nuevo</span>
+                            {% endif %}
+                            {% if product.discount_percentage %}
+                            <span class="badge badge-sale">-{{ product.discount_percentage }}%</span>
+                            {% endif %}
+                            {% if product.is_bestseller %}
+                            <span class="badge badge-best">Más vendido</span>
+                            {% endif %}
+
+                            <a href="{{ product.get_absolute_url }}" class="product-image-wrapper">
+                                <img src="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}"
+                                    alt="{{ product.name }}" class="product-image primary"
+                                    data-original="{{ product.base_image_url }}">
+                                {% if product.hover_image %}
+                                <img src="{{ product.hover_image_url }}" alt="{{ product.name }}"
+                                    class="product-image hover">
+                                {% endif %}
+                            </a>
+
+                            <div class="product-info">
+                                <h3 class="product-name">
+                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                                </h3>
+
+                                {% if product.short_description %}
+                                <p class="product-description">{{ product.short_description }}</p>
+                                {% endif %}
+
+                                <div class="product-colors">
+                                    {% for color in product.available_colors.all|slice:":6" %}
+                                    <span class="color-dot" style="background-color: {{ color.hex_code }};"
+                                        title="{{ color.name }}" data-color-slug="{{ color.slug }}"
+                                        data-product-id="{{ product.id }}"></span>
+                                    {% endfor %}
+                                    {% if product.available_colors.count > 6 %}
+                                    <span class="more-colors">+{{ product.available_colors.count|add:"-6" }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="product-pricing">
+                                    {% if product.sale_price %}
+                                    <span class="price-original">S/ {{ product.starting_price }}</span>
+                                    <span class="price-current">S/ {{ product.sale_price }}</span>
+                                    {% else %}
+                                    <span class="price-current">Desde S/ {{ product.starting_price }}</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="product-actions">
+                                    <a href="{% url 'shop:product_detail' category.slug subcategory.slug product.slug %}"
+                                        class="btn-customize">
+                                        Personalizar
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                        {% empty %}
+                        <div class="no-products">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No hay productos disponibles</h3>
+                            <p>No encontramos productos que coincidan con tus filtros.</p>
+                            <a href="{% url 'shop:clothing_subcategory' category.slug subcategory.slug %}"
+                                class="btn-customize">Ver todos los productos</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h4>Envío Rápido</h4>
+                    <p>Entrega en 3-5 días hábiles</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-paint-brush"></i>
+                    <h4>Diseño Gratis</h4>
+                    <p>Te ayudamos con tu diseño</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-undo"></i>
+                    <h4>Garantía</h4>
+                    <p>100% satisfacción garantizada</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-headset"></i>
+                    <h4>Soporte</h4>
+                    <p>Atención por WhatsApp</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Mobile Filter Button -->
+<button type="button" class="mobile-filter-btn" id="mobile-filter-toggle">
+    <i class="fas fa-filter"></i> Filtros
+</button>
+
+<!-- Mobile Filter Overlay -->
+<div class="filter-overlay" id="filter-overlay"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ===== MANEJO DE COLOR SWATCHES =====
+        // ===== MANEJO DE COLOR SWATCHES CON CLIC =====
+        document.querySelectorAll('.color-dot').forEach(function(dot) {
+            dot.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const colorSlug = this.getAttribute('data-color-slug');
+                const productCard = this.closest('.product-card');
+                
+                if (!productCard) return;
+                
+                // 1. Actualizar estado activo del color
+                productCard.querySelectorAll('.color-dot').forEach(d => {
+                    d.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 2. Cambiar imagen (si tienes imágenes por color)
+                const imageWrapper = productCard.querySelector('.product-image-wrapper');
+                if (!imageWrapper) return;
+                
+                // Ocultar todas las imágenes de color
+                const allColorImages = imageWrapper.querySelectorAll('.product-image[data-color-slug]');
+                allColorImages.forEach(img => {
+                    img.style.opacity = '0';
+                    img.style.pointerEvents = 'none';
+                });
+                
+                // Mostrar imagen del color seleccionado
+                const colorImage = imageWrapper.querySelector(`.product-image[data-color-slug="${colorSlug}"]`);
+                const primaryImage = imageWrapper.querySelector('.product-image.primary');
+                
+                if (colorImage) {
+                    // Hay imagen específica para este color
+                    colorImage.style.opacity = '1';
+                    colorImage.style.pointerEvents = 'auto';
+                    if (primaryImage) primaryImage.style.opacity = '0';
+                } else {
+                    // No hay imagen específica, mostrar la principal
+                    if (primaryImage) {
+                        primaryImage.style.opacity = '1';
+                        primaryImage.style.pointerEvents = 'auto';
+                    }
+                }
+            });
+            
+            // Soporte para teclado (accesibilidad)
+            dot.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+    });
+
+    // Prevenir navegación al hacer clic en color dot
+    document.querySelectorAll('.product-image-wrapper').forEach(wrapper => {
+        wrapper.addEventListener('click', function(e) {
+            if (e.target.closest('.color-dot')) {
+                e.preventDefault();
+            }
+        });
+    });
+        // Toggle filter sections
+        document.querySelectorAll('.filter-title').forEach(function (title) {
+            title.addEventListener('click', function () {
+                const target = this.getAttribute('data-toggle');
+                const content = document.getElementById('filter-' + target);
+                const icon = this.querySelector('i');
+
+                if (content) {
+                    content.classList.toggle('collapsed');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                }
+            });
+        });
+
+        // Price presets
+        document.querySelectorAll('.price-preset').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const minInput = document.querySelector('input[name="price_min"]');
+                const maxInput = document.querySelector('input[name="price_max"]');
+
+                minInput.value = this.getAttribute('data-min');
+                maxInput.value = this.getAttribute('data-max');
+
+                document.querySelectorAll('.price-preset').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Mobile filter toggle
+        const mobileFilterBtn = document.getElementById('mobile-filter-toggle');
+        const filterSidebar = document.querySelector('.filter-sidebar');
+        const filterOverlay = document.getElementById('filter-overlay');
+
+        if (mobileFilterBtn) {
+            mobileFilterBtn.addEventListener('click', function () {
+                filterSidebar.classList.toggle('open');
+                filterOverlay.classList.toggle('active');
+            });
+        }
+
+        if (filterOverlay) {
+            filterOverlay.addEventListener('click', function () {
+                filterSidebar.classList.remove('open');
+                filterOverlay.classList.remove('active');
+            });
+        }
+
+        // View toggle
+        document.querySelectorAll('.view-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const view = this.getAttribute('data-view');
+                const container = document.getElementById('products-container');
+
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                container.classList.remove('grid-view', 'list-view');
+                container.classList.add(view + '-view');
+            });
+        });
+    });
+
+    function updateSort(value) {
+        const url = new URL(window.location);
+        url.searchParams.set('sort', value);
+        window.location = url;
+    }
+</script>
+{% endblock %}
