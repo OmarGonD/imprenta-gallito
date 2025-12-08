@@ -525,42 +525,45 @@ def clothing_category(request):
 from django.shortcuts import render, get_object_or_404
 from .models import Subcategory, Product # Asume que también tienes un modelo Product
 
+# views.py → clothing_subcategory
+from django.shortcuts import render, get_object_or_404
+from .models import Product, Category, Subcategory
+
 def clothing_subcategory(request, category_slug, subcategory_slug):
-    """
-    Muestra los productos que pertenecen a una subcategoría específica,
-    validando que la subcategoría pertenezca a la categoría dada en la URL.
-    """
-    print(f"🔍 Vista ejecutada: {category_slug}/{subcategory_slug}")
-    # 1. Recuperar la Subcategoría o lanzar 404 (No Subcategory matches the given query)
-    #    Aquí es donde la combinación de slugs debe ser correcta.
-    #    'category__slug' filtra a través de la relación de clave foránea.
-    try:
-        subcategory = get_object_or_404(
-            Subcategory, 
-            slug=subcategory_slug,           # Ej: 'polos'
-            category__slug=category_slug     # Ej: 'ropa-bolsos'
-        )
-    except Exception as e:
-        # Aunque get_object_or_404 debería manejarlo, este bloque es para depuración
-        print(f"Error al buscar subcategoría: {e}")
-        # Lanza el 404 si no se encuentra
-        raise
-        
-    # 2. Obtener los Productos relacionados
-    #    Asumiendo que tu modelo Product tiene una ForeignKey a Subcategory
-    #    llamada 'subcategory' o que usas el related_name
-    products = Product.objects.filter(subcategory=subcategory,status='active')
+    category = get_object_or_404(Category, slug=category_slug)
+    subcategory = get_object_or_404(Subcategory, slug=subcategory_slug, category=category)
+    
+    products = Product.objects.filter(
+        category=category,
+        subcategory=subcategory,
+        status='active'
+    ).prefetch_related('available_colors')
 
-    # 3. Preparar el Contexto y Renderizar
+    # AÑADE ESTO: Preparar imágenes por producto y color
+    products_with_images = []
+    for product in products:
+        colors_data = {}
+        for color in product.available_colors.all():
+            # Reutiliza tu API lógica (sin hacer request HTTP)
+            image_obj = product.images.filter(color=color).first()  # si existe
+            image_url = image_obj.image_url if image_obj else product.base_image_url
+            
+            colors_data[color.slug] = {
+                'image': image_url or product.base_image_url,
+                'is_primary': image_obj.is_primary if image_obj else True
+            }
+        products_with_images.append({
+            'product': product,
+            'images_by_color': colors_data
+        })
+
     context = {
-        'category': subcategory.category,
+        'category': category,
         'subcategory': subcategory,
-        'products': products,
-        # Puedes añadir los slugs al contexto por si los necesitas en la plantilla
-        'current_category_slug': category_slug, 
-        'current_subcategory_slug': subcategory_slug,
+        'products_with_images': products_with_images,  # ← Este es el nuevo contexto
+        'products': products,  # mantener compatibilidad si usas en otros lados
+        # ... resto del contexto
     }
-
     return render(request, 'shop/clothing_subcategory.html', context)
 
 
