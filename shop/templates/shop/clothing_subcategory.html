@@ -84,11 +84,17 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             e.stopPropagation();
 
+            const productCard = this.closest('.product-card');
             const colorSlug = this.dataset.colorSlug;
-            const productSlug = this.closest('.product-card').dataset.productSlug;
+            const productSlug = productCard.dataset.productSlug;
             const img = document.getElementById('img-' + productSlug);
+            
+            // Elementos que deben actualizar su URL
+            const imageLink = productCard.querySelector('a.product-image-wrapper');
+            const customizeBtn = productCard.querySelector('.btn-customize');
 
-            if (!img || !productSlug || !colorSlug) return;
+
+            if (!img || !productSlug || !colorSlug || !imageLink || !customizeBtn) return;
 
             // 1. Cambiar swatch activo
             this.closest('.product-colors').querySelectorAll('.color-dot').forEach(d => {
@@ -96,12 +102,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             this.classList.add('active');
 
-            // 2. Llamar a tu API existente (la misma que usas en el detalle)
+            // 2. Actualizar la URL de la imagen y el botón 'Personalizar' (sin recargar)
+            [imageLink, customizeBtn].forEach(link => {
+                const url = new URL(link.href);
+                url.searchParams.set('color', colorSlug);
+                link.href = url.toString();
+            });
+
+            // 3. Cambiar imagen (tu API ya funciona perfecto)
             fetch(`/api/product/${productSlug}/colors/?color=${colorSlug}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.image) {
-                        // Animación suave
                         img.style.opacity = '0.4';
                         setTimeout(() => {
                             img.src = data.image;
@@ -110,9 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .catch(err => {
-                    console.warn('No hay imagen para este color, se mantiene la base', err);
-                    // Opcional: volver a imagen base
-                    img.src = img.dataset.baseUrl;
+                    console.warn('Sin imagen para este color');
                 });
         });
     });
