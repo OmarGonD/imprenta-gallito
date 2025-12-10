@@ -14,124 +14,84 @@ from marketing.models import Cupons
 from decimal import Decimal
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 
+@require_POST
 def add_to_cart(request, product_slug):
-    print("=" * 60)
-    print("🚀 add_to_cart iniciado")
-    print(f"Method: {request.method}")
-    print(f"Product slug: {product_slug}")
+    """Versión simplificada sin logging excesivo"""
     try:
-        if request.method == 'POST':
-            print("✅ Es POST")
-            print("\n📦 POST data:")
-            for key, value in request.POST.items():
-                print(f"   {key}: '{value}'")
-            product = get_object_or_404(Product, slug=product_slug)
-            print(f"✅ Producto encontrado: {product.name}")
-            quantity = int(request.POST.get('quantity', 1))
-            print(f"✅ Cantidad: {quantity}")
-            uploaded_file = request.FILES.get('uploaded_file')
-            
-            # ⭐ NUEVOS: Obtener color y talla
-            color = request.POST.get('color', '').strip()
-            size = request.POST.get('size', '').strip()
-            print(f"✅ Color recibido: '{color}'")
-            print(f"✅ Size recibido: '{size}'")
-            color_image_url = request.POST.get('color_image_url', '').strip()
-            # Get or create cart (TU LÓGICA EXISTENTE - NO CAMBIAR)
-            cart_id = request.COOKIES.get('cart_id')
-            print(f"🍪 Cart ID de cookie: {cart_id}")
-            if cart_id:
-                try:
-                    cart = Cart.objects.get(id=cart_id)
-                    print(f"✅ Cart encontrado: {cart.id}")
-                except Cart.DoesNotExist:
-                    print("⚠️ Cart no existe, creando nuevo...")
-                    cart = Cart.objects.create()
-                    print(f"✅ Nuevo cart creado: {cart.id}")
-            else:
-                print("⚠️ No hay cart_id, creando nuevo...")
-                cart = Cart.objects.create()
-                print(f"✅ Nuevo cart creado: {cart.id}")
-
-            # ⭐ MODIFICADO: Buscar item con mismo producto, color y talla
-            print("\n🔄 Intentando crear/obtener CartItem...")
-            from cart.models import CartItem
-            fields = [f.name for f in CartItem._meta.get_fields()]
-            print(f"Campos disponibles en CartItem: {fields}")
-
-            if 'color' not in fields:
-                print("❌ ERROR: CartItem NO tiene campo 'color'")
-                return JsonResponse({
-                    'success': False,
-                    'error': 'CartItem no tiene campo color. Ejecuta: python manage.py makemigrations && python manage.py migrate'
-                }, status=500)
-
-            try:
-                cart_item = CartItem.objects.get(
-                    cart=cart,
-                    product=product,
-                    color=color if color else None,
-                    size=size if size else None
-                )
-                # Si existe, sumar cantidad
-                cart_item.quantity += quantity
+        # Obtener datos
+        color_slug = request.POST.get('color_slug', '').strip()
+        size_slug = request.POST.get('size_slug', '').strip()
+        quantity = int(request.POST.get('quantity', 1))
+        uploaded_file = request.FILES.get('uploaded_file')
+        color_image_url = request.POST.get('color_image_url', '').strip()
+        
+        # Validaciones
+        if not color_slug or not size_slug:
+            return JsonResponse({
+                'success': False,
+                'error': 'Color y talla son requeridos'
+            }, status=400)
+        
+        # Obtener producto
+        product = get_object_or_404(Product, slug=product_slug)
+        
+        # Obtener o crear carrito
+        cart_id = request.COOKIES.get('cart_id')
+        if cart_id:
+            cart, _ = Cart.objects.get_or_create(id=cart_id)
+        else:
+            cart = Cart.objects.create()
+        
+        # Buscar o crear item
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            color=color_slug,
+            size=size_slug,
+            defaults={
+                'quantity': quantity,
+                'color_image_url': color_image_url
+            }
+        )
+        
+        # Si ya existía, sumar cantidad
+        if not created:
+            cart_item.quantity += quantity
+            if color_image_url:
                 cart_item.color_image_url = color_image_url
-                created = False
-                print(f"✅ CartItem existente actualizado")
-            except CartItem.DoesNotExist:
-                # Si no existe, crear nuevo
-                cart_item = CartItem.objects.create(
-                    cart=cart,
-                    product=product,
-                    color=color if color else None,
-                    size=size if size else None,
-                    quantity=quantity,
-                    color_image_url=color_image_url
-                )
-                created = True
-                print(f"✅ Nuevo CartItem creado: {cart_item.id}")
-            
-            # Manejar archivo (TU LÓGICA EXISTENTE)
-            if uploaded_file:
-                cart_item.file_a = uploaded_file
-                print(f"✅ Archivo adjuntado")
-            
-            cart_item.save()
-            print(f"💾 CartItem guardado - Color: '{cart_item.color}', Size: '{cart_item.size}'")
-
-            print("=" * 60)
-
-            # Respuesta mejorada
-            response = JsonResponse({
-                'success': True, 
-                'message': 'Producto agregado al carrito',
-                'product_name': product.name,
-                'color': color if color else 'N/A',
-                'size': size if size else 'N/A',
-                'quantity': quantity
-            })
-            response.set_cookie('cart_id', cart.id)
-            return response
+        
+        # Agregar archivo si existe
+        if uploaded_file:
+            cart_item.file_a = uploaded_file
+        
+        cart_item.save()
+        
+        # Respuesta
+        response = JsonResponse({
+            'success': True,
+            'message': f'{product.name} agregado al carrito',
+            'item': {
+                'product': product.name,
+                'color': color_slug,
+                'size': size_slug,
+                'quantity': cart_item.quantity
+            },
+            'cart_count': cart.cartitem_set.count(),
+            'cart_url': '/carrito-de-compras/'
+        })
+        
+        response.set_cookie('cart_id', cart.id, max_age=60*60*24*30)
+        return response
         
     except Exception as e:
-        print("=" * 60)
-        print("❌ ERROR CAPTURADO:")
-        print(f"Tipo: {type(e).__name__}")
-        print(f"Mensaje: {str(e)}")
-        import traceback
-        print("\nTraceback completo:")
-        traceback.print_exc()
-        print("=" * 60)
-        
         return JsonResponse({
             'success': False,
-            'error': f'{type(e).__name__}: {str(e)}'
+            'error': str(e)
         }, status=500)
-
-    return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
 
 def full_remove(request, cart_item_id):
     cart_item = CartItem.objects.get(id=cart_item_id)

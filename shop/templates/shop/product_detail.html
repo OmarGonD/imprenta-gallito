@@ -34,6 +34,36 @@
     transform: scale(1.01);
 }
 
+/* File preview container */
+.file-preview-box {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.file-preview-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #E5E7EB;
+}
+
+.file-icon-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #E5E7EB;
+}
+
 /* Tabla de tiers - highlight fila actual */
 .tier-row-active {
     background-color: #EFF6FF;
@@ -190,150 +220,129 @@
 
             <form id="productForm" method="POST" action="#" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" name="product_slug" value="{{ product.slug }}">
-                <input type="hidden" name="category_slug" value="{{ category.slug }}">
-                <input type="hidden" name="quantity_tier" value="custom">
-                <input type="hidden" name="custom_quantity" id="custom_quantity_hidden">
-                <input type="hidden" name="design_choice" id="design_choice_hidden" value="">
-                
-                <!-- Input de cantidad -->
+
+                <!-- Quantity Selector -->
                 <div class="mb-6">
-                    <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
-                        Cantidad
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Cantidad <span class="text-red-500">*</span>
                     </label>
-                    <input 
-                        type="number" 
-                        id="quantity" 
-                        name="quantity"
-                        min="1" 
-                        max="999999"
-                        value="100"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
-                    >
-                    <p class="text-sm text-gray-500 mt-1">Ingresa la cantidad exacta que necesitas</p>
+                    <div class="flex items-center space-x-3">
+                        <button 
+                            type="button" 
+                            id="qty-decrease" 
+                            class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold"
+                        >
+                            −
+                        </button>
+                        <input 
+                            type="number" 
+                            id="quantity" 
+                            name="quantity" 
+                            value="10" 
+                            min="1" 
+                            max="10000" 
+                            class="w-20 text-center border-2 border-gray-300 rounded-lg py-2 font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        >
+                        <button 
+                            type="button" 
+                            id="qty-increase" 
+                            class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Mínimo 10 unidades</p>
                 </div>
 
-                <!-- Card de precio actual -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Price Display -->
+                <div id="pricing-display" class="mb-6 p-5 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl">
+                    <div class="flex items-baseline justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Precio unitario</p>
-                            <p class="text-2xl font-bold text-gray-900">
-                                S/ <span id="unit-price">1.68</span>
-                            </p>
+                            <p class="text-3xl font-bold text-blue-600" id="unit-price">S/ 0.00</p>
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 mb-1">Descuento aplicado</p>
-                            <p class="text-2xl font-bold text-green-600">
-                                <span id="discount-percent">33</span>%
-                            </p>
-                        </div>
-                        <div>
+                        <div class="text-right">
                             <p class="text-sm text-gray-600 mb-1">Total</p>
-                            <p class="text-3xl font-bold text-blue-600">
-                                S/ <span id="total-price">252.00</span>
-                            </p>
+                            <p class="text-2xl font-bold text-gray-900" id="total-price">S/ 0.00</p>
                         </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-blue-200">
+                        <p class="text-xs text-gray-600">
+                            <span class="font-medium">Descuento por volumen:</span>
+                            <span id="discount-badge" class="ml-2 px-2 py-1 bg-green-100 text-green-700 rounded-full font-semibold">0%</span>
+                        </p>
                     </div>
                 </div>
 
-                <!-- Tabla de tiers -->
+                <!-- Pricing Tiers Table -->
+                {% if pricing_tiers %}
                 <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                        ⚡ Descuentos por volumen
-                    </h3>
-                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-gray-700">Descuentos por volumen</h3>
+                        <button 
+                            type="button" 
+                            id="toggle-tiers-btn"
+                            class="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center"
+                        >
+                            Ver tabla
+                            <svg class="w-4 h-4 ml-1 transition-transform" id="tiers-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div id="tiers-table" class="hidden overflow-hidden rounded-lg border border-gray-200 shadow-sm">
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Cantidad</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Precio/unidad</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Descuento</th>
-                                    <th class="px-4 py-3 text-left font-medium text-gray-700">Ahorro</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Cantidad</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Precio c/u</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase">Descuento</th>
                                 </tr>
                             </thead>
-                            <tbody id="tiers-table">
-                                {% if pricing_tiers %}
-                                    {% for tier in pricing_tiers %}
-                                    <tr class="tier-row border-b border-gray-200 hover:bg-gray-50 transition-colors" 
-                                        data-min="{{ tier.min_quantity }}" 
-                                        data-max="{{ tier.max_quantity }}">
-                                        
-                                        <td class="px-4 py-3">
-                                            {% comment %} 
-                                                Usamos min_quantity y max_quantity para la condición
-                                                y mostramos '+' si es la cantidad máxima de 999999
-                                            {% endcomment %}
-                                            {% if tier.max_quantity == 999999 %}
-                                                <span class="font-medium text-gray-900">{{ tier.min_quantity }}+</span>
-                                            {% else %}
-                                                <span class="font-medium text-gray-900">{{ tier.min_quantity }}-{{ tier.max_quantity }}</span>
-                                            {% endif %}
-                                        </td>
-                                        
-                                        <td class="px-4 py-3">
-                                            <span class="font-semibold text-gray-900">S/ {{ tier.unit_price|floatformat:2 }}</span>
-                                        </td>
-                                        
-                                        <td class="px-4 py-3">
-                                            {% if tier.discount_percent > 0 %}
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                                                    {{ tier.discount_percent }}%
-                                                </span>
-                                            {% else %}
-                                                <span class="text-gray-400">-</span>
-                                            {% endif %}
-                                        </td>
-                                        
-                                        <td class="px-4 py-3">
-                                            {% if tier.savings > 0 %}
-                                                <span class="text-green-600 font-medium">S/ {{ tier.savings|floatformat:2 }}</span>
-                                            {% else %}
-                                                <span class="text-gray-400">-</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr>
-                                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">
-                                            No hay tiers de precio disponibles para este producto
-                                        </td>
-                                    </tr>
-                                {% endif %}
+                            <tbody class="bg-white divide-y divide-gray-200" id="tiers-tbody">
+                                {% for tier in pricing_tiers %}
+                                <tr class="hover:bg-gray-50 transition-colors" data-tier-min="{{ tier.min_quantity }}">
+                                    <td class="px-4 py-3 text-gray-900 font-medium">
+                                        {{ tier.min_quantity }}{% if tier.max_quantity %} - {{ tier.max_quantity }}{% else %}+{% endif %}
+                                    </td>
+                                    <td class="px-4 py-3 text-gray-700">S/ {{ tier.price_per_unit|floatformat:2 }}</td>
+                                    <td class="px-4 py-3">
+                                        {% if tier.discount_percentage > 0 %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            -{{ tier.discount_percentage }}%
+                                        </span>
+                                        {% else %}
+                                        <span class="text-gray-400 text-xs">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
+                {% endif %}
 
-                <!-- Sugerencia inteligente -->
-                <div id="suggestion-box" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 hidden">
-                    <p class="text-sm text-yellow-800">
-                        💡 <span id="suggestion-text"></span>
-                    </p>
-                </div>
-
-                <!-- ============================================ -->
-                <!-- NUEVA SECCIÓN: Elegir Diseño -->
-                <!-- ============================================ -->
+                <!-- Design Choice Cards (solo para tarjetas de presentación) -->
                 {% if category.slug == 'tarjetas-presentacion' %}
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
-                        ¿Cómo quieres diseñar tu tarjeta? <span class="text-red-500">*</span>
+                        ¿Cómo quieres tu diseño? <span class="text-red-500">*</span>
                     </label>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Opción 1: Elegir de galería -->
-                        <button type="button" class="design-choice-card text-left" id="choice-gallery" data-choice="gallery">
+                        <!-- Opción 1: Elegir template -->
+                        <button type="button" class="design-choice-card text-left" id="choice-template" data-choice="template">
                             <div class="design-choice-icon">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                             </div>
-                            <h4 class="font-bold text-gray-900 text-lg mb-1">Elegir una plantilla</h4>
-                            <p class="text-gray-500 text-sm mb-3">Más de 450 diseños profesionales para personalizar con tus datos</p>
-                            <span class="inline-flex items-center text-blue-600 font-semibold text-sm group-hover:underline">
-                                Ver plantillas
+                            <h4 class="font-bold text-gray-900 text-lg mb-1">Elegir template profesional</h4>
+                            <p class="text-gray-500 text-sm mb-3">Personaliza uno de nuestros +450 diseños</p>
+                            <span class="inline-flex items-center text-blue-600 font-semibold text-sm">
+                                Ver galería
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                 </svg>
@@ -374,7 +383,7 @@
                 </div>
                 {% endif %}
 
-                <!-- File Upload Section (Solo si NO es tarjetas de presentación o si selecciona "upload") -->
+                <!-- File Upload Section -->
                 <div id="file-upload-section" class="upload-zone p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 mb-6 {% if category.slug == 'tarjetas-presentacion' %}hidden{% endif %}">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
                         Sube tu diseño <span class="text-red-500">*</span>
@@ -389,22 +398,52 @@
                         {% if category.slug != 'tarjetas-presentacion' %}required{% endif %}
                     >
                     
-                    <label 
-                        for="file-upload-input"
-                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
-                    >
-                        <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                        </svg>
-                        Examinar archivos
-                    </label>
+                    <!-- Upload Button (mostrado inicialmente) -->
+                    <div id="upload-button-container">
+                        <label 
+                            for="file-upload-input"
+                            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+                        >
+                            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                            </svg>
+                            Examinar archivos
+                        </label>
+                        
+                        <p class="text-xs text-gray-500 mt-2">
+                            Formatos: JPG, PNG, PDF, AI, PSD, SVG • Máx: 10MB
+                        </p>
+                    </div>
                     
-                    <p class="text-xs text-gray-500 mt-2">
-                        Formatos: JPG, PNG, PDF, AI, PSD, SVG • Máx: 10MB
-                    </p>
-                    
-                    <div id="file-preview-container" class="mt-4">
-                        <p class="text-sm text-gray-400">Ningún archivo seleccionado</p>
+                    <!-- File Preview Container (oculto inicialmente) -->
+                    <div id="file-preview-container" class="hidden">
+                        <div class="file-preview-box">
+                            <!-- Imagen preview o ícono de archivo -->
+                            <div id="preview-image-container"></div>
+                            
+                            <!-- Información del archivo -->
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900" id="file-name"></p>
+                                <p class="text-sm text-gray-500 mt-1" id="file-size"></p>
+                                <div class="mt-2 flex items-center">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Archivo cargado
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón para cambiar archivo -->
+                            <button 
+                                type="button"
+                                id="change-file-btn"
+                                class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                            >
+                                Cambiar archivo
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -490,7 +529,6 @@
 
 <script>
     // 1. FUNCIONES Y VARIABLES DE UTILIDAD (CRÍTICAS)
-    // Se mantiene getCookie aquí para el manejo de CSRF/AJAX.
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -505,6 +543,211 @@
         }
         return cookieValue;
     }
+
+    // 2. MANEJO DE SUBIDA DE ARCHIVOS
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('file-upload-input');
+        const uploadButtonContainer = document.getElementById('upload-button-container');
+        const filePreviewContainer = document.getElementById('file-preview-container');
+        const previewImageContainer = document.getElementById('preview-image-container');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        const changeFileBtn = document.getElementById('change-file-btn');
+        const uploadZone = document.getElementById('file-upload-section');
+        const addToCartBtn = document.getElementById('add-to-cart');
+        const fileRequiredMessage = document.getElementById('file-required-message');
+
+        // Variable para saber si ya hay un archivo seleccionado
+        let fileSelected = false;
+        let isProcessingFile = false; // Flag para prevenir procesamiento múltiple
+
+        // Función para formatear el tamaño del archivo
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Función para validar el archivo
+        function validateFile(file) {
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 
+                                 'application/pdf', 'image/svg+xml', 
+                                 'application/postscript', // .ai
+                                 'image/vnd.adobe.photoshop']; // .psd
+            
+            if (file.size > maxSize) {
+                alert('El archivo es demasiado grande. Tamaño máximo: 10MB');
+                return false;
+            }
+
+            // Verificar extensión también (en caso de que el tipo MIME no sea reconocido)
+            const extension = file.name.split('.').pop().toLowerCase();
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'svg', 'ai', 'psd'];
+            
+            if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(extension)) {
+                alert('Formato de archivo no permitido. Formatos aceptados: JPG, PNG, PDF, AI, PSD, SVG');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Función para mostrar el preview del archivo
+        function showFilePreview(file) {
+            // Prevenir procesamiento múltiple
+            if (isProcessingFile) {
+                console.log('⚠️ Ya se está procesando un archivo, ignorando...');
+                return;
+            }
+            
+            isProcessingFile = true;
+            
+            if (!validateFile(file)) {
+                fileInput.value = '';
+                isProcessingFile = false;
+                return;
+            }
+
+            // Actualizar nombre y tamaño
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+
+            // Crear preview visual - limpiar completamente el contenedor
+            previewImageContainer.innerHTML = '';
+            
+            if (file.type.startsWith('image/')) {
+                // Si es imagen, mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Verificar que el contenedor esté vacío antes de agregar
+                    if (previewImageContainer.children.length === 0) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'file-preview-image';
+                        previewImageContainer.appendChild(img);
+                    }
+                    isProcessingFile = false;
+                };
+                reader.onerror = function() {
+                    isProcessingFile = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Si es PDF u otro archivo, mostrar ícono
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'file-icon-container';
+                
+                let iconSvg = '';
+                if (file.type === 'application/pdf') {
+                    iconSvg = `
+                        <svg class="w-12 h-12 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                        </svg>
+                    `;
+                } else {
+                    iconSvg = `
+                        <svg class="w-12 h-12 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                        </svg>
+                    `;
+                }
+                
+                iconContainer.innerHTML = iconSvg;
+                previewImageContainer.appendChild(iconContainer);
+                isProcessingFile = false; // Reset flag para archivos no-imagen
+            }
+
+            // Mostrar preview, ocultar botón de subida
+            uploadButtonContainer.classList.add('hidden');
+            filePreviewContainer.classList.remove('hidden');
+            
+            // Marcar que hay archivo seleccionado
+            fileSelected = true;
+            updateAddToCartButton();
+        }
+
+        // Evento cuando se selecciona un archivo
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                showFilePreview(file);
+            }
+        });
+
+        // Botón para cambiar archivo
+        changeFileBtn.addEventListener('click', function() {
+            isProcessingFile = false; // Reset flag antes de seleccionar nuevo archivo
+            fileInput.value = ''; // Limpiar input para permitir seleccionar el mismo archivo
+            fileInput.click();
+        });
+
+        // Drag and drop - solo visual, el archivo se maneja por el evento change
+        uploadZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // Asignar archivos al input - esto dispara automáticamente el evento change
+                fileInput.files = files;
+            }
+        });
+
+        // Función para habilitar/deshabilitar botón de agregar al carrito
+        function updateAddToCartButton() {
+            if (fileSelected) {
+                addToCartBtn.disabled = false;
+                addToCartBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                addToCartBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+                fileRequiredMessage.classList.add('hidden');
+            } else {
+                addToCartBtn.disabled = true;
+                addToCartBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                addToCartBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+                fileRequiredMessage.classList.remove('hidden');
+            }
+        }
+
+        // Para tarjetas de presentación - manejo de opciones de diseño
+        const choiceTemplate = document.getElementById('choice-template');
+        const choiceUpload = document.getElementById('choice-upload');
+        const fileUploadSection = document.getElementById('file-upload-section');
+
+        if (choiceTemplate && choiceUpload) {
+            choiceTemplate.addEventListener('click', function() {
+                // Redirigir a galería de templates
+                window.location.href = "{% url 'shop:template_gallery' category.slug product.slug %}";
+            });
+
+            choiceUpload.addEventListener('click', function() {
+                // Seleccionar esta opción
+                choiceUpload.classList.add('selected');
+                choiceTemplate.classList.remove('selected');
+                
+                // Mostrar sección de upload
+                fileUploadSection.classList.remove('hidden');
+                
+                // Scroll suave hacia la sección
+                fileUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
+
+        // Inicializar estado del botón
+        updateAddToCartButton();
+    });
 </script>
 
 <script id="product-tiers-data" type="application/json">
@@ -514,7 +757,10 @@
 <div id="product-data" 
      style="display: none;"
      data-base-price="{{ safe_starting_price|floatformat:2|unlocalize }}"
-     data-tiers-id="product-tiers-data">
+     data-tiers-id="product-tiers-data"
+     data-category-slug="{{ category.slug }}"
+     data-product-slug="{{ product.slug }}"
+     data-add-to-cart-url="{% url 'shop:add_product_to_cart' %}">
 </div>
 
 <script src="{% static 'js/product_logic.js' %}"></script>

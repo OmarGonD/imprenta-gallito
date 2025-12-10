@@ -600,7 +600,7 @@ def add_clothing_to_cart(request):
         
         # Obtener color y talla
         color = get_object_or_404(ProductColor, slug=color_slug)
-        size = get_object_or_404(ProductSize, slug=size_slug)
+        size = get_object_or_404(ProductSize, name=size_slug)
         
         # Verificar que el color y talla estén disponibles para este producto
         if color not in product.available_colors.all():
@@ -1738,6 +1738,7 @@ def get_product_colors(request, product_slug):
 # =============================================================================
 # API: Agregar producto al carrito (genérico para todos los tipos)
 # =============================================================================
+
 @csrf_exempt
 def add_to_cart_api(request):
     """
@@ -1762,21 +1763,30 @@ def add_to_cart_api(request):
         if is_clothing:
             # Producto de ropa - requiere color y talla
             color_slug = request.POST.get('color_slug')
-            size_slug = request.POST.get('size_slug')
+            size_name = request.POST.get('size_slug')
             
-            if not all([color_slug, size_slug]):
+            if not all([color_slug, size_name]):
                 return JsonResponse({
                     'error': 'Productos de ropa requieren color y talla'
                 }, status=400)
             
-            color = get_object_or_404(ProductColor, slug=color_slug)
-            size = get_object_or_404(ProductSize, slug=size_slug)
+            color_obj = get_object_or_404(ProductColor, slug=color_slug)
+            size_obj = get_object_or_404(ProductSize, name=size_name)
             
-            if color not in product.available_colors.all():
+            if color_obj not in product.available_colors.all():
                 return JsonResponse({'error': 'Color no disponible'}, status=400)
             
-            if size not in product.available_sizes.all():
+            if size_obj not in product.available_sizes.all():
                 return JsonResponse({'error': 'Talla no disponible'}, status=400)
+            
+            # Obtener la imagen del color
+            # Buscar ProductImage para este producto y color
+            product_image = ProductImage.objects.filter(
+                product=product,
+                color=color_obj
+            ).first()
+            
+            color_image_url = product_image.image_url if product_image else product.base_image_url
             
             # Obtener o crear carrito
             cart_id = request.COOKIES.get('cart_id')
@@ -1789,36 +1799,41 @@ def add_to_cart_api(request):
             else:
                 cart = Cart.objects.create()
             
-            # Buscar o crear CartItem
+            # Buscar CartItem existente con mismo producto, color y talla
             cart_item = CartItem.objects.filter(
                 cart=cart,
                 product=product,
-                clothing_color=color,
-                clothing_size=size
+                color=color_obj.name,
+                size=size_obj.name
             ).first()
             
             if cart_item:
-                cart_item.clothing_quantity = (cart_item.clothing_quantity or 0) + quantity
+                # Actualizar cantidad del item existente
+                cart_item.quantity = cart_item.quantity + quantity
+                # Actualizar la URL de la imagen del color (por si cambió)
+                cart_item.color_image_url = color_image_url
                 cart_item.save()
             else:
+                # Crear nuevo CartItem
                 cart_item = CartItem.objects.create(
                     cart=cart,
                     product=product,
-                    clothing_color=color,
-                    clothing_size=size,
-                    clothing_quantity=quantity
+                    color=color_obj.name,
+                    size=size_obj.name,
+                    quantity=quantity,
+                    color_image_url=color_image_url  # ✅ Guardar URL de imagen del color
                 )
             
             item_info = {
                 'product_name': product.name,
-                'color': color.name,
-                'size': size.name,
-                'quantity': cart_item.clothing_quantity,
+                'color': color_obj.name,
+                'size': size_obj.name,
+                'quantity': cart_item.quantity,
+                'color_image_url': color_image_url  # Incluir en respuesta
             }
             
         else:
             # Producto de impresión - manejo diferente
-            # (implementar según tus necesidades)
             return JsonResponse({
                 'error': 'Productos de impresión usan un flujo diferente'
             }, status=400)
@@ -1841,9 +1856,12 @@ def add_to_cart_api(request):
         return response
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return JsonResponse({
             'error': f'Error al agregar al carrito: {str(e)}'
         }, status=500)
+
 
 
 # =============================================================================
