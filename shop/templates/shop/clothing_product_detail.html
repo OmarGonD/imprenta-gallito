@@ -258,6 +258,55 @@
     color: #9CA3AF;
     margin-left: 0.25rem;
 }
+
+/* 📁 FILE UPLOAD STYLES */
+.upload-zone {
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #60A5FA;
+    background-color: #EFF6FF;
+}
+
+.upload-zone.dragover {
+    border-color: #3B82F6;
+    background-color: #DBEAFE;
+    transform: scale(1.02);
+}
+
+.file-preview-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: linear-gradient(to right, #F9FAFB, #FFFFFF);
+    border: 2px solid #E5E7EB;
+    border-radius: 0.75rem;
+}
+
+#preview-image-container {
+    flex-shrink: 0;
+}
+
+.file-preview-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 2px solid #E5E7EB;
+}
+
+.file-icon-container {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F3F4F6;
+    border-radius: 0.5rem;
+    border: 2px solid #E5E7EB;
+}
 </style>
 
 <div class="container mx-auto px-4 py-8 max-w-7xl">
@@ -347,8 +396,8 @@
                     <div class="size-buttons-container">
                         {% for size in available_sizes %}
                         <button type="button"
-                                class="size-btn {% if selected_size and size.slug == selected_size.slug %}active{% endif %}"
-                                data-size-slug="{{ size.slug }}"
+                                class="size-btn {% if selected_size and size.name == selected_size.name %}active{% endif %}"
+                                data-size-slug="{{ size.name }}"
                                 data-size-name="{{ size.name }}">
                             {{ size.name }}
                         </button>
@@ -356,7 +405,7 @@
                     </div>
                     {% endif %}
 
-                    <input type="hidden" id="selected-size" name="size" value="{{ selected_size.slug|default:'' }}">
+                    <input type="hidden" id="selected-size" name="size" value="{{ selected_size.name|default:'' }}">
                 </div>
 
                 <!-- Quantity Selector -->
@@ -365,13 +414,13 @@
                         Cantidad <span class="text-red-500">*</span>
                     </label>
                     <div class="flex items-center space-x-3">
-                        <button type="button" id="decrease-qty" 
+                        <button type="button" id="qty-decrease" 
                                 class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors font-bold text-xl">
                             −
                         </button>
                         <input type="number" id="quantity" name="quantity" min="1" value="1" 
                                class="w-20 text-center border-2 border-gray-300 rounded-lg py-2 text-lg font-semibold focus:border-blue-500 focus:outline-none">
-                        <button type="button" id="increase-qty" 
+                        <button type="button" id="qty-increase" 
                                 class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors font-bold text-xl">
                             +
                         </button>
@@ -477,21 +526,75 @@
                 </div>
                 {% endif %}
 
+                <!-- File Upload Section -->
+                <div id="file-upload-section" class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Sube tu diseño <span class="text-red-500">*</span>
+                    </label>
+                    
+                    <!-- Upload Button Container (shown initially) -->
+                    <div id="upload-button-container">
+                        <div class="upload-zone border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-blue-400 transition-colors" 
+                             onclick="document.getElementById('file-upload-input').click()">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <p class="mt-4 text-sm text-gray-600">
+                                <span class="font-semibold text-blue-600">Haz clic para subir</span> o arrastra tu archivo aquí
+                            </p>
+                            <p class="text-xs text-gray-500 mt-2">Formatos: PDF, AI, PSD, JPG, PNG (Max. 10MB)</p>
+                        </div>
+                        <input type="file" id="file-upload-input" name="design_file" class="hidden" accept=".pdf,.ai,.psd,.jpg,.jpeg,.png,.svg,.webp,.gif">
+                    </div>
+
+                    <!-- File Preview Container (shown after file is selected) -->
+                    <div id="file-preview-container" class="hidden">
+                        <div class="file-preview-box">
+                            <!-- Imagen o icono preview -->
+                            <div id="preview-image-container"></div>
+                            
+                            <!-- Info del archivo -->
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900" id="file-name">archivo.pdf</p>
+                                <p class="text-sm text-gray-500" id="file-size">2.4 MB</p>
+                                <div class="mt-2">
+                                    <span class="inline-flex items-center text-xs font-medium text-green-600">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Archivo cargado
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón para cambiar archivo -->
+                            <button 
+                                type="button"
+                                id="change-file-btn"
+                                class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                            >
+                                Cambiar archivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Botón agregar al carrito -->
                 <button 
                     type="button"
                     id="add-to-cart"
-                    class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg"
+                    disabled
+                    class="w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-lg cursor-not-allowed transition-all"
                 >
                     🛒 Agregar al carrito
                 </button>
 
                 <!-- Mensaje de validación -->
-                <p id="validation-message" class="text-sm text-orange-600 mt-2 hidden flex items-center">
+                <p id="validation-message" class="text-sm text-orange-600 mt-2 flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                     </svg>
-                    Por favor selecciona color y talla
+                    Debes subir tu diseño para continuar
                 </p>
             </form>
 
@@ -611,6 +714,13 @@ document.addEventListener('DOMContentLoaded', function() {
             originalSelectColor(colorSlug, colorName);
         }
         
+        // 🆕 Actualizar el input hidden de color
+        const colorInput = document.getElementById('selected-color');
+        if (colorInput) {
+            colorInput.value = colorSlug;
+            console.log('✅ Input hidden de color actualizado:', colorSlug);
+        }
+        
         // Actualizar la imagen del producto
         const productSlug = window.productSlug || '{{ product.slug }}';
         const mainImage = document.getElementById('main-product-image');
@@ -647,6 +757,357 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     console.log('✅ Cambio de imagen por color configurado');
+    
+    // ====================================================================
+    // MANEJO DE SELECCIÓN DE COLORES - CON DEBUGGING
+    // ====================================================================
+    const colorSwatches = document.querySelectorAll('.color-swatch');
+    const selectedColorNameElement = document.getElementById('selected-color-name');
+    const selectedColorInput = document.getElementById('selected-color');
+    
+    console.log('🔍 DEBUG - Colores:');
+    console.log('  - Color swatches encontrados:', colorSwatches.length);
+    console.log('  - Elemento de nombre:', selectedColorNameElement);
+    console.log('  - Input hidden:', selectedColorInput);
+    console.log('  - Valor inicial del input:', selectedColorInput ? selectedColorInput.value : 'NO EXISTE');
+    
+    if (colorSwatches.length > 0) {
+        colorSwatches.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('🔍 Click en swatch de color');
+                
+                const colorSlug = this.getAttribute('data-color-slug');
+                const colorName = this.getAttribute('data-color-name');
+                
+                console.log('  - Color slug:', colorSlug);
+                console.log('  - Color name:', colorName);
+                
+                // Llamar a la función selectColor (que ya maneja todo)
+                if (typeof window.selectColor === 'function') {
+                    window.selectColor(colorSlug, colorName);
+                } else {
+                    // Fallback manual si selectColor no existe
+                    colorSwatches.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (selectedColorNameElement) {
+                        selectedColorNameElement.textContent = colorName;
+                    }
+                    if (selectedColorInput) {
+                        selectedColorInput.value = colorSlug;
+                    }
+                    window.selectedColorSlug = colorSlug;
+                }
+            });
+        });
+        
+        console.log('✅ Manejo de colores configurado');
+    } else {
+        console.warn('⚠️ No se encontraron color swatches');
+    }
+    
+    // ====================================================================
+    // MANEJO DE SELECCIÓN DE TALLAS - CON DEBUGGING
+    // ====================================================================
+    const sizeButtons = document.querySelectorAll('.size-btn');
+    const selectedSizeNameElement = document.getElementById('selected-size-name');
+    const selectedSizeInput = document.getElementById('selected-size');
+    
+    console.log('🔍 DEBUG - Tallas:');
+    console.log('  - Botones de talla encontrados:', sizeButtons.length);
+    console.log('  - Elemento de nombre:', selectedSizeNameElement);
+    console.log('  - Input hidden:', selectedSizeInput);
+    console.log('  - Valor inicial del input:', selectedSizeInput ? selectedSizeInput.value : 'NO EXISTE');
+    
+    if (sizeButtons.length > 0) {
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('🔍 Click en botón de talla');
+                
+                // Remover clase active de todos los botones
+                sizeButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Agregar clase active al botón clickeado
+                this.classList.add('active');
+                
+                // Obtener datos del botón
+                const sizeName = this.getAttribute('data-size-name');
+                const sizeSlug = this.getAttribute('data-size-slug'); // Ahora contiene el name, no slug
+                
+                console.log('  - Talla nombre:', sizeName);
+                console.log('  - Talla slug (realmente es name):', sizeSlug);
+                console.log('  - ⚠️ NOTA: Usando "name" porque ProductSize no tiene campo slug');
+                
+                // Actualizar el texto visible
+                if (selectedSizeNameElement) {
+                    selectedSizeNameElement.textContent = sizeName;
+                    console.log('  - ✅ Texto actualizado a:', sizeName);
+                }
+                
+                // Actualizar el input hidden
+                if (selectedSizeInput) {
+                    selectedSizeInput.value = sizeSlug;
+                    console.log('  - ✅ Input value actualizado a:', sizeSlug);
+                    console.log('  - Verificación - Input value ahora es:', selectedSizeInput.value);
+                }
+                
+                // Actualizar también window.selectedSize si existe
+                if (typeof window.selectSize === 'function') {
+                    console.log('  - Llamando a window.selectSize()');
+                    window.selectSize(sizeSlug, sizeName);
+                }
+            });
+        });
+        
+        console.log('✅ Manejo de tallas configurado');
+    } else {
+        console.warn('⚠️ No se encontraron botones de talla');
+    }
+    
+    // Verificar estado inicial
+    setTimeout(() => {
+        console.log('🔍 Estado después de 1 segundo:');
+        console.log('  - Input hidden value:', selectedSizeInput ? selectedSizeInput.value : 'NO EXISTE');
+        console.log('  - Text visible:', selectedSizeNameElement ? selectedSizeNameElement.textContent : 'NO EXISTE');
+    }, 1000);
+    
+    // ====================================================================
+    // DEBUGGING DEL BOTÓN AGREGAR AL CARRITO
+    // ====================================================================
+    const addToCartBtn = document.getElementById('add-to-cart');
+    
+    if (addToCartBtn) {
+        // Interceptar el click ANTES de que lo maneje product_logic.js
+        addToCartBtn.addEventListener('click', function(e) {
+            console.log('🛒 ======== CLICK EN AGREGAR AL CARRITO ========');
+            
+            const colorInput = document.getElementById('selected-color');
+            const sizeInput = document.getElementById('selected-size');
+            const quantityInput = document.getElementById('quantity');
+            
+            console.log('📊 Valores en el momento del click:');
+            console.log('  - Color input:', colorInput ? colorInput.value : 'NO EXISTE');
+            console.log('  - Size input:', sizeInput ? sizeInput.value : 'NO EXISTE');
+            console.log('  - Quantity input:', quantityInput ? quantityInput.value : 'NO EXISTE');
+            
+            console.log('🔍 Verificando window variables:');
+            console.log('  - window.selectedColor:', window.selectedColor);
+            console.log('  - window.selectedSize:', window.selectedSize);
+            
+            // Ver si los inputs están vacíos
+            if (!colorInput || !colorInput.value) {
+                console.error('❌ NO HAY COLOR SELECCIONADO');
+            } else {
+                console.log('✅ Color OK:', colorInput.value);
+            }
+            
+            if (!sizeInput || !sizeInput.value) {
+                console.error('❌ NO HAY TALLA SELECCIONADA');
+            } else {
+                console.log('✅ Talla OK:', sizeInput.value);
+            }
+            
+            console.log('========================================');
+        }, true); // true = captura en fase de captura, antes que otros listeners
+        
+        console.log('✅ Debugging de add-to-cart configurado');
+    }
+    
+    // ====================================================================
+    // MANEJO DE SUBIDA DE ARCHIVOS
+    // ====================================================================
+    const fileInput = document.getElementById('file-upload-input');
+    const uploadButtonContainer = document.getElementById('upload-button-container');
+    const filePreviewContainer = document.getElementById('file-preview-container');
+    const previewImageContainer = document.getElementById('preview-image-container');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const changeFileBtn = document.getElementById('change-file-btn');
+    const addToCartBtnRef = document.getElementById('add-to-cart');  // Renombrado para evitar redeclaración
+    const validationMessage = document.getElementById('validation-message');
+    const uploadZone = document.querySelector('.upload-zone');
+    
+    let fileSelected = false;
+    let isProcessingFile = false;
+    
+    console.log('📁 Inicializando sistema de subida de archivos...');
+    
+    // Función para formatear tamaño de archivo
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+    
+    // Función para validar el archivo
+    function validateFile(file) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 
+                             'application/pdf', 'image/svg+xml', 
+                             'application/postscript', // .ai
+                             'image/vnd.adobe.photoshop']; // .psd
+        
+        if (file.size > maxSize) {
+            alert('El archivo es demasiado grande. Tamaño máximo: 10MB');
+            return false;
+        }
+        
+        // Verificar extensión también (en caso de que el tipo MIME no sea reconocido)
+        const extension = file.name.split('.').pop().toLowerCase();
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'svg', 'ai', 'psd'];
+        
+        if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(extension)) {
+            alert('Formato de archivo no permitido. Formatos aceptados: JPG, PNG, PDF, AI, PSD, SVG');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Función para mostrar el preview del archivo
+    function showFilePreview(file) {
+        // Prevenir procesamiento múltiple
+        if (isProcessingFile) {
+            console.log('⚠️ Ya se está procesando un archivo, ignorando...');
+            return;
+        }
+        
+        isProcessingFile = true;
+        
+        if (!validateFile(file)) {
+            fileInput.value = '';
+            isProcessingFile = false;
+            return;
+        }
+        
+        // Actualizar nombre y tamaño
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        
+        // Crear preview visual - limpiar completamente el contenedor
+        previewImageContainer.innerHTML = '';
+        
+        if (file.type.startsWith('image/')) {
+            // Si es imagen, mostrar preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Verificar que el contenedor esté vacío antes de agregar
+                if (previewImageContainer.children.length === 0) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'file-preview-image';
+                    previewImageContainer.appendChild(img);
+                }
+                isProcessingFile = false;
+            };
+            reader.onerror = function() {
+                isProcessingFile = false;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Si es PDF u otro archivo, mostrar ícono
+            const iconContainer = document.createElement('div');
+            iconContainer.className = 'file-icon-container';
+            
+            let iconSvg = '';
+            if (file.type === 'application/pdf') {
+                iconSvg = `
+                    <svg class="w-12 h-12 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                    </svg>
+                `;
+            } else {
+                iconSvg = `
+                    <svg class="w-12 h-12 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                    </svg>
+                `;
+            }
+            
+            iconContainer.innerHTML = iconSvg;
+            previewImageContainer.appendChild(iconContainer);
+            isProcessingFile = false; // Reset flag para archivos no-imagen
+        }
+        
+        // Mostrar preview, ocultar botón de subida
+        uploadButtonContainer.classList.add('hidden');
+        filePreviewContainer.classList.remove('hidden');
+        
+        // Marcar que hay archivo seleccionado
+        fileSelected = true;
+        updateAddToCartButton();
+        
+        console.log('✅ Archivo cargado:', file.name);
+    }
+    
+    // Evento cuando se selecciona un archivo
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                showFilePreview(file);
+            }
+        });
+    }
+    
+    // Botón para cambiar archivo
+    if (changeFileBtn) {
+        changeFileBtn.addEventListener('click', function() {
+            isProcessingFile = false; // Reset flag antes de seleccionar nuevo archivo
+            fileInput.value = ''; // Limpiar input para permitir seleccionar el mismo archivo
+            fileInput.click();
+        });
+    }
+    
+    // Drag and drop - solo visual, el archivo se maneja por el evento change
+    if (uploadZone) {
+        uploadZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        
+        uploadZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+        });
+        
+        uploadZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // Asignar archivos al input - esto dispara automáticamente el evento change
+                fileInput.files = files;
+                // Disparar evento change manualmente
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+    }
+    
+    // Función para habilitar/deshabilitar botón de agregar al carrito
+    function updateAddToCartButton() {
+        if (fileSelected) {
+            addToCartBtnRef.disabled = false;
+            addToCartBtnRef.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            addToCartBtnRef.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer', 'shadow-md', 'hover:shadow-lg');
+            if (validationMessage) validationMessage.classList.add('hidden');
+            console.log('✅ Botón de agregar al carrito HABILITADO');
+        } else {
+            addToCartBtnRef.disabled = true;
+            addToCartBtnRef.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            addToCartBtnRef.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer', 'shadow-md', 'hover:shadow-lg');
+            if (validationMessage) validationMessage.classList.remove('hidden');
+            console.log('⚠️ Botón de agregar al carrito DESHABILITADO - falta subir archivo');
+        }
+    }
+    
+    // Inicializar estado del botón
+    updateAddToCartButton();
+    console.log('✅ Sistema de subida de archivos configurado');
 });
 </script>
 

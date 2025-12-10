@@ -1780,13 +1780,15 @@ def add_to_cart_api(request):
                 return JsonResponse({'error': 'Talla no disponible'}, status=400)
             
             # Obtener la imagen del color
-            # Buscar ProductImage para este producto y color
             product_image = ProductImage.objects.filter(
                 product=product,
                 color=color_obj
             ).first()
             
             color_image_url = product_image.image_url if product_image else product.base_image_url
+            
+            # ✅ NUEVO: Obtener archivo de diseño si existe
+            design_file = request.FILES.get('design_file')
             
             # Obtener o crear carrito
             cart_id = request.COOKIES.get('cart_id')
@@ -1812,6 +1814,14 @@ def add_to_cart_api(request):
                 cart_item.quantity = cart_item.quantity + quantity
                 # Actualizar la URL de la imagen del color (por si cambió)
                 cart_item.color_image_url = color_image_url
+                
+                # ✅ NUEVO: Actualizar archivo de diseño si se envió uno nuevo
+                if design_file:
+                    # Eliminar archivo anterior si existe
+                    if cart_item.design_file:
+                        cart_item.design_file.delete(save=False)
+                    cart_item.design_file = design_file
+                
                 cart_item.save()
             else:
                 # Crear nuevo CartItem
@@ -1821,7 +1831,8 @@ def add_to_cart_api(request):
                     color=color_obj.name,
                     size=size_obj.name,
                     quantity=quantity,
-                    color_image_url=color_image_url  # ✅ Guardar URL de imagen del color
+                    color_image_url=color_image_url,
+                    design_file=design_file  # ✅ NUEVO: Guardar archivo de diseño
                 )
             
             item_info = {
@@ -1829,7 +1840,8 @@ def add_to_cart_api(request):
                 'color': color_obj.name,
                 'size': size_obj.name,
                 'quantity': cart_item.quantity,
-                'color_image_url': color_image_url  # Incluir en respuesta
+                'color_image_url': color_image_url,
+                'has_design_file': bool(cart_item.design_file)  # ✅ NUEVO: Indicar si tiene archivo
             }
             
         else:

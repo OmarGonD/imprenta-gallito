@@ -26,7 +26,7 @@ def add_to_cart(request, product_slug):
         color_slug = request.POST.get('color_slug', '').strip()
         size_slug = request.POST.get('size_slug', '').strip()
         quantity = int(request.POST.get('quantity', 1))
-        uploaded_file = request.FILES.get('uploaded_file')
+        uploaded_file = request.FILES.get('design_file')  # Corregido: era 'uploaded_file'
         color_image_url = request.POST.get('color_image_url', '').strip()
         
         # Validaciones
@@ -66,7 +66,7 @@ def add_to_cart(request, product_slug):
         
         # Agregar archivo si existe
         if uploaded_file:
-            cart_item.file_a = uploaded_file
+            cart_item.design_file = uploaded_file  # Corregido: era 'file_a'
         
         cart_item.save()
         
