@@ -6,38 +6,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="{% block metadescription %}{% block metadesciption %}Imprenta Gallito Perú - Impresión de Alta Calidad{% endblock %}{% endblock %}">
+    <meta name="description" content="{% block metadescription %}Imprenta Gallito Perú - Impresión de Alta Calidad{% endblock %}">
     <meta name="google-site-verification" content="fGkwUY2RcijkVzB6DiwIuAToP1y5xw8ECXQQabRAOIM"/>
-    <link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/gallito_favicon.png' %}"/>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- Custom CSS Files -->
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}">
-    <link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
-    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-
-    <!-- HTMX for dynamic content loading -->
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <title>{% block title %}Imprenta Gallito{% endblock %}</title>
-    
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN - CARGAR PRIMERO -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            important: true,
             theme: {
                 extend: {
                     colors: {
@@ -54,10 +36,12 @@
                             900: '#78350f',
                         },
                         'brand': {
-                            yellow: '#FFC107',
-                            orange: '#FF9800',
-                            red: '#FF5722',
-                            dark: '#2D3748',
+                            primary: '#0066cc',
+                            'primary-dark': '#004999',
+                            secondary: '#e63946',
+                            dark: '#1a1a2e',
+                            green: '#008965',
+                            'green-dark': '#007554',
                         }
                     },
                     fontFamily: {
@@ -65,429 +49,143 @@
                         'body': ['Inter', 'sans-serif'],
                     },
                     maxWidth: {
-                        '8xl': '88rem',    // 1408px
-                        '9xl': '96rem',    // 1536px
-                        '10xl': '120rem',  // 1920px
-                        'ultra': '160rem', // 2560px
+                        '8xl': '88rem',
+                        '9xl': '96rem',
+                        '10xl': '104rem',
                     },
                     screens: {
                         '3xl': '1920px',
                         '4xl': '2560px',
-                        '5xl': '3440px',
                     }
                 }
             }
         }
     </script>
-    
-    {% block extra_css %}{% endblock %}
 
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Bootstrap CSS - Solo Grid y utilidades básicas -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <!-- CSS Unificado - Un solo archivo con estilos custom mínimos -->
+    <link rel="stylesheet" href="{% static 'css/gallito-unified.css' %}">
+
+    <!-- Estilos globales para ultrawide -->
     <style>
-        /* ===== OPTIMIZACIÓN PARA TODAS LAS RESOLUCIONES ===== */
-        
-        /* Base - Móviles y tablets (reducido 5%) */
-        html, body {
+        /* Contenedor global para ultrawide - aplica a todas las páginas */
+        .container-ultrawide {
             width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
-            font-size: 15.2px; /* Base font size reducido de 16px */
-        }
-        
-        /* Desktop HD (1920px+) - Reducido 5% */
-        @media (min-width: 1920px) {
-            html {
-                font-size: 17.1px; /* Reducido de 18px */
-            }
-            
-            h1 {
-                font-size: 4.275rem !important; /* Reducido de 4.5rem */
-            }
-            
-            h2 {
-                font-size: 3.325rem !important; /* Reducido de 3.5rem */
-            }
-            
-            h3 {
-                font-size: 1.9rem !important; /* Reducido de 2rem */
-            }
-            
-            .btn-large, .btn, button[type="submit"], .action-link {
-                font-size: 1.1875rem; /* Reducido de 1.25rem */
-                padding: 1.1875rem 2.375rem; /* Reducido de 1.25rem 2.5rem */
-            }
-        }
-        
-        /* Ultrawide/2K (2560px+) - Reducido 5% */
-        @media (min-width: 2560px) {
-            html {
-                font-size: 19px; /* Reducido de 20px */
-            }
-            
-            h1 {
-                font-size: 5.225rem !important; /* Reducido de 5.5rem */
-            }
-            
-            h2 {
-                font-size: 3.8rem !important; /* Reducido de 4rem */
-            }
-            
-            h3 {
-                font-size: 2.375rem !important; /* Reducido de 2.5rem */
-            }
-            
-            h4 {
-                font-size: 1.6625rem !important; /* Reducido de 1.75rem */
-            }
-            
-            .btn-large, .btn, button[type="submit"], .action-link {
-                font-size: 1.425rem; /* Reducido de 1.5rem */
-                padding: 1.425rem 2.85rem; /* Reducido de 1.5rem 3rem */
-            }
-            
-            /* Aumentar tamaño de íconos (reducido 5%) */
-            .fa, .fas, .far, .fab {
-                font-size: 1.1875em; /* Reducido de 1.25em */
-            }
-            
-            /* Cards más grandes (reducido 5%) */
-            .card, .product-card, .category-card {
-                padding: 1.9rem; /* Reducido de 2rem */
-            }
-            
-            /* Inputs y formularios (reducido 5%) */
-            input, textarea, select {
-                font-size: 1.069rem; /* Reducido de 1.125rem */
-                padding: 0.95rem 1.425rem; /* Reducido de 1rem 1.5rem */
-            }
-        }
-        
-        /* 4K/5K (3840px+) - Reducido 5% */
-        @media (min-width: 3840px) {
-            html {
-                font-size: 20.9px; /* Reducido de 22px */
-            }
-            
-            h1 {
-                font-size: 5.7rem !important; /* Reducido de 6rem */
-            }
-            
-            h2 {
-                font-size: 4.275rem !important; /* Reducido de 4.5rem */
-            }
-        }
-        
-        /* ===== FUENTES ORIGINALES ===== */
-        body, html {
-            font-family: 'Libre Baskerville', Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, Times New Roman, serif !important;
-        }
-        
-        .navbar,
-        #main-hero-banner,
-        .imprenta-gallito-title,
-        #promotional-banner,
-        .promo-banner,
-        .my_header_bg_color,
-        .my_header_categories {
-            font-family: 'Bree Serif', serif !important;
-        }
-        
-        .imprenta-gallito-title {
-            font-family: 'Poppins', sans-serif !important;
-        }
-        
-        /* ===== LAYOUT RESPONSIVO CON MEJOR CENTRADO ===== */
-        .main-section {
-            width: 100vw;
-            max-width: 100vw;
+            max-width: 96rem; /* 1536px */
             margin-left: auto;
             margin-right: auto;
-            padding-left: 0;
-            padding-right: 0;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
         
-        @media (max-width: 1200px) {
-            .main-section {
-                width: 100vw;
-                max-width: 100vw;
-                padding-left: 0;
-                padding-right: 0;
+        @media (min-width: 640px) {
+            .container-ultrawide {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
             }
         }
         
-        @media (max-width: 767px) {
-            .main-section {
-                width: 100vw;
-                max-width: 100vw;
-                padding-left: 0;
-                padding-right: 0;
+        @media (min-width: 1024px) {
+            .container-ultrawide {
+                padding-left: 2rem;
+                padding-right: 2rem;
             }
         }
         
-        /* ===== MEJORAS DE ESPACIADO PARA PANTALLAS GRANDES ===== */
+        @media (min-width: 1280px) {
+            .container-ultrawide {
+                padding-left: 3rem;
+                padding-right: 3rem;
+            }
+        }
+        
         @media (min-width: 1920px) {
-            .container, .container-fluid {
-                padding-left: 2.5rem; /* Aumentado para más aire */
-                padding-right: 2.5rem;
-            }
-            
-            section {
-                padding-top: 3.8rem; /* Reducido de 4rem */
-                padding-bottom: 3.8rem;
+            .container-ultrawide {
+                max-width: 104rem; /* 1664px para 3xl */
+                padding-left: 4rem;
+                padding-right: 4rem;
             }
         }
         
         @media (min-width: 2560px) {
-            .container, .container-fluid {
-                padding-left: 3.5rem; /* Aumentado para más aire */
-                padding-right: 3.5rem;
-            }
-            
-            section {
-                padding-top: 4.75rem; /* Reducido de 5rem */
-                padding-bottom: 4.75rem;
-            }
-            
-            /* Espaciado entre elementos (reducido 5%) */
-            .mb-3 { margin-bottom: 1.425rem !important; }
-            .mb-4 { margin-bottom: 1.9rem !important; }
-            .mb-5 { margin-bottom: 2.375rem !important; }
-            .mt-3 { margin-top: 1.425rem !important; }
-            .mt-4 { margin-top: 1.9rem !important; }
-            .mt-5 { margin-top: 2.375rem !important; }
-        }
-        
-        /* ===== SCROLLBAR PERSONALIZADA ===== */
-        ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #3B82F6, #8B5CF6);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #2563EB, #7C3AED);
-        }
-        
-        @media (min-width: 2560px) {
-            ::-webkit-scrollbar {
-                width: 16px;
-                height: 16px;
+            .container-ultrawide {
+                max-width: 120rem; /* 1920px para 4xl */
+                padding-left: 5rem;
+                padding-right: 5rem;
             }
         }
         
-        /* ===== TRANSICIONES SUAVES ===== */
-        * {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        a, button, input, select, textarea {
-            transition: all 0.3s ease;
-        }
-        
-        /* ===== MEJORAS DE LEGIBILIDAD ===== */
+        /* Override para .container de Bootstrap en pantallas grandes */
         @media (min-width: 1920px) {
-            p, li, span {
-                line-height: 1.7;
+            .container, .container-lg, .container-xl {
+                max-width: 1600px !important;
             }
         }
         
         @media (min-width: 2560px) {
-            p, li, span {
-                line-height: 1.8;
-                letter-spacing: 0.01em;
-            }
-        }
-        
-        /* ===== OPTIMIZACIÓN DE ANCHO PARA MEJOR CENTRADO ===== */
-        
-        /* Containers más centrados con más espacio lateral */
-        @media (min-width: 1920px) {
-            .container,
-            .container-fluid,
-            .max-w-7xl,
-            .max-w-6xl,
-            .max-w-5xl {
-                max-width: 85% !important; /* Reducido de 90% para más centrado */
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
-        
-        @media (min-width: 2560px) {
-            /* Mejor centrado en ultrawide */
-            .container,
-            .container-fluid,
-            .max-w-7xl,
-            .max-w-8xl,
-            .max-w-6xl,
-            .max-w-5xl,
-            .max-w-4xl {
-                max-width: 88% !important; /* Reducido de 95% para más centrado */
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            /* Padding lateral generoso pero aprovechando el espacio */
-            section,
-            .section {
-                padding-left: 5rem !important; /* Aumentado de 4rem */
-                padding-right: 5rem !important;
-            }
-            
-            /* Grids con más columnas en ultrawide */
-            .grid-cols-4 {
-                grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-            }
-            
-            .grid-cols-3 {
-                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-            }
-            
-            .grid-cols-6 {
-                grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
-            }
-            
-            /* Limitar ancho de textos para legibilidad */
-            p:not(.no-limit),
-            .text-content {
-                max-width: 75ch; /* Reducido de 80ch para mejor legibilidad */
-            }
-            
-            /* Cards y elementos con ancho mínimo (reducido 5%) */
-            .card,
-            .product-card,
-            .category-card {
-                min-width: 266px; /* Reducido de 280px */
-            }
-        }
-        
-        @media (min-width: 3440px) {
-            /* Para pantallas ultra-anchas específicas - mejor centrado */
-            .container,
-            .container-fluid,
-            .max-w-7xl,
-            .max-w-8xl {
-                max-width: 90% !important; /* Reducido de 96% */
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            section,
-            .section {
-                padding-left: 6rem !important; /* Aumentado de 5rem */
-                padding-right: 6rem !important;
-            }
-            
-            /* Aún más columnas en grids */
-            .grid-cols-4 {
-                grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
-            }
-            
-            .grid-cols-6 {
-                grid-template-columns: repeat(10, minmax(0, 1fr)) !important;
+            .container, .container-lg, .container-xl {
+                max-width: 2000px !important;
             }
         }
     </style>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <title>{% block title %}Imprenta Gallito{% endblock %}</title>
+    
+    {% block extra_css %}{% endblock %}
 
     {% block data_layer %}{% endblock %}
     
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
         w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        });
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
         var f = d.getElementsByTagName(s)[0],
             j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
         j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-TPXWL88');</script>
-    <!-- End Google Tag Manager -->
 </head>
-<body>
+<body class="font-body antialiased text-gray-900 bg-gray-50">
 <!-- Google Tag Manager (noscript) -->
 <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TPXWL88"
             height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 {% include 'header.html' %}
 
-<div class="main-section">
-{% block content %}
-{% endblock %}
-</div>
+<main class="min-h-screen">
+    {% block content %}
+    {% endblock %}
+</main>
 
 {% include 'footer.html' %}
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-
-<!-- Additional scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
 <script src="{% static 'js/footer.js' %}"></script>
 <script src="{% static 'js/size-quantity.js' %}"></script>
-
-<!-- Incluyendo Culqi Checkout -->
 <script src="https://checkout.culqi.com/js/v3"></script>
 
-<!-- Header Initialization Script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize Bootstrap dropdowns
-        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
-        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-            return new bootstrap.Dropdown(dropdownToggleEl)
-        });
-
-        // Cart count functionality
-        function updateCartCount() {
-            const cartCount = document.querySelector('.cart-count');
-            if (cartCount) {
-                // Cart count logic here
-            }
-        }
-
-        // Initialize cart count
-        updateCartCount();
-
-        // Search form functionality
-        const searchForm = document.querySelector('.search-form');
-        if (searchForm) {
-            searchForm.addEventListener('submit', function(e) {
-                const searchInput = this.querySelector('.search-input');
-                if (searchInput && searchInput.value.trim() === '') {
-                    e.preventDefault();
-                    searchInput.focus();
-                }
-            });
-        }
-        
-        // Log screen size for debugging (remove in production)
-        console.log('Screen width:', window.innerWidth, 'px');
-        console.log('Screen height:', window.innerHeight, 'px');
-        console.log('Device pixel ratio:', window.devicePixelRatio);
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Bootstrap dropdowns
+    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+    dropdownElementList.map(function (dropdownToggleEl) {
+        return new bootstrap.Dropdown(dropdownToggleEl)
     });
-    
-    // Update on resize
-    window.addEventListener('resize', function() {
-        console.log('Screen resized to:', window.innerWidth, 'x', window.innerHeight);
-    });
+});
 </script>
 
 {% block extra_js %}{% endblock %}

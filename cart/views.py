@@ -93,7 +93,7 @@ def add_to_cart(request, product_slug):
             'error': str(e)
         }, status=500)
 
-def full_remove(request, cart_item_id):
+def delete_item(request, cart_item_id):
     cart_item = CartItem.objects.get(id=cart_item_id)
     cart_item.delete()
 

@@ -3,68 +3,51 @@
 
 {% block title %}{{ category.name }} | Ropa y Bolsas | Imprenta Gallito{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/clothing.css' %}">
-<style>
-    .filter-options-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-    .filter-option-btn input[type="checkbox"] { display: none; }
-    .filter-option-btn span { padding: 8px 14px; border: 1px solid #ddd; border-radius: 20px; font-size: 0.85rem; color: #555; background: #fff; transition: all 0.2s ease; }
-    .filter-option-btn:hover span { border-color: #0066cc; color: #0066cc; }
-    .filter-option-btn input[type="checkbox"]:checked+span { background: #0066cc; border-color: #0066cc; color: #fff; }
-
-    .product-colors { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; justify-content: center; }
-    .color-dot {
-        width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
-        border: 2px solid transparent; box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
-        transition: all 0.25s ease;
-    }
-    .color-dot:hover { transform: scale(1.2); }
-    .color-dot.active {
-        border-color: #0066cc;
-        box-shadow: 0 0 0 3px #e3f2fd, 0 0 0 1px #0066cc;
-    }
-
-    .no-products { text-align: center; padding: 60px 20px; color: #666; }
-    .no-products i { font-size: 64px; margin-bottom: 20px; opacity: 0.3; }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="clothing-page">
-    <section class="clothing-hero" style="padding: 40px 20px;">
-        <div class="hero-content">
-            <h1>{{ category.name }}</h1>
-            <p>{{ category.description }}</p>
+<div class="bg-gray-50 min-h-screen">
+    
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900 py-12 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">{{ category.name }}</h1>
+            <p class="text-xl text-white/85 max-w-2xl mx-auto">{{ category.description }}</p>
         </div>
     </section>
 
-    <nav class="breadcrumb-nav">
-        <div class="container">
-            <ol class="breadcrumb">
-                <li><a href="{% url 'shop:home' %}">Inicio</a></li>
-                <li><a href="{% url 'shop:clothing_category' %}">Ropa y Bolsas</a></li>
-                <li class="active">{{ category.name }}</li>
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b border-gray-200 py-4">
+        <div class="max-w-6xl mx-auto px-4">
+            <ol class="flex items-center gap-2 text-sm">
+                <li><a href="{% url 'shop:home' %}" class="text-gray-500 hover:text-blue-600 transition-colors">Inicio</a></li>
+                <li class="text-gray-400">/</li>
+                <li><a href="{% url 'shop:clothing_category' %}" class="text-gray-500 hover:text-blue-600 transition-colors">Ropa y Bolsas</a></li>
+                <li class="text-gray-400">/</li>
+                <li class="text-gray-900 font-medium">{{ category.name }}</li>
             </ol>
         </div>
     </nav>
 
-   {% if subcategories %}
-    <section class="categories-nav">
-        <div class="container">
-            <div class="categories-grid categories-grid-circles">
+    <!-- Subcategories Navigation (Circles) -->
+    {% if subcategories %}
+    <section class="bg-white py-8 border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-8">
                 {% for sub in subcategories %}
                 <a href="{% url 'shop:clothing_subcategory' category.slug sub.slug %}"
-                class="subcategory-circle-link">
-                    
-                    <div class="category-icon subcategory-circle {% if sub.slug == category.slug %}active{% endif %}">
+                   class="flex flex-col items-center w-24 transition-transform hover:-translate-y-1 group">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-4 mb-2 transition-all
+                                {% if sub.slug == subcategory.slug %}border-purple-500 shadow-lg{% else %}border-gray-200 group-hover:border-purple-400{% endif %}">
                         {% if sub.image_url %}
-                            <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
+                        <img src="{{ sub.image_url }}" alt="{{ sub.name }}" class="w-full h-full object-cover">
                         {% else %}
-                            <i class="fas fa-tshirt"></i> 
+                        <div class="w-full h-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                            <i class="fas fa-tshirt text-white text-lg"></i>
+                        </div>
                         {% endif %}
                     </div>
-                    
-                    <span class="category-name">{{ sub.name }}</span>
+                    <span class="text-xs font-medium text-center text-gray-700 group-hover:text-purple-600 transition-colors">
+                        {{ sub.name }}
+                    </span>
                 </a>
                 {% endfor %}
             </div>
@@ -72,131 +55,142 @@
     </section>
     {% endif %}
 
-    <main class="clothing-main">
-        <div class="container">
-            <div class="clothing-layout">
-                
-                <section class="products-section">
-                    <div class="results-bar">
-                        <div class="results-count"><strong>{{ product_count }}</strong> productos</div>
-                        <div class="sort-options">
-                            <select id="sort-select" onchange="updateSort(this.value)">
-                                <option value="featured" {% if sort_by == 'featured' %}selected{% endif %}>Destacados</option>
-                                <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Menor precio</option>
-                                <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Mayor precio</option>
-                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Más recientes</option>
-                                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nombre A-Z</option>
-                            </select>
-                        </div>
+    <!-- Main Content -->
+    <main class="py-10">
+        <div class="max-w-6xl mx-auto px-4">
+            
+            <!-- Results Bar -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 p-4 bg-white rounded-xl shadow-sm">
+                <div class="text-gray-700">
+                    <span class="font-bold text-purple-600 text-lg">{{ product_count }}</span> productos
+                </div>
+                <div class="flex items-center gap-3">
+                    <label class="text-sm text-gray-500">Ordenar:</label>
+                    <select id="sort-select" onchange="updateSort(this.value)"
+                            class="px-4 py-2 border-2 border-gray-200 rounded-lg text-sm focus:outline-none focus:border-purple-500 transition-colors">
+                        <option value="featured" {% if sort_by == 'featured' %}selected{% endif %}>Destacados</option>
+                        <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Menor precio</option>
+                        <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Mayor precio</option>
+                        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Más recientes</option>
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Nombre A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-container">
+                {% for product in products %}
+                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all group"
+                         data-product-id="{{ product.id }}"
+                         data-product-slug="{{ product.slug }}"
+                         data-base-image="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}">
+                    
+                    <!-- Badges -->
+                    <div class="relative">
+                        {% if product.is_new %}
+                        <span class="absolute top-3 left-3 z-10 px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full">Nuevo</span>
+                        {% endif %}
+                        {% if product.discount_percentage %}
+                        <span class="absolute top-3 right-3 z-10 px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">-{{ product.discount_percentage }}%</span>
+                        {% endif %}
+                        {% if product.is_bestseller %}
+                        <span class="absolute top-3 {% if product.is_new %}left-20{% else %}left-3{% endif %} z-10 px-3 py-1 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full">⭐ Popular</span>
+                        {% endif %}
+                        
+                        <!-- Product Image -->
+                        <a href="#" class="block aspect-square overflow-hidden bg-gray-100"
+                           onclick="event.preventDefault(); goToDetailWithColor(this.closest('article'))">
+                            <img src="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}"
+                                 alt="{{ product.name }}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                 id="product-img-{{ product.id }}">
+                        </a>
                     </div>
 
-                    <div class="products-grid" id="products-container">
-                        {% for product in products %}
-                        <article class="product-card"
-                                 data-product-id="{{ product.id }}"
-                                 data-product-slug="{{ product.slug }}"
-                                 data-base-image="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}">
-                            {% if product.is_new %}<span class="badge badge-new">Nuevo</span>{% endif %}
-                            {% if product.discount_percentage %}<span class="badge badge-sale">-{{ product.discount_percentage }}%</span>{% endif %}
-                            {% if product.is_bestseller %}<span class="badge badge-best">Más vendido</span>{% endif %}
+                    <!-- Product Info -->
+                    <div class="p-4">
+                        {% if product.material %}
+                        <span class="text-xs text-purple-600 font-medium uppercase tracking-wide">{{ product.material }}</span>
+                        {% endif %}
 
-                            <!-- IMAGEN + NOMBRE + BOTÓN: todos llevan el color seleccionado -->
-                            <a href="#" class="product-image-wrapper"
-                                onclick="event.preventDefault(); goToDetailWithColor(this.closest('.product-card'))">
-                                <img src="{% if product.base_image_url %}{{ product.base_image_url }}{% else %}{% static 'img/placeholder-product.png' %}{% endif %}"
-                                     alt="{{ product.name }}" class="product-image primary"
-                                     id="product-img-{{ product.id }}">
+                        <h3 class="font-bold text-gray-900 mt-1 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors">
+                            <a href="#" onclick="event.preventDefault(); goToDetailWithColor(this.closest('article'))">
+                                {{ product.name }}
                             </a>
+                        </h3>
 
-                            <div class="product-info">
-                                {% if product.material %}
-                                    <span class="product-brand">{{ product.material }}</span>
-                                {% endif %}
-
-                                <h3 class="product-name">
-                                    <a href="#" onclick="event.preventDefault(); goToDetailWithColor(this.closest('.product-card'))">
-                                        {{ product.name }}
-                                    </a>
-                                </h3>
-
-                                <!-- COLORES -->
-                                {% with colors=product.available_colors.all %}
-                                    {% if colors %}
-                                    <div class="product-colors">
-                                        {% for color in colors %}
-                                        <span class="color-dot"
-                                              style="background-color: {{ color.hex_code }}; 
-                                                     border: 1px solid {% if color.hex_code|lower in '#ffffff,#f5f5f5,#ffff00,#fcfcfc,#fff' %}#ccc{% else %}{{ color.hex_code }}{% endif %};"
-                                              title="{{ color.name }}"
-                                              data-color-slug="{{ color.slug }}"
-                                              data-product-id="{{ product.id }}"></span>
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
-                                {% endwith %}
-
-                                <!-- PRECIO -->
-                                <div class="product-pricing">
-                                    {% if product.sale_price %}
-                                        <span class="price-original">S/ {{ product.base_price }}</span>
-                                        <span class="price-current">S/ {{ product.sale_price }}</span>
-                                    {% else %}
-                                        <span class="price-current">Desde S/ {{ product.base_price|default:"25.00" }}</span>
-                                    {% endif %}
-                                </div>
-
-                                <!-- BOTÓN PERSONALIZAR -->
-                                <div class="product-actions">
-                                    <a href="#" 
-                                       onclick="event.preventDefault(); goToDetailWithColor(this.closest('.product-card'))"
-                                       class="btn-customize">
-                                        Personalizar
-                                    </a>
-                                </div>
-                            </div>
-                        </article>
-
-                        {% empty %}
-                        <div class="no-products">
-                            <i class="fas fa-box-open"></i>
-                            <h3>No hay productos disponibles</h3>
-                            <p>Intenta con otros filtros o regresa más tarde.</p>
+                        <!-- Color Swatches -->
+                        {% with colors=product.available_colors.all %}
+                        {% if colors %}
+                        <div class="flex flex-wrap gap-1.5 justify-center my-3">
+                            {% for color in colors %}
+                            <span class="color-dot w-5 h-5 rounded-full cursor-pointer border-2 border-transparent hover:scale-125 transition-all"
+                                  style="background-color: {{ color.hex_code }}; 
+                                         box-shadow: 0 0 0 1px {% if color.hex_code|lower in '#ffffff,#f5f5f5,#ffff00,#fcfcfc,#fff' %}#ccc{% else %}rgba(0,0,0,0.1){% endif %};"
+                                  title="{{ color.name }}"
+                                  data-color-slug="{{ color.slug }}"
+                                  data-product-id="{{ product.id }}"></span>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+
+                        <!-- Price -->
+                        <div class="flex items-baseline gap-2 justify-center mb-3">
+                            {% if product.sale_price %}
+                            <span class="text-sm text-gray-400 line-through">S/ {{ product.base_price }}</span>
+                            <span class="text-lg font-bold text-red-600">S/ {{ product.sale_price }}</span>
+                            {% else %}
+                            <span class="text-sm text-gray-500">Desde</span>
+                            <span class="text-lg font-bold text-purple-600">S/ {{ product.base_price|default:"25.00" }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- CTA Button -->
+                        <a href="#" 
+                           onclick="event.preventDefault(); goToDetailWithColor(this.closest('article'))"
+                           class="block w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center font-semibold rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all">
+                            Personalizar
+                        </a>
                     </div>
-                </section>
+                </article>
+                {% empty %}
+                <div class="col-span-full text-center py-16">
+                    <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No hay productos disponibles</h3>
+                    <p class="text-gray-500">Intenta con otros filtros o regresa más tarde.</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </main>
 </div>
 
-<button type="button" class="mobile-filter-btn" id="mobile-filter-toggle">
-    Filtros {% if has_active_filters %}<span class="filter-badge">!</span>{% endif %}
+<!-- Mobile Filter Button (if needed) -->
+<button type="button" 
+        class="lg:hidden fixed bottom-6 right-6 w-14 h-14 bg-purple-600 text-white rounded-full shadow-xl flex items-center justify-center hover:bg-purple-700 transition-all z-40"
+        id="mobile-filter-toggle">
+    <i class="fas fa-filter"></i>
 </button>
-<div class="filter-overlay" id="filter-overlay"></div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Para cada tarjeta de producto, inicializar el color correcto
-    document.querySelectorAll('.product-card').forEach(card => {
+    // Initialize color swatches
+    document.querySelectorAll('article[data-product-id]').forEach(card => {
         const dots = card.querySelectorAll('.color-dot');
-        const img = card.querySelector('.product-image-wrapper img');
+        const img = card.querySelector('img[id^="product-img-"]');
         const baseImage = card.dataset.baseImage;
         const productSlug = card.dataset.productSlug;
         
         if (!dots.length) return;
         
-        // Buscar qué color corresponde a la imagen base usando la API
-        // Mientras tanto, NO marcar ningún color como activo hasta verificar
-        
-        // Cargar los colores del producto y encontrar cuál corresponde a la imagen actual
+        // Fetch colors and set active state
         fetch(`/api/product/${productSlug}/colors/`)
             .then(r => r.json())
             .then(data => {
                 if (data.colors && data.colors.length > 0) {
-                    // Buscar el color que coincida con la imagen base
                     let matchingColor = null;
                     
                     for (const color of data.colors) {
@@ -206,58 +200,49 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                     
-                    // Si no encontramos coincidencia exacta, usar el primer color
-                    // y actualizar la imagen para que coincidan
                     if (!matchingColor) {
                         matchingColor = data.colors[0].slug;
-                        // Actualizar la imagen al primer color disponible
                         if (data.colors[0].image_url && img) {
                             img.src = data.colors[0].image_url;
                         }
                     }
                     
-                    // Marcar el color correcto como activo
                     dots.forEach(dot => {
                         if (dot.dataset.colorSlug === matchingColor) {
-                            dot.classList.add('active');
+                            dot.classList.add('active', 'ring-2', 'ring-purple-500', 'ring-offset-2');
                         }
                     });
                 } else {
-                    // Si no hay datos de la API, marcar el primer color
-                    if (dots[0]) dots[0].classList.add('active');
+                    if (dots[0]) dots[0].classList.add('active', 'ring-2', 'ring-purple-500', 'ring-offset-2');
                 }
             })
             .catch(() => {
-                // En caso de error, marcar el primer color como activo
-                if (dots[0]) dots[0].classList.add('active');
+                if (dots[0]) dots[0].classList.add('active', 'ring-2', 'ring-purple-500', 'ring-offset-2');
             });
     });
 
-    // Cambio de imagen al hacer clic en color
+    // Color swatch click handler
     document.querySelectorAll('.color-dot').forEach(swatch => {
         swatch.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
-            const card = this.closest('.product-card');
+            const card = this.closest('article');
             if (!card) return;
 
-            // Quitar clase active de todos los dots de esta tarjeta
-            card.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-            this.classList.add('active');
+            // Remove active state from all dots in this card
+            card.querySelectorAll('.color-dot').forEach(d => {
+                d.classList.remove('active', 'ring-2', 'ring-purple-500', 'ring-offset-2');
+            });
+            this.classList.add('active', 'ring-2', 'ring-purple-500', 'ring-offset-2');
 
             const slug = card.dataset.productSlug;
             const colorSlug = this.dataset.colorSlug;
-            const img = card.querySelector('.product-image-wrapper img');
+            const img = card.querySelector('img[id^="product-img-"]');
 
             if (!slug || !colorSlug || !img) return;
 
-            // Guardar imagen original
-            if (!img.dataset.originalSrc) {
-                img.dataset.originalSrc = img.src;
-            }
-
-            // Cargar nueva imagen desde la API
+            // Load new image
             fetch(`/api/product/${slug}/colors/?color=${encodeURIComponent(colorSlug)}`)
                 .then(r => r.json())
                 .then(data => {
@@ -268,16 +253,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Redirigir al detalle con el color seleccionado
+// Navigate to product detail with selected color
 function goToDetailWithColor(card) {
     const productSlug = card.dataset.productSlug;
-    const categorySlug = "{{ category.slug }}";          // ej: "ropa-bolsos"
-    const subcategorySlug = "{{ subcategory.slug }}";    // ej: "polos"
+    const categorySlug = "{{ category.slug }}";
+    const subcategorySlug = "{{ subcategory.slug }}";
     
     const activeSwatch = card.querySelector('.color-dot.active') || card.querySelector('.color-dot');
     const colorSlug = activeSwatch ? activeSwatch.dataset.colorSlug : '';
     
-    // URL dinámica para cualquier categoría
     window.location.href = `/${encodeURIComponent(categorySlug)}/${encodeURIComponent(subcategorySlug)}/${encodeURIComponent(productSlug)}/?color=${colorSlug}`;
 }
 

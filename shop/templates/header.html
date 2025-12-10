@@ -1,14 +1,14 @@
 {% load static %}
 
 <!-- Modern Header with Gradient Promo Strip -->
-<div class="relative">
+<header class="relative z-50">
     <!-- Promotional Strip -->
-    <div class="promo-strip bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white overflow-hidden">
+    <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white overflow-hidden">
         <div class="header-container mx-auto px-4">
-            <div class="flex items-center justify-center py-3 gap-3 animate-slideIn">
+            <div class="flex items-center justify-center py-2.5 gap-3 animate-slideIn">
                 <span class="promo-emoji animate-bounce">🎉</span>
                 <span class="promo-text font-semibold">¡Envío GRATIS en pedidos mayores a S/100!</span>
-                <a href="#" class="hidden md:inline-flex items-center promo-link font-bold hover:underline gap-1 group">
+                <a href="#" class="hidden md:inline-flex items-center promo-text font-bold hover:underline gap-1 group">
                     Ver detalles
                     <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -45,7 +45,7 @@
                 </div>
 
                 <!-- Right Actions -->
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 ml-auto">
                     <a href="tel:964601601" class="flex items-center gap-2 topbar-link font-semibold text-gray-700 hover:text-blue-600 transition-colors group">
                         <div class="topbar-phone-icon bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                             <svg class="topbar-phone-svg text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,16 +153,19 @@
                             <span class="action-label font-medium hidden xl:block">Cuenta</span>
                         </a>
 
-                        <a href="{% url 'carrito-de-compras:cart_detail' %}" class="relative flex flex-col items-center cart-button bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 group">
-                            <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Cart Button con ID para actualización dinámica -->
+                        <a href="{% url 'carrito-de-compras:cart_detail' %}" 
+                           id="cart-button"
+                           class="relative cart-button flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg group">
+                            <svg class="cart-icon group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
-                            {% if cart_items_counter > 0 %}
-                            <span class="cart-badge absolute bg-red-500 text-white font-bold rounded-full flex items-center justify-center animate-pulse border-2 border-white">
-                                {{ cart_items_counter }}
+                            <!-- Badge del carrito con ID -->
+                            <span id="cart-badge" 
+                                  class="cart-badge absolute bg-red-500 text-white rounded-full flex items-center justify-center font-bold {% if not cart_items_counter %}hidden{% endif %}"
+                                  style="top: -8px; right: -8px; min-width: 20px; height: 20px; font-size: 11px;">
+                                {{ cart_items_counter|default:0 }}
                             </span>
-                            {% endif %}
-                            <span class="action-label font-bold hidden xl:block">Carrito</span>
                         </a>
                     </div>
                 </div>
@@ -171,578 +174,109 @@
     </div>
 
     <!-- Navigation Bar -->
-    <nav class="main-nav bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 text-white shadow-xl">
+    <nav class="bg-white border-b-2 border-blue-600 hidden lg:block">
         <div class="header-container mx-auto px-4">
-            <!-- FIXED: Using flex-nowrap and no justify-between -->
-            <div class="flex items-center nav-wrapper">
-                
-                <!-- Mobile Menu Toggle -->
-                <button class="lg:hidden p-3 hover:bg-white/10 rounded-xl transition-all" id="mobileNavToggle">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-
-                <!-- Desktop Navigation - All items in same ul, single row -->
-                <ul class="hidden lg:flex items-center nav-items-gap flex-nowrap">
-                    <!-- Categories (Home removed - logo serves that purpose) -->
-                    {% for category in categories %}
-                    <li class="relative group flex-shrink-0">
-                        <a href="{{ category.get_url }}" class="nav-link-item flex items-center hover:bg-white/10 rounded-xl transition-all font-semibold">
-                            <span class="nav-link-text text-center">{{ category.name }}</span>
-                            {% if category.subcategories.all %}
-                            <svg class="nav-chevron flex-shrink-0 transform group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="nav-wrapper flex items-center justify-between">
+                <!-- Navigation Items -->
+                <ul class="flex items-center nav-items-gap">
+                    <li>
+                        <a href="{% url 'shop:home' %}" class="nav-link-item flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all group">
+                            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                            <span class="nav-link-text font-semibold">Inicio</span>
+                        </a>
+                    </li>
+                    
+                    {% for category in nav_categories %}
+                    <li class="relative group">
+                        <a href="{% url 'shop:category' category.slug %}" class="nav-link-item flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+                            <span class="nav-link-text font-semibold leading-tight">{{ category.name }}</span>
+                            {% if category.subcategories.exists %}
+                            <svg class="nav-chevron text-gray-400 group-hover:text-blue-600 group-hover:rotate-180 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                             {% endif %}
                         </a>
                         
-                        {% if category.subcategories.all %}
-                        <!-- Dropdown -->
-                        <div class="dropdown-menu absolute left-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2 z-50">
-                            <div class="p-2">
-                                {% for subcategory in category.subcategories.all %}
-                                <a href="{{ subcategory.get_url }}" class="block dropdown-item text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-600 rounded-xl transition-all font-medium">
-                                    {{ subcategory.name }}
-                                </a>
-                                {% endfor %}
-                            </div>
-                            <div class="border-t border-gray-100 p-2">
-                                <a href="{{ category.get_url }}" class="block dropdown-item font-bold text-blue-600 hover:bg-blue-50 rounded-xl transition-all">
-                                    Ver todos →
-                                </a>
-                            </div>
+                        {% if category.subcategories.exists %}
+                        <div class="dropdown-menu absolute top-full left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            {% for subcategory in category.subcategories.all %}
+                            <a href="{% url 'shop:subcategory' category.slug subcategory.slug %}" class="dropdown-item block text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                                {{ subcategory.name }}
+                            </a>
+                            {% endfor %}
                         </div>
                         {% endif %}
                     </li>
                     {% endfor %}
-                    
-                    <!-- FIXED: Ofertas is now inside the same ul as a regular li -->
-                    <li class="flex-shrink-0">
-                        <a href="#" class="ofertas-badge bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-bold rounded-xl animate-pulse flex items-center whitespace-nowrap">
-                            🔥 Ofertas
-                        </a>
-                    </li>
                 </ul>
+
+                <!-- Ofertas Badge -->
+                <a href="#" class="ofertas-badge inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-full hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span>🔥</span>
+                    <span>Ofertas</span>
+                </a>
             </div>
         </div>
     </nav>
 
-    <!-- Mobile Navigation Menu -->
-    <div id="mobileNavMenu" class="hidden lg:hidden bg-white border-t border-gray-200 shadow-lg">
-        <div class="header-container mx-auto px-4 py-4">
-            <ul class="space-y-2">
-                <li>
-                    <a href="{% url 'shop:home' %}" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all font-semibold">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        Inicio
-                    </a>
-                </li>
-                {% for category in categories %}
-                <li>
-                    <button class="w-full flex items-center justify-between px-4 py-3 text-left text-gray-700 hover:bg-blue-50 rounded-xl transition-all font-semibold mobile-category-btn" data-target="mobile-cat-{{ category.slug }}">
-                        <span>{{ category.name }}</span>
-                        {% if category.subcategories.all %}
-                        <svg class="w-5 h-5 transform transition-transform mobile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                        {% endif %}
-                    </button>
-                    {% if category.subcategories.all %}
-                    <div id="mobile-cat-{{ category.slug }}" class="hidden pl-8 mt-2 space-y-1">
-                        {% for subcategory in category.subcategories.all %}
-                        <a href="{{ subcategory.get_url }}" class="block px-4 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                            {{ subcategory.name }}
-                        </a>
-                        {% endfor %}
-                    </div>
+    <!-- Mobile Navigation Toggle -->
+    <div class="lg:hidden bg-white border-b border-gray-200 px-4 py-3">
+        <button id="mobileNavToggle" class="w-full flex items-center justify-between px-4 py-3 bg-gray-100 rounded-xl text-gray-700 font-semibold">
+            <span class="flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+                Menú de Categorías
+            </span>
+            <svg class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+        
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobileNavMenu" class="hidden mt-3 space-y-2">
+            <a href="{% url 'shop:home' %}" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-lg font-semibold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Inicio
+            </a>
+            
+            {% for category in nav_categories %}
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                <button class="mobile-category-btn w-full flex items-center justify-between px-4 py-3 text-gray-700 font-semibold hover:bg-gray-50" data-target="mobile-sub-{{ category.slug }}">
+                    <span>{{ category.name }}</span>
+                    {% if category.subcategories.exists %}
+                    <svg class="mobile-chevron w-5 h-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
                     {% endif %}
-                </li>
-                {% endfor %}
-                <li>
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-xl font-bold">
-                        🔥 Ofertas
+                </button>
+                
+                {% if category.subcategories.exists %}
+                <div id="mobile-sub-{{ category.slug }}" class="hidden bg-gray-50 border-t border-gray-200">
+                    {% for subcategory in category.subcategories.all %}
+                    <a href="{% url 'shop:subcategory' category.slug subcategory.slug %}" class="block px-6 py-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                        {{ subcategory.name }}
                     </a>
-                </li>
-            </ul>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <a href="#" class="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-lg">
+                <span>🔥</span> Ofertas Especiales
+            </a>
         </div>
     </div>
-</div>
-
-<style>
-/* ===== HEADER RESPONSIVE STYLES ===== */
-
-/* Animation */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-slideIn {
-    animation: slideIn 0.5s ease-out;
-}
-
-/* ===== BASE STYLES (Mobile First) ===== */
-.header-container {
-    max-width: 100%;
-}
-
-/* Promo Strip */
-.promo-emoji { font-size: 1.25rem; }
-.promo-text { font-size: 0.875rem; }
-.promo-link { font-size: 0.875rem; }
-
-/* Top Bar */
-.topbar-height { padding: 0.625rem 0; }
-.topbar-links-gap { gap: 1.5rem; }
-.topbar-link { font-size: 0.875rem; }
-.topbar-icon { width: 1rem; height: 1rem; }
-.topbar-phone-icon { width: 2rem; height: 2rem; }
-.topbar-phone-svg { width: 1rem; height: 1rem; }
-.topbar-avatar { width: 1.75rem; height: 1.75rem; font-size: 0.75rem; }
-
-/* Main Header */
-.main-header-padding { padding: 1rem 0; }
-.header-logo { height: 3rem; width: auto; }
-.header-logo-text { font-size: 1.125rem; }
-
-/* Search */
-.search-icon { width: 1.25rem; height: 1.25rem; }
-.search-input { 
-    padding: 0.875rem 8rem 0.875rem 3rem;
-    font-size: 0.875rem;
-}
-.search-button {
-    padding: 0.5rem 1.5rem;
-    font-size: 0.875rem;
-}
-
-/* Action Links */
-.action-links-gap { gap: 0.25rem; }
-.action-link-padding { padding: 0.5rem 0.5rem; }
-.action-icon { width: 1.5rem; height: 1.5rem; }
-.action-label { font-size: 0.75rem; }
-.cart-button { padding: 0.5rem 0.75rem; }
-.cart-icon { width: 1.5rem; height: 1.5rem; }
-.cart-badge { 
-    width: 1.5rem; 
-    height: 1.5rem; 
-    font-size: 0.75rem;
-    top: -0.5rem;
-    right: -0.5rem;
-}
-
-/* Navigation Bar */
-.nav-wrapper { 
-    min-height: 3.5rem;
-}
-.nav-items-gap { gap: 0.25rem; }
-.nav-link-item {
-    padding: 0.5rem 0.625rem;
-    gap: 0.25rem;
-    flex-direction: row;
-    align-items: center;
-}
-.nav-link-text {
-    font-size: 0.8rem;
-    line-height: 1.25;
-    text-align: center;
-    max-width: 5.5rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-}
-.nav-home-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-right: 0.375rem;
-}
-.nav-chevron {
-    width: 0.75rem;
-    height: 0.75rem;
-    margin-left: 0.125rem;
-    flex-shrink: 0;
-}
-.ofertas-badge {
-    padding: 0.5rem 0.875rem;
-    font-size: 0.8rem;
-    margin-left: 0.25rem;
-}
-
-/* Dropdown */
-.dropdown-menu { width: 16rem; }
-.dropdown-item { 
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-}
-
-/* ===== LARGE DESKTOP (1280px+) ===== */
-@media (min-width: 1280px) {
-    .header-container { max-width: 95%; }
-    
-    .nav-items-gap { gap: 0.375rem; }
-    .nav-link-item { padding: 0.625rem 0.75rem; }
-    .nav-link-text { 
-        font-size: 0.825rem; 
-        max-width: 6rem;
-    }
-    .nav-chevron {
-        width: 0.8rem;
-        height: 0.8rem;
-    }
-    .ofertas-badge {
-        padding: 0.5rem 1rem;
-        font-size: 0.825rem;
-    }
-}
-
-/* ===== DESKTOP HD (1920px+) ===== */
-@media (min-width: 1920px) {
-    .header-container { max-width: 92%; }
-    
-    /* Promo Strip */
-    .promo-emoji { font-size: 1.5rem; }
-    .promo-text { font-size: 1rem; }
-    .promo-link { font-size: 1rem; }
-    
-    /* Top Bar */
-    .topbar-height { padding: 0.75rem 0; }
-    .topbar-links-gap { gap: 2rem; }
-    .topbar-link { font-size: 0.95rem; }
-    .topbar-icon { width: 1.125rem; height: 1.125rem; }
-    .topbar-phone-icon { width: 2.25rem; height: 2.25rem; }
-    .topbar-phone-svg { width: 1.125rem; height: 1.125rem; }
-    .topbar-avatar { width: 2rem; height: 2rem; font-size: 0.8rem; }
-    
-    /* Main Header */
-    .main-header-padding { padding: 1.25rem 0; }
-    .header-logo { height: 3.5rem; }
-    .header-logo-text { font-size: 1.25rem; }
-    
-    /* Search */
-    .search-icon { width: 1.375rem; height: 1.375rem; }
-    .search-input { 
-        padding: 1rem 9rem 1rem 3.25rem;
-        font-size: 0.95rem;
-    }
-    .search-button {
-        padding: 0.625rem 1.75rem;
-        font-size: 0.95rem;
-    }
-    
-    /* Action Links */
-    .action-links-gap { gap: 0.5rem; }
-    .action-link-padding { padding: 0.625rem 0.75rem; }
-    .action-icon { width: 1.625rem; height: 1.625rem; }
-    .action-label { font-size: 0.8rem; }
-    .cart-button { padding: 0.625rem 1rem; }
-    .cart-icon { width: 1.625rem; height: 1.625rem; }
-    .cart-badge { 
-        width: 1.625rem; 
-        height: 1.625rem; 
-        font-size: 0.8rem;
-    }
-    
-    /* Navigation Bar */
-    .nav-wrapper { min-height: 4rem; }
-    .nav-items-gap { gap: 0.5rem; }
-    .nav-link-item { 
-        padding: 0.75rem 0.875rem;
-        gap: 0.375rem;
-    }
-    .nav-link-text { 
-        font-size: 0.875rem;
-        max-width: 6.5rem;
-        line-height: 1.3;
-    }
-    .nav-home-icon {
-        width: 1.375rem;
-        height: 1.375rem;
-    }
-    .nav-chevron {
-        width: 0.875rem;
-        height: 0.875rem;
-        margin-left: 0.25rem;
-    }
-    .ofertas-badge {
-        padding: 0.625rem 1.125rem;
-        font-size: 0.875rem;
-        margin-left: 0.5rem;
-    }
-    
-    /* Dropdown */
-    .dropdown-menu { width: 18rem; }
-    .dropdown-item { 
-        padding: 0.875rem 1.125rem;
-        font-size: 0.95rem;
-    }
-}
-
-/* ===== ULTRAWIDE/2K (2560px+) ===== */
-@media (min-width: 2560px) {
-    .header-container { max-width: 88%; }
-    
-    /* Promo Strip */
-    .promo-emoji { font-size: 1.75rem; }
-    .promo-text { font-size: 1.125rem; }
-    .promo-link { font-size: 1.125rem; }
-    
-    /* Top Bar */
-    .topbar-height { padding: 0.875rem 0; }
-    .topbar-links-gap { gap: 2.5rem; }
-    .topbar-link { font-size: 1.05rem; }
-    .topbar-icon { width: 1.25rem; height: 1.25rem; }
-    .topbar-phone-icon { width: 2.5rem; height: 2.5rem; }
-    .topbar-phone-svg { width: 1.25rem; height: 1.25rem; }
-    .topbar-avatar { width: 2.25rem; height: 2.25rem; font-size: 0.875rem; }
-    
-    /* Main Header */
-    .main-header-padding { padding: 1.5rem 0; }
-    .header-logo { height: 4.25rem; }
-    .header-logo-text { font-size: 1.4rem; }
-    
-    /* Search */
-    .search-icon { width: 1.5rem; height: 1.5rem; }
-    .search-input { 
-        padding: 1.125rem 10rem 1.125rem 3.5rem;
-        font-size: 1.05rem;
-    }
-    .search-button {
-        padding: 0.75rem 2rem;
-        font-size: 1.05rem;
-    }
-    
-    /* Action Links */
-    .action-links-gap { gap: 0.75rem; }
-    .action-link-padding { padding: 0.75rem 1rem; }
-    .action-icon { width: 1.875rem; height: 1.875rem; }
-    .action-label { font-size: 0.875rem; }
-    .cart-button { padding: 0.75rem 1.25rem; }
-    .cart-icon { width: 1.875rem; height: 1.875rem; }
-    .cart-badge { 
-        width: 1.875rem; 
-        height: 1.875rem; 
-        font-size: 0.875rem;
-        top: -0.625rem;
-        right: -0.625rem;
-    }
-    
-    /* Navigation Bar */
-    .nav-wrapper { min-height: 4.5rem; }
-    .nav-items-gap { gap: 0.75rem; }
-    .nav-link-item { 
-        padding: 0.875rem 1rem;
-        gap: 0.5rem;
-    }
-    .nav-link-text {
-        font-size: 1rem;
-        line-height: 1.35;
-        max-width: 7.5rem;
-    }
-    .nav-home-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        margin-right: 0.5rem;
-    }
-    .nav-chevron {
-        width: 1rem;
-        height: 1rem;
-        margin-left: 0.375rem;
-    }
-    .ofertas-badge {
-        padding: 0.75rem 1.375rem;
-        font-size: 1rem;
-        margin-left: 0.75rem;
-    }
-    
-    /* Dropdown */
-    .dropdown-menu { width: 22rem; }
-    .dropdown-item { 
-        padding: 1rem 1.375rem;
-        font-size: 1.05rem;
-    }
-}
-
-/* ===== ULTRA-WIDE (3440px+) ===== */
-@media (min-width: 3440px) {
-    .header-container { max-width: 85%; }
-    
-    /* Promo Strip */
-    .promo-emoji { font-size: 2rem; }
-    .promo-text { font-size: 1.25rem; }
-    .promo-link { font-size: 1.25rem; }
-    
-    /* Top Bar */
-    .topbar-height { padding: 1rem 0; }
-    .topbar-links-gap { gap: 3rem; }
-    .topbar-link { font-size: 1.15rem; }
-    .topbar-icon { width: 1.375rem; height: 1.375rem; }
-    .topbar-phone-icon { width: 2.75rem; height: 2.75rem; }
-    .topbar-phone-svg { width: 1.375rem; height: 1.375rem; }
-    .topbar-avatar { width: 2.5rem; height: 2.5rem; font-size: 1rem; }
-    
-    /* Main Header */
-    .main-header-padding { padding: 1.75rem 0; }
-    .header-logo { height: 5rem; }
-    .header-logo-text { font-size: 1.6rem; }
-    
-    /* Search */
-    .search-icon { width: 1.75rem; height: 1.75rem; }
-    .search-input { 
-        padding: 1.25rem 11rem 1.25rem 4rem;
-        font-size: 1.15rem;
-    }
-    .search-button {
-        padding: 0.875rem 2.25rem;
-        font-size: 1.15rem;
-    }
-    
-    /* Action Links */
-    .action-links-gap { gap: 1rem; }
-    .action-link-padding { padding: 0.875rem 1.25rem; }
-    .action-icon { width: 2.125rem; height: 2.125rem; }
-    .action-label { font-size: 0.95rem; }
-    .cart-button { padding: 0.875rem 1.5rem; }
-    .cart-icon { width: 2.125rem; height: 2.125rem; }
-    .cart-badge { 
-        width: 2.125rem; 
-        height: 2.125rem; 
-        font-size: 1rem;
-    }
-    
-    /* Navigation Bar */
-    .nav-wrapper { min-height: 5rem; }
-    .nav-items-gap { gap: 1rem; }
-    .nav-link-item { 
-        padding: 1rem 1.25rem;
-        gap: 0.625rem;
-    }
-    .nav-link-text {
-        font-size: 1.125rem;
-        line-height: 1.4;
-        max-width: 8.5rem;
-    }
-    .nav-home-icon {
-        width: 1.625rem;
-        height: 1.625rem;
-        margin-right: 0.625rem;
-    }
-    .nav-chevron {
-        width: 1.125rem;
-        height: 1.125rem;
-        margin-left: 0.5rem;
-    }
-    .ofertas-badge {
-        padding: 0.875rem 1.625rem;
-        font-size: 1.125rem;
-        margin-left: 1rem;
-    }
-    
-    /* Dropdown */
-    .dropdown-menu { width: 26rem; }
-    .dropdown-item { 
-        padding: 1.125rem 1.5rem;
-        font-size: 1.15rem;
-    }
-}
-
-/* ===== 4K (3840px+) ===== */
-@media (min-width: 3840px) {
-    .header-container { max-width: 82%; }
-    
-    /* Promo Strip */
-    .promo-emoji { font-size: 2.25rem; }
-    .promo-text { font-size: 1.4rem; }
-    .promo-link { font-size: 1.4rem; }
-    
-    /* Top Bar */
-    .topbar-height { padding: 1.125rem 0; }
-    .topbar-links-gap { gap: 3.5rem; }
-    .topbar-link { font-size: 1.25rem; }
-    .topbar-icon { width: 1.5rem; height: 1.5rem; }
-    .topbar-phone-icon { width: 3rem; height: 3rem; }
-    .topbar-phone-svg { width: 1.5rem; height: 1.5rem; }
-    .topbar-avatar { width: 2.75rem; height: 2.75rem; font-size: 1.125rem; }
-    
-    /* Main Header */
-    .main-header-padding { padding: 2rem 0; }
-    .header-logo { height: 5.5rem; }
-    .header-logo-text { font-size: 1.75rem; }
-    
-    /* Search */
-    .search-icon { width: 2rem; height: 2rem; }
-    .search-input { 
-        padding: 1.375rem 12rem 1.375rem 4.5rem;
-        font-size: 1.25rem;
-    }
-    .search-button {
-        padding: 1rem 2.5rem;
-        font-size: 1.25rem;
-    }
-    
-    /* Action Links */
-    .action-links-gap { gap: 1.25rem; }
-    .action-link-padding { padding: 1rem 1.5rem; }
-    .action-icon { width: 2.375rem; height: 2.375rem; }
-    .action-label { font-size: 1.05rem; }
-    .cart-button { padding: 1rem 1.75rem; }
-    .cart-icon { width: 2.375rem; height: 2.375rem; }
-    .cart-badge { 
-        width: 2.375rem; 
-        height: 2.375rem; 
-        font-size: 1.125rem;
-        top: -0.75rem;
-        right: -0.75rem;
-    }
-    
-    /* Navigation Bar */
-    .nav-wrapper { min-height: 5.5rem; }
-    .nav-items-gap { gap: 1.25rem; }
-    .nav-link-item { 
-        padding: 1.125rem 1.5rem;
-        gap: 0.75rem;
-    }
-    .nav-link-text {
-        font-size: 1.25rem;
-        line-height: 1.45;
-        max-width: 10rem;
-    }
-    .nav-home-icon {
-        width: 1.875rem;
-        height: 1.875rem;
-        margin-right: 0.75rem;
-    }
-    .nav-chevron {
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-left: 0.625rem;
-    }
-    .ofertas-badge {
-        padding: 1rem 1.875rem;
-        font-size: 1.25rem;
-        margin-left: 1.25rem;
-    }
-    
-    /* Dropdown */
-    .dropdown-menu { width: 30rem; }
-    .dropdown-item { 
-        padding: 1.25rem 1.75rem;
-        font-size: 1.25rem;
-    }
-}
-</style>
+</header>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile navigation toggle
+    // Mobile navigation
     const mobileNavToggle = document.getElementById('mobileNavToggle');
     const mobileNavMenu = document.getElementById('mobileNavMenu');
     
@@ -752,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Mobile category accordion
     document.querySelectorAll('.mobile-category-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const targetId = this.getAttribute('data-target');
@@ -762,12 +295,81 @@ document.addEventListener('DOMContentLoaded', function() {
             if (target) {
                 target.classList.toggle('hidden');
                 if (chevron) {
-                    chevron.style.transform = target.classList.contains('hidden') 
-                        ? 'rotate(0deg)' 
-                        : 'rotate(180deg)';
+                    chevron.style.transform = target.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
                 }
             }
         });
     });
 });
+
+// ========== FUNCIONES PARA ACTUALIZAR EL CARRITO ==========
+
+/**
+ * Actualiza el badge del carrito con el nuevo conteo
+ * @param {number} count - Cantidad de items en el carrito
+ */
+function updateCartBadge(count) {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    
+    if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+        // Animación de bounce
+        badge.classList.add('animate-bounce');
+        setTimeout(() => {
+            badge.classList.remove('animate-bounce');
+        }, 1000);
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+/**
+ * Obtiene el conteo actual del carrito desde el servidor
+ * Nota: Requiere añadir la URL 'cart_count' en cart/urls.py si quieres usar esta función
+ */
+function refreshCartCount() {
+    // Si la URL existe, la usa. Si no, simplemente recarga la página.
+    fetch('/carrito-de-compras/count/')
+        .then(response => {
+            if (!response.ok) throw new Error('URL not found');
+            return response.json();
+        })
+        .then(data => {
+            updateCartBadge(data.count);
+        })
+        .catch(error => {
+            // Si la URL no existe, simplemente recargar la página actualizará el badge
+            console.log('Para actualización dinámica, añade la vista cart_count');
+        });
+}
+
+/**
+ * Incrementa el badge del carrito (para usar después de añadir un producto)
+ */
+function incrementCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    
+    let currentCount = parseInt(badge.textContent) || 0;
+    updateCartBadge(currentCount + 1);
+}
+
+/**
+ * Decrementa el badge del carrito (para usar después de eliminar un producto)
+ */
+function decrementCartBadge() {
+    const badge = document.getElementById('cart-badge');
+    if (!badge) return;
+    
+    let currentCount = parseInt(badge.textContent) || 0;
+    updateCartBadge(Math.max(0, currentCount - 1));
+}
+
+// Exponer funciones globalmente para usar desde otros scripts
+window.updateCartBadge = updateCartBadge;
+window.refreshCartCount = refreshCartCount;
+window.incrementCartBadge = incrementCartBadge;
+window.decrementCartBadge = decrementCartBadge;
 </script>

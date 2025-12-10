@@ -3,543 +3,31 @@
 
 {% block title %}{{ subcategory.name }} - {{ category.name }} - Imprenta Gallito{% endblock %}
 
-{% block extra_css %}
-<style>
-:root {
-    --primary: #0066cc;
-    --primary-dark: #004999;
-    --secondary: #e63946;
-    --dark: #1a1a2e;
-    --light-bg: #f8f9fa;
-    --border-color: #e0e0e0;
-}
-
-.subcategory-page {
-    background-color: var(--light-bg);
-    min-height: 100vh;
-}
-
-/* Hero con color según category_type del padre */
-.subcategory-hero {
-    padding: 50px 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.subcategory-hero.hero-quality-tiers {
-    background: linear-gradient(135deg, var(--dark) 0%, #16213e 100%);
-}
-
-.subcategory-hero.hero-product-types {
-    background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%);
-}
-
-.subcategory-hero.hero-formats {
-    background: linear-gradient(135deg, #0066cc 0%, #004999 100%);
-}
-
-.subcategory-hero.hero-services {
-    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-}
-
-.subcategory-hero.hero-occasions {
-    background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
-}
-
-.subcategory-hero.hero-standard {
-    background: linear-gradient(135deg, #0066cc 0%, #0d47a1 100%);
-}
-
-.subcategory-hero .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    position: relative;
-    z-index: 1;
-}
-
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-    transition: color 0.2s;
-}
-
-.back-link:hover {
-    color: white;
-}
-
-.subcategory-hero h1 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 15px;
-}
-
-.subcategory-hero p {
-    font-size: 1.1rem;
-    color: rgba(255,255,255,0.9);
-    max-width: 600px;
-}
-
-/* Badge del estilo */
-.style-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.2);
-    padding: 6px 14px;
-    border-radius: 20px;
-    color: white;
-    font-size: 0.8rem;
-    margin-top: 15px;
-}
-
-/* Breadcrumb */
-.subcategory-breadcrumb {
-    background: white;
-    padding: 15px 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.subcategory-breadcrumb .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.subcategory-breadcrumb ol {
-    display: flex;
-    gap: 8px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.9rem;
-}
-
-.subcategory-breadcrumb li:not(:last-child)::after {
-    content: "/";
-    margin-left: 8px;
-    color: #999;
-}
-
-.subcategory-breadcrumb a {
-    color: #666;
-    text-decoration: none;
-}
-
-.subcategory-breadcrumb a:hover {
-    color: var(--primary);
-}
-
-.subcategory-breadcrumb .active {
-    color: #333;
-    font-weight: 500;
-}
-
-/* Sibling Subcategories - Mostrar otras subcategorías del mismo padre */
-.sibling-subcategories {
-    background: white;
-    padding: 25px 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.sibling-subcategories .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.sibling-title {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 15px;
-}
-
-/* Estilo TABS para siblings */
-.siblings-tabs {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.sibling-tab {
-    padding: 10px 20px;
-    background: #f0f0f0;
-    border-radius: 8px;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: all 0.2s;
-    border: 2px solid transparent;
-}
-
-.sibling-tab:hover {
-    border-color: var(--primary);
-    background: rgba(0,102,204,0.05);
-}
-
-.sibling-tab.active {
-    background: var(--primary);
-    color: white;
-}
-
-/* Estilo CIRCLES para siblings */
-.siblings-circles {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-}
-
-.sibling-circle {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    width: 100px;
-    transition: transform 0.2s;
-}
-
-.sibling-circle:hover {
-    transform: translateY(-5px);
-}
-
-.sibling-circle-img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #e0e0e0;
-    margin-bottom: 10px;
-    transition: border-color 0.2s;
-}
-
-.sibling-circle:hover .sibling-circle-img,
-.sibling-circle.active .sibling-circle-img {
-    border-color: var(--primary);
-}
-
-.sibling-circle.active .sibling-circle-img {
-    border-width: 4px;
-    border-color: var(--secondary);
-}
-
-.sibling-circle-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.sibling-circle-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--primary), #0088ff);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sibling-circle-placeholder i {
-    color: white;
-    font-size: 1.5rem;
-}
-
-.sibling-circle span {
-    font-size: 0.85rem;
-    color: #333;
-    text-align: center;
-    font-weight: 500;
-}
-
-.sibling-circle.active span {
-    color: var(--secondary);
-}
-
-/* Estilo CARDS para siblings */
-.siblings-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.sibling-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    text-decoration: none;
-    color: #333;
-    transition: all 0.2s;
-    border: 2px solid transparent;
-}
-
-.sibling-card:hover {
-    border-color: var(--primary);
-    background: white;
-}
-
-.sibling-card.active {
-    border-color: var(--primary);
-    background: rgba(0,102,204,0.1);
-}
-
-.sibling-card-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.sibling-card-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.sibling-card span {
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-/* Products Section */
-.products-section {
-    padding: 50px 0;
-}
-
-.products-section .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.products-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-.products-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--dark);
-}
-
-.products-count {
-    background: #e5e7eb;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-}
-
-.product-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-}
-
-.product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-}
-
-.product-image {
-    aspect-ratio: 1;
-    overflow: hidden;
-    background: #f5f5f5;
-}
-
-.product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.product-card:hover .product-image img {
-    transform: scale(1.05);
-}
-
-.product-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
-}
-
-.product-placeholder i {
-    font-size: 3rem;
-    margin-bottom: 10px;
-}
-
-.product-content {
-    padding: 20px;
-}
-
-.product-content h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 10px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.product-description {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.product-price {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 10px;
-}
-
-.price-current {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.price-from {
-    font-size: 0.85rem;
-    color: #999;
-}
-
-.product-sku {
-    font-size: 0.75rem;
-    color: #999;
-}
-
-.product-cta {
-    display: block;
-    text-align: center;
-    padding: 12px;
-    background: var(--primary);
-    color: white;
-    font-weight: 600;
-    border-radius: 8px;
-    margin-top: 15px;
-    transition: background 0.3s ease;
-}
-
-.product-card:hover .product-cta {
-    background: var(--primary-dark);
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 80px 20px;
-    background: white;
-    border-radius: 16px;
-}
-
-.empty-state i {
-    font-size: 4rem;
-    color: #ddd;
-    margin-bottom: 20px;
-}
-
-.empty-state h3 {
-    font-size: 1.5rem;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.empty-state p {
-    color: #999;
-    margin-bottom: 25px;
-}
-
-.empty-state a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--primary);
-    color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-}
-
-@media (max-width: 768px) {
-    .subcategory-hero h1 {
-        font-size: 1.8rem;
-    }
-    
-    .siblings-circles {
-        gap: 20px;
-    }
-    
-    .sibling-circle {
-        width: 80px;
-    }
-    
-    .sibling-circle-img {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .products-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="subcategory-page">
+<div class="bg-gray-50 min-h-screen">
     
-    {# ============================================
-       HERO SECTION
-       ============================================ #}
-    <section class="subcategory-hero hero-{{ category.category_type|default:'standard' }}">
-        <div class="container">
-            <a href="{% url 'shop:category' category.slug %}" class="back-link">
+    <!-- Hero Section - Color dinámico según category_type -->
+    <section class="py-12 relative overflow-hidden
+        {% if category.category_type == 'quality_tiers' %}bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900
+        {% elif category.category_type == 'product_types' %}bg-gradient-to-br from-blue-900 via-slate-800 to-slate-900
+        {% elif category.category_type == 'formats' %}bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800
+        {% elif category.category_type == 'services' %}bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800
+        {% elif category.category_type == 'occasions' %}bg-gradient-to-br from-pink-500 via-pink-600 to-pink-700
+        {% else %}bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800{% endif %}">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <a href="{% url 'shop:category' category.slug %}" 
+               class="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-5 transition-colors">
                 <i class="fas fa-arrow-left"></i>
                 Volver a {{ category.name }}
             </a>
             
-            <h1>{{ subcategory.name }}</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ subcategory.name }}</h1>
             {% if subcategory.description %}
-            <p>{{ subcategory.description }}</p>
+            <p class="text-lg text-white/90 max-w-xl">{{ subcategory.description }}</p>
             {% endif %}
             
-            {# Mostrar badge del estilo de visualización #}
             {% if subcategory.display_style %}
-            <div class="style-badge">
+            <div class="inline-flex items-center gap-2 mt-5 px-4 py-2 bg-white/20 rounded-full text-white text-sm">
                 {% if subcategory.display_style == 'tab' %}
                 <i class="fas fa-layer-group"></i> Nivel de calidad
                 {% elif subcategory.display_style == 'circle' %}
@@ -554,12 +42,10 @@
         </div>
     </section>
 
-    {# ============================================
-       BREADCRUMB
-       ============================================ #}
-    <nav class="subcategory-breadcrumb">
-        <div class="container">
-            <ol>
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <ol class="breadcrumb">
                 <li><a href="{% url 'shop:home' %}">Inicio</a></li>
                 <li><a href="{% url 'shop:category' category.slug %}">{{ category.name }}</a></li>
                 <li class="active">{{ subcategory.name }}</li>
@@ -567,57 +53,70 @@
         </div>
     </nav>
 
-    {# ============================================
-       SIBLING SUBCATEGORIES - Según display_style
-       ============================================ #}
+    <!-- Sibling Subcategories -->
     {% if sibling_subcategories %}
-    <section class="sibling-subcategories">
-        <div class="container">
-            <p class="sibling-title">También en {{ category.name }}:</p>
+    <section class="bg-white py-6 border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <p class="text-sm text-gray-500 mb-4">También en {{ category.name }}:</p>
             
             {% if subcategory.display_style == 'tab' %}
-            {# TABS STYLE #}
-            <div class="siblings-tabs">
+            <!-- TABS Style -->
+            <div class="flex flex-wrap gap-3">
                 {% for sib in sibling_subcategories %}
                 <a href="{% url 'shop:subcategory' category.slug sib.slug %}" 
-                   class="sibling-tab {% if sib.slug == subcategory.slug %}active{% endif %}">
+                   class="px-5 py-2.5 rounded-lg font-medium transition-all border-2
+                          {% if sib.slug == subcategory.slug %}
+                          bg-blue-600 text-white border-blue-600
+                          {% else %}
+                          bg-gray-100 text-gray-700 border-transparent hover:border-blue-600 hover:bg-blue-50
+                          {% endif %}">
                     {{ sib.name }}
                 </a>
                 {% endfor %}
             </div>
             
             {% elif subcategory.display_style == 'circle' %}
-            {# CIRCLES STYLE #}
-            <div class="siblings-circles">
+            <!-- CIRCLES Style -->
+            <div class="flex flex-wrap gap-8">
                 {% for sib in sibling_subcategories %}
                 <a href="{% url 'shop:subcategory' category.slug sib.slug %}" 
-                   class="sibling-circle {% if sib.slug == subcategory.slug %}active{% endif %}">
-                    <div class="sibling-circle-img">
+                   class="flex flex-col items-center w-24 transition-transform hover:-translate-y-1
+                          {% if sib.slug == subcategory.slug %}opacity-100{% else %}opacity-80 hover:opacity-100{% endif %}">
+                    <div class="w-16 h-16 rounded-full overflow-hidden border-4 mb-2 transition-colors
+                                {% if sib.slug == subcategory.slug %}border-red-500{% else %}border-gray-200 hover:border-blue-500{% endif %}">
                         {% if sib.image_url %}
-                        <img src="{{ sib.image_url }}" alt="{{ sib.name }}">
+                        <img src="{{ sib.image_url }}" alt="{{ sib.name }}" class="w-full h-full object-cover">
                         {% else %}
-                        <div class="sibling-circle-placeholder">
-                            <i class="fas fa-tag"></i>
+                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                            <i class="fas fa-tag text-white text-lg"></i>
                         </div>
                         {% endif %}
                     </div>
-                    <span>{{ sib.name }}</span>
+                    <span class="text-xs font-medium text-center
+                                 {% if sib.slug == subcategory.slug %}text-red-500{% else %}text-gray-700{% endif %}">
+                        {{ sib.name }}
+                    </span>
                 </a>
                 {% endfor %}
             </div>
             
             {% else %}
-            {# CARDS STYLE (default) #}
-            <div class="siblings-cards">
+            <!-- CARDS Style (default) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {% for sib in sibling_subcategories %}
                 <a href="{% url 'shop:subcategory' category.slug sib.slug %}" 
-                   class="sibling-card {% if sib.slug == subcategory.slug %}active{% endif %}">
+                   class="flex items-center gap-3 p-3 rounded-xl transition-all border-2
+                          {% if sib.slug == subcategory.slug %}
+                          border-blue-500 bg-blue-50
+                          {% else %}
+                          border-transparent bg-gray-50 hover:border-blue-500 hover:bg-white
+                          {% endif %}">
                     {% if sib.image_url %}
-                    <div class="sibling-card-icon">
-                        <img src="{{ sib.image_url }}" alt="{{ sib.name }}">
+                    <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+                        <img src="{{ sib.image_url }}" alt="{{ sib.name }}" class="w-full h-full object-cover">
                     </div>
                     {% endif %}
-                    <span>{{ sib.name }}</span>
+                    <span class="text-sm font-medium text-gray-700">{{ sib.name }}</span>
                 </a>
                 {% endfor %}
             </div>
@@ -626,62 +125,61 @@
     </section>
     {% endif %}
 
-    {# ============================================
-       PRODUCTOS
-       ============================================ #}
-    <section class="products-section">
-        <div class="container">
-            <div class="products-header">
-                <h2>Productos</h2>
-                <span class="products-count">{{ products|length }} producto{{ products|length|pluralize }}</span>
+    <!-- Products Section -->
+    <section class="py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">Productos</h2>
+                <span class="text-gray-500">{{ products|length }} producto{{ products|length|pluralize }}</span>
             </div>
 
             {% if products %}
-            <div class="products-grid">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {% for product in products %}
-                <a href="{{ product.get_absolute_url }}" class="product-card">
-                    <div class="product-image">
+                <a href="{{ product.get_absolute_url }}" class="material-card">
+                    <div class="material-image">
                         {% if product.base_image_url %}
                         <img src="{{ product.base_image_url }}" alt="{{ product.name }}">
                         {% else %}
-                        <div class="product-placeholder">
-                            <i class="fas fa-image"></i>
-                            <span>Sin imagen</span>
+                        <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                            <i class="fas fa-image text-4xl mb-2"></i>
+                            <span class="text-sm">Sin imagen</span>
                         </div>
                         {% endif %}
                     </div>
                     
-                    <div class="product-content">
+                    <div class="material-content">
                         <h3>{{ product.name }}</h3>
                         
                         {% if product.description %}
-                        <p class="product-description">{{ product.description }}</p>
+                        <p>{{ product.description|truncatewords:12 }}</p>
                         {% endif %}
                         
                         {% with price_range=product.get_price_range %}
-                        <div class="product-price">
+                        <div class="material-price">
                             {% if price_range.0 == price_range.1 %}
-                            <span class="price-current">S/ {{ price_range.0 }}</span>
+                            <span class="price-value">S/ {{ price_range.0 }}</span>
                             {% else %}
                             <span class="price-from">Desde</span>
-                            <span class="price-current">S/ {{ price_range.0 }}</span>
+                            <span class="price-value">S/ {{ price_range.0 }}</span>
                             {% endif %}
                         </div>
                         {% endwith %}
                         
-                        <p class="product-sku">SKU: {{ product.sku }}</p>
+                        <p class="text-xs text-gray-400 mb-3">SKU: {{ product.sku }}</p>
                         
-                        <span class="product-cta">Ver Detalles</span>
+                        <span class="material-cta">Ver Detalles</span>
                     </div>
                 </a>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="empty-state">
-                <i class="fas fa-box-open"></i>
-                <h3>No hay productos disponibles</h3>
-                <p>Esta subcategoría aún no tiene productos.</p>
-                <a href="{% url 'shop:category' category.slug %}">
+            <div class="text-center py-20 bg-white rounded-2xl">
+                <i class="fas fa-box-open text-6xl text-gray-300 mb-6"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No hay productos disponibles</h3>
+                <p class="text-gray-500 mb-6">Esta subcategoría aún no tiene productos.</p>
+                <a href="{% url 'shop:category' category.slug %}" 
+                   class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                     <i class="fas fa-arrow-left"></i>
                     Volver a {{ category.name }}
                 </a>

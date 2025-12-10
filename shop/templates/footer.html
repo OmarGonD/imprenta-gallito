@@ -1,37 +1,108 @@
 {% load static %}
 
-
-<div id="footer-navbar">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-9">
-                <ul class="footer_ul footer-links">
-                    <li>
-                        <a href="https://facebook.com/imprentagallito" rel="nofollow noopener" target="_blank" title="Facebook">
-                            <i class="fab fa-facebook-square footer_icons"></i>
-                        </a>
-                    </li>
-                    <!-- Add more social icons as needed -->
-                </ul>
-                <p class="footer_text">
-                    Imprenta Gallito Perú &mdash; Impresión de stickers personalizados en vinil de alta calidad.<br>
-                    <span class="footer_links">
-                        <a href="/legales-terminos">Términos y condiciones</a> |
-                        <a href="/legales-privacidad">Política de privacidad</a> |
-                        <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
-                    </span>
+<footer class="bg-slate-900 text-gray-400">
+    <!-- Main Footer -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <!-- Logo & About -->
+            <div class="lg:col-span-1">
+                <a href="{% url 'shop:home' %}" class="flex items-center gap-3 mb-4">
+                    <img src="{% static 'img/imprenta_gallito_logo.png' %}" alt="Imprenta Gallito" class="h-10">
+                    <span class="text-white font-bold text-xl">Imprenta Gallito</span>
+                </a>
+                <p class="text-sm leading-relaxed mb-4">
+                    Impresión de alta calidad para tu negocio. Tarjetas de presentación, stickers, folletos y más.
                 </p>
+                <!-- Social Links -->
+                <div class="flex gap-4">
+                    <a href="https://facebook.com/imprentagallito" target="_blank" rel="nofollow noopener" 
+                       class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com/imprentagallito" target="_blank" rel="nofollow noopener" 
+                       class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-500 hover:text-white transition-all">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/51964601601" target="_blank" rel="nofollow noopener" 
+                       class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-green-500 hover:text-white transition-all">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
             </div>
-            <div class="col-md-3 text-right">
-                <div>
-                    <span class="footer_text_right">
-                        <img style="display:inline-block;vertical-align:middle;" src="{% static 'img/home/peru-square-flag.jpg' %}" width="22" height="22" alt="Perú">
-                        Perú
-                    </span>
-                    <br>
-                    <span class="footer_text_right">&copy; {{ now|date:"Y" }} imprentagallito</span>
+            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-white font-semibold text-lg mb-4">Enlaces Rápidos</h4>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'shop:home' %}" class="hover:text-white transition-colors">Inicio</a></li>
+                    {% for category in nav_categories|slice:":4" %}
+                    <li><a href="{% url 'shop:category' category.slug %}" class="hover:text-white transition-colors">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Support -->
+            <div>
+                <h4 class="text-white font-semibold text-lg mb-4">Soporte</h4>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'shop:preguntas_frecuentes' %}" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+                    <li><a href="{% url 'shop:legales_terminos' %}" class="hover:text-white transition-colors">Términos y Condiciones</a></li>
+                    <li><a href="{% url 'shop:legales_privacidad' %}" class="hover:text-white transition-colors">Política de Privacidad</a></li>
+                    <li><a href="/contacto/" class="hover:text-white transition-colors">Contacto</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact -->
+            <div>
+                <h4 class="text-white font-semibold text-lg mb-4">Contáctanos</h4>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-phone text-blue-500 mt-1"></i>
+                        <div>
+                            <p class="text-white font-medium">964 601 601</p>
+                            <p class="text-xs">Lun - Sáb: 9am - 6pm</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-envelope text-blue-500 mt-1"></i>
+                        <div>
+                            <a href="mailto:ventas@imprentagallito.com" class="text-white font-medium hover:text-blue-400 transition-colors">
+                                ventas@imprentagallito.com
+                            </a>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt text-blue-500 mt-1"></i>
+                        <div>
+                            <p class="text-sm">Lima, Perú</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Bar -->
+    <div class="border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <img src="{% static 'img/home/peru-square-flag.jpg' %}" alt="Perú" class="w-5 h-5 rounded">
+                    <span class="text-sm">Perú</span>
+                </div>
+                
+                <p class="text-sm text-center">
+                    &copy; {{ now|date:"Y" }} <span class="text-white">Imprenta Gallito</span>. Todos los derechos reservados.
+                </p>
+                
+                <!-- Payment Methods -->
+                <div class="flex items-center gap-3">
+                    <i class="fab fa-cc-visa text-2xl text-gray-500"></i>
+                    <i class="fab fa-cc-mastercard text-2xl text-gray-500"></i>
+                    <span class="text-xs text-gray-500 font-medium px-2 py-1 bg-slate-800 rounded">Yape</span>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</footer>
