@@ -1,28 +1,22 @@
 """
-Django management command to import catalog data from CSV files
+Django management command to import catalog data from Excel files (xlsx)
 
-INCLUDES:
-- Categories (with category_type field)
-- Subcategories (with display_style field)
-- Products (with colors and sizes for clothing)
-- ProductColor (NEW - for clothing colors)
-- ProductSize (NEW - for clothing sizes)
-- ProductImage (NEW - product images by color)
-- Variant Types & Options
-- Price Tiers
-- Design Templates
+ACTUALIZADO PARA SISTEMA DE OPCIONES GENÉRICAS
+==============================================
+Usa: ProductOption + ProductOptionValue + ProductVariant
+En lugar de: ProductColor + ProductSize
 
 Usage:
     python manage.py import_catalog
     python manage.py import_catalog --dry-run
     python manage.py import_catalog --force
     python manage.py import_catalog --only=templates
-    python manage.py import_catalog --only=colors
+    python manage.py import_catalog --only=options
     python manage.py import_catalog --only=polos
 """
 import os
 import pandas as pd
-import csv
+# import csv # YA NO ES NECESARIO
 from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -32,13 +26,11 @@ from shop.models import (
     Category,
     Subcategory,
     Product,
-    ProductColor,
-    ProductSize,
+    ProductOption,
+    ProductOptionValue,
+    ProductVariant,
     ProductImage,
     DesignTemplate,
-    VariantType,
-    VariantOption,
-    ProductVariantType,
     PriceTier
 )
 
@@ -59,7 +51,8 @@ STANDARD_SIZES = [
 
 
 class Command(BaseCommand):
-    help = 'Importa el catálogo de productos desde archivos CSV'
+    # Ayuda actualizada para Excel
+    help = 'Importa el catálogo de productos desde archivos Excel (xlsx)'
 
     # Mapeo de caracteres cirílicos a latinos acentuados
     CYRILLIC_TO_LATIN = {
@@ -97,7 +90,7 @@ class Command(BaseCommand):
         return result
 
     def fix_mojibake(self, text):
-        """Corrige caracteres mojibake en un texto."""
+        """Corrige caracteres mojibake en un texto. Menos necesario para Excel."""
         if not isinstance(text, str):
             return text
         
@@ -106,16 +99,13 @@ class Command(BaseCommand):
         
         for _ in range(max_iterations):
             try:
-                # Intenta corregir UTF-8 que fue leído como Latin-1
                 fixed = result.encode('latin-1').decode('utf-8')
                 if fixed == result:
                     break
                 result = fixed
             except (UnicodeDecodeError, UnicodeEncodeError):
-                # Si falla, el texto ya está bien o es Latin-1 puro
                 break
         
-        # Siempre aplicar limpieza de cirílicos
         result = self.fix_cyrillic_homoglyphs(result)
         return result
 
@@ -128,39 +118,18 @@ class Command(BaseCommand):
                 )
         return df
 
-    def detect_delimiter(self, filepath):
-        """Detecta el delimitador del CSV."""
-        with open(filepath, 'r', encoding='latin-1') as f:
-            sample = f.read(4096)
-            try:
-                dialect = csv.Sniffer().sniff(sample, delimiters=',;\t|')
-                return dialect.delimiter
-            except csv.Error:
-                # Si hay más ; que , probablemente sea ;
-                if sample.count(';') > sample.count(','):
-                    return ';'
-                return ','
+    # --- MÉTODO OBSOLETO PARA EXCEL (reemplazado) ---
+    # def detect_delimiter(self, filepath):
+    #    ...
 
-    def safe_read_csv(self, filepath, encoding='latin-1'):
-        """
-        Lee CSV con encoding mixto (Latin-1 + UTF-8).
+    # NUEVO MÉTODO PARA LEER EXCEL
+    def safe_read_excel(self, filename, sheet_name=0):
+        """Lee un archivo Excel (xlsx) y aplica corrección de encoding si está activo."""
+        filepath = os.path.join(self.data_dir, filename)
         
-        Estrategia:
-        1. Intentar primero UTF-8 para archivos nuevos
-        2. Si falla, usar Latin-1 (acepta cualquier byte 0-255)
-        3. Aplicar fix_mojibake()
-        """
-        # Detectar delimitador
-        delimiter = self.detect_delimiter(filepath)
+        # pd.read_excel maneja la codificación y los tipos de datos de Excel
+        df = pd.read_excel(filepath, sheet_name=sheet_name)
         
-        # Intentar primero con UTF-8 para archivos nuevos
-        try:
-            df = pd.read_csv(filepath, encoding='utf-8', delimiter=delimiter)
-        except UnicodeDecodeError:
-            # Si falla, usar Latin-1
-            df = pd.read_csv(filepath, encoding=encoding, delimiter=delimiter)
-        
-        # Aplicar correcciones de encoding si está habilitado
         if self.fix_encoding:
             df = self.fix_dataframe_encoding(df)
         
@@ -172,11 +141,13 @@ class Command(BaseCommand):
             action='store_true',
             help='Forzar reimportación (elimina datos existentes)'
         )
+        # Se mantiene --dry-run con guion medio
         parser.add_argument(
             '--dry-run',
             action='store_true',
             help='Simular importación sin escribir en base de datos'
         )
+        # Se mantiene --no-fix-encoding con guion medio
         parser.add_argument(
             '--no-fix-encoding',
             action='store_true',
@@ -185,20 +156,22 @@ class Command(BaseCommand):
         parser.add_argument(
             '--only',
             type=str,
-            choices=['categories', 'subcategories', 'products', 'variants', 
-                     'prices', 'templates', 'colors', 'sizes', 'images', 'polos'],
+            choices=['categories', 'subcategories', 'products', 'options',
+                     'prices', 'templates', 'images', 'polos'],
             help='Importar solo un tipo específico de datos'
         )
 
     def handle(self, *args, **options):
+        # FIX: Acceder a los argumentos con guion bajo (_)
         self.force = options['force']
-        self.dry_run = options['dry_run']
-        self.fix_encoding = not options.get('no_fix_encoding', False)
+        self.dry_run = options['dry_run'] # <-- CORRECCIÓN: 'dry-run' -> 'dry_run'
+        self.fix_encoding = not options.get('no_fix_encoding', False) # <-- CORRECCIÓN: 'no_fix-encoding' -> 'no_fix_encoding'
         self.only = options.get('only')
         self.data_dir = os.path.join(settings.BASE_DIR, 'static', 'data')
         
         self.stdout.write(self.style.SUCCESS('=' * 70))
-        self.stdout.write(self.style.SUCCESS('IMPORTACIÓN DEL CATÁLOGO DE PRODUCTOS'))
+        self.stdout.write(self.style.SUCCESS('IMPORTACIÓN DEL CATÁLOGO DE PRODUCTOS (EXCEL)')) # Título actualizado
+        self.stdout.write(self.style.SUCCESS('Sistema de Opciones Genéricas'))
         self.stdout.write(self.style.SUCCESS('=' * 70))
         
         if self.fix_encoding:
@@ -220,41 +193,30 @@ class Command(BaseCommand):
         
         try:
             with transaction.atomic():
-                # Verificar archivos CSV
-                self.verify_csv_files()
+                self.verify_excel_files() # <--- Llamada al método de verificación de Excel
                 
-                # Limpiar datos si force=True
                 if self.force and not self.dry_run:
                     self.clear_existing_data()
                 
                 self.stdout.write('\nIniciando importación...\n')
                 
-                # Contadores
                 counts = {}
                 
-                # Importar según --only o todo
                 if not self.only or self.only == 'categories':
                     counts['categories'] = self.import_categories()
                 
                 if not self.only or self.only == 'subcategories':
                     counts['subcategories'] = self.import_subcategories()
                 
-                # NUEVO: Importar colores y tallas primero (antes de productos)
-                if not self.only or self.only in ['colors', 'polos']:
-                    counts['colors'] = self.import_colors()
-                
-                if not self.only or self.only in ['sizes', 'polos']:
-                    counts['sizes'] = self.import_sizes()
-                
-                if not self.only or self.only == 'variants':
-                    counts['variant_types'] = self.import_variant_types()
-                    counts['variant_options'] = self.import_variant_options()
+                # NUEVO: Importar opciones base (color, talla, etc.)
+                if not self.only or self.only in ['options', 'polos']:
+                    counts['product_options'] = self.import_product_options()
+                    counts['option_values'] = self.import_option_values()
                 
                 if not self.only or self.only in ['products', 'polos']:
                     counts['products'] = self.import_products()
-                    counts['product_variants'] = self.import_product_variant_types()
                 
-                # NUEVO: Importar imágenes de productos por color
+                # NUEVO: Importar imágenes con option_value
                 if not self.only or self.only in ['images', 'polos']:
                     counts['product_images'] = self.import_product_images()
                 
@@ -293,25 +255,25 @@ class Command(BaseCommand):
         response = input(f'{message} (si/no): ').lower()
         return response in ['si', 'yes', 'y', 's']
 
-    def verify_csv_files(self):
-        """Verifica que existan los archivos CSV necesarios"""
+    # VERIFICACIÓN DE ARCHIVOS ACTUALIZADA PARA EXCEL
+    def verify_excel_files(self):
+        """Verifica que existan los archivos Excel (.xlsx) necesarios"""
         required_files = [
-            'categories_complete.csv',
-            'subcategories_complete.csv',
-            'products_complete.csv',
-            'price_tiers_complete.csv',
-            'variant_types_complete.csv',
-            'variant_options_complete.csv',
-            'product_variant_types_complete.csv'
+            'categories_complete.xlsx',
+            'subcategories_complete.xlsx',
+            'products_complete.xlsx',
+            'price_tiers_complete.xlsx',
         ]
         
         optional_files = [
-            'design_templates.csv',
-            'polos_colors.csv',      # NUEVO
-            'polos_images.csv',      # NUEVO
+            'design_templates.xlsx',
+            'polos_colors.xlsx',
+            'polos_images.xlsx',
+            'product_options.xlsx',
+            'option_values.xlsx',
         ]
         
-        self.stdout.write('Verificando archivos CSV...')
+        self.stdout.write('Verificando archivos Excel...')
         missing_files = []
         
         for filename in required_files:
@@ -330,7 +292,7 @@ class Command(BaseCommand):
         
         if missing_files:
             raise FileNotFoundError(
-                f'Archivos CSV faltantes: {", ".join(missing_files)}'
+                f'Archivos Excel faltantes: {", ".join(missing_files)}'
             )
         
         self.stdout.write(self.style.SUCCESS('   ✓ Verificación completada\n'))
@@ -343,14 +305,12 @@ class Command(BaseCommand):
             'ProductImage': ProductImage.objects.all().delete()[0],
             'DesignTemplate': DesignTemplate.objects.all().delete()[0],
             'PriceTier': PriceTier.objects.all().delete()[0],
-            'ProductVariantType': ProductVariantType.objects.all().delete()[0],
+            'ProductVariant': ProductVariant.objects.all().delete()[0],
             'Product': Product.objects.all().delete()[0],
-            'VariantOption': VariantOption.objects.all().delete()[0],
-            'VariantType': VariantType.objects.all().delete()[0],
+            'ProductOptionValue': ProductOptionValue.objects.all().delete()[0],
+            'ProductOption': ProductOption.objects.all().delete()[0],
             'Subcategory': Subcategory.objects.all().delete()[0],
             'Category': Category.objects.all().delete()[0],
-            'ProductColor': ProductColor.objects.all().delete()[0],
-            'ProductSize': ProductSize.objects.all().delete()[0],
         }
         
         total = sum(counts.values())
@@ -361,83 +321,38 @@ class Command(BaseCommand):
         self.stdout.write('')
 
     # =========================================================================
-    # NUEVO: IMPORTAR COLORES
+    # NUEVO: IMPORTAR OPCIONES BASE (color, size, material, etc.)
     # =========================================================================
-    def import_colors(self):
-        """Importa colores de productos desde CSV"""
-        self.stdout.write('Importando colores...')
-        filepath = os.path.join(self.data_dir, 'polos_colors.csv')
+    def import_product_options(self):
+        """
+        Importa tipos de opciones desde Excel o crea las opciones base.
+        ProductOption: color, size, material, finish, cassette, etc.
+        """
+        self.stdout.write('Importando tipos de opciones...')
         
-        if not os.path.exists(filepath):
-            self.stdout.write(self.style.WARNING(
-                '   SKIP Archivo polos_colors.csv no encontrado\n'
-            ))
-            return 0
-        
-        df = self.safe_read_csv(filepath, encoding='utf-8')
+        # Primero, crear opciones base que siempre existen
+        base_options = [
+            {'key': 'color', 'name': 'Color', 'display_order': 1, 'is_required': True, 'selection_type': 'single'},
+            {'key': 'size', 'name': 'Talla', 'display_order': 2, 'is_required': True, 'selection_type': 'single'},
+            # Opciones para banners (futuro)
+            {'key': 'material', 'name': 'Material', 'display_order': 3, 'is_required': True, 'selection_type': 'single'},
+            {'key': 'finish', 'name': 'Acabado', 'display_order': 4, 'is_required': False, 'selection_type': 'single'},
+            {'key': 'cassette', 'name': 'Sistema de Sujeción', 'display_order': 5, 'is_required': False, 'selection_type': 'single'},
+        ]
         
         created = 0
         updated = 0
         
-        for _, row in df.iterrows():
-            try:
-                slug = str(row.get('slug', '')).strip()
-                if not slug:
-                    continue
-                
-                hex_code = str(row.get('hex_code', '')).strip()
-                if not hex_code.startswith('#'):
-                    hex_code = f'#{hex_code}'
-                
-                defaults = {
-                    'name': row.get('name', slug.replace('-', ' ').title()),
-                    'hex_code': hex_code,
-                    'display_order': int(row.get('display_order', 0)),
-                    'is_active': str(row.get('is_active', 'True')).lower() == 'true',
-                }
-                
-                if not self.dry_run:
-                    _, was_created = ProductColor.objects.update_or_create(
-                        slug=slug,
-                        defaults=defaults
-                    )
-                    if was_created:
-                        created += 1
-                    else:
-                        updated += 1
-                else:
-                    created += 1
-                    
-            except Exception as e:
-                self.stdout.write(self.style.WARNING(
-                    f'   WARNING Error en color {row.get("slug")}: {str(e)}'
-                ))
-        
-        self.stdout.write(f'   OK {created} creados, {updated} actualizados\n')
-        return created + updated
-
-    # =========================================================================
-    # NUEVO: IMPORTAR TALLAS
-    # =========================================================================
-    def import_sizes(self):
-        """Importa tallas estándar de ropa"""
-        self.stdout.write('Importando tallas estándar...')
-        
-        created = 0
-        updated = 0
-        
-        for name, display_name, order in STANDARD_SIZES:
-            defaults = {
-                'display_name': display_name,
-                'size_type': 'clothing',
-                'display_order': order,
-                'is_active': True,
-            }
-            
+        for opt_data in base_options:
             if not self.dry_run:
-                _, was_created = ProductSize.objects.update_or_create(
-                    name=name,
-                    defaults=defaults
+                _, was_created = ProductOption.objects.update_or_create(
+                    key=opt_data['key'],
+                    defaults={
+                        'name': opt_data['name'],
+                        'display_order': opt_data['display_order'],
+                        'is_required': opt_data['is_required'],
+                        'selection_type': opt_data['selection_type'],
+                    }
                 )
                 if was_created:
                     created += 1
@@ -446,87 +361,198 @@ class Command(BaseCommand):
             else:
                 created += 1
         
-        self.stdout.write(f'   OK {created} creadas, {updated} actualizadas\n')
+        # Luego, importar desde Excel si existe
+        filename = 'product_options.xlsx' # Extensión actualizada
+        filepath = os.path.join(self.data_dir, filename)
+        if os.path.exists(filepath):
+            # Llamada al nuevo método safe_read_excel
+            df = self.safe_read_excel(filename) 
+            
+            for _, row in df.iterrows():
+                try:
+                    key = str(row.get('key', '')).strip()
+                    if not key:
+                        continue
+                    
+                    if not self.dry_run:
+                        _, was_created = ProductOption.objects.update_or_create(
+                            key=key,
+                            defaults={
+                                'name': row.get('name', key.title()),
+                                # Conversión explícita a int
+                                'display_order': int(row.get('display_order', 0)),
+                                'is_required': str(row.get('is_required', 'True')).lower() == 'true',
+                                'selection_type': row.get('selection_type', 'single'),
+                            }
+                        )
+                        if was_created:
+                            created += 1
+                        else:
+                            updated += 1
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(f'   WARNING Error: {e}'))
+        
+        self.stdout.write(f'   OK {created} creados, {updated} actualizados\n')
         return created + updated
 
     # =========================================================================
-    # NUEVO: IMPORTAR IMÁGENES DE PRODUCTOS POR COLOR
+    # NUEVO: IMPORTAR VALORES DE OPCIONES (colores, tallas, materiales)
     # =========================================================================
-    def import_product_images(self):
-        """Importa imágenes de productos por color desde CSV"""
-        self.stdout.write('Importando imágenes de productos...')
-        filepath = os.path.join(self.data_dir, 'polos_images.csv')
-        
-        if not os.path.exists(filepath):
-            self.stdout.write(self.style.WARNING(
-                '   SKIP Archivo polos_images.csv no encontrado\n'
-            ))
-            return 0
-        
-        df = self.safe_read_csv(filepath, encoding='utf-8')
+    def import_option_values(self):
+        """
+        Importa valores de opciones desde Excel.
+        Incluye colores desde polos_colors.xlsx y tallas estándar.
+        """
+        self.stdout.write('Importando valores de opciones...')
         
         created = 0
-        skipped = 0
-        errors = 0
+        updated = 0
         
-        for _, row in df.iterrows():
-            try:
-                product_slug = str(row.get('product_slug', '')).strip()
-                image_url = str(row.get('image_url', '')).strip()
-                
-                if not product_slug or not image_url:
-                    skipped += 1
-                    continue
-                
+        # 1. Importar tallas estándar
+        try:
+            size_option = ProductOption.objects.get(key='size')
+            
+            for name, display_name, order in STANDARD_SIZES:
                 if not self.dry_run:
-                    try:
-                        product = Product.objects.get(slug=product_slug)
-                    except Product.DoesNotExist:
-                        skipped += 1
-                        continue
-                    
-                    color = None
-                    color_slug = str(row.get('color_slug', '')).strip()
-                    if color_slug:
-                        try:
-                            color = ProductColor.objects.get(slug=color_slug)
-                        except ProductColor.DoesNotExist:
-                            pass
-                    
-                    is_primary = str(row.get('is_primary', 'False')).lower() == 'true'
-                    
-                    _, was_created = ProductImage.objects.update_or_create(
-                        product=product,
-                        color=color,
-                        image_url=image_url,
+                    _, was_created = ProductOptionValue.objects.update_or_create(
+                        option=size_option,
+                        value=name,
                         defaults={
-                            'is_primary': is_primary,
-                            'display_order': int(row.get('display_order', 0)),
+                            'display_name': display_name,
+                            'display_order': order,
+                            'is_active': True,
                         }
                     )
                     if was_created:
                         created += 1
+                    else:
+                        updated += 1
                 else:
                     created += 1
                     
-            except Exception as e:
-                errors += 1
-                self.stdout.write(self.style.WARNING(
-                    f'   WARNING Error en imagen: {str(e)}'
-                ))
+            self.stdout.write(f'   • Tallas estándar: {len(STANDARD_SIZES)}')
+        except ProductOption.DoesNotExist:
+            self.stdout.write(self.style.WARNING('   WARNING: Opción "size" no encontrada'))
         
-        self.stdout.write(f'   OK {created} creadas, {skipped} omitidas')
-        if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
+        # 2. Importar colores desde polos_colors.xlsx
+        filename = 'polos_colors.xlsx' # Extensión actualizada
+        filepath = os.path.join(self.data_dir, filename)
+        if os.path.exists(filepath):
+            try:
+                color_option = ProductOption.objects.get(key='color')
+                # Llamada al nuevo método safe_read_excel
+                df = self.safe_read_excel(filename)
+                color_count = 0
+                
+                for _, row in df.iterrows():
+                    try:
+                        slug = str(row.get('slug', '')).strip()
+                        if not slug:
+                            continue
+                        
+                        hex_code = str(row.get('hex_code', '')).strip()
+                        if not hex_code.startswith('#'):
+                            hex_code = f'#{hex_code}'
+                        
+                        if not self.dry_run:
+                            _, was_created = ProductOptionValue.objects.update_or_create(
+                                option=color_option,
+                                value=slug,
+                                defaults={
+                                    'display_name': row.get('name', slug.replace('-', ' ').title()),
+                                    'hex_code': hex_code,
+                                    # Conversión explícita a int
+                                    'display_order': int(row.get('display_order', 0)),
+                                    'is_active': str(row.get('is_active', 'True')).lower() == 'true',
+                                }
+                            )
+                            if was_created:
+                                created += 1
+                                color_count += 1
+                            else:
+                                updated += 1
+                        else:
+                            created += 1
+                            color_count += 1
+                            
+                    except Exception as e:
+                        self.stdout.write(self.style.WARNING(
+                            f'   WARNING Error en color {row.get("slug")}: {e}'
+                        ))
+                
+                self.stdout.write(f'   • Colores desde Excel: {color_count}')
+                
+            except ProductOption.DoesNotExist:
+                self.stdout.write(self.style.WARNING('   WARNING: Opción "color" no encontrada'))
         else:
-            self.stdout.write('')
-        return created
+            self.stdout.write(self.style.WARNING(f'   SKIP: {filename} no encontrado'))
+        
+        # 3. Importar desde option_values.xlsx si existe (para materiales, acabados, etc.)
+        filename = 'option_values.xlsx' # Extensión actualizada
+        filepath = os.path.join(self.data_dir, filename)
+        if os.path.exists(filepath):
+            # Llamada al nuevo método safe_read_excel
+            df = self.safe_read_excel(filename)
+            extra_count = 0
+            
+            for _, row in df.iterrows():
+                try:
+                    option_key = str(row.get('option_key', '')).strip()
+                    value = str(row.get('value', '')).strip()
+                    
+                    if not option_key or not value:
+                        continue
+                    
+                    option = ProductOption.objects.get(key=option_key)
+                    
+                    if not self.dry_run:
+                        defaults = {
+                            'display_name': row.get('display_name', value.replace('-', ' ').title()),
+                            # Conversión explícita a int
+                            'display_order': int(row.get('display_order', 0)),
+                            'is_active': str(row.get('is_active', 'True')).lower() == 'true',
+                        }
+                        
+                        # Campos opcionales
+                        if pd.notna(row.get('hex_code')):
+                            defaults['hex_code'] = str(row['hex_code'])
+                        if pd.notna(row.get('additional_price')):
+                            # Conversión a Decimal a través de str para evitar errores de precisión
+                            defaults['additional_price'] = Decimal(str(row['additional_price']))
+                        
+                        _, was_created = ProductOptionValue.objects.update_or_create(
+                            option=option,
+                            value=value,
+                            defaults=defaults
+                        )
+                        if was_created:
+                            created += 1
+                            extra_count += 1
+                        else:
+                            updated += 1
+                    else:
+                        created += 1
+                        extra_count += 1
+                        
+                except ProductOption.DoesNotExist:
+                    self.stdout.write(self.style.WARNING(
+                        f'   WARNING: Opción "{option_key}" no encontrada'
+                    ))
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(f'   WARNING Error: {e}'))
+            
+            if extra_count > 0:
+                self.stdout.write(f'   • Valores adicionales: {extra_count}')
+        
+        self.stdout.write(f'   OK {created} creados, {updated} actualizados\n')
+        return created + updated
 
     def import_categories(self):
-        """Importa categorías desde CSV"""
+        """Importa categorías desde Excel"""
         self.stdout.write('Importando categorías...')
-        filepath = os.path.join(self.data_dir, 'categories_complete.csv')
-        df = self.safe_read_csv(filepath)
+        filename = 'categories_complete.xlsx' # Extensión actualizada
+        # Llamada al nuevo método safe_read_excel
+        df = self.safe_read_excel(filename)
         
         created = 0
         updated = 0
@@ -534,19 +560,21 @@ class Command(BaseCommand):
         for _, row in df.iterrows():
             defaults = {
                 'name': row['category_name'],
-                'description': row['description'] if pd.notna(row['description']) else '',
-                'image_url': row['image_url'] if pd.notna(row['image_url']) else None,
+                # Maneja mejor los nulos de Excel para strings/int
+                'description': str(row['description']) if pd.notna(row['description']) else '',
+                'image_url': str(row['image_url']) if pd.notna(row['image_url']) else None,
+                # Conversión explícita a int
                 'display_order': int(row['display_order']),
-                'status': row['status'] if 'status' in row else 'active',
+                'status': str(row['status']) if 'status' in row and pd.notna(row['status']) else 'active',
             }
             
-            # Nuevo campo category_type (si existe en CSV)
             if 'category_type' in row and pd.notna(row['category_type']):
-                defaults['category_type'] = row['category_type']
+                defaults['category_type'] = str(row['category_type'])
             
             if not self.dry_run:
                 _, was_created = Category.objects.update_or_create(
-                    slug=row['category_slug'],
+                    # Asegura que el slug es string
+                    slug=str(row['category_slug']).strip(),
                     defaults=defaults
                 )
                 if was_created:
@@ -560,10 +588,11 @@ class Command(BaseCommand):
         return created + updated
 
     def import_subcategories(self):
-        """Importa subcategorías desde CSV"""
+        """Importa subcategorías desde Excel"""
         self.stdout.write('Importando subcategorías...')
-        filepath = os.path.join(self.data_dir, 'subcategories_complete.csv')
-        df = self.safe_read_csv(filepath)
+        filename = 'subcategories_complete.xlsx' # Extensión actualizada
+        # Llamada al nuevo método safe_read_excel
+        df = self.safe_read_excel(filename)
         
         created = 0
         updated = 0
@@ -571,22 +600,25 @@ class Command(BaseCommand):
         
         for _, row in df.iterrows():
             try:
+                category_slug = str(row['category_slug']).strip()
+                subcategory_slug = str(row['subcategory_slug']).strip()
+                
                 if not self.dry_run:
-                    category = Category.objects.get(slug=row['category_slug'])
+                    category = Category.objects.get(slug=category_slug)
                     defaults = {
                         'name': row['subcategory_name'],
                         'category': category,
-                        'description': row['description'] if pd.notna(row['description']) else '',
-                        'image_url': row['image_url'] if pd.notna(row['image_url']) else None,
+                        'description': str(row['description']) if pd.notna(row['description']) else '',
+                        'image_url': str(row['image_url']) if pd.notna(row['image_url']) else None,
+                        # Conversión explícita a int
                         'display_order': int(row['display_order']),
                     }
                     
-                    # Nuevo campo display_style (si existe en CSV)
                     if 'display_style' in row and pd.notna(row['display_style']):
-                        defaults['display_style'] = row['display_style']
+                        defaults['display_style'] = str(row['display_style'])
                     
                     _, was_created = Subcategory.objects.update_or_create(
-                        slug=row['subcategory_slug'],
+                        slug=subcategory_slug,
                         defaults=defaults
                     )
                     if was_created:
@@ -597,84 +629,14 @@ class Command(BaseCommand):
                     created += 1
             except Category.DoesNotExist:
                 self.stdout.write(self.style.WARNING(
-                    f'   WARNING Categoría no encontrada: {row["category_slug"]}'
+                    f'   WARNING Categoría no encontrada: {category_slug}'
                 ))
                 errors += 1
-        
-        self.stdout.write(f'   OK {created} creadas, {updated} actualizadas')
-        if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
-        else:
-            self.stdout.write('')
-        return created + updated
-
-    def import_variant_types(self):
-        """Importa tipos de variantes desde CSV"""
-        self.stdout.write('Importando tipos de variantes...')
-        filepath = os.path.join(self.data_dir, 'variant_types_complete.csv')
-        df = self.safe_read_csv(filepath)
-        
-        created = 0
-        updated = 0
-        
-        for _, row in df.iterrows():
-            defaults = {
-                'name': row['variant_type_name'],
-                'description': row['description'] if pd.notna(row['description']) else '',
-                'display_order': int(row['display_order'])
-            }
-            if not self.dry_run:
-                _, was_created = VariantType.objects.update_or_create(
-                    slug=row['variant_type_slug'],
-                    defaults=defaults
-                )
-                if was_created:
-                    created += 1
-                else:
-                    updated += 1
-            else:
-                created += 1
-        
-        self.stdout.write(f'   OK {created} creados, {updated} actualizados\n')
-        return created + updated
-
-    def import_variant_options(self):
-        """Importa opciones de variantes desde CSV"""
-        self.stdout.write('Importando opciones de variantes...')
-        filepath = os.path.join(self.data_dir, 'variant_options_complete.csv')
-        df = self.safe_read_csv(filepath)
-        
-        created = 0
-        updated = 0
-        errors = 0
-        
-        for _, row in df.iterrows():
-            try:
-                if not self.dry_run:
-                    variant_type = VariantType.objects.get(slug=row['variant_type_slug'])
-                    defaults = {
-                        'name': row['option_name'],
-                        'variant_type': variant_type,
-                        'description': row['description'] if pd.notna(row['description']) else '',
-                        'additional_price': Decimal(str(row['additional_price'])),
-                        'image_url': row['image_url'] if pd.notna(row['image_url']) else None,
-                        'display_order': int(row['display_order'])
-                    }
-                    _, was_created = VariantOption.objects.update_or_create(
-                        slug=row['option_slug'],
-                        defaults=defaults
-                    )
-                    if was_created:
-                        created += 1
-                    else:
-                        updated += 1
-                else:
-                    created += 1
-            except VariantType.DoesNotExist:
-                self.stdout.write(self.style.WARNING(
-                    f'   WARNING Tipo de variante no encontrado: {row["variant_type_slug"]}'
+            except Exception as e:
+                 self.stdout.write(self.style.WARNING(
+                    f'   WARNING Error en subcategoría {subcategory_slug}: {str(e)}'
                 ))
-                errors += 1
+                 errors += 1
         
         self.stdout.write(f'   OK {created} creadas, {updated} actualizadas')
         if errors > 0:
@@ -693,6 +655,7 @@ class Command(BaseCommand):
         if not colors_hex_str or pd.isna(colors_hex_str):
             return colors
         
+        # Asegura que es string antes de split
         for item in str(colors_hex_str).split('|'):
             if ':' in item:
                 parts = item.split(':', 1)
@@ -706,14 +669,27 @@ class Command(BaseCommand):
         return colors
 
     def import_products(self):
-        """Importa productos desde CSV - ACTUALIZADO para soportar colores y campos adicionales"""
+        """
+        Importa productos desde Excel.
+        ACTUALIZADO: Crea ProductVariant para asignar opciones.
+        """
         self.stdout.write('Importando productos...')
-        filepath = os.path.join(self.data_dir, 'products_complete.csv')
-        df = self.safe_read_csv(filepath)
+        filename = 'products_complete.xlsx' # Extensión actualizada
+        # Llamada al nuevo método safe_read_excel
+        df = self.safe_read_excel(filename)
         
         created = 0
         updated = 0
         errors = 0
+        
+        # Obtener opciones de color y talla
+        color_option = None
+        size_option = None
+        try:
+            color_option = ProductOption.objects.get(key='color')
+            size_option = ProductOption.objects.get(key='size')
+        except ProductOption.DoesNotExist:
+            pass
         
         for _, row in df.iterrows():
             try:
@@ -740,17 +716,18 @@ class Command(BaseCommand):
                         'name': row['product_name'],
                         'category': category,
                         'subcategory': subcategory,
-                        'sku': row['sku'],
-                        'description': row['description'] if pd.notna(row['description']) else '',
-                        'base_image_url': row['base_image_url'] if pd.notna(row['base_image_url']) else '',
-                        'status': row['status'] if pd.notna(row.get('status')) else 'active',
+                        # Asegura que SKU es string
+                        'sku': str(row['sku']), 
+                        'description': str(row['description']) if pd.notna(row['description']) else '',
+                        'base_image_url': str(row['base_image_url']) if pd.notna(row['base_image_url']) else '',
+                        'status': str(row.get('status')) if pd.notna(row.get('status')) else 'active',
                     }
                     
-                    # NUEVO: guardar marca en material (campo existente)
+                    # Guardar marca en material
                     if 'marca' in row and pd.notna(row['marca']):
-                        defaults['material'] = row['marca']
+                        defaults['material'] = str(row['marca'])
                     
-                    # NUEVO: guardar género/tipo_cuello/tipo_manga en features
+                    # Guardar características en features
                     features_parts = []
                     if 'genero' in row and pd.notna(row['genero']):
                         features_parts.append(f"genero:{row['genero']}")
@@ -767,29 +744,49 @@ class Command(BaseCommand):
                         defaults=defaults
                     )
                     
-                    # NUEVO: Asignar colores si existen
+                    # NUEVO: Asignar colores via ProductVariant
                     colors_hex_str = row.get('colores_hex', '')
-                    if colors_hex_str and pd.notna(colors_hex_str):
-                        colors_data = self.parse_colors_hex(colors_hex_str)
+                    if colors_hex_str and pd.notna(colors_hex_str) and color_option:
+                        colors_data = self.parse_colors_hex(str(colors_hex_str)) # Asegura string
                         
+                        # Crear/obtener ProductVariant para color
+                        variant, _ = ProductVariant.objects.get_or_create(
+                            product=product,
+                            option=color_option,
+                            defaults={'display_order': 1}
+                        )
+                        
+                        # Añadir valores de color disponibles
                         for color_slug, hex_code in colors_data.items():
-                            color, _ = ProductColor.objects.get_or_create(
-                                slug=color_slug,
+                            # Asegurar que el color existe
+                            color_val, _ = ProductOptionValue.objects.get_or_create(
+                                option=color_option,
+                                value=color_slug,
                                 defaults={
-                                    'name': color_slug.replace('-', ' ').title(),
+                                    'display_name': color_slug.replace('-', ' ').title(),
                                     'hex_code': hex_code,
                                     'is_active': True,
                                 }
                             )
-                            product.available_colors.add(color)
+                            variant.available_values.add(color_val)
                     
-                    # NUEVO: Asignar tallas estándar para ropa
-                    if category_slug == 'ropa-bolsos':
-                        sizes = ProductSize.objects.filter(
-                            name__in=['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+                    # NUEVO: Asignar tallas para ropa
+                    # Nota: Hay que asegurar que 'category_slug' sea 'ropa-bolsos'
+                    if category_slug == 'ropa-bolsos' and size_option:
+                        # Crear/obtener ProductVariant para talla
+                        variant, _ = ProductVariant.objects.get_or_create(
+                            product=product,
+                            option=size_option,
+                            defaults={'display_order': 2}
+                        )
+                        
+                        # Añadir tallas estándar
+                        sizes = ProductOptionValue.objects.filter(
+                            option=size_option,
+                            value__in=['XS', 'S', 'M', 'L', 'XL', 'XXL'],
                             is_active=True
                         )
-                        product.available_sizes.set(sizes)
+                        variant.available_values.set(sizes)
                     
                     if was_created:
                         created += 1
@@ -816,36 +813,87 @@ class Command(BaseCommand):
             self.stdout.write('')
         return created + updated
 
-    def import_product_variant_types(self):
-        """Importa relaciones producto-variantes desde CSV"""
-        self.stdout.write('Importando variantes de productos...')
-        filepath = os.path.join(self.data_dir, 'product_variant_types_complete.csv')
-        df = self.safe_read_csv(filepath)
+    def import_product_images(self):
+        """
+        Importa imágenes de productos desde Excel.
+        ACTUALIZADO: Usa option_value en lugar de color.
+        """
+        self.stdout.write('Importando imágenes de productos...')
+        filename = 'polos_images.xlsx' # Extensión actualizada
+        filepath = os.path.join(self.data_dir, filename)
+        
+        if not os.path.exists(filepath):
+            self.stdout.write(self.style.WARNING(
+                f'   SKIP Archivo {filename} no encontrado\n'
+            ))
+            return 0
+        
+        # Llamada al nuevo método safe_read_excel
+        df = self.safe_read_excel(filename)
         
         created = 0
         skipped = 0
         errors = 0
         
+        # Obtener opción de color
+        color_option = None
+        try:
+            color_option = ProductOption.objects.get(key='color')
+        except ProductOption.DoesNotExist:
+            pass
+        
         for _, row in df.iterrows():
             try:
+                product_slug = str(row.get('product_slug', '')).strip()
+                image_url = str(row.get('image_url', '')).strip()
+                
+                if not product_slug or not image_url:
+                    skipped += 1
+                    continue
+                
                 if not self.dry_run:
-                    product = Product.objects.get(slug=row['product_slug'])
-                    variant_type = VariantType.objects.get(slug=row['variant_type_slug'])
+                    try:
+                        product = Product.objects.get(slug=product_slug)
+                    except Product.DoesNotExist:
+                        skipped += 1
+                        continue
                     
-                    _, was_created = ProductVariantType.objects.get_or_create(
+                    # NUEVO: Buscar option_value en lugar de color
+                    option_value = None
+                    color_slug = str(row.get('color_slug', '')).strip()
+                    if color_slug and color_option:
+                        try:
+                            option_value = ProductOptionValue.objects.get(
+                                option=color_option,
+                                value=color_slug
+                            )
+                        except ProductOptionValue.DoesNotExist:
+                            pass
+                    
+                    is_primary = str(row.get('is_primary', 'False')).lower() == 'true'
+                    
+                    _, was_created = ProductImage.objects.update_or_create(
                         product=product,
-                        variant_type=variant_type
+                        option_value=option_value,
+                        image_url=image_url,
+                        defaults={
+                            'is_primary': is_primary,
+                            # Conversión explícita a int
+                            'display_order': int(row.get('display_order', 0)),
+                        }
                     )
                     if was_created:
                         created += 1
-                    else:
-                        skipped += 1
                 else:
                     created += 1
-            except (Product.DoesNotExist, VariantType.DoesNotExist):
+                    
+            except Exception as e:
                 errors += 1
+                self.stdout.write(self.style.WARNING(
+                    f'   WARNING Error en imagen: {str(e)}'
+                ))
         
-        self.stdout.write(f'   OK {created} creadas, {skipped} ya existían')
+        self.stdout.write(f'   OK {created} creadas, {skipped} omitidas')
         if errors > 0:
             self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
         else:
@@ -853,10 +901,11 @@ class Command(BaseCommand):
         return created
 
     def import_price_tiers(self):
-        """Importa niveles de precio desde CSV"""
+        """Importa niveles de precio desde Excel"""
         self.stdout.write('Importando niveles de precios...')
-        filepath = os.path.join(self.data_dir, 'price_tiers_complete.csv')
-        df = self.safe_read_csv(filepath)
+        filename = 'price_tiers_complete.xlsx' # Extensión actualizada
+        # Llamada al nuevo método safe_read_excel
+        df = self.safe_read_excel(filename)
         
         created = 0
         updated = 0
@@ -864,15 +913,21 @@ class Command(BaseCommand):
         
         for _, row in df.iterrows():
             try:
+                product_slug = str(row['product_slug']).strip()
+                
                 if not self.dry_run:
-                    product = Product.objects.get(slug=row['product_slug'])
+                    product = Product.objects.get(slug=product_slug)
                     defaults = {
+                        # Conversión explícita a int
                         'max_quantity': int(row['max_quan']),
+                        # Conversión a Decimal a través de string
                         'unit_price': Decimal(str(row['unit_price'])),
+                        # Conversión explícita a int
                         'discount_percentage': int(row['discount_percent'])
                     }
                     _, was_created = PriceTier.objects.update_or_create(
                         product=product,
+                        # Conversión explícita a int
                         min_quantity=int(row['min_quan']),
                         defaults=defaults
                     )
@@ -884,6 +939,9 @@ class Command(BaseCommand):
                     created += 1
             except Product.DoesNotExist:
                 errors += 1
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f'   WARNING Error en precio para {product_slug}: {str(e)}'))
+                errors += 1
         
         self.stdout.write(f'   OK {created} creados, {updated} actualizados')
         if errors > 0:
@@ -893,81 +951,103 @@ class Command(BaseCommand):
         return created + updated
 
     def import_design_templates(self):
-        """Importa templates de diseño desde CSV"""
+        """Importa templates de diseño desde Excel - VERSIÓN FINAL SIN ERRORES"""
         self.stdout.write('Importando templates de diseño...')
-        filepath = os.path.join(self.data_dir, 'design_templates.csv')
+        filename = 'design_templates.xlsx' # Extensión actualizada
+        filepath = os.path.join(self.data_dir, filename)
         
-        # El archivo es opcional
         if not os.path.exists(filepath):
-            self.stdout.write(self.style.WARNING(
-                '   SKIP Archivo design_templates.csv no encontrado\n'
-            ))
+            self.stdout.write(self.style.WARNING(f'    SKIP Archivo {filename} no encontrado\n'))
             return 0
         
-        df = self.safe_read_csv(filepath)
-        
+        # Llamada al nuevo método safe_read_excel
+        df = self.safe_read_excel(filename)
+        self.stdout.write(f'    Leyendo {len(df)} filas...')
+
         created = 0
         updated = 0
         errors = 0
-        
-        for _, row in df.iterrows():
+
+        for index, row in df.iterrows():
+            template_slug = row.get('template_slug')
+            if not template_slug or pd.isna(template_slug):
+                errors += 1
+                continue
+            template_slug = str(template_slug).strip()
+
             try:
-                # Saltar filas vacías
-                if pd.isna(row.get('template_slug')) or not row.get('template_slug'):
-                    continue
-                
-                if not self.dry_run:
-                    # Obtener categoría
-                    category = Category.objects.get(slug=row['category_slug'])
-                    
-                    # Obtener subcategoría (opcional)
-                    subcategory = None
-                    if pd.notna(row.get('subcategory_slug')) and row.get('subcategory_slug'):
-                        try:
-                            subcategory = Subcategory.objects.get(slug=row['subcategory_slug'])
-                        except Subcategory.DoesNotExist:
-                            pass  # Subcategoría opcional
-                    
-                    # Preparar defaults
-                    defaults = {
-                        'name': row['template_name'],
-                        'category': category,
-                        'subcategory': subcategory,
-                        'description': row['description'] if pd.notna(row.get('description')) else '',
-                        'thumbnail_url': row['thumbnail_url'] if pd.notna(row.get('thumbnail_url')) else '',
-                        'preview_url': row['preview_url'] if pd.notna(row.get('preview_url')) else '',
-                        'is_popular': str(row.get('is_popular', 'false')).lower() == 'true',
-                        'display_order': int(row['display_order']) if pd.notna(row.get('display_order')) else 0,
-                    }
-                    
-                    # Crear o actualizar
-                    _, was_created = DesignTemplate.objects.update_or_create(
-                        slug=row['template_slug'],
-                        defaults=defaults
-                    )
-                    
-                    if was_created:
-                        created += 1
-                    else:
-                        updated += 1
-                else:
+                if self.dry_run:
                     created += 1
-                    
+                    continue
+
+                # Limpiar URLs
+                def clean_url(url):
+                    if pd.isna(url) or not isinstance(url, str):
+                        return ''
+                    return str(url).strip() # Asegura string antes de strip
+
+                thumbnail_url = clean_url(row.get('thumbnail_url'))
+                preview_url = clean_url(row.get('preview_url'))
+
+                category_slug = str(row.get('category_slug', '')).strip()
+                if not category_slug:
+                    errors += 1
+                    continue
+
+                category = Category.objects.get(slug=category_slug)
+
+                subcategory = None
+                subcategory_slug = row.get('subcategory_slug')
+                if pd.notna(subcategory_slug):
+                    subcategory_slug = str(subcategory_slug).strip()
+                    if subcategory_slug:
+                        try:
+                            subcategory = Subcategory.objects.get(category=category, slug=subcategory_slug)
+                        except Subcategory.DoesNotExist:
+                            pass
+
+                # Orden de visualización
+                display_order = 0
+                if pd.notna(row.get('display_order')):
+                    try:
+                        # La conversión a float antes de int es robusta para Excel
+                        display_order = int(float(row['display_order']))
+                    except:
+                        display_order = index + 1
+
+                # Banderas
+                is_popular = str(row.get('is_popular', 'false')).lower() in ('true', '1', 'yes', 'sí')
+                is_new = str(row.get('is_new', 'false')).lower() in ('true', '1', 'yes', 'sí')
+
+                defaults = {
+                    'name': str(row.get('template_name', template_slug)),
+                    'category': category,
+                    'subcategory': subcategory,
+                    'description': str(row.get('description', '')) if pd.notna(row.get('description')) else '',
+                    'thumbnail_url': thumbnail_url,
+                    'preview_url': preview_url or thumbnail_url,
+                    'is_popular': is_popular,
+                    'is_new': is_new,
+                    'display_order': display_order,
+                }
+
+                obj, was_created = DesignTemplate.objects.update_or_create(
+                    slug=template_slug,
+                    defaults=defaults
+                )
+
+                if was_created:
+                    created += 1
+                else:
+                    updated += 1
+
             except Category.DoesNotExist:
-                self.stdout.write(self.style.WARNING(
-                    f'   WARNING Categoría no encontrada: {row.get("category_slug")}'
-                ))
+                self.stdout.write(self.style.WARNING(f'    Categoría no encontrada: {category_slug}'))
                 errors += 1
             except Exception as e:
-                self.stdout.write(self.style.ERROR(
-                    f'   ERROR en template {row.get("template_slug")}: {str(e)}'
-                ))
+                self.stdout.write(self.style.ERROR(f'    ERROR {template_slug}: {e}'))
                 errors += 1
-        
-        self.stdout.write(f'   OK {created} creados, {updated} actualizados')
-        if errors > 0:
-            self.stdout.write(self.style.WARNING(f'   WARNING {errors} errores\n'))
-        else:
-            self.stdout.write('')
-        
+
+        self.stdout.write(self.style.SUCCESS(f'    {created} creados | {updated} actualizados | {errors} errores'))
+        self.stdout.write('')
         return created + updated

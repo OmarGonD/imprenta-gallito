@@ -1,14 +1,22 @@
 """
-Shop Models - SISTEMA UNIFICADO
-================================
+Shop Models - SISTEMA UNIFICADO CON OPCIONES GENÉRICAS
+=======================================================
 Este archivo contiene todos los modelos para la aplicación shop.
 
-ARQUITECTURA UNIFICADA:
-- Category → Subcategory → Product (para TODO, incluyendo ropa)
-- ProductColor y ProductSize como modelos auxiliares
-- Los modelos Clothing* han sido eliminados (redundantes)
+ARQUITECTURA:
+- Category → Subcategory → Product (para TODO)
+- ProductOption → ProductOptionValue → ProductVariant (sistema genérico de opciones)
 
-El CSV subcategories_complete.csv ahora funciona directamente.
+ELIMINADOS:
+- ProductColor (reemplazado por ProductOption key='color')
+- ProductSize (reemplazado por ProductOption key='size')
+- available_colors y available_sizes de Product
+
+NUEVO SISTEMA DE OPCIONES:
+Permite añadir cualquier tipo de opción sin tocar código:
+- color, size (ropa)
+- material, finish, trim (tarjetas)
+- material, cassette, mounting (banners)
 """
 from django.db import models
 from django.urls import reverse
@@ -16,7 +24,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from decimal import Decimal
-from .sizes_and_quantities import TAMANIOS, CANTIDADES
 
 
 # ============================================================================
@@ -24,26 +31,19 @@ from .sizes_and_quantities import TAMANIOS, CANTIDADES
 # ============================================================================
 
 CATEGORY_TYPES = [
-    ('quality_tiers', 'Niveles de Calidad'),      # Tarjetas: Deluxe > Premium > Estándar
-    ('product_types', 'Tipos de Producto'),        # Ropa: Polos, Gorros, Bolsos
-    ('formats', 'Formatos de Entrega'),            # Stickers: Individual, Plancha, Rollo
-    ('services', 'Servicios'),                     # Diseño: Logo, Web, Redes
-    ('occasions', 'Ocasiones'),                    # Invitaciones: Boda, Cumpleaños
-    ('standard', 'Estándar'),                      # Default
+    ('quality_tiers', 'Niveles de Calidad'),
+    ('product_types', 'Tipos de Producto'),
+    ('formats', 'Formatos de Entrega'),
+    ('services', 'Servicios'),
+    ('occasions', 'Ocasiones'),
+    ('standard', 'Estándar'),
 ]
 
 DISPLAY_STYLES = [
-    ('tab', 'Tabs Horizontales'),          # Para quality_tiers
-    ('circle', 'Círculos con Imagen'),     # Para product_types (ropa, promocionales)
-    ('card', 'Cards con Imagen'),          # Para formats
-    ('vertical_card', 'Cards Verticales'), # Para services
-]
-
-SIZE_TYPES = [
-    ('clothing', 'Ropa'),
-    ('hat', 'Gorras'),
-    ('bag', 'Bolsas'),
-    ('universal', 'Universal'),
+    ('tab', 'Tabs Horizontales'),
+    ('circle', 'Círculos con Imagen'),
+    ('card', 'Cards con Imagen'),
+    ('vertical_card', 'Cards Verticales'),
 ]
 
 
@@ -56,26 +56,25 @@ class Category(models.Model):
     Categorías principales del catálogo.
     Ejemplos: Tarjetas de Presentación, Ropa y Bolsos, Stickers, etc.
     """
-    slug = models.SlugField(max_length=250, unique=True, primary_key=True, 
-                           help_text="Identificador único de la categoría")
+    slug = models.SlugField(max_length=250, unique=True, primary_key=True,
+                            help_text="Identificador único de la categoría")
     name = models.CharField(max_length=250, verbose_name="Nombre")
     description = models.TextField(blank=True, verbose_name="Descripción")
     image_url = models.CharField(max_length=500, blank=True, verbose_name="URL de imagen")
-    icon = models.CharField(max_length=50, blank=True, 
-                           help_text="Clase de Font Awesome, ej: fa-tshirt")
+    icon = models.CharField(max_length=50, blank=True,
+                            help_text="Clase de Font Awesome, ej: fa-tshirt")
     display_order = models.IntegerField(default=0, verbose_name="Orden de visualización",
-                                       help_text="Menor número aparece primero")
+                                        help_text="Menor número aparece primero")
     status = models.CharField(max_length=20, default='active',
-                             choices=[('active', 'Activo'), ('inactive', 'Inactivo'), ('seasonal', 'Temporal')],
-                             verbose_name="Estado")
+                              choices=[('active', 'Activo'), ('inactive', 'Inactivo'), ('seasonal', 'Temporal')],
+                              verbose_name="Estado")
     category_type = models.CharField(
-        max_length=20, 
-        choices=CATEGORY_TYPES, 
+        max_length=20,
+        choices=CATEGORY_TYPES,
         default='standard',
         verbose_name="Tipo de Categoría",
         help_text="Define cómo se renderiza esta categoría en el frontend"
     )
-    # Campos para template personalizado
     custom_template = models.CharField(
         max_length=100, blank=True,
         verbose_name="Template personalizado",
@@ -105,11 +104,9 @@ class Category(models.Model):
         return self.get_absolute_url()
 
     def get_active_products_count(self):
-        """Retorna el número de productos activos en esta categoría"""
         return self.products.filter(status='active').count()
-    
+
     def get_active_subcategories(self):
-        """Retorna subcategorías activas ordenadas"""
         return self.subcategories.filter(status='active').order_by('display_order')
 
 
@@ -120,15 +117,15 @@ class Subcategory(models.Model):
               Deluxe, Premium, Estándar (para Tarjetas)
     """
     slug = models.SlugField(max_length=250, unique=True, primary_key=True,
-                           help_text="Identificador único de la subcategoría")
+                            help_text="Identificador único de la subcategoría")
     name = models.CharField(max_length=250, verbose_name="Nombre")
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='subcategories',
                                  verbose_name="Categoría")
     description = models.TextField(blank=True, verbose_name="Descripción")
     image_url = models.CharField(max_length=500, blank=True, verbose_name="URL de imagen")
-    icon = models.CharField(max_length=50, blank=True, 
-                           help_text="Clase de Font Awesome, ej: fa-tshirt")
+    icon = models.CharField(max_length=50, blank=True,
+                            help_text="Clase de Font Awesome, ej: fa-tshirt")
     display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
     display_style = models.CharField(
         max_length=20,
@@ -138,8 +135,8 @@ class Subcategory(models.Model):
         help_text="Cómo se muestra esta subcategoría en el frontend"
     )
     status = models.CharField(max_length=20, default='active',
-                             choices=[('active', 'Activo'), ('inactive', 'Inactivo')],
-                             verbose_name="Estado")
+                              choices=[('active', 'Activo'), ('inactive', 'Inactivo')],
+                              verbose_name="Estado")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -162,50 +159,198 @@ class Subcategory(models.Model):
     @property
     def get_url(self):
         return self.get_absolute_url()
-    
+
     def get_active_products(self):
-        """Retorna productos activos de esta subcategoría"""
         return self.products.filter(status='active')
 
 
 # ============================================================================
-# COLORES Y TALLAS (Aplicables a cualquier producto)
+# SISTEMA GENÉRICO DE OPCIONES DE PRODUCTO
 # ============================================================================
 
-class ProductColor(models.Model):
-    """Colores disponibles para productos (ropa, accesorios, etc.)"""
-    name = models.CharField(max_length=50, verbose_name="Nombre")
-    slug = models.SlugField(max_length=50, unique=True)
-    hex_code = models.CharField(max_length=7, help_text="Código hex, ej: #FF5733")
-    display_order = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True)
+class ProductOption(models.Model):
+    """
+    Define un TIPO de opción de producto (color, talla, material, acabado, etc.)
     
+    Ejemplos de keys:
+    - 'color' para colores de ropa/accesorios
+    - 'size' para tallas
+    - 'material' para material de banners (lona, vinil, microperforado)
+    - 'finish' para acabados de tarjetas (mate, brillante, soft-touch)
+    - 'cassette' para sistema de sujeción de banners
+    - 'trim' para tipo de corte
+    """
+    key = models.SlugField(
+        max_length=100,
+        unique=True,
+        help_text="Identificador único: color, size, material, finish, cassette, etc."
+    )
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Nombre visible",
+        help_text="Nombre que se muestra al usuario: Color, Talla, Material, etc."
+    )
+    display_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Orden de visualización"
+    )
+    is_required = models.BooleanField(
+        default=True,
+        verbose_name="Es requerido",
+        help_text="Si es True, el usuario debe seleccionar una opción"
+    )
+    selection_type = models.CharField(
+        max_length=10,
+        choices=[('single', 'Única'), ('multiple', 'Múltiple')],
+        default='single',
+        verbose_name="Tipo de selección",
+        help_text="Única: solo un valor. Múltiple: varios valores posibles"
+    )
+
     class Meta:
-        db_table = 'product_colors'
+        db_table = 'product_options'
         ordering = ['display_order', 'name']
-        verbose_name = 'Color de Producto'
-        verbose_name_plural = 'Colores de Productos'
-    
+        verbose_name = 'Opción de Producto'
+        verbose_name_plural = 'Opciones de Productos'
+
     def __str__(self):
         return self.name
 
+    def get_active_values(self):
+        """Retorna los valores activos de esta opción"""
+        return self.values.filter(is_active=True).order_by('display_order')
 
-class ProductSize(models.Model):
-    """Tallas disponibles para productos"""
-    name = models.CharField(max_length=20)  # XS, S, M, L, XL, etc.
-    display_name = models.CharField(max_length=50)  # Extra Small, Small, etc.
-    size_type = models.CharField(max_length=20, choices=SIZE_TYPES, default='clothing')
-    display_order = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True)
+
+class ProductOptionValue(models.Model):
+    """
+    Valor específico para una opción de producto.
     
+    Ejemplos:
+    - Para option key='color': Rojo, Azul, Negro (con hex_code en el campo 'extra')
+    - Para option key='size': XS, S, M, L, XL
+    - Para option key='material': Lona 13oz, Vinil, Microperforado
+    - Para option key='cassette': Roll-up, X-Banner, Porta Banner
+    """
+    option = models.ForeignKey(
+        ProductOption,
+        on_delete=models.CASCADE,
+        related_name='values',
+        verbose_name="Tipo de Opción"
+    )
+    value = models.CharField(
+        max_length=100,
+        verbose_name="Valor interno",
+        help_text="Identificador interno: rojo, azul, xs, s, lona-13oz"
+    )
+    display_name = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Nombre visible",
+        help_text="Nombre mostrado al usuario. Si está vacío, usa 'value'"
+    )
+    image = models.ImageField(
+        upload_to='option_images/',
+        blank=True,
+        null=True,
+        verbose_name="Imagen/Muestra",
+        help_text="Para colores: muestra del color. Para materiales: textura"
+    )
+    hex_code = models.CharField(
+        max_length=7,
+        blank=True,
+        verbose_name="Código Hex",
+        help_text="Solo para colores: #FF5733"
+    )
+    additional_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal('0.00'),
+        verbose_name="Precio adicional",
+        help_text="Costo extra al seleccionar esta opción"
+    )
+    display_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Orden de visualización"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Activo"
+    )
+
     class Meta:
-        db_table = 'product_sizes'
-        ordering = ['size_type', 'display_order']
-        verbose_name = 'Talla de Producto'
-        verbose_name_plural = 'Tallas de Productos'
-    
+        db_table = 'product_option_values'
+        ordering = ['option', 'display_order', 'display_name']
+        verbose_name = 'Valor de Opción'
+        verbose_name_plural = 'Valores de Opciones'
+        unique_together = ['option', 'value']
+
     def __str__(self):
-        return f"{self.name} ({self.get_size_type_display()})"
+        return f"{self.option.name}: {self.get_display_name()}"
+
+    def get_display_name(self):
+        """Retorna display_name si existe, sino value"""
+        return self.display_name or self.value
+
+    def has_additional_cost(self):
+        return self.additional_price > 0
+
+
+class ProductVariant(models.Model):
+    """
+    Relaciona un Producto con los tipos de opciones que tiene disponibles.
+    
+    Ejemplo: El polo "polo-algodon-180g" tiene:
+    - ProductVariant(product=polo, option=color)
+    - ProductVariant(product=polo, option=size)
+    
+    Para banners "banner-roll-up" tendría:
+    - ProductVariant(product=banner, option=material)
+    - ProductVariant(product=banner, option=cassette)
+    """
+    product = models.ForeignKey(
+        'Product',
+        on_delete=models.CASCADE,
+        related_name='variant_options',
+        verbose_name="Producto"
+    )
+    option = models.ForeignKey(
+        ProductOption,
+        on_delete=models.CASCADE,
+        related_name='product_variants',
+        verbose_name="Tipo de Opción"
+    )
+    display_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Orden de visualización",
+        help_text="Orden en que aparece esta opción en el producto"
+    )
+    # Valores específicos disponibles para este producto (subset de ProductOptionValue)
+    available_values = models.ManyToManyField(
+        ProductOptionValue,
+        blank=True,
+        related_name='product_variants',
+        verbose_name="Valores disponibles",
+        help_text="Si está vacío, todos los valores activos de la opción están disponibles"
+    )
+
+    class Meta:
+        db_table = 'product_variants'
+        ordering = ['product', 'display_order']
+        verbose_name = 'Variante de Producto'
+        verbose_name_plural = 'Variantes de Productos'
+        unique_together = ['product', 'option']
+
+    def __str__(self):
+        return f"{self.product.name} - {self.option.name}"
+
+    def get_available_values(self):
+        """
+        Retorna los valores disponibles para este producto.
+        Si available_values está vacío, retorna todos los valores activos de la opción.
+        """
+        if self.available_values.exists():
+            return self.available_values.filter(is_active=True).order_by('display_order')
+        return self.option.values.filter(is_active=True).order_by('display_order')
 
 
 # ============================================================================
@@ -215,10 +360,10 @@ class ProductSize(models.Model):
 class Product(models.Model):
     """
     Producto unificado que soporta tanto productos de imprenta como ropa.
-    Los campos opcionales se usan según el tipo de producto.
+    Las opciones (color, talla, material, etc.) se manejan via ProductVariant.
     """
     slug = models.SlugField(max_length=250, primary_key=True,
-                           help_text="Identificador único del producto")
+                            help_text="Identificador único del producto")
     name = models.CharField(max_length=250, verbose_name="Nombre del Producto")
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  related_name='products',
@@ -228,54 +373,46 @@ class Product(models.Model):
                                     related_name='products',
                                     verbose_name="Subcategoría")
     sku = models.CharField(max_length=50, unique=True, verbose_name="SKU",
-                          help_text="Código único del producto")
+                           help_text="Código único del producto")
     description = models.TextField(blank=True, verbose_name="Descripción")
     short_description = models.CharField(max_length=200, blank=True,
-                                        verbose_name="Descripción corta")
-    
+                                         verbose_name="Descripción corta")
+
     # Imágenes
     base_image_url = models.CharField(max_length=500, blank=True,
                                       verbose_name="URL de imagen principal")
     hover_image_url = models.CharField(max_length=500, blank=True,
                                        verbose_name="URL de imagen hover")
-    
+
     # Precios (para productos simples sin tiers)
-    base_price = models.DecimalField(max_digits=10, decimal_places=2, 
+    base_price = models.DecimalField(max_digits=10, decimal_places=2,
                                      null=True, blank=True,
                                      verbose_name="Precio base")
-    sale_price = models.DecimalField(max_digits=10, decimal_places=2, 
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2,
                                      null=True, blank=True,
                                      verbose_name="Precio oferta")
     min_quantity = models.IntegerField(default=1, verbose_name="Cantidad mínima")
-    
-    # Opciones de personalización (para ropa, accesorios)
-    available_colors = models.ManyToManyField(ProductColor, blank=True, 
-                                              related_name='products',
-                                              verbose_name="Colores disponibles")
-    available_sizes = models.ManyToManyField(ProductSize, blank=True, 
-                                             related_name='products',
-                                             verbose_name="Tallas disponibles")
-    
+
     # Características del producto
-    material = models.CharField(max_length=100, blank=True, 
-                               verbose_name="Material/Marca",
-                               help_text="Material del producto o marca para ropa")
+    material = models.CharField(max_length=100, blank=True,
+                                verbose_name="Material/Marca",
+                                help_text="Material del producto o marca para ropa")
     weight = models.CharField(max_length=50, blank=True, verbose_name="Peso")
-    features = models.TextField(blank=True, 
-                               help_text="Para ropa: genero:unisex,cuello:cuello_redondo,manga:manga_corta",
-                               verbose_name="Características")
-    
+    features = models.TextField(blank=True,
+                                help_text="Para ropa: genero:unisex,cuello:cuello_redondo",
+                                verbose_name="Características")
+
     # Flags
     is_featured = models.BooleanField(default=False, verbose_name="Destacado")
     is_new = models.BooleanField(default=False, verbose_name="Nuevo")
     is_bestseller = models.BooleanField(default=False, verbose_name="Más vendido")
-    
+
     # Estado y orden
     status = models.CharField(max_length=20, default='active',
-                             choices=[('active', 'Activo'), ('inactive', 'Inactivo'), ('seasonal', 'Temporal')],
-                             verbose_name="Estado")
+                              choices=[('active', 'Activo'), ('inactive', 'Inactivo'), ('seasonal', 'Temporal')],
+                              verbose_name="Estado")
     display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -297,42 +434,46 @@ class Product(models.Model):
     def get_absolute_url(self):
         # Ropa y bolsos
         if hasattr(self.category, 'parent') and self.category.parent and self.category.parent.slug == "ropa-bolsos":
-            return reverse('shop:clothing_product_detail', 
-                        kwargs={
-                            'category_slug': self.category.slug,
-                            'subcategory_slug': self.subcategory.slug,
-                            'product_slug': self.slug
-                        })
-        
+            return reverse('shop:clothing_product_detail',
+                           kwargs={
+                               'category_slug': self.category.slug,
+                               'subcategory_slug': self.subcategory.slug,
+                               'product_slug': self.slug
+                           })
+
         # Catálogos especiales sin subcategoría real
         special_categories = [
             'tarjetas-presentacion', 'empaques', 'folletos', 'posters',
             'invitaciones-regalos', 'bodas', 'productos-promocionales'
         ]
         if self.category and self.category.slug in special_categories:
-            return reverse('shop:product_detail', 
-                        kwargs={
-                            'category_slug': self.category.slug,
-                            'subcategory_slug': self.subcategory.slug,
-                            'product_slug': self.slug
-                        })
-                        
+            return reverse('shop:product_detail',
+                           kwargs={
+                               'category_slug': self.category.slug,
+                               'subcategory_slug': self.subcategory.slug,
+                               'product_slug': self.slug
+                           })
+
         # Productos con subcategoría real
         if hasattr(self, 'subcategory') and self.subcategory:
-            return reverse('shop:product_detail', 
-                        kwargs={
-                            'category_slug': self.category.slug,
-                            'subcategory_slug': self.subcategory.slug,
-                            'product_slug': self.slug
-                        })
-        
+            return reverse('shop:product_detail',
+                           kwargs={
+                               'category_slug': self.category.slug,
+                               'subcategory_slug': self.subcategory.slug,
+                               'product_slug': self.slug
+                           })
+
         # Fallback → siempre 3 niveles
-        return reverse('shop:product_detail', 
-                    kwargs={
-                        'category_slug': self.category.slug,
-                        'subcategory_slug': self.subcategory.slug if self.subcategory else 'default',
-                        'product_slug': self.slug
-                    })
+        return reverse('shop:product_detail',
+                       kwargs={
+                           'category_slug': self.category.slug,
+                           'subcategory_slug': self.subcategory.slug if self.subcategory else 'default',
+                           'product_slug': self.slug
+                       })
+
+    # =========================================================================
+    # MÉTODOS DE PRECIOS
+    # =========================================================================
 
     @property
     def current_price(self):
@@ -343,42 +484,21 @@ class Product(models.Model):
             return self.base_price
         first_tier = self.price_tiers.order_by('min_quantity').first()
         return first_tier.unit_price if first_tier else Decimal('0.00')
-    
+
     @property
     def starting_price(self):
         """Retorna el precio inicial más bajo (para mostrar 'Desde S/ X')"""
-        # Si tiene precio base directo, úsalo
         if self.base_price:
             return self.base_price
-        
-        # Si no, obtén el precio del tier con cantidad mínima más baja
         first_tier = self.price_tiers.order_by('min_quantity').first()
         return first_tier.unit_price if first_tier else None
-    
+
     @property
     def discount_percentage(self):
         """Calcula el porcentaje de descuento"""
         if self.sale_price and self.base_price and self.base_price > self.sale_price:
             return int(((self.base_price - self.sale_price) / self.base_price) * 100)
         return 0
-    
-    @property
-    def features_list(self):
-        """Retorna las características como lista"""
-        if self.features:
-            return [f.strip() for f in self.features.split(',')]
-        return []
-    
-    @property
-    def features_dict(self):
-        """Retorna las características como diccionario (para filtros de ropa)"""
-        result = {}
-        if self.features:
-            for item in self.features.split(','):
-                if ':' in item:
-                    key, value = item.split(':', 1)
-                    result[key.strip()] = value.strip()
-        return result
 
     def get_base_price(self, quantity=1):
         """Retorna el precio base para una cantidad específica (usando tiers)"""
@@ -386,10 +506,8 @@ class Product(models.Model):
             min_quantity__lte=quantity,
             max_quantity__gte=quantity
         ).first()
-        
         if tier:
             return tier.unit_price
-        
         if self.base_price:
             return self.base_price
         first_tier = self.price_tiers.order_by('min_quantity').first()
@@ -401,118 +519,182 @@ class Product(models.Model):
         if not tiers:
             price = self.base_price or Decimal('0.00')
             return (price, price)
-        
         prices = [tier.unit_price for tier in tiers]
         return (min(prices), max(prices))
 
-    def get_available_variant_types(self):
-        """Retorna los tipos de variantes disponibles para este producto"""
-        return VariantType.objects.filter(
-            product_variant_types__product=self
-        ).order_by('display_order')
-    
-    def has_colors(self):
-        """Verifica si el producto tiene colores disponibles"""
-        return self.available_colors.exists()
-    
-    def has_sizes(self):
-        """Verifica si el producto tiene tallas disponibles"""
-        return self.available_sizes.exists()
+    # =========================================================================
+    # MÉTODOS DE CARACTERÍSTICAS
+    # =========================================================================
 
+    @property
+    def features_list(self):
+        """Retorna las características como lista"""
+        if self.features:
+            return [f.strip() for f in self.features.split(',')]
+        return []
+
+    @property
+    def features_dict(self):
+        """Retorna las características como diccionario (para filtros de ropa)"""
+        result = {}
+        if self.features:
+            for item in self.features.split(','):
+                if ':' in item:
+                    key, value = item.split(':', 1)
+                    result[key.strip()] = value.strip()
+        return result
+
+    # =========================================================================
+    # MÉTODOS DE OPCIONES/VARIANTES (NUEVO SISTEMA)
+    # =========================================================================
+
+    def get_variant_options(self):
+        """
+        Retorna lista de diccionarios con las opciones disponibles para este producto.
+        Optimizado para usar directamente en templates.
+        
+        Retorna:
+        [
+            {
+                'key': 'color',
+                'name': 'Color',
+                'is_required': True,
+                'selection_type': 'single',
+                'values': [
+                    {'value': 'rojo', 'display_name': 'Rojo', 'hex_code': '#FF0000', 
+                     'image': '/media/option_images/rojo.jpg', 'additional_price': Decimal('0.00')},
+                    {'value': 'azul', 'display_name': 'Azul', 'hex_code': '#0000FF', ...},
+                ]
+            },
+            {
+                'key': 'size',
+                'name': 'Talla',
+                'is_required': True,
+                'values': [...]
+            },
+        ]
+        """
+        result = []
+        
+        variants = self.variant_options.select_related('option').prefetch_related(
+            'available_values',
+            'option__values'
+        ).order_by('display_order')
+        
+        for variant in variants:
+            option = variant.option
+            values = variant.get_available_values()
+            
+            option_data = {
+                'key': option.key,
+                'name': option.name,
+                'is_required': option.is_required,
+                'selection_type': option.selection_type,
+                'values': []
+            }
+            
+            for val in values:
+                option_data['values'].append({
+                    'value': val.value,
+                    'display_name': val.get_display_name(),
+                    'hex_code': val.hex_code,
+                    'image': val.image.url if val.image else None,
+                    'additional_price': val.additional_price,
+                    'has_additional_cost': val.has_additional_cost(),
+                })
+            
+            result.append(option_data)
+        
+        return result
+
+    def get_option_by_key(self, key):
+        """
+        Retorna los valores de una opción específica por su key.
+        Útil para obtener solo colores o solo tallas.
+        
+        Uso: product.get_option_by_key('color')
+        """
+        try:
+            variant = self.variant_options.select_related('option').prefetch_related(
+                'available_values', 'option__values'
+            ).get(option__key=key)
+            return variant.get_available_values()
+        except ProductVariant.DoesNotExist:
+            return ProductOptionValue.objects.none()
+
+    def has_option(self, key):
+        """Verifica si el producto tiene una opción específica"""
+        return self.variant_options.filter(option__key=key).exists()
+
+    def has_colors(self):
+        """Verifica si el producto tiene colores disponibles (retrocompatibilidad)"""
+        return self.has_option('color')
+
+    def has_sizes(self):
+        """Verifica si el producto tiene tallas disponibles (retrocompatibilidad)"""
+        return self.has_option('size')
+
+    def get_colors(self):
+        """Retorna los colores disponibles (retrocompatibilidad)"""
+        return self.get_option_by_key('color')
+
+    def get_sizes(self):
+        """Retorna las tallas disponibles (retrocompatibilidad)"""
+        return self.get_option_by_key('size')
+
+    def is_clothing_product(self):
+        """Determina si es un producto de ropa (tiene color o talla)"""
+        return self.has_option('color') or self.has_option('size')
+
+
+# ============================================================================
+# IMÁGENES DE PRODUCTO
+# ============================================================================
 
 class ProductImage(models.Model):
-    """Imágenes adicionales del producto, opcionalmente por color"""
+    """
+    Imágenes adicionales del producto, opcionalmente asociadas a un valor de opción.
+    Por ejemplo: imagen del polo en color rojo.
+    """
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    color = models.ForeignKey(ProductColor, on_delete=models.SET_NULL, 
-                             null=True, blank=True, related_name='product_images')
+    option_value = models.ForeignKey(
+        ProductOptionValue,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='product_images',
+        verbose_name="Valor de opción",
+        help_text="Opcional: asociar esta imagen a un color/material específico"
+    )
     image_url = models.CharField(max_length=500, verbose_name="URL de imagen")
     alt_text = models.CharField(max_length=200, blank=True)
     is_primary = models.BooleanField(default=False)
     display_order = models.IntegerField(default=0)
-    
+
     class Meta:
         db_table = 'product_images'
         ordering = ['display_order']
         verbose_name = 'Imagen de Producto'
         verbose_name_plural = 'Imágenes de Productos'
-    
+
     def __str__(self):
-        color_name = self.color.name if self.color else "Default"
-        return f"{self.product.name} - {color_name}"
+        option_name = self.option_value.get_display_name() if self.option_value else "Default"
+        return f"{self.product.name} - {option_name}"
+
+    def get_option_info(self):
+        """Retorna información del valor de opción asociado"""
+        if self.option_value:
+            return {
+                'option_key': self.option_value.option.key,
+                'value': self.option_value.value,
+                'display_name': self.option_value.get_display_name(),
+            }
+        return None
 
 
 # ============================================================================
-# VARIANTES Y PRECIOS
+# PRECIOS POR VOLUMEN
 # ============================================================================
-
-class VariantType(models.Model):
-    """Tipo de variante (forma, material, acabado, etc.)"""
-    slug = models.SlugField(max_length=250, unique=True, primary_key=True,
-                           help_text="Identificador único del tipo de variante")
-    name = models.CharField(max_length=250, verbose_name="Nombre")
-    description = models.TextField(blank=True, verbose_name="Descripción")
-    is_required = models.BooleanField(default=False, verbose_name="Es requerido")
-    allows_multiple = models.BooleanField(default=False, verbose_name="Permite múltiples")
-    display_order = models.IntegerField(default=0, verbose_name="Orden de visualización")
-    applies_to = models.CharField(max_length=100, blank=True, null=True,
-                                  verbose_name="Aplica a",
-                                  help_text="Categorías o tipos de productos")
-
-    class Meta:
-        db_table = 'variant_types'
-        ordering = ['display_order', 'name']
-        verbose_name = 'Tipo de Variante'
-        verbose_name_plural = 'Tipos de Variantes'
-
-    def __str__(self):
-        return self.name
-
-    def get_options_count(self):
-        return self.options.count()
-
-
-class VariantOption(models.Model):
-    """Opción específica de una variante"""
-    slug = models.SlugField(max_length=250, primary_key=True)
-    variant_type = models.ForeignKey(VariantType, on_delete=models.CASCADE,
-                                     related_name='options')
-    name = models.CharField(max_length=250, verbose_name="Nombre")
-    description = models.TextField(blank=True, verbose_name="Descripción")
-    additional_price = models.DecimalField(max_digits=10, decimal_places=2,
-                                          default=Decimal('0.00'),
-                                          verbose_name="Precio adicional")
-    image_url = models.CharField(max_length=500, blank=True, null=True)
-    display_order = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'variant_options'
-        ordering = ['variant_type', 'display_order', 'name']
-        verbose_name = 'Opción de Variante'
-        verbose_name_plural = 'Opciones de Variantes'
-
-    def __str__(self):
-        return f"{self.variant_type.name}: {self.name}"
-
-    def has_additional_cost(self):
-        return self.additional_price > 0
-
-
-class ProductVariantType(models.Model):
-    """Relación producto-variante"""
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,
-                                related_name='product_variant_types')
-    variant_type = models.ForeignKey(VariantType, on_delete=models.CASCADE,
-                                     related_name='product_variant_types')
-
-    class Meta:
-        db_table = 'product_variant_types'
-        unique_together = ['product', 'variant_type']
-        verbose_name = 'Variante de Producto'
-        verbose_name_plural = 'Variantes de Productos'
-
-    def __str__(self):
-        return f"{self.product.name} - {self.variant_type.name}"
-
 
 class PriceTier(models.Model):
     """Tier de precios por volumen"""
@@ -523,7 +705,7 @@ class PriceTier(models.Model):
     unit_price = models.DecimalField(max_digits=10, decimal_places=2,
                                      verbose_name="Precio unitario")
     discount_percentage = models.IntegerField(default=0,
-                                             verbose_name="Porcentaje de descuento")
+                                              verbose_name="Porcentaje de descuento")
 
     class Meta:
         db_table = 'price_tiers'
@@ -585,6 +767,38 @@ class Peru(models.Model):
 
 
 # ============================================================================
+# DESIGN TEMPLATES
+# ============================================================================
+
+class DesignTemplate(models.Model):
+    """Templates de diseño predefinidos"""
+    slug = models.SlugField(max_length=100, unique=True, primary_key=True)
+    name = models.CharField(max_length=200, verbose_name="Nombre del Template")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 related_name='design_templates')
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL,
+                                    null=True, blank=True,
+                                    related_name='design_templates')
+    description = models.TextField(blank=True)
+    thumbnail_url = models.CharField(max_length=500, verbose_name="URL Miniatura")
+    preview_url = models.CharField(max_length=500, blank=True, verbose_name="URL Preview")
+    is_popular = models.BooleanField(default=False)
+    is_new = models.BooleanField(default=False)
+    display_order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'design_templates'
+        ordering = ['-is_popular', 'display_order', 'name']
+        verbose_name = 'Template de Diseño'
+        verbose_name_plural = 'Templates de Diseño'
+
+    def __str__(self):
+        return f"{self.name} ({self.category.name})"
+
+
+# ============================================================================
 # MODELOS LEGACY (Para compatibilidad - considerar migrar o eliminar)
 # ============================================================================
 
@@ -595,8 +809,8 @@ class TarjetaPresentacion(models.Model):
     image = models.ImageField(upload_to='tarjetas_presentacion', blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     type = models.CharField(max_length=20,
-        choices=[('standard', 'Standard'), ('premium', 'Premium'), ('deluxe', 'Deluxe')],
-        default='standard')
+                            choices=[('standard', 'Standard'), ('premium', 'Premium'), ('deluxe', 'Deluxe')],
+                            default='standard')
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -662,44 +876,21 @@ class Empaque(models.Model):
 
 
 # ============================================================================
-# DESIGN TEMPLATES
+# NOTA SOBRE MODELOS ELIMINADOS:
 # ============================================================================
-
-class DesignTemplate(models.Model):
-    """Templates de diseño predefinidos"""
-    slug = models.SlugField(max_length=100, unique=True, primary_key=True)
-    name = models.CharField(max_length=200, verbose_name="Nombre del Template")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,
-                                related_name='design_templates')
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.SET_NULL,
-                                   null=True, blank=True,
-                                   related_name='design_templates')
-    description = models.TextField(blank=True)
-    thumbnail_url = models.CharField(max_length=500, verbose_name="URL Miniatura")
-    preview_url = models.CharField(max_length=500, blank=True, verbose_name="URL Preview")
-    is_popular = models.BooleanField(default=False)
-    is_new = models.BooleanField(default=False)
-    display_order = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'design_templates'
-        ordering = ['-is_popular', 'display_order', 'name']
-        verbose_name = 'Template de Diseño'
-        verbose_name_plural = 'Templates de Diseño'
-
-    def __str__(self):
-        return f"{self.name} ({self.category.name})"
-
-
-# ============================================================================
-# NOTA: Los siguientes modelos han sido ELIMINADOS por ser redundantes:
-# - ClothingCategory (usar Category con category_type='product_types')
-# - ClothingSubCategory (usar Subcategory con display_style='circle')
-# - ClothingProduct (usar Product con available_colors y available_sizes)
-# - ClothingProductImage (usar ProductImage)
-# - ClothingColor (usar ProductColor)
-# - ClothingSize (usar ProductSize)
-# - ClothingProductPricing (usar PriceTier)
+# Los siguientes modelos han sido ELIMINADOS y reemplazados por el sistema
+# genérico de opciones (ProductOption + ProductOptionValue + ProductVariant):
+#
+# - ProductColor → usar ProductOption(key='color') + ProductOptionValue
+# - ProductSize → usar ProductOption(key='size') + ProductOptionValue
+# - VariantType → usar ProductOption
+# - VariantOption → usar ProductOptionValue
+# - ProductVariantType → usar ProductVariant
+#
+# Los campos eliminados de Product:
+# - available_colors (ManyToMany) → ahora via ProductVariant
+# - available_sizes (ManyToMany) → ahora via ProductVariant
+#
+# Para migrar datos existentes, ejecutar:
+# python manage.py migrate_colors_to_options  (crear este comando)
 # ============================================================================

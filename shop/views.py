@@ -1,8 +1,8 @@
 """
-Shop Views - SISTEMA UNIFICADO
-===============================
+Shop Views - SISTEMA UNIFICADO CON OPCIONES GENÉRICAS
+======================================================
+Migrado de ProductColor/ProductSize a ProductOption/ProductOptionValue/ProductVariant.
 Todas las vistas usan el sistema Category → Subcategory → Product.
-Las vistas de ropa ahora usan los mismos modelos que el resto del catálogo.
 """
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -21,10 +21,15 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.conf import settings
+from django.db.models import Q, Count, Min, Prefetch
 
+# =============================================================================
+# IMPORTS DE MODELOS - SISTEMA GENÉRICO DE OPCIONES
+# =============================================================================
 from shop.models import (
-    Profile, Peru, Category, Subcategory, Product, 
-    ProductColor, ProductSize, ProductImage,
+    Profile, Peru, Category, Subcategory, Product,
+    ProductOption, ProductOptionValue, ProductVariant,  # ← NUEVO SISTEMA
+    ProductImage,
     TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque,
     DesignTemplate, PriceTier
 )
@@ -38,21 +43,6 @@ from .template_loader import TemplateLoader
 import os
 import json
 
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from django.core.paginator import Paginator
-from django.db.models import Q, Count, Min, Prefetch
-import json
-
-
-from .models import (
-    Category,
-    Subcategory,
-    Product,
-    ProductColor,
-    ProductSize,
-    ProductImage,
-)
 
 # ============================================================================
 # HOME PAGE VIEW
@@ -154,13 +144,19 @@ def category_view(request, category_slug):
     except Category.DoesNotExist:
         raise Http404("Categoría no encontrada")
     
-    
     subcategories = category.subcategories.filter(status='active').order_by('display_order')
     
+    # ACTUALIZADO: Prefetch con nuevo sistema de opciones
     products = Product.objects.filter(
         category=category,
         status='active'
-    ).select_related('category', 'subcategory').prefetch_related('price_tiers', 'available_colors', 'available_sizes')
+    ).select_related(
+        'category', 'subcategory'
+    ).prefetch_related(
+        'price_tiers',
+        'variant_options__option',
+        'variant_options__available_values'
+    )
     
     subcategory_filter = request.GET.get('subcategory', '')
     if subcategory_filter:
@@ -182,6 +178,7 @@ def category_view(request, category_slug):
 def subcategory_view(request, category_slug, subcategory_slug):
     """
     Vista para mostrar una subcategoría y sus productos.
+    ACTUALIZADO: Usa sistema genérico de opciones.
     """
     try:
         category = Category.objects.get(slug=category_slug, status='active')
@@ -193,25 +190,40 @@ def subcategory_view(request, category_slug, subcategory_slug):
     except (Category.DoesNotExist, Subcategory.DoesNotExist):
         raise Http404("Subcategoría no encontrada")
     
+    # ACTUALIZADO: Prefetch con nuevo sistema
     products = Product.objects.filter(
         subcategory=subcategory,
         status='active'
-    ).select_related('category', 'subcategory').prefetch_related('price_tiers', 'available_colors', 'available_sizes')
+    ).select_related(
+        'category', 'subcategory'
+    ).prefetch_related(
+        'price_tiers',
+        'variant_options__option',
+        'variant_options__available_values'
+    )
     
     sibling_subcategories = category.subcategories.filter(status='active').order_by('display_order')
     
-    # Filtros adicionales para ropa
+    # Filtros - ACTUALIZADO para sistema genérico
     color_filter = request.GET.getlist('color')
     size_filter = request.GET.getlist('size')
     price_min = request.GET.get('price_min', '')
     price_max = request.GET.get('price_max', '')
     sort_by = request.GET.get('sort', 'featured')
     
+    # ACTUALIZADO: Filtrar por colores usando nuevo sistema
     if color_filter:
-        products = products.filter(available_colors__slug__in=color_filter).distinct()
+        products = products.filter(
+            variant_options__option__key='color',
+            variant_options__available_values__value__in=color_filter
+        ).distinct()
     
+    # ACTUALIZADO: Filtrar por tallas usando nuevo sistema
     if size_filter:
-        products = products.filter(available_sizes__name__in=size_filter).distinct()
+        products = products.filter(
+            variant_options__option__key='size',
+            variant_options__available_values__value__in=size_filter
+        ).distinct()
     
     if price_min:
         products = products.filter(base_price__gte=float(price_min))
@@ -231,18 +243,23 @@ def subcategory_view(request, category_slug, subcategory_slug):
     else:
         products = products.order_by('-is_featured', '-is_bestseller', 'name')
     
-    # Obtener colores y tallas disponibles en esta subcategoría
-    all_colors = ProductColor.objects.filter(
-        products__subcategory=subcategory, is_active=True
-    ).distinct()
-    all_sizes = ProductSize.objects.filter(
-        products__subcategory=subcategory, is_active=True
-    ).distinct()
+    # ACTUALIZADO: Obtener colores y tallas disponibles con nuevo sistema
+    all_colors = ProductOptionValue.objects.filter(
+        option__key='color',
+        variants__product__subcategory=subcategory,
+        is_active=True
+    ).distinct().order_by('display_order')
+    
+    all_sizes = ProductOptionValue.objects.filter(
+        option__key='size',
+        variants__product__subcategory=subcategory,
+        is_active=True
+    ).distinct().order_by('display_order')
     
     context = {
         'category': category,
         'subcategory': subcategory,
-        'subcategories': sibling_subcategories,  # Para navegación
+        'subcategories': sibling_subcategories,
         'sibling_subcategories': sibling_subcategories,
         'products': products,
         'product_count': products.count(),
@@ -258,20 +275,10 @@ def subcategory_view(request, category_slug, subcategory_slug):
     return render(request, 'shop/subcategory.html', context)
 
 
-import json
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
-# from shop.models import ... (Asumimos que los imports están correctos)
-
-import json
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
-# from shop.models import ... (Asegúrate de importar todos los modelos necesarios: Product, Category, PriceTier, etc.)
-
-
 def product_detail(request, category_slug, subcategory_slug, product_slug):
     """
-    Vista unificada para detalle de producto (Ropa/Imprenta) - VERSIÓN FINAL Y ROBUSTA
+    Vista unificada para detalle de producto (Ropa/Imprenta)
+    ACTUALIZADO: Usa sistema genérico de opciones.
     """
     
     # -------------------------------------------------------------------------
@@ -291,33 +298,29 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         raise Http404("Producto no encontrado")
     
     # -------------------------------------------------------------------------
-    # 2. PROCESAR PRECIOS DE FORMA SEGURA (Generar safe_base_price en float)
+    # 2. PROCESAR PRECIOS DE FORMA SEGURA
     # -------------------------------------------------------------------------
     
     raw_starting_price = product.starting_price
     raw_base_price = product.base_price
     
-    # Fallback para starting_price
     if raw_starting_price is not None:
         safe_starting_price = float(raw_starting_price)
     elif raw_base_price is not None:
         safe_starting_price = float(raw_base_price)
     else:
         first_tier = product.price_tiers.order_by('min_quantity').first()
-        # Asegura que unit_price no sea None antes de intentar float()
         safe_starting_price = float(first_tier.unit_price) if first_tier and first_tier.unit_price is not None else 0.0
     
-    # Fallback para base_price (Precio de referencia para los descuentos)
     if raw_base_price is not None:
         safe_base_price = float(raw_base_price)
     elif raw_starting_price is not None:
         safe_base_price = float(raw_starting_price)
     else:
-        # Usa el precio inicial seguro si no hay base ni starting price
         safe_base_price = safe_starting_price 
     
     # -------------------------------------------------------------------------
-    # 3. INICIALIZAR CONTEXTO BASE CON VALORES SEGUROS
+    # 3. INICIALIZAR CONTEXTO BASE
     # -------------------------------------------------------------------------
     
     context = {
@@ -325,18 +328,16 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         'product': product,
         'related_products': None,
         'template_name': 'shop/product_detail.html',
-        
-        # Variable UNIFICADA para los tiers (HTML y JS)
         'pricing_tiers': [], 
         'images_by_color': '{}',
         'selected_color_slug': '',
         'base_image_url': product.base_image_url or '',
         'safe_starting_price': safe_starting_price,
-        'safe_base_price': safe_base_price, # El precio base ya está en float
+        'safe_base_price': safe_base_price,
     }
 
     # -------------------------------------------------------------------------
-    # 4. LÓGICA DE TIERS UNIFICADA (Calcula y Formatea Tiers)
+    # 4. LÓGICA DE TIERS UNIFICADA
     # -------------------------------------------------------------------------
     
     pricing_tiers_qs = product.price_tiers.all().order_by('min_quantity')
@@ -346,19 +347,17 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         savings = 0.0
         current_unit_price = float(tier.unit_price) 
         
-        # ✅ Cálculo Robusto de Ahorro: Usa el precio de referencia seguro (float)
         if safe_base_price > 0 and safe_base_price > current_unit_price:
             savings = safe_base_price - current_unit_price
         
         formatted_tiers.append({
-            'min_quantity': int(tier.min_quantity),      # Consistente: int
-            'max_quantity': int(tier.max_quantity),      # Consistente: int
-            'unit_price': current_unit_price,            # CRÍTICO: float
+            'min_quantity': int(tier.min_quantity),
+            'max_quantity': int(tier.max_quantity),
+            'unit_price': current_unit_price,
             'discount_percent': tier.discount_percentage,
-            'savings': savings                           # CRÍTICO: float
+            'savings': savings
         })
 
-    # Si no hay tiers, asegurar que contenga el precio base
     if not formatted_tiers:
         formatted_tiers = [{
             'min_quantity': 1,
@@ -368,55 +367,63 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             'savings': 0.0,
         }]
 
-    # ✅ Asignamos la lista a la variable UNIFICADA 'pricing_tiers' para HTML y JS
     context['pricing_tiers'] = formatted_tiers
-    context['pricing_tiers_json'] = json.dumps(formatted_tiers) # Ahora no fallará (solo floats)
-
+    context['pricing_tiers_json'] = json.dumps(formatted_tiers)
 
     # -------------------------------------------------------------------------
-    # 5. LÓGICA ESPECÍFICA (Ropa vs. Imprenta)
+    # 5. LÓGICA ESPECÍFICA (Ropa vs. Imprenta) - ACTUALIZADO
     # -------------------------------------------------------------------------
 
     if category_slug == 'ropa-bolsos':
         
         subcategory = product.subcategory
 
-        # TALLAS
-        available_sizes = product.available_sizes.filter(is_active=True).order_by('display_order')
+        # ACTUALIZADO: Obtener opciones usando nuevo sistema
+        variant_options = product.get_variant_options()
+        
+        # Obtener colores y tallas del nuevo sistema
+        available_colors = product.get_colors()  # Método de retrocompatibilidad
+        available_sizes = product.get_sizes()    # Método de retrocompatibilidad
         
         context.update({
+            'variant_options': variant_options,  # Nuevo: todas las opciones
             'available_sizes': available_sizes,
+            'available_colors': available_colors,
             'pricing_tiers_qs': pricing_tiers_qs, 
             'subcategory': subcategory,
             'category_slug': subcategory.slug,
         })
         
-        # MANEJO DE COLORES E IMÁGENES
+        # MANEJO DE COLORES E IMÁGENES - ACTUALIZADO
         selected_color_slug = request.GET.get('color', '')
-        available_colors = product.available_colors.filter(is_active=True).order_by('display_order')
         
         selected_color = None
-        if selected_color_slug:
-            selected_color = available_colors.filter(slug=selected_color_slug).first()
-        if not selected_color and available_colors.exists():
-            selected_color = available_colors.first()
-            selected_color_slug = selected_color.slug
+        if selected_color_slug and available_colors:
+            for color in available_colors:
+                if color.value == selected_color_slug:
+                    selected_color = color
+                    break
+        
+        if not selected_color and available_colors:
+            selected_color = available_colors[0]
+            selected_color_slug = selected_color.value
             
         context.update({
-            'available_colors': available_colors,
             'selected_color': selected_color,
             'selected_color_slug': selected_color_slug or '',
         })
 
+        # ACTUALIZADO: Construir images_by_color con nuevo sistema
         images_by_color = {}
         base_image_url = product.base_image_url or ''
         
-        all_images = product.images.select_related('color').order_by(
-            'color__slug', '-is_primary', 'display_order'
+        # Obtener imágenes relacionadas con option_value
+        all_images = product.images.select_related('option_value').order_by(
+            'option_value__value', '-is_primary', 'display_order'
         )
         
         for img in all_images:
-            color_key = img.color.slug if img.color else 'default'
+            color_key = img.option_value.value if img.option_value else 'default'
             if color_key not in images_by_color:
                 images_by_color[color_key] = []
             
@@ -428,14 +435,14 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         
         if selected_color:
             primary_image = product.images.filter(
-                color=selected_color, 
+                option_value=selected_color, 
                 is_primary=True
             ).first()
             
             if primary_image:
                 base_image_url = primary_image.image_url or base_image_url
             else:
-                first_image = product.images.filter(color=selected_color).first()
+                first_image = product.images.filter(option_value=selected_color).first()
                 if first_image:
                     base_image_url = first_image.image_url or base_image_url
 
@@ -451,7 +458,7 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         # 5.1. LÓGICA PARA IMPRENTA Y OTROS
         # -------------------------------------------------------------------------
         
-        context['variant_types'] = product.get_available_variant_types()
+        #context['variant_types'] = product.get_available_variant_types()
         
         context['related_products'] = Product.objects.filter(
             category=category,
@@ -471,13 +478,13 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     print("\n" + "="*70)
     print(f"🔍 DEBUGGING: {product.name} (Template: {context['template_name']})")
     print("="*70)
-    print(f"  Tiers cargados: {len(context['pricing_tiers'])} tiers")
-    print(f"  Precio Base Seguro (float): {context['safe_base_price']}")
+    print(f"  Tiers cargados: {len(context['pricing_tiers'])} tiers")
+    print(f"  Precio Base Seguro (float): {context['safe_base_price']}")
     
     if context['pricing_tiers']:
-        print(f"\n  📊 Tiers procesados (variable única):")
+        print(f"\n  📊 Tiers procesados:")
         for i, tier in enumerate(context['pricing_tiers'][:3]):
-            print(f"    Tier {i}: min={tier['min_quantity']}, "
+            print(f"    Tier {i}: min={tier['min_quantity']}, "
                   f"max={tier['max_quantity']}, "
                   f"price={tier['unit_price']} (savings={tier['savings']})")
     
@@ -488,29 +495,21 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     # -------------------------------------------------------------------------
     
     return render(request, context['template_name'], context)
-# ============================================================================
-# ROPA Y BOLSOS - VISTAS REFACTORIZADAS (Usando sistema unificado)
-# ============================================================================
 
-# =============================================================================
-# VISTAS ESPECÍFICAS PARA ROPA/BOLSOS (MODIFICADAS POR EL USUARIO)
-# =============================================================================
+
+# ============================================================================
+# ROPA Y BOLSOS - VISTAS REFACTORIZADAS
+# ============================================================================
 
 def clothing_category(request):
     """
     Vista de categoría para 'ropa-bolsos/' (Nivel 1).
-    Renderiza clothing_category.html.
-    
-    Esta vista no recibe argumentos de slug porque la URL está fijada en 'ropa-bolsos/'.
     """
-    # Busca la categoría 'ropa-bolsos'
     try:
         category = Category.objects.get(slug='ropa-bolsos')
     except Category.DoesNotExist:
-        # En caso de que el slug 'ropa-bolsos' no exista en la base de datos
         raise Http404("La categoría 'Ropa y Bolsos' no fue encontrada.")
         
-    # Obtener subcategorías relevantes (polos, camisas, etc.)
     subcategories = Subcategory.objects.filter(category=category)
     
     context = {
@@ -519,38 +518,44 @@ def clothing_category(request):
     }
     return render(request, 'shop/clothing_category.html', context)
 
-    return render(request, 'shop/clothing_category.html', context)
-    
-from django.shortcuts import render, get_object_or_404
-from .models import Subcategory, Product # Asume que también tienes un modelo Product
-
-# views.py → clothing_subcategory
-from django.shortcuts import render, get_object_or_404
-from .models import Product, Category, Subcategory
 
 def clothing_subcategory(request, category_slug, subcategory_slug):
+    """
+    Vista de subcategoría para ropa.
+    ACTUALIZADO: Usa sistema genérico de opciones.
+    """
     category = get_object_or_404(Category, slug=category_slug)
     subcategory = get_object_or_404(Subcategory, slug=subcategory_slug, category=category)
     
+    # ACTUALIZADO: Prefetch con nuevo sistema
     products = Product.objects.filter(
         category=category,
         subcategory=subcategory,
         status='active'
-    ).prefetch_related('available_colors')
+    ).prefetch_related(
+        'variant_options__option',
+        'variant_options__available_values',
+        'images__option_value'
+    )
 
-    # AÑADE ESTO: Preparar imágenes por producto y color
+    # Preparar imágenes por producto y color - ACTUALIZADO
     products_with_images = []
     for product in products:
         colors_data = {}
-        for color in product.available_colors.all():
-            # Reutiliza tu API lógica (sin hacer request HTTP)
-            image_obj = product.images.filter(color=color).first()  # si existe
+        
+        # Obtener colores usando nuevo método
+        colors = product.get_colors()
+        
+        for color in colors:
+            # Buscar imagen para este color (option_value)
+            image_obj = product.images.filter(option_value=color).first()
             image_url = image_obj.image_url if image_obj else product.base_image_url
             
-            colors_data[color.slug] = {
+            colors_data[color.value] = {
                 'image': image_url or product.base_image_url,
                 'is_primary': image_obj.is_primary if image_obj else True
             }
+        
         products_with_images.append({
             'product': product,
             'images_by_color': colors_data
@@ -559,15 +564,10 @@ def clothing_subcategory(request, category_slug, subcategory_slug):
     context = {
         'category': category,
         'subcategory': subcategory,
-        'products_with_images': products_with_images,  # ← Este es el nuevo contexto
-        'products': products,  # mantener compatibilidad si usas en otros lados
-        # ... resto del contexto
+        'products_with_images': products_with_images,
+        'products': products,
     }
     return render(request, 'shop/clothing_subcategory.html', context)
-
-
-    
-
 
 
 # =============================================================================
@@ -577,122 +577,12 @@ def clothing_subcategory(request, category_slug, subcategory_slug):
 def add_clothing_to_cart(request):
     """
     API para agregar productos de ropa al carrito.
-    Acepta: product_slug, color_slug, size_slug, quantity
+    ACTUALIZADO: Usa sistema genérico de opciones.
     """
     if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
     try:
-        # Obtener datos del POST
-        product_slug = request.POST.get('product_slug')
-        color_slug = request.POST.get('color_slug')
-        size_slug = request.POST.get('size_slug')
-        quantity = int(request.POST.get('quantity', 1))
-        
-        # Validar datos requeridos
-        if not all([product_slug, color_slug, size_slug]):
-            return JsonResponse({
-                'error': 'Faltan datos requeridos (producto, color, talla)'
-            }, status=400)
-        
-        # Obtener el producto
-        product = get_object_or_404(Product, slug=product_slug)
-        
-        # Obtener color y talla
-        color = get_object_or_404(ProductColor, slug=color_slug)
-        size = get_object_or_404(ProductSize, name=size_slug)
-        
-        # Verificar que el color y talla estén disponibles para este producto
-        if color not in product.available_colors.all():
-            return JsonResponse({'error': 'Color no disponible'}, status=400)
-        
-        if size not in product.available_sizes.all():
-            return JsonResponse({'error': 'Talla no disponible'}, status=400)
-        
-        # Calcular precio basado en cantidad (usando PriceTiers)
-        unit_price = product.base_price  # Default
-        
-        # Buscar el tier correspondiente
-        price_tier = product.price_tiers.filter(
-            min_quantity__lte=quantity,
-            max_quantity__gte=quantity
-        ).first()
-        
-        if price_tier:
-            unit_price = price_tier.unit_price
-        
-        # Obtener o crear el carrito
-        if request.user.is_authenticated:
-            cart, _ = Cart.objects.get_or_create(
-                user=request.user,
-                status='active'
-            )
-        else:
-            # Para usuarios anónimos, usar sesión
-            cart_id = request.session.get('cart_id')
-            if cart_id:
-                cart = Cart.objects.filter(id=cart_id, status='active').first()
-                if not cart:
-                    cart = Cart.objects.create(status='active')
-                    request.session['cart_id'] = cart.pk
-            else:
-                cart = Cart.objects.create(status='active')
-                request.session['cart_id'] = cart.pk
-        
-        # Buscar si ya existe un item con el mismo producto, color y talla
-        cart_item = CartItem.objects.filter(
-            cart=cart,
-            product=product,
-            color=color,
-            size=size
-        ).first()
-        
-        if cart_item:
-            # Actualizar cantidad
-            cart_item.quantity += quantity
-            cart_item.unit_price = unit_price
-            cart_item.save()
-        else:
-            # Crear nuevo item
-            cart_item = CartItem.objects.create(
-                cart=cart,
-                product=product,
-                color=color,
-                size=size,
-                quantity=quantity,
-                unit_price=unit_price
-            )
-        
-        # Calcular totales del carrito
-        cart_items = cart.items.all()
-        cart_total = sum(item.get_total() for item in cart_items)
-        cart_count = sum(item.quantity for item in cart_items)
-        
-        return JsonResponse({
-            'success': True,
-            'message': f'{product.name} agregado al carrito',
-            'cart_count': cart_count,
-            'cart_total': float(cart_total),
-            'item': {
-                'product_name': product.name,
-                'color': color.name,
-                'size': size.name,
-                'quantity': cart_item.quantity,
-                'unit_price': float(unit_price),
-                'total': float(cart_item.get_total()),
-            }
-        })
-        
-    except Exception as e:
-        return JsonResponse({
-            'error': f'Error al agregar al carrito: {str(e)}'
-        }, status=500)
-
-
-@csrf_exempt
-def add_clothing_to_cart(request):
-    """AJAX endpoint para agregar producto de ropa al carrito."""
-    if request.method == 'POST':
         cart_id = request.COOKIES.get('cart_id')
         if cart_id:
             try:
@@ -704,22 +594,45 @@ def add_clothing_to_cart(request):
             cart_id = cart.pk
         
         product_slug = request.POST.get('product_slug')
-        color_slug = request.POST.get('color')
-        size_name = request.POST.get('size')
+        color_value = request.POST.get('color') or request.POST.get('color_slug')
+        size_value = request.POST.get('size') or request.POST.get('size_slug')
         quantity = int(request.POST.get('quantity', 1))
         
         try:
             product = Product.objects.get(slug=product_slug, status='active')
-            color = ProductColor.objects.get(slug=color_slug) if color_slug else None
-            size = ProductSize.objects.get(name=size_name) if size_name else None
+            
+            # ACTUALIZADO: Obtener color y talla del nuevo sistema
+            color_obj = None
+            size_obj = None
+            
+            if color_value:
+                color_obj = ProductOptionValue.objects.filter(
+                    option__key='color',
+                    value=color_value
+                ).first()
+            
+            if size_value:
+                size_obj = ProductOptionValue.objects.filter(
+                    option__key='size',
+                    value=size_value
+                ).first()
             
             # Guardar datos de personalización en comment como JSON
             custom_data = json.dumps({
                 'type': 'clothing',
-                'color': color.name if color else '',
-                'color_hex': color.hex_code if color else '',
-                'size': size.name if size else '',
+                'color': color_obj.get_display_name() if color_obj else '',
+                'color_value': color_obj.value if color_obj else '',
+                'color_hex': color_obj.hex_code if color_obj else '',
+                'size': size_obj.get_display_name() if size_obj else '',
+                'size_value': size_obj.value if size_obj else '',
             })
+            
+            # Obtener imagen del color
+            color_image_url = product.base_image_url
+            if color_obj:
+                img = product.images.filter(option_value=color_obj).first()
+                if img:
+                    color_image_url = img.image_url
             
             cart_item = CartItem.objects.create(
                 cart=cart,
@@ -727,6 +640,9 @@ def add_clothing_to_cart(request):
                 quantity=str(quantity),
                 comment=custom_data,
                 step_two_complete=True,
+                color=color_obj.get_display_name() if color_obj else '',
+                size=size_obj.get_display_name() if size_obj else '',
+                color_image_url=color_image_url,
             )
             
             # Contar items en el carrito
@@ -746,7 +662,10 @@ def add_clothing_to_cart(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
+    except Exception as e:
+        return JsonResponse({
+            'error': f'Error al agregar al carrito: {str(e)}'
+        }, status=500)
 
 
 # ============================================================================
@@ -910,82 +829,46 @@ def add_product_to_cart(request):
 
 
 # ============================================================================
-# TARJETAS DE PRESENTACIÓN
-# ============================================================================
-
-
-# ============================================================================
-# TEMPLATE GALLERY
+# VISTA: GALERÍA DE PLANTILLAS - VERSIÓN 100% FUNCIONAL
 # ============================================================================
 
 def template_gallery_view(request, category_slug, product_slug):
-    """Vista de galería de templates de diseño."""
-    category = get_object_or_404(Category, slug=category_slug, status='active')
-    product = get_object_or_404(Product, slug=product_slug, category=category, status='active')
-    
-    page = request.GET.get('page', 1)
+    """
+    Muestra la galería de plantillas para un producto específico.
+    URL: /<category_slug>/producto/<product_slug>/elegir-diseno/
+    """
     try:
-        page = int(page)
-    except (TypeError, ValueError):
-        page = 1
-    
-    filter_type = request.GET.get('filter', 'all')
-    if filter_type not in ('all', 'popular', 'new'):
-        filter_type = 'all'
-    
-    edit_item_id = request.GET.get('edit_item')
-    edit_item_data = None
-    
-    if edit_item_id:
-        try:
-            cart_item = CartItem.objects.get(pk=edit_item_id)
-            edit_item_data = json.dumps({
-                'id': cart_item.pk,
-                'contact_name': cart_item.contact_name or '',
-                'contact_phone': cart_item.contact_phone or '',
-                'contact_email': cart_item.contact_email or '',
-                'contact_job_title': cart_item.contact_job_title or '',
-                'contact_company': cart_item.contact_company or '',
-                'contact_social': cart_item.contact_social or '',
-                'contact_address': cart_item.contact_address or '',
-                'template_slug': cart_item.get_template_slug() if hasattr(cart_item, 'get_template_slug') else '',
-                'logo_url': cart_item.logo_file.url if cart_item.logo_file else '',
-            })
-        except CartItem.DoesNotExist:
-            edit_item_data = None
-    
-    data = TemplateLoader.get_paginated(
-        page=page,
-        per_page=24,
-        filter_type=filter_type,
-        category_slug=category_slug
+        category = Category.objects.get(slug=category_slug, status='active')
+        product = Product.objects.get(
+            slug=product_slug,
+            category=category,
+            status='active'
+        )
+    except (Category.DoesNotExist, Product.DoesNotExist):
+        raise Http404("Producto o categoría no encontrada")
+
+    # OBTENER PLANTILLAS DE LA CATEGORÍA (prioridad: subcategoría si existe)
+    templates = DesignTemplate.objects.filter(
+        category=category
     )
-    
-    stats = TemplateLoader.get_stats(category_slug)
-    
+
+    # Si el producto tiene subcategoría, filtrar por ella también (opcional pero recomendado)
+    if product.subcategory:
+        templates = templates.filter(
+            Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
+        )
+
+    templates = templates.order_by('-is_popular', '-is_new', 'display_order', 'name').distinct()
+
     context = {
-        'category': category,
         'product': product,
-        'templates': data['templates'],
-        'filter_type': filter_type,
-        'total_templates': stats['total'],
-        'popular_count': stats['popular_count'],
-        'new_count': stats['new_count'],
-        'page_obj': {
-            'number': data['page'],
-            'has_previous': data['has_prev'],
-            'has_next': data['has_next'],
-            'previous_page_number': data['prev_page'],
-            'next_page_number': data['next_page'],
-            'paginator': {
-                'num_pages': data['total_pages'],
-                'page_range': range(1, data['total_pages'] + 1),
-            }
-        },
-        'showing_count': len(data['templates']),
-        'edit_item_data': edit_item_data,
+        'category': category,
+        'templates': templates,
+        'total_templates': templates.count(),
+        # Para los filtros por industria (si usas el campo industry_slug)
+        # 'categories': DesignTemplate.objects.filter(category=category).values('industry_slug').distinct(),
     }
-    
+
     return render(request, 'shop/template_gallery.html', context)
 
 
@@ -1176,41 +1059,32 @@ def get_district(request):
     })
 
 
-### ¿Quiénes somos? ###
+# ============================================================================
+# FOOTER LINKS
+# ============================================================================
 
 def quienes_somos(request):
     return render(request, "footer_links/quienes_somos.html")
 
-
-### ¿Cómo comprar? ###
-
 def como_comprar(request):
     return render(request, "footer_links/como_comprar.html")
-
-
-### Contactanos ###
 
 def contactanos(request):
     return render(request, "footer_links/contactanos.html")
 
-
-### Legales - Privacidad ###
-
-
 def legales_privacidad(request):
     return render(request, 'footer_links/legales_privacidad.html')
-
-### Legales - Términos ###
 
 def legales_terminos(request):
     return render(request, 'footer_links/legales_terminos.html')    
 
-### Preguntas frecuentes ###
-
 def preguntas_frecuentes(request):
     return render(request, 'footer_links/preguntas_frecuentes.html')
 
-# Tamanos y cantidades
+
+# ============================================================================
+# STEP VIEWS (Legacy)
+# ============================================================================
 
 class StepOneView(FormView):
     form_class = StepOneForm
@@ -1218,7 +1092,6 @@ class StepOneView(FormView):
     success_url = 'subir-arte'
 
     def get_initial(self):
-        # pre-populate form if someone goes back and forth between forms
         initial = super(StepOneView, self).get_initial()
         initial['size'] = self.request.session.get('size', None)
         initial['quantity'] = self.request.session.get('quantity', None)
@@ -1226,7 +1099,6 @@ class StepOneView(FormView):
             category__slug=self.kwargs['c_slug'],
             slug=self.kwargs['product_slug']
         )
-
         return initial
 
     def get_context_data(self, **kwargs):
@@ -1246,7 +1118,6 @@ class StepOneView(FormView):
             try:
                 cart = Cart.objects.get(pk=cart_id)
             except ObjectDoesNotExist:
-                # supplied ID doesn't match a Cart from your BD
                 cart = Cart.objects.create(cart_id="Random")
         else:
             cart = Cart.objects.create(cart_id="Random")
@@ -1267,7 +1138,6 @@ class StepOneView(FormView):
         return response
 
 
-# here we are going to use CreateView to save the Third step ModelForm
 class StepTwoView(FormView):
     form_class = StepTwoForm
     template_name = 'shop/subir-arte.html'
@@ -1286,7 +1156,6 @@ class StepTwoView(FormView):
 
     def form_valid(self, form):
         item_id = self.request.COOKIES.get("item_id")
-
         cart_item = CartItem.objects.get(pk=item_id)
         cart_item.file_a = form.cleaned_data["file_a"]
         cart_item.file_b = form.cleaned_data["file_b"]
@@ -1298,31 +1167,22 @@ class StepTwoView(FormView):
         return response
 
 
-### STEPS ONE & TWO FOR SAMPLES
-
-
-# Tamanos y cantidades
-
 class StepOneView_Sample(FormView):
     form_class = StepOneForm_Sample
     template_name = 'shop/medidas-cantidades.html'
     success_url = 'subir-arte'
 
     def get_initial(self):
-        # pre-populate form if someone goes back and forth between forms
         initial = super(StepOneView_Sample, self).get_initial()
         initial['size'] = self.request.session.get('size', None)
         initial['sample'] = Sample.objects.get(
-            # category=self.kwargs['muestras'],
             slug=self.kwargs['sample_slug']
         )
-
         return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sample'] = Sample.objects.get(
-            # category=self.kwargs['muestras'],
             slug=self.kwargs['sample_slug']
         )
         context['sample_form'] = context.get('form')
@@ -1337,7 +1197,6 @@ class StepOneView_Sample(FormView):
             try:
                 cart = Cart.objects.get(pk=cart_id)
             except ObjectDoesNotExist:
-                # supplied ID doesn't match a Cart from your BD
                 cart = Cart.objects.create(cart_id="Random")
         else:
             cart = Cart.objects.create(cart_id="Random")
@@ -1346,7 +1205,6 @@ class StepOneView_Sample(FormView):
             size=form.cleaned_data.get('size'),
             quantity=2,
             sample=Sample.objects.get(
-                # category=self.kwargs['muestras'],
                 slug=self.kwargs['sample_slug']
             ),
             cart=cart
@@ -1358,8 +1216,6 @@ class StepOneView_Sample(FormView):
         return response
 
 
-# here we are going to use CreateView to save the Third step ModelForm
-
 class StepTwoView_Sample(FormView):
     form_class = StepTwoForm_Sample
     template_name = 'shop/subir-arte.html'
@@ -1368,7 +1224,6 @@ class StepTwoView_Sample(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['product'] = Sample.objects.get(
-            # category__slug=self.kwargs['c_slug'],
             slug=self.kwargs['sample_slug']
         )
         return context
@@ -1378,7 +1233,6 @@ class StepTwoView_Sample(FormView):
 
     def form_valid(self, form):
         item_id = self.request.COOKIES.get("item_id")
-
         sample_item = SampleItem.objects.get(pk=item_id)
         sample_item.file_a = form.cleaned_data["file_a"]
         sample_item.file_b = form.cleaned_data["file_b"]
@@ -1390,9 +1244,9 @@ class StepTwoView_Sample(FormView):
         return response
 
 
-###############################
-###############################
-
+# ============================================================================
+# AUTH VIEWS
+# ============================================================================
 
 def signinView(request):
     if request.method == 'POST':
@@ -1400,20 +1254,12 @@ def signinView(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            # username = request.POST['username']
-            # password = request.POST['password']
-            print(username)
-            print(password)
-            user = authenticate(username=username,
-                                password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                # cart_id =_cart_id(request)
-                # request.session['cart_id'] = cart_id
                 return redirect('carrito-de-compras:cart_detail')
             else:
                 return redirect('signup')
-
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/signin.html', {'form': form})
@@ -1422,11 +1268,8 @@ def signinView(request):
 def signoutView(request):
     if request.user.is_superuser:
         request.session.modified = True
-
         logout(request)
-
     else:
-        # del request.session['cart_id']
         request.session.modified = True
         logout(request)
 
@@ -1436,18 +1279,8 @@ def signoutView(request):
     return response
 
 
-### New SignUp Extended
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-
-
-
-### Email Confirmation Needed ###
-
 def email_confirmation_needed(request):
     return render(request, "accounts/email_confirmation_needed.html")
-
 
 
 def activate(request, uidb64, token):
@@ -1457,31 +1290,18 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        print("############")
-        print("Enters if of activate function")
-        print("############")
         user.is_active = True
         user.save()
         login(request, user)
-        '''send email to admin when a new user has activate his/her account'''
-        print("############")
-        print(user.pk)
-        print(type(user.pk))
-        print("############")
         send_email_new_registered_user(user.pk)
         return redirect('shop:home')
     else:
         return HttpResponse('¡Enlace de activación inválido! Intente registrarse nuevamente.')
 
 
-
 def send_email_new_registered_user(user_id):
     try:
-        print("Enters send_email_new_registed_user try")
         profile = Profile.objects.latest('id')
-        if profile:
-            print("Se obtuvo profile")
-        '''sending the order to the customer'''
         subject = f"Imprenta Gallito Perú - Nuevo usuario registrado #{profile.pk}"
         to = [f'{profile.user.email}', 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
         from_email = 'imprentagallito@imprentagallito.pe'
@@ -1502,7 +1322,6 @@ def send_email_new_registered_user(user_id):
         msg = EmailMessage(subject, message, to=to, from_email=from_email)
         msg.content_subtype = 'html'
         msg.send()
-        print("Se envió msj")
     except:
         pass
 
@@ -1523,13 +1342,11 @@ def signupView(request):
         province_list = set()
     if len(province_list):
         district_list = set(
-            Peru.objects.filter(departamento=department_list[0], provincia=province_list[0]).values_list("distrito",
-                                                                                                         flat=True))
+            Peru.objects.filter(departamento=department_list[0], provincia=province_list[0]).values_list("distrito", flat=True))
     else:
         district_list = set()
 
     if request.method == 'POST':
-
         peru = Peru.objects.all()
         department_list = set()
         province_list = set()
@@ -1540,19 +1357,15 @@ def signupView(request):
         if len(department_list):
             province_list = set(
                 Peru.objects.filter(departamento__in=department_list).values_list("provincia", flat=True))
-
             province_list = list(province_list)
         else:
             province_list = set()
         if len(province_list):
             district_list = set(
                 Peru.objects.filter(departamento__in=department_list, provincia__in=province_list).values_list(
-                    "distrito",
-                    flat=True))
+                    "distrito", flat=True))
         else:
             district_list = set()
-
-        #####
 
         user_form = SignUpForm(request.POST)
         profile_form = ProfileForm(district_list, province_list, department_list, request.POST, request.FILES)
@@ -1566,25 +1379,21 @@ def signupView(request):
             customer_group = Group.objects.get(name='Clientes')
             customer_group.user_set.add(signup_user)
             raw_password = user_form.cleaned_data.get('password1')
-            user.refresh_from_db()  # This will load the Profile created by the Signal
+            user.refresh_from_db()
 
             profile_form = ProfileForm(district_list, province_list, department_list, request.POST, request.FILES,
-                                       instance=user.profile)  # Reload the profile form with the profile instance
-            profile_form.full_clean()  # Manually clean the form this time. It is implicitly called by "is_valid()" method
-            profile_form.save()  # Gracefully save the form
-            send_email_new_registered_user(user.pk) # send email to admin when a new user registers himself
+                                       instance=user.profile)
+            profile_form.full_clean()
+            profile_form.save()
+            send_email_new_registered_user(user.pk)
             login(request, user)
 
             return redirect('carrito-de-compras:cart_detail')
-
         else:
             pass
 
-
     else:
-
         user_form = SignUpForm()
-
         profile_form = ProfileForm(district_list, province_list, department_list)
 
     return render(request, 'accounts/signup.html', {
@@ -1626,7 +1435,6 @@ def parse_features(features_str):
     """
     Parsea el string de features guardado en el producto
     Formato: "genero:unisex,cuello:cuello_redondo,manga:manga_corta"
-    Retorna: {'genero': 'unisex', 'cuello': 'cuello_redondo', 'manga': 'manga_corta'}
     """
     result = {}
     if not features_str:
@@ -1650,11 +1458,12 @@ def get_product_feature(product, feature_name):
 
 # =============================================================================
 # API: Obtener colores disponibles (para filtros dinámicos)
+# ACTUALIZADO: Usa sistema genérico de opciones
 # =============================================================================
 def get_available_colors(request):
     """
     API para obtener colores disponibles basados en filtros activos.
-    Útil para actualizar los swatches dinámicamente.
+    ACTUALIZADO: Usa ProductOptionValue en lugar de ProductColor.
     """
     subcategory_slug = request.GET.get('subcategory', '')
     
@@ -1666,61 +1475,75 @@ def get_available_colors(request):
     except Subcategory.DoesNotExist:
         return JsonResponse({'colors': []})
     
-    colors = ProductColor.objects.filter(
-        products__subcategory=subcategory,
-        products__status='active',
+    # ACTUALIZADO: Query con nuevo sistema
+    colors = ProductOptionValue.objects.filter(
+        option__key='color',
+        variants__product__subcategory=subcategory,
+        variants__product__status='active',
         is_active=True
-    ).distinct().values('slug', 'name', 'hex_code').order_by('display_order')
+    ).distinct().values(
+        'value', 'display_name', 'hex_code'
+    ).order_by('display_order')
     
-    return JsonResponse({'colors': list(colors)})
+    # Formatear para compatibilidad
+    colors_list = []
+    for c in colors:
+        colors_list.append({
+            'slug': c['value'],  # Mantener 'slug' para retrocompatibilidad
+            'value': c['value'],
+            'name': c['display_name'] or c['value'],
+            'display_name': c['display_name'] or c['value'],
+            'hex_code': c['hex_code'],
+        })
+    
+    return JsonResponse({'colors': colors_list})
 
 
 # =============================================================================
 # API: Obtener colores e imágenes de un producto
+# ACTUALIZADO: Usa sistema genérico de opciones
 # =============================================================================
 def get_product_colors(request, product_slug):
     """
     API para obtener colores e imágenes de un producto específico.
-    
-    Si se pasa ?color=slug, retorna solo la imagen de ese color:
-        { "image": "url_de_la_imagen" }
-    
-    Si no se pasa color, retorna todos los colores:
-        { "product_slug": "...", "colors": [...] }
+    ACTUALIZADO: Usa ProductOptionValue en lugar de ProductColor.
     """
     try:
         product = Product.objects.get(slug=product_slug)
     except Product.DoesNotExist:
         return JsonResponse({'error': 'Producto no encontrado'}, status=404)
     
-    # Si se pide un color específico, retornar solo la imagen
-    color_slug = request.GET.get('color')
-    if color_slug:
-        # Buscar la imagen para este color
+    # Si se pide un color específico
+    color_value = request.GET.get('color')
+    if color_value:
+        # Buscar la imagen para este color (option_value)
         image = ProductImage.objects.filter(
             product=product,
-            color__slug=color_slug
+            option_value__value=color_value
         ).first()
         
         if image:
             return JsonResponse({'image': image.image_url})
         else:
-            # Si no hay imagen específica para el color, retornar la base
             return JsonResponse({'image': product.base_image_url or ''})
     
     # Si no se pide color específico, retornar todos
     colors_data = []
-    for color in product.available_colors.all():
+    available_colors = product.get_colors()  # Usa método de retrocompatibilidad
+    
+    for color_val in available_colors:
         # Buscar imagen para este color
         image = ProductImage.objects.filter(
             product=product,
-            color=color
+            option_value=color_val
         ).first()
         
         colors_data.append({
-            'slug': color.slug,
-            'name': color.name,
-            'hex_code': color.hex_code,
+            'slug': color_val.value,  # Retrocompatibilidad
+            'value': color_val.value,
+            'name': color_val.get_display_name(),
+            'display_name': color_val.get_display_name(),
+            'hex_code': color_val.hex_code,
             'image_url': image.image_url if image else product.base_image_url,
         })
     
@@ -1731,19 +1554,62 @@ def get_product_colors(request, product_slug):
     })
 
 
-
-
+# =============================================================================
+# API: Obtener todas las opciones de un producto
+# NUEVO: Para el sistema genérico de opciones
+# =============================================================================
+def get_product_options(request, product_slug):
+    """
+    API para obtener todas las opciones disponibles de un producto.
+    Retorna estructura completa para cualquier tipo de opción.
+    """
+    try:
+        product = Product.objects.get(slug=product_slug)
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Producto no encontrado'}, status=404)
+    
+    # Obtener todas las opciones usando el método del modelo
+    variant_options = product.get_variant_options()
+    
+    # Formatear para JSON
+    options_data = {}
+    for key, data in variant_options.items():
+        options_data[key] = {
+            'option_name': data['option'].name,
+            'option_key': data['option'].key,
+            'values': []
+        }
+        for val in data['values']:
+            val_data = {
+                'value': val.value,
+                'display_name': val.get_display_name(),
+                'additional_price': float(val.additional_price) if val.additional_price else 0,
+            }
+            # Agregar campos opcionales si existen
+            if val.hex_code:
+                val_data['hex_code'] = val.hex_code
+            if val.image:
+                val_data['image'] = val.image.url
+            
+            options_data[key]['values'].append(val_data)
+    
+    return JsonResponse({
+        'product_slug': product_slug,
+        'product_name': product.name,
+        'options': options_data,
+    })
 
 
 # =============================================================================
 # API: Agregar producto al carrito (genérico para todos los tipos)
+# ACTUALIZADO: Usa sistema genérico de opciones
 # =============================================================================
 
 @csrf_exempt
 def add_to_cart_api(request):
     """
     API genérica para agregar productos al carrito.
-    Detecta automáticamente si es producto de ropa o de impresión.
+    ACTUALIZADO: Detecta tipo de producto usando is_clothing_product().
     """
     if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
@@ -1757,37 +1623,55 @@ def add_to_cart_api(request):
         
         product = get_object_or_404(Product, slug=product_slug)
         
-        # Detectar tipo de producto
-        is_clothing = product.available_colors.exists() or product.available_sizes.exists()
+        # ACTUALIZADO: Detectar tipo usando método de retrocompatibilidad
+        is_clothing = product.is_clothing_product()
         
         if is_clothing:
             # Producto de ropa - requiere color y talla
-            color_slug = request.POST.get('color_slug')
-            size_name = request.POST.get('size_slug')
+            color_value = request.POST.get('color_slug') or request.POST.get('color')
+            size_value = request.POST.get('size_slug') or request.POST.get('size')
             
-            if not all([color_slug, size_name]):
+            if not all([color_value, size_value]):
                 return JsonResponse({
                     'error': 'Productos de ropa requieren color y talla'
                 }, status=400)
             
-            color_obj = get_object_or_404(ProductColor, slug=color_slug)
-            size_obj = get_object_or_404(ProductSize, name=size_name)
+            # ACTUALIZADO: Obtener valores usando nuevo sistema
+            color_obj = ProductOptionValue.objects.filter(
+                option__key='color',
+                value=color_value
+            ).first()
             
-            if color_obj not in product.available_colors.all():
-                return JsonResponse({'error': 'Color no disponible'}, status=400)
+            size_obj = ProductOptionValue.objects.filter(
+                option__key='size',
+                value=size_value
+            ).first()
             
-            if size_obj not in product.available_sizes.all():
-                return JsonResponse({'error': 'Talla no disponible'}, status=400)
+            if not color_obj:
+                return JsonResponse({'error': 'Color no encontrado'}, status=400)
+            
+            if not size_obj:
+                return JsonResponse({'error': 'Talla no encontrada'}, status=400)
+            
+            # Verificar disponibilidad en el producto
+            product_colors = product.get_colors()
+            product_sizes = product.get_sizes()
+            
+            if color_obj not in product_colors:
+                return JsonResponse({'error': 'Color no disponible para este producto'}, status=400)
+            
+            if size_obj not in product_sizes:
+                return JsonResponse({'error': 'Talla no disponible para este producto'}, status=400)
             
             # Obtener la imagen del color
             product_image = ProductImage.objects.filter(
                 product=product,
-                color=color_obj
+                option_value=color_obj
             ).first()
             
             color_image_url = product_image.image_url if product_image else product.base_image_url
             
-            # ✅ NUEVO: Obtener archivo de diseño si existe
+            # Obtener archivo de diseño si existe
             design_file = request.FILES.get('design_file')
             
             # Obtener o crear carrito
@@ -1805,19 +1689,16 @@ def add_to_cart_api(request):
             cart_item = CartItem.objects.filter(
                 cart=cart,
                 product=product,
-                color=color_obj.name,
-                size=size_obj.name
+                color=color_obj.get_display_name(),
+                size=size_obj.get_display_name()
             ).first()
             
             if cart_item:
                 # Actualizar cantidad del item existente
                 cart_item.quantity = cart_item.quantity + quantity
-                # Actualizar la URL de la imagen del color (por si cambió)
                 cart_item.color_image_url = color_image_url
                 
-                # ✅ NUEVO: Actualizar archivo de diseño si se envió uno nuevo
                 if design_file:
-                    # Eliminar archivo anterior si existe
                     if cart_item.design_file:
                         cart_item.design_file.delete(save=False)
                     cart_item.design_file = design_file
@@ -1828,20 +1709,22 @@ def add_to_cart_api(request):
                 cart_item = CartItem.objects.create(
                     cart=cart,
                     product=product,
-                    color=color_obj.name,
-                    size=size_obj.name,
+                    color=color_obj.get_display_name(),
+                    size=size_obj.get_display_name(),
                     quantity=quantity,
                     color_image_url=color_image_url,
-                    design_file=design_file  # ✅ NUEVO: Guardar archivo de diseño
+                    design_file=design_file
                 )
             
             item_info = {
                 'product_name': product.name,
-                'color': color_obj.name,
-                'size': size_obj.name,
+                'color': color_obj.get_display_name(),
+                'color_value': color_obj.value,
+                'size': size_obj.get_display_name(),
+                'size_value': size_obj.value,
                 'quantity': cart_item.quantity,
                 'color_image_url': color_image_url,
-                'has_design_file': bool(cart_item.design_file)  # ✅ NUEVO: Indicar si tiene archivo
+                'has_design_file': bool(cart_item.design_file)
             }
             
         else:
@@ -1873,15 +1756,3 @@ def add_to_cart_api(request):
         return JsonResponse({
             'error': f'Error al agregar al carrito: {str(e)}'
         }, status=500)
-
-
-
-# =============================================================================
-# COMPATIBILIDAD: Mantener las vistas específicas de ropa
-# =============================================================================
-
-
-
-def add_clothing_to_cart(request):
-    """Vista específica para ropa - redirige a API genérica"""
-    return add_to_cart_api(request)

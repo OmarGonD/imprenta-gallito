@@ -358,7 +358,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-3">
                         Color <span class="text-red-500">*</span>
                         <span id="selected-color-name" class="text-gray-900 font-semibold ml-2">
-                            {% if selected_color %}{{ selected_color.name }}{% else %}Selecciona un color{% endif %}
+                            {% if selected_color %}{{ selected_color.display_name|default:selected_color.value }}{% else %}Selecciona un color{% endif %}
                         </span>
                     </label>
 
@@ -366,12 +366,12 @@
                     <div class="color-swatches-container">
                         {% for color in available_colors %}
                         <button type="button"
-                                class="color-swatch {% if selected_color and color.slug == selected_color.slug %}active{% endif %}"
+                                class="color-swatch {% if selected_color and color.value == selected_color.value %}active{% endif %}"
                                 style="background-color: {{ color.hex_code }};"
-                                data-color-slug="{{ color.slug }}"
-                                data-color-name="{{ color.name }}"
-                                title="{{ color.name }}"
-                                aria-label="Seleccionar color {{ color.name }}">
+                                data-color-slug="{{ color.value }}"
+                                data-color-name="{{ color.display_name|default:color.value }}"
+                                title="{{ color.display_name|default:color.value }}"
+                                aria-label="Seleccionar color {{ color.display_name|default:color.value }}">
                             <svg class="checkmark" fill="none" stroke="white" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                             </svg>
@@ -380,7 +380,7 @@
                     </div>
                     {% endif %}
 
-                    <input type="hidden" id="selected-color" name="color" value="{{ selected_color.slug|default:'' }}">
+                    <input type="hidden" id="selected-color" name="color" value="{{ selected_color.value|default:'' }}">
                 </div>
 
                 <!-- Size Selection -->
@@ -388,7 +388,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-3">
                         Talla <span class="text-red-500">*</span>
                         <span id="selected-size-name" class="text-gray-900 font-semibold ml-2">
-                            {% if selected_size %}{{ selected_size.name }}{% else %}Selecciona una talla{% endif %}
+                            {% if selected_size %}{{ selected_size.value }}{% else %}Selecciona una talla{% endif %}
                         </span>
                     </label>
 
@@ -396,16 +396,16 @@
                     <div class="size-buttons-container">
                         {% for size in available_sizes %}
                         <button type="button"
-                                class="size-btn {% if selected_size and size.name == selected_size.name %}active{% endif %}"
-                                data-size-slug="{{ size.name }}"
-                                data-size-name="{{ size.name }}">
-                            {{ size.name }}
+                                class="size-btn {% if selected_size and size.value == selected_size.value %}active{% endif %}"
+                                data-size-slug="{{ size.value }}"
+                                data-size-name="{{ size.display_name|default:size.value }}">
+                            {{ size.value }}
                         </button>
                         {% endfor %}
                     </div>
                     {% endif %}
 
-                    <input type="hidden" id="selected-size" name="size" value="{{ selected_size.name|default:'' }}">
+                    <input type="hidden" id="selected-size" name="size" value="{{ selected_size.value|default:'' }}">
                 </div>
 
                 <!-- Quantity Selector -->
@@ -731,7 +731,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mainImage.style.opacity = '0.5';
         
         // Llamar a la API para obtener la imagen del color
-        fetch(`/api/product/${productSlug}/colors/?color=${colorSlug}`)
+        fetch(`/api/product/${productSlug}/colors/?color=${colorValue}`)
             .then(response => response.json())
             .then(data => {
                 if (data.image) {

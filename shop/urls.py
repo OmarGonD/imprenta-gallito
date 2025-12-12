@@ -22,24 +22,15 @@ urlpatterns = [
     # =============================================
     # ROPA Y BOLSOS → SIEMPRE ANTES QUE LAS GENÉRICAS
     # =============================================
-    # =============================================
     # URL: /ropa-bolsos/
     path('ropa-bolsos/', 
          views.clothing_category, 
-         name='clothing_category'), # 1 nivel (Categoría)
+         name='clothing_category'),  # 1 nivel (Categoría)
 
     # URL: /ropa-bolsos/polos/
-    # Usamos una expresión regular para "capturar" el slug fijo 'ropa-bolsos' 
-    # y pasarlo a la vista como 'category_slug' junto con subcategory_slug.
-    # Alternativamente, usamos un patrón dinámico completo aquí (ver NOTA).
     path('<slug:category_slug>/<slug:subcategory_slug>/', 
          views.clothing_subcategory, 
-         name='clothing_subcategory'), # 2 niveles (Subcategoría)
-
-    # URL: /ropa-bolsos/polos/producto-x/
-    #path('<slug:category_slug>/<slug:subcategory_slug>/<slug:product_slug>/', 
-    #     views.clothing_product_detail, 
-    #     name='clothing_product_detail'), # 3 niveles (Producto)
+         name='clothing_subcategory'),  # 2 niveles (Subcategoría)
 
 
 
@@ -59,6 +50,12 @@ urlpatterns = [
     path('api/product/<str:product_slug>/colors/', views.get_product_colors, name='get_product_colors'),
     path('api/clothing/add-to-cart/', views.add_clothing_to_cart, name='add_clothing_to_cart'),
     path('api/cart/add/', views.add_to_cart_api, name='add_to_cart_api'),
+    
+    # =============================================
+    # NUEVO: API para sistema genérico de opciones
+    # =============================================
+    path('api/product/<str:product_slug>/options/', views.get_product_options, name='get_product_options'),
+    path('api/colors/', views.get_available_colors, name='get_available_colors'),
 
 
     # =============================================
@@ -84,8 +81,6 @@ urlpatterns = [
     # =============================================
     path('<slug:category_slug>/<slug:subcategory_slug>/<slug:product_slug>/', 
          views.product_detail, name='product_detail'),
-    #path('<slug:category_slug>/<slug:product_slug>/', 
-    #     views.product_detail, name='product_detail'),
 
     # =============================================
     # LISTADOS DE CATEGORÍAS Y SUBCATEGORÍAS (al final)

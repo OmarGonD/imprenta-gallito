@@ -173,16 +173,18 @@
                         </div>
                         
                         <div class="vp-product-colors">
-                            {% for color in product.available_colors.all|slice:":6" %}
+                            {% for color in product.get_colors|slice:":6" %}
                             <span class="vp-color-dot {% if forloop.first %}active{% endif %}"
                                 style="background-color: {{ color.hex_code }};"
-                                data-color-slug="{{ color.slug }}"
+                                data-color-slug="{{ color.value }}"
                                 data-product-slug="{{ product.slug }}"
-                                title="{{ color.name }}"></span>
+                                title="{{ color.display_name|default:color.value }}"></span>
                             {% endfor %}
-                            {% if product.available_colors.count > 6 %}
-                            <span class="vp-more-colors" title="{{ product.available_colors.count }} colores disponibles">+{{ product.available_colors.count|add:"-6" }}</span>
+                            {% with color_count=product.get_colors|length %}
+                            {% if color_count > 6 %}
+                            <span class="vp-more-colors">+{{ color_count|add:"-6" }}</span>
                             {% endif %}
+                            {% endwith %}
                         </div>
 
                         <div class="vp-product-actions">
@@ -253,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             // 3. Cambiar imagen (mantiene tu lógica de fetch)
-            fetch(`/api/product/${productSlug}/colors/?color=${colorSlug}`)
+            fetch(`/api/product/${productSlug}/colors/?color=${colorValue}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.image) {

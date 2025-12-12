@@ -120,16 +120,16 @@
                         </h3>
 
                         <!-- Color Swatches -->
-                        {% with colors=product.available_colors.all %}
+                        {% with colors=product.get_colors %}
                         {% if colors %}
                         <div class="flex flex-wrap gap-1.5 justify-center my-3">
                             {% for color in colors %}
                             <span class="color-dot w-5 h-5 rounded-full cursor-pointer border-2 border-transparent hover:scale-125 transition-all"
-                                  style="background-color: {{ color.hex_code }}; 
-                                         box-shadow: 0 0 0 1px {% if color.hex_code|lower in '#ffffff,#f5f5f5,#ffff00,#fcfcfc,#fff' %}#ccc{% else %}rgba(0,0,0,0.1){% endif %};"
-                                  title="{{ color.name }}"
-                                  data-color-slug="{{ color.slug }}"
-                                  data-product-id="{{ product.id }}"></span>
+                                style="background-color: {{ color.hex_code }}; 
+                                        box-shadow: 0 0 0 1px {% if color.hex_code|lower in '#ffffff,#f5f5f5,#ffff00,#fcfcfc,#fff' %}#ccc{% else %}rgba(0,0,0,0.1){% endif %};"
+                                title="{{ color.display_name|default:color.value }}"
+                                data-color-slug="{{ color.value }}"
+                                data-product-id="{{ product.slug }}"></span>
                             {% endfor %}
                         </div>
                         {% endif %}
