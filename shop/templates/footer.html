@@ -36,7 +36,7 @@
                 <h4 class="text-white font-semibold text-lg mb-4">Enlaces Rápidos</h4>
                 <ul class="space-y-2">
                     <li><a href="{% url 'shop:home' %}" class="hover:text-white transition-colors">Inicio</a></li>
-                    {% for category in nav_categories|slice:":4" %}
+                    {% for category in categories|slice:":4" %}
                     <li><a href="{% url 'shop:category' category.slug %}" class="hover:text-white transition-colors">{{ category.name }}</a></li>
                     {% endfor %}
                 </ul>

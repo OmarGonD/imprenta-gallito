@@ -315,9 +315,9 @@
         <ol class="flex items-center space-x-2 text-sm text-gray-600">
             <li><a href="{% url 'shop:home' %}" class="hover:text-blue-600 transition-colors">Inicio</a></li>
             <li><span class="mx-2">/</span></li>
-            <li><a href="{% url 'shop:clothing_category' %}" class="hover:text-blue-600 transition-colors">{{ product.category.name }}</a></li>
+            <li><a href="{% url 'shop:category' product.category.slug %}" class="hover:text-blue-600 transition-colors">{{ product.category.name }}</a></li>
             <li><span class="mx-2">/</span></li>
-            <li><a href="{% url 'shop:clothing_subcategory' product.category.slug product.subcategory.slug %}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
+            <li><a href="{% url 'shop:subcategory' product.category.slug product.subcategory.slug %}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
             <li><span class="mx-2">/</span></li>
             <li class="text-gray-900 font-medium">{{ product.name }}</li>
         </ol>

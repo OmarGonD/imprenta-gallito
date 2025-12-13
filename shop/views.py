@@ -135,8 +135,8 @@ def Home(request):
 
 def category_view(request, category_slug):
     """
-    Vista genérica para mostrar una categoría y sus productos.
-    Detecta si la categoría tiene un template personalizado.
+    Vista genérica para mostrar una categoría con sus subcategorías y productos.
+    Muestra productos agrupados por subcategoría con vista previa (máx 4).
     """
     print(f"🔍 Vista ejecutada: Entra a Category View")
     try:
@@ -144,32 +144,29 @@ def category_view(request, category_slug):
     except Category.DoesNotExist:
         raise Http404("Categoría no encontrada")
     
-    subcategories = category.subcategories.filter(status='active').order_by('display_order')
-    
-    # ACTUALIZADO: Prefetch con nuevo sistema de opciones
-    products = Product.objects.filter(
-        category=category,
+    # Prefetch subcategorías con sus productos activos (optimizado)
+    subcategories = category.subcategories.filter(
         status='active'
-    ).select_related(
-        'category', 'subcategory'
     ).prefetch_related(
-        'price_tiers',
-        'variant_options__option',
-        'variant_options__available_values'
-    )
+        Prefetch(
+            'products',
+            queryset=Product.objects.filter(status='active').order_by('display_order', 'name'),
+            to_attr='active_products_list'
+        )
+    ).order_by('display_order')
     
-    subcategory_filter = request.GET.get('subcategory', '')
-    if subcategory_filter:
-        products = products.filter(subcategory__slug=subcategory_filter)
-    
-    products = products.order_by('subcategory__display_order', 'name')
+    # Productos sin subcategoría (si los hay)
+    products_without_subcategory = Product.objects.filter(
+        category=category,
+        subcategory__isnull=True,
+        status='active'
+    ).order_by('display_order', 'name')
     
     context = {
         'category': category,
         'subcategories': subcategories,
-        'products': products,
-        'product_count': products.count(),
-        'selected_subcategory': subcategory_filter,
+        'products': products_without_subcategory,  # Para productos sin subcategoría
+        'product_count': Product.objects.filter(category=category, status='active').count(),
     }
     
     return render(request, 'shop/category.html', context)
@@ -246,13 +243,13 @@ def subcategory_view(request, category_slug, subcategory_slug):
     # ACTUALIZADO: Obtener colores y tallas disponibles con nuevo sistema
     all_colors = ProductOptionValue.objects.filter(
         option__key='color',
-        variants__product__subcategory=subcategory,
+        product_variants__product__subcategory=subcategory,
         is_active=True
     ).distinct().order_by('display_order')
     
     all_sizes = ProductOptionValue.objects.filter(
         option__key='size',
-        variants__product__subcategory=subcategory,
+        product_variants__product__subcategory=subcategory,
         is_active=True
     ).distinct().order_by('display_order')
     
@@ -327,7 +324,7 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         'category': category,
         'product': product,
         'related_products': None,
-        'template_name': 'shop/product_detail.html',
+        'template_name': 'shop/tarjetas_presentacion_product_detail.html',
         'pricing_tiers': [], 
         'images_by_color': '{}',
         'selected_color_slug': '',
@@ -496,78 +493,6 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     
     return render(request, context['template_name'], context)
 
-
-# ============================================================================
-# ROPA Y BOLSOS - VISTAS REFACTORIZADAS
-# ============================================================================
-
-def clothing_category(request):
-    """
-    Vista de categoría para 'ropa-bolsos/' (Nivel 1).
-    """
-    try:
-        category = Category.objects.get(slug='ropa-bolsos')
-    except Category.DoesNotExist:
-        raise Http404("La categoría 'Ropa y Bolsos' no fue encontrada.")
-        
-    subcategories = Subcategory.objects.filter(category=category)
-    
-    context = {
-        'category': category,
-        'subcategories': subcategories,
-    }
-    return render(request, 'shop/clothing_category.html', context)
-
-
-def clothing_subcategory(request, category_slug, subcategory_slug):
-    """
-    Vista de subcategoría para ropa.
-    ACTUALIZADO: Usa sistema genérico de opciones.
-    """
-    category = get_object_or_404(Category, slug=category_slug)
-    subcategory = get_object_or_404(Subcategory, slug=subcategory_slug, category=category)
-    
-    # ACTUALIZADO: Prefetch con nuevo sistema
-    products = Product.objects.filter(
-        category=category,
-        subcategory=subcategory,
-        status='active'
-    ).prefetch_related(
-        'variant_options__option',
-        'variant_options__available_values',
-        'images__option_value'
-    )
-
-    # Preparar imágenes por producto y color - ACTUALIZADO
-    products_with_images = []
-    for product in products:
-        colors_data = {}
-        
-        # Obtener colores usando nuevo método
-        colors = product.get_colors()
-        
-        for color in colors:
-            # Buscar imagen para este color (option_value)
-            image_obj = product.images.filter(option_value=color).first()
-            image_url = image_obj.image_url if image_obj else product.base_image_url
-            
-            colors_data[color.value] = {
-                'image': image_url or product.base_image_url,
-                'is_primary': image_obj.is_primary if image_obj else True
-            }
-        
-        products_with_images.append({
-            'product': product,
-            'images_by_color': colors_data
-        })
-
-    context = {
-        'category': category,
-        'subcategory': subcategory,
-        'products_with_images': products_with_images,
-        'products': products,
-    }
-    return render(request, 'shop/clothing_subcategory.html', context)
 
 
 # =============================================================================
@@ -1478,7 +1403,7 @@ def get_available_colors(request):
     # ACTUALIZADO: Query con nuevo sistema
     colors = ProductOptionValue.objects.filter(
         option__key='color',
-        variants__product__subcategory=subcategory,
+        product_variants__product__subcategory=subcategory,
         variants__product__status='active',
         is_active=True
     ).distinct().values(

@@ -22,15 +22,7 @@ urlpatterns = [
     # =============================================
     # ROPA Y BOLSOS → SIEMPRE ANTES QUE LAS GENÉRICAS
     # =============================================
-    # URL: /ropa-bolsos/
-    path('ropa-bolsos/', 
-         views.clothing_category, 
-         name='clothing_category'),  # 1 nivel (Categoría)
 
-    # URL: /ropa-bolsos/polos/
-    path('<slug:category_slug>/<slug:subcategory_slug>/', 
-         views.clothing_subcategory, 
-         name='clothing_subcategory'),  # 2 niveles (Subcategoría)
 
 
 
@@ -76,15 +68,17 @@ urlpatterns = [
         name='activate'
     ),
 
-    # =============================================
-    # RUTAS GENÉRICAS → CON SUBCATEGORÍA REAL (3 niveles)
-    # =============================================
-    path('<slug:category_slug>/<slug:subcategory_slug>/<slug:product_slug>/', 
-         views.product_detail, name='product_detail'),
 
     # =============================================
     # LISTADOS DE CATEGORÍAS Y SUBCATEGORÍAS (al final)
     # =============================================
     path('<slug:category_slug>/', views.category_view, name='category'),
     path('<slug:category_slug>/<slug:subcategory_slug>/', views.subcategory_view, name='subcategory'),
+    # =============================================
+    # RUTAS GENÉRICAS → CON SUBCATEGORÍA REAL (3 niveles)
+    # =============================================
+    path('<slug:category_slug>/<slug:subcategory_slug>/<slug:product_slug>/', 
+         views.product_detail, name='product_detail'),
+
+   
 ]

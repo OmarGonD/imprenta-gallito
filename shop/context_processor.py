@@ -6,6 +6,7 @@ MIGRATION NOTE (2024):
 - For catalog system, use Category from shop.models
 """
 import re
+from django.db.models import Prefetch
 
 
 def menu_links(request):
@@ -25,43 +26,25 @@ def menu_links(request):
     return dict(links=links)
 
 
-def navbar_categories(request):
-    """Provide categories for VistaPrint-style navbar - returns empty if DB not ready"""
-    categories = []
-    try:
-        from django.db import connection
-        # Check if table exists first
-        table_names = connection.introspection.table_names()
-        if 'categories' not in table_names and 'shop_category' not in table_names:
-            return dict(categories=[])
-        
-        from .models import Category
-        categories = list(Category.objects.filter(
-            status='active'
-        ).prefetch_related(
-            'subcategories'
-        ).order_by('display_order', 'name')[:20])
-    except:
-        pass
-    return dict(categories=categories)
-
-
-def categories(request):
-    """Provide catalog categories for the new catalog system - returns empty if DB not ready"""
+def nav_categories(request):
+    """Provide categories with subcategories for navigation"""
     cats = []
     try:
         from django.db import connection
-        # Check if table exists first
         table_names = connection.introspection.table_names()
         if 'categories' not in table_names and 'shop_category' not in table_names:
-            return dict(categories=[])
+            return {'categories': []}
         
-        from .models import Category
+        from .models import Category, Subcategory
         cats = list(Category.objects.filter(
             status='active'
         ).prefetch_related(
-            'subcategories'
+            Prefetch(
+                'subcategories',
+                queryset=Subcategory.objects.filter(status='active').order_by('display_order', 'name')
+            )
         ).order_by('display_order', 'name')[:20])
-    except:
-        pass
-    return dict(categories=cats)
+    except Exception as e:
+        print(f"❌ Error en nav_categories: {e}")  # Para debug
+    
+    return {'categories': cats}
