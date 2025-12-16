@@ -467,6 +467,10 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             'has_colors': product.has_colors(),
             'has_sizes': product.has_sizes(),
         })
+        
+        # Use specialized template for bodas subcategory
+        if subcategory_slug == 'bodas':
+            context['template_name'] = 'shop/bodas_product_detail.html'
 
     # -------------------------------------------------------------------------
     # 6. DEBUGGING

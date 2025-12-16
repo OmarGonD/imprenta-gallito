@@ -225,6 +225,8 @@ class Command(BaseCommand):
                 
                 if not self.only or self.only == 'templates':
                     counts['design_templates'] = self.import_design_templates()
+                    # Also import templates from static files
+                    counts['design_templates'] += self.import_templates_from_static()
                 
                 # Resumen
                 self.stdout.write('\n' + '=' * 70)
@@ -1051,3 +1053,128 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f'    {created} creados | {updated} actualizados | {errors} errores'))
         self.stdout.write('')
         return created + updated
+
+    # =========================================================================
+    # NUEVO: IMPORTAR TEMPLATES DESDE ARCHIVOS ESTÁTICOS
+    # =========================================================================
+    def import_templates_from_static(self):
+        """Importa templates de diseño desde carpetas de archivos estáticos."""
+        self.stdout.write('Importando templates desde archivos estáticos...')
+        
+        base_path = os.path.join(settings.BASE_DIR, 'static', 'media', 'template_images')
+        
+        if not os.path.exists(base_path):
+            self.stdout.write(self.style.WARNING(f'    SKIP Directorio no encontrado: {base_path}\n'))
+            return 0
+        
+        # Mapeo de carpetas a categorías
+        category_mappings = {
+            'tarjetas_presentacion': 'tarjetas-presentacion',
+            'invitaciones_papeleria': 'invitaciones-papeleria',
+        }
+        
+        total_created = 0
+        total_updated = 0
+        
+        for folder_name, category_slug in category_mappings.items():
+            folder_path = os.path.join(base_path, folder_name)
+            
+            if not os.path.isdir(folder_path):
+                continue
+            
+            try:
+                category = Category.objects.get(slug=category_slug)
+            except Category.DoesNotExist:
+                self.stdout.write(self.style.WARNING(f'    Categoría no encontrada: {category_slug}'))
+                continue
+            
+            self.stdout.write(f'\n  Procesando: {folder_name} -> {category.name}')
+            
+            # Check if this folder has subfolders (like bodas has product subfolders)
+            items = os.listdir(folder_path)
+            subdirs = [d for d in items if os.path.isdir(os.path.join(folder_path, d))]
+            
+            if subdirs:
+                # Has subfolders - each is a product/subcategory
+                for subdir in subdirs:
+                    subdir_path = os.path.join(folder_path, subdir)
+                    subcategory_slug = subdir.replace('_', '-')
+                    
+                    try:
+                        subcategory = Subcategory.objects.get(slug=subcategory_slug, category=category)
+                    except Subcategory.DoesNotExist:
+                        subcategory = None
+                    
+                    created, updated = self._import_templates_from_folder(
+                        subdir_path, category, subcategory, f'{folder_name}/{subdir}'
+                    )
+                    total_created += created
+                    total_updated += updated
+            else:
+                # No subfolders - images directly in category folder
+                created, updated = self._import_templates_from_folder(
+                    folder_path, category, None, folder_name
+                )
+                total_created += created
+                total_updated += updated
+        
+        self.stdout.write(self.style.SUCCESS(f'\n    ✓ Archivos estáticos: {total_created} creados | {total_updated} actualizados'))
+        self.stdout.write('')
+        return total_created + total_updated
+
+    def _import_templates_from_folder(self, folder_path, category, subcategory, prefix):
+        """Importa templates desde una carpeta específica."""
+        image_extensions = ('.jpg', '.jpeg', '.png', '.webp')
+        
+        try:
+            files = [f for f in os.listdir(folder_path) if f.lower().endswith(image_extensions)]
+        except OSError:
+            return 0, 0
+        
+        if not files:
+            return 0, 0
+        
+        self.stdout.write(f'    • {prefix}: {len(files)} imágenes')
+        
+        created = 0
+        updated = 0
+        
+        for i, image_file in enumerate(files):
+            # Create slug from filename
+            file_slug = os.path.splitext(image_file)[0].lower()
+            template_slug = f'{category.slug}-{file_slug}'[:100]
+            
+            # Image URL
+            relative_path = folder_path.replace(str(settings.BASE_DIR), '').replace('\\', '/')
+            if relative_path.startswith('/'):
+                relative_path = relative_path[1:]
+            image_url = f'/{relative_path}/{image_file}'
+            
+            # Template name
+            template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
+            
+            if not self.dry_run:
+                try:
+                    template, was_created = DesignTemplate.objects.update_or_create(
+                        slug=template_slug,
+                        defaults={
+                            'name': template_name,
+                            'category': category,
+                            'subcategory': subcategory,
+                            'thumbnail_url': image_url,
+                            'preview_url': image_url,
+                            'is_popular': i < 10,
+                            'is_new': i < 5,
+                            'display_order': i,
+                        }
+                    )
+                    if was_created:
+                        created += 1
+                    else:
+                        updated += 1
+                except Exception as e:
+                    pass  # Silently skip errors
+            else:
+                created += 1
+        
+        return created, updated

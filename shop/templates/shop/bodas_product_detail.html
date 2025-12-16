@@ -1,0 +1,1175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}{{ product.name }} - {{ category.name }}{% endblock %}
+
+{% block content %}
+<style>
+/* ===== ESTILOS ESPECÍFICOS DE PRODUCT DETAIL ===== */
+/* Solo animaciones y estilos que NO están en base.html/Tailwind */
+
+@keyframes bounce-once {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-once {
+    animation: bounce-once 0.6s ease-in-out;
+}
+
+/* Upload zone - estados */
+.upload-zone {
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #3B82F6;
+    background-color: #F0F9FF;
+}
+
+.upload-zone.dragover {
+    border-color: #2563EB;
+    background-color: #DBEAFE;
+    transform: scale(1.01);
+}
+
+/* File preview container */
+.file-preview-box {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.file-preview-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #E5E7EB;
+}
+
+.file-icon-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #E5E7EB;
+}
+
+/* Tabla de tiers - highlight fila actual */
+.tier-row-active {
+    background-color: #EFF6FF;
+    border-left: 4px solid #3B82F6;
+}
+
+/* Modal backdrop blur */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+}
+
+/* Transiciones suaves para cards */
+.product-card-hover {
+    transition: all 0.3s ease;
+}
+
+.product-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== DESIGN CHOICE CARDS ===== */
+.design-choice-card {
+    border: 2px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: block;
+}
+
+.design-choice-card:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.design-choice-card:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px -5px rgba(59, 130, 246, 0.2);
+}
+
+.design-choice-card:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.design-choice-card.selected {
+    border-color: #3B82F6;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+}
+
+.design-choice-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 50px 50px 0;
+    border-color: transparent #3B82F6 transparent transparent;
+}
+
+.design-choice-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.design-choice-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.design-choice-card:first-child .design-choice-icon {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+    color: #2563EB;
+}
+
+.design-choice-card:last-child .design-choice-icon {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+    color: #059669;
+}
+
+/* Template mini preview */
+.template-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.template-mini-grid img {
+    width: 100%;
+    aspect-ratio: 1.75/1;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #E5E7EB;
+}
+
+/* 🆕 FIX: Nombre del producto - evitar sobreposición */
+.product-title {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.3;
+}
+
+/* 💰 PRICE DISPLAY - Colores forzados y estilo elegante */
+#unit-price {
+    color: #2563EB !important; /* Azul */
+    font-weight: 800 !important;
+    letter-spacing: -0.025em;
+}
+
+#discount-badge {
+    color: #059669 !important; /* Verde - mismo de la tabla */
+    font-weight: 800 !important;
+    letter-spacing: -0.025em;
+}
+
+#total-price {
+    color: #111827 !important; /* Negro */
+    font-weight: 800 !important;
+    letter-spacing: -0.025em;
+}
+
+/* Efectos hover en las secciones del price display */
+.bg-gradient-to-br {
+    transition: all 0.3s ease;
+}
+
+/* 🎨 TABLA DE DESCUENTOS MEJORADA - ELEGANTE Y SOBRIA */
+.pricing-table {
+    background: white;
+}
+
+.pricing-table thead {
+    background: #F9FAFB;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.pricing-table th {
+    color: #374151;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    width: 33.33%;
+}
+
+.pricing-table td {
+    padding: 1rem;
+    text-align: center;
+    width: 33.33%;
+}
+
+.pricing-table tbody tr {
+    border-bottom: 1px solid #F3F4F6;
+    transition: background-color 0.15s ease;
+}
+
+.pricing-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.pricing-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.price-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.discount-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: #ECFDF5;
+    color: #059669;
+    border: 1px solid #D1FAE5;
+}
+
+.discount-badge-none {
+    color: #D1D5DB;
+    font-size: 1rem;
+}
+
+.quantity-text {
+    font-weight: 600;
+    color: #374151;
+}
+
+.quantity-unit {
+    font-size: 0.75rem;
+    color: #9CA3AF;
+    margin-left: 0.25rem;
+}
+
+/* Animación para el collapse */
+.tiers-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.tiers-collapse.show {
+    max-height: 500px;
+    transition: max-height 0.4s ease-in;
+}
+
+/* ===== BODAS OPTIONS STYLES ===== */
+
+/* Color Swatches */
+.color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.color-swatch.selected {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #3B82F6;
+}
+
+.color-swatch.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Option Cards */
+.option-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 20px;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+    min-width: 100px;
+    text-align: center;
+}
+
+.option-card:hover {
+    border-color: #93C5FD;
+    background: #F0F9FF;
+}
+
+.option-card.selected {
+    border-color: #3B82F6;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    box-shadow: 0 0 0 1px #3B82F6;
+}
+
+.option-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+</style>
+
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Breadcrumb -->
+    <nav class="mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600">
+            <li><a href="{% url 'shop:home' %}" class="hover:text-blue-600 transition-colors">Inicio</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ category.get_url }}" class="hover:text-blue-600 transition-colors">{{ category.name }}</a></li>
+            {% if product.subcategory %}
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ product.subcategory.get_url }}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
+            {% endif %}
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-900 font-medium">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Main Product Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+        <!-- Left: Image -->
+        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center">
+            {% if product.base_image_url %}
+                <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg">
+            {% else %}
+                <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg">
+            {% endif %}
+        </div>
+
+        <!-- Right: Options -->
+        <div class="space-y-6">
+            <div>
+                <h1 class="product-title text-2xl lg:text-3xl font-bold text-gray-900 mb-3 lg:mb-4 2xl:mb-5">{{ product.name }}</h1>
+                <p class="text-sm text-gray-500 mt-2">SKU: {{ product.sku }}</p>
+            </div>
+            
+            {% if product.description %}
+            <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+            {% endif %}
+
+            <form id="productForm" method="POST" action="#" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Quantity Selector -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Cantidad <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex items-center space-x-3">
+                        <button 
+                            type="button" 
+                            id="qty-decrease" 
+                            class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold"
+                        >
+                            −
+                        </button>
+                        <input 
+                            type="number" 
+                            id="quantity" 
+                            name="quantity" 
+                            value="10" 
+                            min="1" 
+                            max="10000" 
+                            class="w-20 text-center border-2 border-gray-300 rounded-lg py-2 font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        >
+                        <button 
+                            type="button" 
+                            id="qty-increase" 
+                            class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Mínimo 10 unidades</p>
+                </div>
+
+                <!-- Price Display -->
+                <div id="pricing-display" class="mb-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md">
+                    <div class="flex w-full divide-x divide-gray-200">
+                        <!-- Precio unitario - 33.3% -->
+                        <div class="flex-1 text-center px-6 py-6 bg-gradient-to-br from-blue-50 to-blue-100" style="width: 33.33%;">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-4 h-4 text-blue-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold">Precio c/u</p>
+                            </div>
+                            <p class="text-3xl leading-tight" id="unit-price">S/ 0.00</p>
+                        </div>
+                        
+                        <!-- Descuento - 33.3% -->
+                        <div class="flex-1 text-center px-6 py-6 bg-gradient-to-br from-emerald-50 to-green-100" style="width: 33.33%;">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-4 h-4 text-emerald-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold">Descuento</p>
+                            </div>
+                            <p class="text-3xl leading-tight" id="discount-badge">0%</p>
+                        </div>
+                        
+                        <!-- Total - 33.3% -->
+                        <div class="flex-1 text-center px-6 py-6 bg-gradient-to-br from-gray-50 to-gray-100" style="width: 33.33%;">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-4 h-4 text-gray-700 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold">Total a pagar</p>
+                            </div>
+                            <p class="text-3xl leading-tight" id="total-price">S/ 0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🎨 TABLA DE DESCUENTOS MEJORADA Y VISIBLE -->
+                {% if pricing_tiers %}
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-semibold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Descuentos por volumen
+                        </h3>
+                        <button 
+                            type="button" 
+                            id="toggle-tiers-btn"
+                            class="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center transition-colors"
+                        >
+                            <span id="toggle-text">Ocultar</span>
+                            <svg class="w-4 h-4 ml-1 transition-transform" id="tiers-chevron" style="transform: rotate(180deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Tabla visible por defecto con clase 'show' -->
+                    <div id="tiers-table" class="tiers-collapse show overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+                        <table class="w-full text-sm pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Precio c/u</th>
+                                    <th>Descuento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tiers-tbody">
+                                {% for tier in pricing_tiers %}
+                                <tr data-tier-min="{{ tier.min_quantity }}">
+                                    <td>
+                                        <span class="quantity-text">
+                                            {{ tier.min_quantity }}{% if tier.max_quantity %} - {{ tier.max_quantity }}{% else %}+{% endif %}
+                                        </span>
+                                        <span class="quantity-unit">unidades</span>
+                                    </td>
+                                    <td>
+                                        <span class="price-value">S/ {{ tier.unit_price|floatformat:2 }}</span>
+                                    </td>
+                                    <td>
+                                        {% if tier.discount_percent > 0 %}
+                                        <span class="discount-badge">
+                                            -{{ tier.discount_percent|floatformat:0 }}%
+                                        </span>
+                                        {% else %}
+                                        <span class="discount-badge-none">—</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-3 flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Los precios se actualizan automáticamente según la cantidad seleccionada
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- ===== BODAS PRODUCT OPTIONS ===== -->
+                
+                <!-- Color Swatches -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Color del Template <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-3" id="color-swatches">
+                        <button type="button" class="color-swatch selected" data-color="gris-oscuro" data-price-modifier="0" style="background-color: #4B5563;" title="Gris Oscuro">
+                            <span class="sr-only">Gris Oscuro</span>
+                        </button>
+                        <button type="button" class="color-swatch" data-color="rosa-claro" data-price-modifier="0" style="background-color: #FBCFE8;" title="Rosa Claro">
+                            <span class="sr-only">Rosa Claro</span>
+                        </button>
+                        <button type="button" class="color-swatch" data-color="azul-claro" data-price-modifier="0" style="background-color: #BFDBFE;" title="Azul Claro">
+                            <span class="sr-only">Azul Claro</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="color" id="selected-color" value="gris-oscuro">
+                </div>
+
+                <!-- Orientation -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Orientación <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-3">
+                        <label class="option-card selected" data-option="orientation" data-value="vertical" data-price-modifier="0">
+                            <input type="radio" name="orientation" value="vertical" checked class="sr-only">
+                            <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="6" y="3" width="12" height="18" rx="2" stroke-width="2"/>
+                            </svg>
+                            <span class="text-sm font-medium">Vertical</span>
+                        </label>
+                        <label class="option-card" data-option="orientation" data-value="horizontal" data-price-modifier="0">
+                            <input type="radio" name="orientation" value="horizontal" class="sr-only">
+                            <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="6" width="18" height="12" rx="2" stroke-width="2"/>
+                            </svg>
+                            <span class="text-sm font-medium">Horizontal</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cut Style (Recorte) -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Recorte <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-3 flex-wrap">
+                        <label class="option-card selected" data-option="cut" data-value="estandar" data-price-modifier="0">
+                            <input type="radio" name="cut_style" value="estandar" checked class="sr-only">
+                            <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="4" y="4" width="16" height="16" stroke-width="2"/>
+                            </svg>
+                            <span class="text-sm font-medium">Estándar</span>
+                        </label>
+                        <label class="option-card" data-option="cut" data-value="redondeado" data-price-modifier="1.50">
+                            <input type="radio" name="cut_style" value="redondeado" class="sr-only">
+                            <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="4" y="4" width="16" height="16" rx="4" stroke-width="2"/>
+                            </svg>
+                            <span class="text-sm font-medium">Redondeado</span>
+                            <span class="text-xs text-emerald-600">+S/ 1.50</span>
+                        </label>
+                        <label class="option-card" data-option="cut" data-value="ticket" data-price-modifier="2.00">
+                            <input type="radio" name="cut_style" value="ticket" class="sr-only">
+                            <svg class="w-6 h-6 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M4 8V6a2 2 0 012-2h12a2 2 0 012 2v2M4 8v8a2 2 0 002 2h12a2 2 0 002-2V8M4 8h16M8 12h8" stroke-width="2"/>
+                            </svg>
+                            <span class="text-sm font-medium">Ticket</span>
+                            <span class="text-xs text-emerald-600">+S/ 2.00</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Embossing (Relieve) -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Relieve <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-3 flex-wrap">
+                        <label class="option-card selected" data-option="embossing" data-value="ninguno" data-price-modifier="0">
+                            <input type="radio" name="embossing" value="ninguno" checked class="sr-only">
+                            <span class="text-sm font-medium">Sin relieve</span>
+                        </label>
+                        <label class="option-card" data-option="embossing" data-value="oro" data-price-modifier="5.00">
+                            <input type="radio" name="embossing" value="oro" class="sr-only">
+                            <div class="w-6 h-6 rounded-full mb-2 bg-gradient-to-br from-yellow-300 to-yellow-600"></div>
+                            <span class="text-sm font-medium">Oro</span>
+                            <span class="text-xs text-emerald-600">+S/ 5.00</span>
+                        </label>
+                        <label class="option-card" data-option="embossing" data-value="plata" data-price-modifier="5.00">
+                            <input type="radio" name="embossing" value="plata" class="sr-only">
+                            <div class="w-6 h-6 rounded-full mb-2 bg-gradient-to-br from-gray-300 to-gray-500"></div>
+                            <span class="text-sm font-medium">Plata</span>
+                            <span class="text-xs text-emerald-600">+S/ 5.00</span>
+                        </label>
+                        <label class="option-card" data-option="embossing" data-value="brillo" data-price-modifier="3.00">
+                            <input type="radio" name="embossing" value="brillo" class="sr-only">
+                            <div class="w-6 h-6 rounded-full mb-2 bg-gradient-to-br from-white to-gray-200 border border-gray-300"></div>
+                            <span class="text-sm font-medium">Papel Brillo</span>
+                            <span class="text-xs text-emerald-600">+S/ 3.00</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Size (Tamaño) -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Tamaño <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-3">
+                        <label class="option-card selected" data-option="size" data-value="small" data-price-modifier="0">
+                            <input type="radio" name="size" value="small" checked class="sr-only">
+                            <span class="text-sm font-medium">4.6'' x 7.2''</span>
+                        </label>
+                        <label class="option-card" data-option="size" data-value="large" data-price-modifier="3.00">
+                            <input type="radio" name="size" value="large" class="sr-only">
+                            <span class="text-sm font-medium">6'' x 9''</span>
+                            <span class="text-xs text-emerald-600">+S/ 3.00</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Design Choice Cards -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        ¿Cómo quieres tu diseño? <span class="text-red-500">*</span>
+                    </label>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Opción 1: Elegir template -->
+                        <button type="button" class="design-choice-card text-left" id="choice-template" data-choice="template">
+                            <div class="design-choice-icon">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-1">Elegir template profesional</h4>
+                            <p class="text-gray-500 text-sm mb-3">Personaliza uno de nuestros diseños elegantes</p>
+                            <span class="inline-flex items-center text-blue-600 font-semibold text-sm">
+                                Ver galería
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <!-- Opción 2: Subir diseño propio -->
+                        <button type="button" class="design-choice-card text-left" id="choice-upload" data-choice="upload">
+                            <div class="design-choice-icon">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-1">Subir mi propio diseño</h4>
+                            <p class="text-gray-500 text-sm">Ya tengo un diseño listo para imprimir</p>
+                            <p class="text-xs text-gray-400 mt-2">Formatos aceptados: PDF, AI, PSD, JPG, PNG</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Upload Section -->
+                <div id="file-upload-section" class="mb-6 hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Sube tu diseño <span class="text-red-500">*</span>
+                    </label>
+                    
+                    <!-- Upload Button Container (shown initially) -->
+                    <div id="upload-button-container">
+                        <div class="upload-zone border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer" 
+                             onclick="document.getElementById('file-upload-input').click()">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <p class="mt-4 text-sm text-gray-600">
+                                <span class="font-semibold text-blue-600">Haz clic para subir</span> o arrastra tu archivo aquí
+                            </p>
+                            <p class="text-xs text-gray-500 mt-2">Formatos: PDF, AI, PSD, JPG, PNG (Max. 10MB)</p>
+                        </div>
+                        <input type="file" id="file-upload-input" name="design_file" class="hidden" accept=".pdf,.ai,.psd,.jpg,.jpeg,.png,.svg,.webp,.gif">
+                    </div>
+
+                    <!-- File Preview Container (shown after file is selected) -->
+                    <div id="file-preview-container" class="hidden">
+                        <div class="file-preview-box">
+                            <!-- Imagen o icono preview -->
+                            <div id="preview-image-container"></div>
+                            
+                            <!-- Info del archivo -->
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900" id="file-name">archivo.pdf</p>
+                                <p class="text-sm text-gray-500" id="file-size">2.4 MB</p>
+                                <div class="mt-2">
+                                    <span class="inline-flex items-center text-xs font-medium text-green-600">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Archivo cargado
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Botón para cambiar archivo -->
+                            <button 
+                                type="button"
+                                id="change-file-btn"
+                                class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                            >
+                                Cambiar archivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón agregar al carrito -->
+                <button 
+                    type="button"
+                    id="add-to-cart"
+                    disabled
+                    class="w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-lg cursor-not-allowed transition-all"
+                >
+                    Agregar al carrito
+                </button>
+
+                <!-- Mensaje de archivo requerido -->
+                <p id="file-required-message" class="text-sm text-orange-600 mt-2 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Selecciona cómo quieres diseñar tu invitación
+                </p>
+            </form>
+
+            <!-- Modal: Producto agregado -->
+            <div id="cart-success-modal" class="modal-backdrop hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-6 w-full max-w-md shadow-2xl rounded-xl bg-white">
+                    <div class="text-center">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 animate-bounce-once">
+                            <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="mt-5 text-xl font-bold text-gray-900">¡Producto agregado!</h3>
+                        <p class="mt-3 text-sm text-gray-600" id="cart-modal-message">
+                            Tu producto ha sido agregado al carrito correctamente.
+                        </p>
+                        
+                        <div class="mt-6 space-y-3">
+                            <button id="modal-go-to-cart" class="w-full px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all">
+                                🛒 Ir al carrito
+                            </button>
+                            <button id="modal-continue-shopping" class="w-full px-5 py-3 border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all">
+                                Seguir comprando
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="border-t border-gray-200 pt-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Productos relacionados</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for related in related_products %}
+            {% if related.subcategory %}
+            <a href="{{ related.get_absolute_url }}" class="product-card-hover bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="aspect-square bg-gray-100 flex items-center justify-center">
+                    {% if related.base_image_url %}
+                        <img src="{{ related.base_image_url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <span class="text-gray-400 text-sm">Sin imagen</span>
+                    {% endif %}
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-1 line-clamp-2">{{ related.name }}</h3>
+                    <p class="text-sm text-gray-500">{{ related.subcategory.name|default:category.name }}</p>
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+{% block extra_js %}
+
+<script>
+    // 1. FUNCIONES Y VARIABLES DE UTILIDAD (CRÍTICAS)
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // 🆕 2. TOGGLE DE TABLA DE DESCUENTOS MEJORADO
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggle-tiers-btn');
+        const tiersTable = document.getElementById('tiers-table');
+        const chevron = document.getElementById('tiers-chevron');
+        const toggleText = document.getElementById('toggle-text');
+        
+        if (toggleBtn && tiersTable) {
+            toggleBtn.addEventListener('click', function() {
+                const isVisible = tiersTable.classList.contains('show');
+                
+                if (isVisible) {
+                    // Ocultar tabla
+                    tiersTable.classList.remove('show');
+                    chevron.style.transform = 'rotate(0deg)';
+                    toggleText.textContent = 'Ver tabla';
+                } else {
+                    // Mostrar tabla
+                    tiersTable.classList.add('show');
+                    chevron.style.transform = 'rotate(180deg)';
+                    toggleText.textContent = 'Ocultar';
+                }
+            });
+            
+            console.log('✅ Toggle de tabla de descuentos configurado');
+        }
+    });
+
+    // 3. MANEJO DE SUBIDA DE ARCHIVOS
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('file-upload-input');
+        const uploadButtonContainer = document.getElementById('upload-button-container');
+        const filePreviewContainer = document.getElementById('file-preview-container');
+        const previewImageContainer = document.getElementById('preview-image-container');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        const changeFileBtn = document.getElementById('change-file-btn');
+        const uploadZone = document.getElementById('file-upload-section');
+        const addToCartBtn = document.getElementById('add-to-cart');
+        const fileRequiredMessage = document.getElementById('file-required-message');
+
+        // Variable para saber si ya hay un archivo seleccionado
+        let fileSelected = false;
+        let isProcessingFile = false; // Flag para prevenir procesamiento múltiple
+
+        // Función para formatear el tamaño del archivo
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Función para validar el archivo
+        function validateFile(file) {
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 
+                                 'application/pdf', 'image/svg+xml', 
+                                 'application/postscript', // .ai
+                                 'image/vnd.adobe.photoshop']; // .psd
+            
+            if (file.size > maxSize) {
+                alert('El archivo es demasiado grande. Tamaño máximo: 10MB');
+                return false;
+            }
+
+            // Verificar extensión también (en caso de que el tipo MIME no sea reconocido)
+            const extension = file.name.split('.').pop().toLowerCase();
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'svg', 'ai', 'psd'];
+            
+            if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(extension)) {
+                alert('Formato de archivo no permitido. Formatos aceptados: JPG, PNG, PDF, AI, PSD, SVG');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Función para mostrar el preview del archivo
+        function showFilePreview(file) {
+            // Prevenir procesamiento múltiple
+            if (isProcessingFile) {
+                console.log('⚠️ Ya se está procesando un archivo, ignorando...');
+                return;
+            }
+            
+            isProcessingFile = true;
+            
+            if (!validateFile(file)) {
+                fileInput.value = '';
+                isProcessingFile = false;
+                return;
+            }
+
+            // Actualizar nombre y tamaño
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+
+            // Crear preview visual - limpiar completamente el contenedor
+            previewImageContainer.innerHTML = '';
+            
+            if (file.type.startsWith('image/')) {
+                // Si es imagen, mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Verificar que el contenedor esté vacío antes de agregar
+                    if (previewImageContainer.children.length === 0) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'file-preview-image';
+                        previewImageContainer.appendChild(img);
+                    }
+                    isProcessingFile = false;
+                };
+                reader.onerror = function() {
+                    isProcessingFile = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Si es PDF u otro archivo, mostrar ícono
+                const iconContainer = document.createElement('div');
+                iconContainer.className = 'file-icon-container';
+                
+                let iconSvg = '';
+                if (file.type === 'application/pdf') {
+                    iconSvg = `
+                        <svg class="w-12 h-12 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                        </svg>
+                    `;
+                } else {
+                    iconSvg = `
+                        <svg class="w-12 h-12 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                        </svg>
+                    `;
+                }
+                
+                iconContainer.innerHTML = iconSvg;
+                previewImageContainer.appendChild(iconContainer);
+                isProcessingFile = false; // Reset flag para archivos no-imagen
+            }
+
+            // Mostrar preview, ocultar botón de subida
+            uploadButtonContainer.classList.add('hidden');
+            filePreviewContainer.classList.remove('hidden');
+            
+            // Marcar que hay archivo seleccionado
+            fileSelected = true;
+            updateAddToCartButton();
+        }
+
+        // Evento cuando se selecciona un archivo
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    showFilePreview(file);
+                }
+            });
+        }
+
+        // Botón para cambiar archivo
+        if (changeFileBtn) {
+            changeFileBtn.addEventListener('click', function() {
+                isProcessingFile = false; // Reset flag antes de seleccionar nuevo archivo
+                fileInput.value = ''; // Limpiar input para permitir seleccionar el mismo archivo
+                fileInput.click();
+            });
+        }
+
+        // Drag and drop - solo visual, el archivo se maneja por el evento change
+        if (uploadZone) {
+            uploadZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+
+            uploadZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+            });
+
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    // Asignar archivos al input - esto dispara automáticamente el evento change
+                    fileInput.files = files;
+                }
+            });
+        }
+
+        // Función para habilitar/deshabilitar botón de agregar al carrito
+        function updateAddToCartButton() {
+            if (fileSelected) {
+                addToCartBtn.disabled = false;
+                addToCartBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                addToCartBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+                if (fileRequiredMessage) fileRequiredMessage.classList.add('hidden');
+            } else {
+                addToCartBtn.disabled = true;
+                addToCartBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                addToCartBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+                if (fileRequiredMessage) fileRequiredMessage.classList.remove('hidden');
+            }
+        }
+
+        // Para bodas - manejo de opciones de diseño
+        const choiceTemplate = document.getElementById('choice-template');
+        const choiceUpload = document.getElementById('choice-upload');
+        const fileUploadSection = document.getElementById('file-upload-section');
+
+        if (choiceTemplate && choiceUpload) {
+            choiceTemplate.addEventListener('click', function() {
+                // Redirigir a galería de templates
+                window.location.href = "{% url 'shop:template_gallery' category.slug product.slug %}";
+            });
+
+            choiceUpload.addEventListener('click', function() {
+                // Seleccionar esta opción
+                choiceUpload.classList.add('selected');
+                choiceTemplate.classList.remove('selected');
+                
+                // Mostrar sección de upload
+                fileUploadSection.classList.remove('hidden');
+                
+                // Scroll suave hacia la sección
+                fileUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
+
+        // ===== BODAS OPTIONS HANDLERS =====
+        
+        // Color Swatches
+        const colorSwatches = document.querySelectorAll('.color-swatch');
+        const selectedColorInput = document.getElementById('selected-color');
+        
+        colorSwatches.forEach(swatch => {
+            swatch.addEventListener('click', function() {
+                colorSwatches.forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                if (selectedColorInput) {
+                    selectedColorInput.value = this.dataset.color;
+                }
+                updateTotalPrice();
+            });
+        });
+        
+        // Option Cards (orientation, cut, embossing, size)
+        const optionCards = document.querySelectorAll('.option-card');
+        
+        optionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const optionType = this.dataset.option;
+                // Deselect other cards of the same option type
+                document.querySelectorAll(`.option-card[data-option="${optionType}"]`).forEach(c => {
+                    c.classList.remove('selected');
+                    c.querySelector('input[type="radio"]').checked = false;
+                });
+                // Select this card
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+                updateTotalPrice();
+            });
+        });
+        
+        // Calculate total price with modifiers
+        function calculatePriceModifier() {
+            let modifier = 0;
+            
+            // Get all selected option cards
+            document.querySelectorAll('.option-card.selected').forEach(card => {
+                modifier += parseFloat(card.dataset.priceModifier || 0);
+            });
+            
+            return modifier;
+        }
+        
+        // Update total price (hook into existing pricing logic)
+        function updateTotalPrice() {
+            // Trigger price recalculation if the product_logic.js is loaded
+            if (window.updatePricing) {
+                window.updatePricing();
+            }
+        }
+
+        // Inicializar estado del botón
+        updateAddToCartButton();
+    });
+</script>
+
+<script id="product-tiers-data" type="application/json">
+{{ pricing_tiers_json|safe }}
+</script>
+
+<div id="product-data" 
+     style="display: none;"
+     data-base-price="{{ safe_starting_price|floatformat:2|unlocalize }}"
+     data-tiers-id="product-tiers-data"
+     data-category-slug="{{ category.slug }}"
+     data-product-slug="{{ product.slug }}"
+     data-add-to-cart-url="{% url 'shop:add_product_to_cart' %}">
+</div>
+
+<script src="{% static 'js/product_logic.js' %}"></script>
+
+{% endblock %}
+
+
+
+{% endblock %}

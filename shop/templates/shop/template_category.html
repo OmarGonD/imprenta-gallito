@@ -1,0 +1,518 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ target_category.name }} - Diseños - Imprenta Gallito{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+    
+    <!-- Hero Section -->
+    <section class="py-12 relative overflow-hidden bg-gradient-to-br from-pink-500 via-pink-600 to-rose-700">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+            <!-- Back link -->
+            {% if subcategory %}
+            <a href="{% url 'shop:subcategory' category.slug subcategory.slug %}" 
+               class="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-5 transition-colors">
+                <i class="fas fa-arrow-left"></i>
+                Volver a {{ subcategory.name }}
+            </a>
+            {% else %}
+            <a href="{% url 'shop:category' category.slug %}" 
+               class="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm mb-5 transition-colors">
+                <i class="fas fa-arrow-left"></i>
+                Volver a {{ category.name }}
+            </a>
+            {% endif %}
+            
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ target_category.name }}</h1>
+            
+            {% if target_category.description %}
+            <p class="text-lg text-white/90 max-w-xl mb-4">{{ target_category.description }}</p>
+            {% else %}
+            <p class="text-lg text-white/90 max-w-xl mb-4">
+                Elige entre {{ template_count }} diseños profesionales o sube tu propio diseño personalizado.
+            </p>
+            {% endif %}
+            
+            <div class="flex flex-wrap gap-3 mt-5">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full text-white text-sm">
+                    <i class="fas fa-palette"></i>
+                    {{ template_count }} diseños disponibles
+                </div>
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full text-white text-sm">
+                    <i class="fas fa-upload"></i>
+                    Sube tu propio diseño
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'shop:home' %}">Inicio</a></li>
+                <li><a href="{% url 'shop:category' category.slug %}">{{ category.name }}</a></li>
+                {% if subcategory %}
+                <li><a href="{% url 'shop:subcategory' category.slug subcategory.slug %}">{{ subcategory.name }}</a></li>
+                {% endif %}
+                <li class="active">{{ target_category.name }}</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Navegación entre hermanos (otras subcategorías) -->
+    {% if sibling_categories %}
+    <section class="bg-white py-6 border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <p class="text-sm text-gray-500 mb-4">Más opciones:</p>
+            <div class="flex flex-wrap gap-3">
+                {% for sib in sibling_categories %}
+                <a href="{% url 'shop:subcategory' category.slug sib.slug %}" 
+                   class="px-4 py-2 rounded-full text-sm font-medium transition-all
+                          {% if sib.slug == target_category.slug %}
+                          bg-pink-600 text-white
+                          {% else %}
+                          bg-gray-100 text-gray-700 hover:bg-pink-100 hover:text-pink-700
+                          {% endif %}">
+                    {{ sib.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Templates Gallery Section -->
+    <section class="py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <!-- Header con contador y ordenamiento -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Elige tu diseño</h2>
+                    <p class="text-gray-500 mt-1">{{ template_count }} plantillas profesionales</p>
+                </div>
+                
+                <!-- Filtros opcionales -->
+                <div class="flex items-center gap-3">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500" onchange="if(this.value) window.location.search='?order='+this.value">
+                        <option value="">Ordenar por</option>
+                        <option value="popular">Más populares</option>
+                        <option value="new">Más recientes</option>
+                        <option value="name">Nombre A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grid de Templates -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                
+                <!-- Card de Upload - Siempre Primera -->
+                {% if show_upload_card and page_obj.number == 1 %}
+                <div class="template-card upload-card group cursor-pointer" 
+                     onclick="openUploadModal()"
+                     data-category-slug="{{ target_category.slug }}"
+                     data-category-name="{{ target_category.name }}">
+                    <div class="template-image bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col items-center justify-center">
+                        <div class="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-cloud-upload-alt text-2xl text-pink-500"></i>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">Subir mi diseño</span>
+                        <span class="text-xs text-gray-500 mt-1">JPG, PNG, PDF</span>
+                    </div>
+                    <div class="template-info">
+                        <h3 class="template-name">Diseño personalizado</h3>
+                        <p class="template-desc">Sube tu propio archivo</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Templates desde la BD -->
+                {% for template in templates %}
+                <a href="{% url 'shop:template_gallery' category.slug target_category.slug %}?template={{ template.slug }}" 
+                   class="template-card group">
+                    <div class="template-image">
+                        {% if template.thumbnail_url %}
+                        <img src="{{ template.thumbnail_url }}" 
+                             alt="{{ template.name }}"
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-100 to-pink-200">
+                            <i class="fas fa-image text-3xl text-pink-300"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Badges -->
+                        <div class="absolute top-2 left-2 flex flex-col gap-1">
+                            {% if template.is_popular %}
+                            <span class="px-2 py-0.5 bg-amber-500 text-white text-xs font-bold rounded-full">
+                                <i class="fas fa-fire mr-1"></i>Popular
+                            </span>
+                            {% endif %}
+                            {% if template.is_new %}
+                            <span class="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
+                                <i class="fas fa-sparkles mr-1"></i>Nuevo
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Hover overlay -->
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                            <span class="px-4 py-2 bg-white rounded-full text-sm font-semibold text-gray-800 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                <i class="fas fa-eye mr-2"></i>Ver diseño
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="template-info">
+                        <h3 class="template-name">{{ template.name }}</h3>
+                        {% if template.description %}
+                        <p class="template-desc">{{ template.description|truncatewords:8 }}</p>
+                        {% endif %}
+                    </div>
+                </a>
+                {% empty %}
+                {% if not show_upload_card or page_obj.number != 1 %}
+                <div class="col-span-full text-center py-20">
+                    <i class="fas fa-palette text-6xl text-gray-300 mb-6"></i>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No hay plantillas disponibles</h3>
+                    <p class="text-gray-500">Pronto agregaremos diseños para esta categoría.</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Paginación -->
+            {% if page_obj.has_other_pages %}
+            <nav class="mt-12 flex justify-center" aria-label="Paginación">
+                <ul class="flex items-center gap-2">
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}" 
+                           class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li>
+                            <span class="px-4 py-2 rounded-lg bg-pink-600 text-white font-semibold">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li>
+                            <a href="?page={{ num }}" 
+                               class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% elif num == 1 or num == page_obj.paginator.num_pages %}
+                        <li>
+                            <a href="?page={{ num }}" 
+                               class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                        <li><span class="px-2 text-gray-400">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}" 
+                           class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+    </section>
+</div>
+
+<!-- Modal de Upload -->
+<div id="uploadModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeUploadModal()"></div>
+    <div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-900">Subir tu diseño</h3>
+                <button onclick="closeUploadModal()" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times text-gray-600"></i>
+                </button>
+            </div>
+            
+            <form id="uploadForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="category_slug" id="uploadCategorySlug">
+                
+                <!-- Dropzone -->
+                <div id="dropzone" 
+                     class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-pink-500 hover:bg-pink-50/50 transition-all cursor-pointer"
+                     onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" name="design_file" accept=".jpg,.jpeg,.png,.pdf,.ai,.psd" class="hidden" onchange="handleFileSelect(this)">
+                    
+                    <div id="dropzoneContent">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-pink-100 flex items-center justify-center mb-4">
+                            <i class="fas fa-cloud-upload-alt text-2xl text-pink-500"></i>
+                        </div>
+                        <p class="text-gray-700 font-medium mb-1">Arrastra tu archivo aquí</p>
+                        <p class="text-gray-500 text-sm mb-4">o haz clic para seleccionar</p>
+                        <p class="text-xs text-gray-400">JPG, PNG, PDF, AI, PSD • Máx. 25MB</p>
+                    </div>
+                    
+                    <div id="filePreview" class="hidden">
+                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 rounded-lg bg-pink-100 flex items-center justify-center">
+                                <i class="fas fa-file-image text-xl text-pink-500"></i>
+                            </div>
+                            <div class="flex-1 text-left">
+                                <p id="fileName" class="font-medium text-gray-900 truncate"></p>
+                                <p id="fileSize" class="text-sm text-gray-500"></p>
+                            </div>
+                            <button type="button" onclick="event.stopPropagation(); clearFile()" class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors">
+                                <i class="fas fa-times text-red-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notas -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Notas adicionales (opcional)</label>
+                    <textarea name="notes" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none" placeholder="Instrucciones especiales para tu diseño..."></textarea>
+                </div>
+                
+                <!-- Botones -->
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeUploadModal()" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="submitBtn" disabled class="flex-1 px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-check mr-2"></i>Continuar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Template Cards */
+.template-card {
+    display: block;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.template-card:hover {
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+}
+
+.template-image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+.template-info {
+    padding: 12px;
+}
+
+.template-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #1f2937;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.template-desc {
+    font-size: 0.75rem;
+    color: #6b7280;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Upload Card Special Style */
+.upload-card {
+    border: 2px dashed #e5e7eb;
+    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+}
+
+.upload-card:hover {
+    border-color: #ec4899;
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+}
+
+.upload-card .template-image {
+    background: transparent;
+}
+
+/* Breadcrumb styles */
+.breadcrumb-nav {
+    background: white;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb li {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb li:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: #9ca3af;
+}
+
+.breadcrumb a {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: #ec4899;
+}
+
+.breadcrumb .active {
+    color: #1f2937;
+    font-weight: 500;
+}
+
+/* Drag and drop styles */
+#dropzone.drag-over {
+    border-color: #ec4899;
+    background-color: #fdf2f8;
+}
+</style>
+
+<script>
+// Modal functions
+function openUploadModal() {
+    const modal = document.getElementById('uploadModal');
+    const categorySlug = document.querySelector('[data-category-slug]')?.dataset.categorySlug || '';
+    document.getElementById('uploadCategorySlug').value = categorySlug;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeUploadModal() {
+    const modal = document.getElementById('uploadModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    clearFile();
+}
+
+// File handling
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (file) {
+        showFilePreview(file);
+    }
+}
+
+function showFilePreview(file) {
+    const content = document.getElementById('dropzoneContent');
+    const preview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    content.classList.add('hidden');
+    preview.classList.remove('hidden');
+    fileName.textContent = file.name;
+    fileSize.textContent = formatFileSize(file.size);
+    submitBtn.disabled = false;
+}
+
+function clearFile() {
+    const content = document.getElementById('dropzoneContent');
+    const preview = document.getElementById('filePreview');
+    const fileInput = document.getElementById('fileInput');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    content.classList.remove('hidden');
+    preview.classList.add('hidden');
+    fileInput.value = '';
+    submitBtn.disabled = true;
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Drag and drop
+const dropzone = document.getElementById('dropzone');
+
+dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('drag-over');
+});
+
+dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('drag-over');
+});
+
+dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+        document.getElementById('fileInput').files = e.dataTransfer.files;
+        showFilePreview(file);
+    }
+});
+
+// Form submission
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Aquí irá la lógica para procesar el archivo y continuar al siguiente paso
+    alert('Archivo subido correctamente. Redirigiendo al editor...');
+    closeUploadModal();
+});
+
+// Close modal on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeUploadModal();
+    }
+});
+</script>
+{% endblock %}
