@@ -130,6 +130,9 @@ class Command(BaseCommand):
         # pd.read_excel maneja la codificación y los tipos de datos de Excel
         df = pd.read_excel(filepath, sheet_name=sheet_name)
         
+        # Limpiar nombres de columnas
+        df.columns = [c.strip() if isinstance(c, str) else c for c in df.columns]
+        
         if self.fix_encoding:
             df = self.fix_dataframe_encoding(df)
         
@@ -187,9 +190,9 @@ class Command(BaseCommand):
         
         if self.force and not self.dry_run:
             self.stdout.write(self.style.WARNING('\nModo FORCE activado: Se eliminarán datos existentes\n'))
-            if not self.confirm_action('¿Está seguro de que desea continuar?'):
-                self.stdout.write(self.style.ERROR('Operación cancelada'))
-                return
+            # if not self.confirm_action('¿Está seguro de que desea continuar?'):
+            #     self.stdout.write(self.style.ERROR('Operación cancelada'))
+            #     return
         
         try:
             with transaction.atomic():
@@ -675,6 +678,7 @@ class Command(BaseCommand):
         Importa productos desde Excel.
         ACTUALIZADO: Crea ProductVariant para asignar opciones.
         """
+        print("DEBUG: Executing import_products STARTS")
         self.stdout.write('Importando productos...')
         filename = 'products_complete.xlsx' # Extensión actualizada
         # Llamada al nuevo método safe_read_excel
@@ -747,8 +751,19 @@ class Command(BaseCommand):
                     )
                     
                     # NUEVO: Asignar colores via ProductVariant
-                    colors_hex_str = row.get('colores_hex', '')
-                    if colors_hex_str and pd.notna(colors_hex_str) and color_option:
+                    colors_hex_str = row.get('available_colors')
+                    if pd.isna(colors_hex_str):
+                        colors_hex_str = row.get('colores_hex')
+                    
+                    # Log DEBUG simplificado
+                    # self.stdout.write(f"DEBUG: {product_slug} | Colors: {colors_hex_str}")
+
+                    # Log DEBUG simplificado
+                    # self.stdout.write(f"DEBUG: {product_slug} | Colors: {colors_hex_str}")
+
+                    if pd.notna(colors_hex_str) and colors_hex_str and color_option:
+                        if 'polo' in product_slug:
+                             self.stdout.write(f'✅ FOUND POLO COLOR DATA: {product_slug} -> {colors_hex_str}')
                         colors_data = self.parse_colors_hex(str(colors_hex_str)) # Asegura string
                         
                         # Crear/obtener ProductVariant para color
@@ -758,19 +773,37 @@ class Command(BaseCommand):
                             defaults={'display_order': 1}
                         )
                         
+                        # Limpiar valores previos si se está forzando actualización o para asegurar exactitud
+                        if self.force or not self.dry_run:
+                             # No limpiamos todo, pero recolectaremos los valores activos para este producto
+                             active_values = []
+                        
                         # Añadir valores de color disponibles
                         for color_slug, hex_code in colors_data.items():
-                            # Asegurar que el color existe
-                            color_val, _ = ProductOptionValue.objects.get_or_create(
+                            # Asegurar que el color existe o actualizar hex
+                            color_val, created_val = ProductOptionValue.objects.get_or_create(
                                 option=color_option,
                                 value=color_slug,
                                 defaults={
                                     'display_name': color_slug.replace('-', ' ').title(),
                                     'hex_code': hex_code,
                                     'is_active': True,
+                                    'display_order': 0 # Default, podría mejorarse
                                 }
                             )
-                            variant.available_values.add(color_val)
+                            
+                            # Si ya existía, actualizar hex si es diferente (y viene del excel)
+                            if not created_val and hex_code and color_val.hex_code != hex_code:
+                                color_val.hex_code = hex_code
+                                color_val.save()
+                            
+                            active_values.append(color_val)
+                        
+                        # Asignar ESTRICTAMENTE los colores del excel al variante
+                        if active_values:
+                            variant.available_values.set(active_values)
+                        else:
+                            variant.available_values.clear()
                     
                     # NUEVO: Asignar tallas para ropa
                     # Nota: Hay que asegurar que 'category_slug' sea 'ropa-bolsos'
@@ -821,14 +854,21 @@ class Command(BaseCommand):
         ACTUALIZADO: Usa option_value en lugar de color.
         """
         self.stdout.write('Importando imágenes de productos...')
-        filename = 'polos_images.xlsx' # Extensión actualizada
+        filename = 'polo_imagenes_colores.xlsx' # Extensión actualizada y nombre corregido
         filepath = os.path.join(self.data_dir, filename)
         
         if not os.path.exists(filepath):
-            self.stdout.write(self.style.WARNING(
-                f'   SKIP Archivo {filename} no encontrado\n'
-            ))
-            return 0
+            # Fallback a nombre antiguo si no existe el nuevo
+            alt_filename = 'polos_images.xlsx'
+            alt_filepath = os.path.join(self.data_dir, alt_filename)
+            if os.path.exists(alt_filepath):
+                filename = alt_filename
+                filepath = alt_filepath
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f'   SKIP Archivo {filename} no encontrado\n'
+                ))
+                return 0
         
         # Llamada al nuevo método safe_read_excel
         df = self.safe_read_excel(filename)
@@ -844,7 +884,11 @@ class Command(BaseCommand):
         except ProductOption.DoesNotExist:
             pass
         
+        processed = 0
         for _, row in df.iterrows():
+            processed += 1
+            if processed <= 5:
+                print(f"DEBUG LOOP: {row.get('product_slug')}")
             try:
                 product_slug = str(row.get('product_slug', '')).strip()
                 image_url = str(row.get('image_url', '')).strip()
@@ -863,25 +907,48 @@ class Command(BaseCommand):
                     # NUEVO: Buscar option_value en lugar de color
                     option_value = None
                     color_slug = str(row.get('color_slug', '')).strip()
+                    display_order = int(row.get('display_order', 0))
+                    
                     if color_slug and color_option:
-                        try:
-                            option_value = ProductOptionValue.objects.get(
-                                option=color_option,
-                                value=color_slug
-                            )
-                        except ProductOptionValue.DoesNotExist:
-                            pass
+                        # Auto-create color if missing (from image filename source)
+                        # Try to find standard color first to get 'hex' if possible? 
+                        # For now, just create with default if missing.
+                        option_value, created_val = ProductOptionValue.objects.get_or_create(
+                            option=color_option,
+                            value=color_slug,
+                            defaults={
+                                'display_name': color_slug.replace('-', ' ').title(),
+                                'hex_code': '#CCCCCC', # Default placeholder
+                                'is_active': True,
+                                'display_order': display_order
+                            }
+                        )
+                        
+                        # CRITICAL: Ensure this color is available for the product variant!
+                        # This enables the swatch to appear even if products.xlsx was missing it.
+                        variant, _ = ProductVariant.objects.get_or_create(
+                            product=product, 
+                            option=color_option,
+                            defaults={'display_order': 1}
+                        )
+                        variant.available_values.add(option_value)
                     
                     is_primary = str(row.get('is_primary', 'False')).lower() == 'true'
                     
                     _, was_created = ProductImage.objects.update_or_create(
                         product=product,
-                        option_value=option_value,
-                        image_url=image_url,
+                        image_url=image_url, # Key by URL to avoid dupes logic (or product+option?)
+                        # Using product + option_value as unique might be better, but multiple images per color allowed
+                        # update_or_create defaults to lookup by first args. 
+                        # We want to create or update specific image entry. 
+                        # Let's map by image_url as unique ID for import? 
+                        # Actually previous code used product, option_value, image_url as lookup?
+                        # No, previous code used (product=product, option_value=..., image_url=...) which means GET by all 3.
+                        # That's strict. Let's stick to update_or_create on image_url + product
                         defaults={
+                            'option_value': option_value,
                             'is_primary': is_primary,
-                            # Conversión explícita a int
-                            'display_order': int(row.get('display_order', 0)),
+                            'display_order': display_order,
                         }
                     )
                     if was_created:
@@ -1105,6 +1172,13 @@ class Command(BaseCommand):
                     except Subcategory.DoesNotExist:
                         subcategory = None
                     
+                    # SPECIAL CASE: BODAS (Nested products)
+                    if subcategory_slug == 'bodas':
+                         created, updated = self._import_bodas_nested(subdir_path, category, subcategory)
+                         total_created += created
+                         total_updated += updated
+                         continue
+                    
                     created, updated = self._import_templates_from_folder(
                         subdir_path, category, subcategory, f'{folder_name}/{subdir}'
                     )
@@ -1178,3 +1252,94 @@ class Command(BaseCommand):
                 created += 1
         
         return created, updated
+
+    def _import_bodas_nested(self, base_path, category, subcategory):
+        """
+        Importa templates de bodas que tienen un nivel extra de anidamiento (por producto).
+        Estructura: bodas/guarda_la_fecha/imagen.jpg
+        """
+        folder_to_product = {
+            'guarda_la_fecha': 'guarda-la-fecha',
+            'servilletas': 'servilletas',
+            'carteles_carton_espuma': 'carteles-carton-espuma',
+            'invitaciones_despedida_soltera': 'invitaciones-despedida-soltera',
+            'libro_firmas_invitados': 'libro-firmas-invitados',
+            'programas_boda': 'programas-boda',
+            'tarjetas_de_gracias': 'tarjetas-de-gracias',
+            'tarjetas_informativas': 'tarjetas-informativas',
+            'tarjetas_itinerario': 'tarjetas-itinerario',
+            'tarjetas_itineario': 'tarjetas-itinerario',
+            'tarjetas_menu': 'tarjetas-menu',
+            'tarjetas_rsvp': 'tarjetas-rsvp',
+        }
+        
+        total_created = 0
+        total_updated = 0
+        
+        # Iterate through each product folder inside bodas
+        if not os.path.exists(base_path):
+            return 0, 0
+            
+        try:
+            items = os.listdir(base_path)
+        except OSError:
+            return 0, 0
+
+        for folder_name in items:
+            folder_path = os.path.join(base_path, folder_name)
+            
+            if not os.path.isdir(folder_path):
+                continue
+            
+            product_slug = folder_to_product.get(folder_name, folder_name.replace('_', '-'))
+            
+            # Get all image files
+            image_extensions = ('.jpg', '.jpeg', '.png', '.webp')
+            try:
+                images = [f for f in os.listdir(folder_path) if f.lower().endswith(image_extensions)]
+            except OSError:
+                continue
+            
+            if not images:
+                continue
+                
+            self.stdout.write(f'     > Bodas: {product_slug} ({len(images)} imgs)')
+
+            for i, image_file in enumerate(images):
+                # Create slug from filename
+                file_slug = os.path.splitext(image_file)[0].lower()
+                template_slug = f'bodas-{product_slug}-{file_slug}'[:100]
+                
+                # Image URL
+                image_url = f'/static/media/template_images/invitaciones_papeleria/bodas/{folder_name}/{image_file}'
+                
+                # Create template name
+                template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
+                
+                if not self.dry_run:
+                    try:
+                        template, created = DesignTemplate.objects.update_or_create(
+                            slug=template_slug,
+                            defaults={
+                                'name': template_name,
+                                'category': category,
+                                'subcategory': subcategory,
+                                'thumbnail_url': image_url,
+                                'preview_url': image_url,
+                                'is_popular': i < 10,
+                                'is_new': i < 5,
+                                'display_order': i,
+                            }
+                        )
+                        
+                        if created:
+                            total_created += 1
+                        else:
+                            total_updated += 1
+                    except Exception as e:
+                         # Silently skip
+                         pass
+                else:
+                    total_created += 1
+                    
+        return total_created, total_updated

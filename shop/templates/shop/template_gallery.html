@@ -1165,21 +1165,26 @@
                 <button class="contact-modal-close" onclick="closeContactModal()" type="button">
                     <i class="fas fa-times"></i>
                 </button>
-                <h2><i class="fas fa-user-edit"></i> Datos para tu tarjeta</h2>
-                <p>Ingresa la información que aparecerá en tus tarjetas de presentación</p>
+                {% if form_config %}
+                    <h2><i class="fas fa-edit"></i> {{ form_config.title }}</h2>
+                    <p>{{ form_config.intro }}</p>
+                {% else %}
+                    <h2><i class="fas fa-user-edit"></i> Datos para tu tarjeta</h2>
+                    <p>Ingresa la información que aparecerá en tus tarjetas de presentación</p>
+                {% endif %}
             </div>
             
             <div class="contact-modal-body">
                 <!-- Logo Upload -->
                 <div class="logo-upload-section">
-                    <h4><i class="fas fa-image"></i> Logo de tu empresa <span class="optional">(opcional)</span></h4>
+                    <h4><i class="fas fa-image"></i> Logo / Imagen <span class="optional">(opcional)</span></h4>
                     <div class="logo-upload-box">
                         <div class="logo-preview-box" id="logo-preview">
-                            <i class="fas fa-building"></i>
+                            <i class="fas fa-image"></i>
                         </div>
                         <div>
                             <button class="logo-upload-btn" type="button" onclick="document.getElementById('logo-file').click()">
-                                <i class="fas fa-upload"></i> Subir logo
+                                <i class="fas fa-upload"></i> Subir imagen
                             </button>
                             <p style="font-size: 0.8rem; color: #666; margin-top: 8px;">PNG, JPG o SVG • Máximo 5MB</p>
                         </div>
@@ -1187,7 +1192,34 @@
                     <input type="file" id="logo-file" accept=".png,.jpg,.jpeg,.svg" style="display: none;">
                 </div>
                 
-                <!-- Contact Info -->
+                {% if form_config %}
+                <!-- DYNAMIC FIELDS -->
+                <div id="dynamic-fields-container">
+                    {% for field in form_config.fields %}
+                    <div class="form-group">
+                        <label>{{ field.label }} {% if field.required %}<span class="required">*</span>{% endif %}</label>
+                        <div class="input-icon">
+                            {% if field.type == 'textarea' %}
+                                <textarea id="dynamic-{{ field.name }}" 
+                                          class="dynamic-field"
+                                          data-name="{{ field.label }}"
+                                          data-required="{{ field.required|yesno:'true,false' }}"
+                                          placeholder="{{ field.placeholder }}"></textarea>
+                            {% else %}
+                                <input type="{{ field.type }}" 
+                                       id="dynamic-{{ field.name }}" 
+                                       class="dynamic-field"
+                                       data-name="{{ field.label }}"
+                                       data-required="{{ field.required|yesno:'true,false' }}"
+                                       placeholder="{{ field.placeholder }}">
+                            {% endif %}
+                            <i class="fas {{ field.icon }}"></i>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <!-- STANDARD FIELDS (Business Cards) -->
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nombre completo <span class="required">*</span></label>
@@ -1248,6 +1280,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
             
             <div class="contact-modal-footer">
@@ -1288,6 +1321,9 @@
     let previewingTemplate = null;
     let uploadedDesign = null;
     let uploadedLogo = null;
+    
+    // Check if dynamic form
+    const isDynamicForm = {% if form_config %}true{% else %}false{% endif %};
     
     // ===== MODO CAMBIAR PLANTILLA =====
     // Detectar si viene del carrito solo para cambiar la plantilla
@@ -1404,7 +1440,8 @@
         
         // Focus first field
         setTimeout(() => {
-            document.getElementById('contact-name').focus();
+            const firstInput = document.querySelector('.contact-modal-body input, .contact-modal-body textarea');
+            if (firstInput) firstInput.focus();
         }, 300);
     };
     
@@ -1511,29 +1548,70 @@
     
     // ===== SUBMIT TO CART =====
     window.submitToCart = function() {
-        // Validate required fields
-        const contactName = document.getElementById('contact-name').value.trim();
-        const contactPhone = document.getElementById('contact-phone').value.trim();
+        // Create form data
+        const formData = new FormData();
         
-        if (!contactName) {
-            alert('Por favor ingresa tu nombre completo');
-            document.getElementById('contact-name').focus();
-            return;
+        if (isDynamicForm) {
+            // --- DYNAMIC FORM VALIDATION ---
+            const dynamicFields = document.querySelectorAll('.dynamic-field');
+            let isValid = true;
+            let additionalInfo = [];
+            
+            dynamicFields.forEach(field => {
+                const isRequired = field.dataset.required === 'true';
+                if (isRequired && !field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = 'red';
+                } else {
+                    field.style.borderColor = '';
+                }
+                
+                if (field.value.trim()) {
+                    additionalInfo.push(field.dataset.name + ": " + field.value.trim());
+                }
+            });
+            
+            if (!isValid) {
+                alert('Por favor completa todos los campos obligatorios (*).');
+                return;
+            }
+            
+            formData.append('additional_info', additionalInfo.join('\n'));
+            
+        } else {
+            // --- STANDARD FORM VALIDATION ---
+            const contactName = document.getElementById('contact-name').value.trim();
+            const contactPhone = document.getElementById('contact-phone').value.trim();
+            
+            if (!contactName) {
+                alert('Por favor ingresa tu nombre completo');
+                document.getElementById('contact-name').focus();
+                return;
+            }
+            
+            if (!contactPhone) {
+                alert('Por favor ingresa tu número de celular');
+                document.getElementById('contact-phone').focus();
+                return;
+            }
+            
+            // Get all contact data
+            const contactEmail = document.getElementById('contact-email').value.trim();
+            const contactJob = document.getElementById('contact-job').value.trim();
+            const contactCompany = document.getElementById('contact-company').value.trim();
+            const contactSocial = document.getElementById('contact-social').value.trim();
+            const contactAddress = document.getElementById('contact-address').value.trim();
+            
+            formData.append('contact_name', contactName);
+            formData.append('contact_phone', contactPhone);
+            formData.append('contact_email', contactEmail);
+            formData.append('contact_job_title', contactJob);
+            formData.append('contact_company', contactCompany);
+            formData.append('contact_social', contactSocial);
+            formData.append('contact_address', contactAddress);
         }
         
-        if (!contactPhone) {
-            alert('Por favor ingresa tu número de celular');
-            document.getElementById('contact-phone').focus();
-            return;
-        }
-        
-        // Get all contact data
-        const contactEmail = document.getElementById('contact-email').value.trim();
-        const contactJob = document.getElementById('contact-job').value.trim();
-        const contactCompany = document.getElementById('contact-company').value.trim();
-        const contactSocial = document.getElementById('contact-social').value.trim();
-        const contactAddress = document.getElementById('contact-address').value.trim();
-        
+        // --- COMMON LOGIC ---
         // Get quantity from URL
         const urlParams = new URLSearchParams(window.location.search);
         const quantity = urlParams.get('quantity') || '100';
@@ -1543,8 +1621,6 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...';
         
-        // Create form data
-        const formData = new FormData();
         formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
         formData.append('product_slug', '{{ product.slug }}');
         formData.append('category_slug', '{{ category.slug }}');
@@ -1567,15 +1643,6 @@
         if (uploadedLogo) {
             formData.append('logo_file', uploadedLogo);
         }
-        
-        // Contact data
-        formData.append('contact_name', contactName);
-        formData.append('contact_phone', contactPhone);
-        formData.append('contact_email', contactEmail);
-        formData.append('contact_job_title', contactJob);
-        formData.append('contact_company', contactCompany);
-        formData.append('contact_social', contactSocial);
-        formData.append('contact_address', contactAddress);
         
         // Submit via POST
         fetch('{% url "shop:add_product_to_cart" %}', {

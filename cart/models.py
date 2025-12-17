@@ -121,6 +121,13 @@ class CartItem(models.Model):
         null=True,
         verbose_name='Empresa'
     )
+    
+    # Nuevo campo para información extra dinámica (Bodas, etc.)
+    additional_info = models.TextField(
+        blank=True, 
+        null=True, 
+        verbose_name="Información Adicional"
+    )
     # =========================================================
 
     class Meta:
@@ -217,14 +224,26 @@ class CartItem(models.Model):
         if not template_slug:
             return None
         
-        # Intentar cargar desde TemplateLoader
+        # 1. Intentar buscar en base de datos (DesignTemplate)
+        try:
+            from shop.models import DesignTemplate
+            template = DesignTemplate.objects.get(slug=template_slug)
+            return {
+                'slug': template.slug,
+                'name': template.name,
+                'thumbnail_url': template.thumbnail_url or template.preview_url
+            }
+        except Exception:
+            pass
+        
+        # 2. Intentar cargar desde TemplateLoader (Legacy)
         try:
             from shop.template_loader import TemplateLoader
             return TemplateLoader.get_by_slug(template_slug)
-        except ImportError:
+        except (ImportError, Exception):
             pass
         
-        # Fallback: construir info básica
+        # 3. Fallback: construir info básica (Asume tarjetas de presentación por defecto)
         return {
             'slug': template_slug,
             'name': f'Diseño {template_slug.upper()}',

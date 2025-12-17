@@ -689,6 +689,10 @@
 {{ pricing_tiers_json|safe }}
 </script>
 
+<script>
+    const imagesByColor = {{ images_by_color|default:"{}"|safe }};
+</script>
+
 <div id="product-data" 
      style="display: none;"
      data-base-price="{{ safe_starting_price|floatformat:2|unlocalize }}"
@@ -722,38 +726,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Actualizar la imagen del producto
-        const productSlug = window.productSlug || '{{ product.slug }}';
         const mainImage = document.getElementById('main-product-image');
         
-        if (!mainImage || !productSlug || !colorSlug) return;
+        if (!mainImage || !colorSlug) return;
         
-        // Mostrar loading
-        mainImage.style.opacity = '0.5';
+        // Buscar imagen en el JSON inyectado
+        const colorData = imagesByColor[colorSlug];
         
-        // Llamar a la API para obtener la imagen del color
-        fetch(`/api/product/${productSlug}/colors/?color=${colorValue}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.image) {
-                    // Precargar la imagen
-                    const img = new Image();
-                    img.onload = function() {
-                        mainImage.src = data.image;
-                        mainImage.style.opacity = '1';
-                    };
-                    img.onerror = function() {
-                        console.warn('Error al cargar imagen del color');
-                        mainImage.style.opacity = '1';
-                    };
-                    img.src = data.image;
-                } else {
-                    mainImage.style.opacity = '1';
-                }
-            })
-            .catch(error => {
-                console.error('Error al obtener imagen del color:', error);
+        if (colorData && colorData.length > 0) {
+            // Mostrar loading
+            mainImage.style.opacity = '0.5';
+            
+            const newSrc = colorData[0].image;
+            
+            // Precargar la imagen
+            const img = new Image();
+            img.onload = function() {
+                mainImage.src = newSrc;
                 mainImage.style.opacity = '1';
-            });
+                console.log('✅ Imagen actualizada para color:', colorSlug);
+            };
+            img.onerror = function() {
+                console.warn('Error al cargar imagen del color:', colorSlug);
+                mainImage.style.opacity = '1';
+            };
+            img.src = newSrc;
+        } else {
+            console.log('ℹ️ No hay imágenes específicas para el color:', colorSlug);
+        }
     };
     
     console.log('✅ Cambio de imagen por color configurado');

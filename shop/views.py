@@ -644,6 +644,9 @@ def add_product_to_cart(request):
         contact_social = request.POST.get('contact_social', '').strip()
         contact_address = request.POST.get('contact_address', '').strip()
         
+        # Additional Info (Dynamic fields)
+        additional_info = request.POST.get('additional_info', '').strip()
+        
         # Edit mode
         edit_item_id = request.POST.get('edit_item_id')
         
@@ -658,6 +661,7 @@ def add_product_to_cart(request):
                 cart_item.contact_company = contact_company or None
                 cart_item.contact_social = contact_social or None
                 cart_item.contact_address = contact_address or None
+                cart_item.additional_info = additional_info or None
                 
                 if design_type == 'template' and template_slug and template_slug != 'custom':
                     cart_item.comment = f"template:{template_slug[:80]}"
@@ -730,7 +734,27 @@ def add_product_to_cart(request):
                 contact_company=contact_company or None,
                 contact_social=contact_social or None,
                 contact_address=contact_address or None,
+                additional_info=additional_info or None,
+                # Add color and size
+                color=request.POST.get('color'),
+                size=request.POST.get('size'),
             )
+            
+            # Helper to set color image if color is selected
+            color_val = request.POST.get('color')
+            if color_val:
+                # Try to find the image for this color
+                # Assuming color_val is the slug or value
+                try:
+                    # Find OptionValue
+                    # We don't have option object handy, but typical setup...
+                    # Better: look for image with option_value__value=color_val
+                    img = product.images.filter(option_value__value=color_val).first()
+                    if img:
+                        cart_item.color_image_url = img.image_url
+                        cart_item.save()
+                except Exception:
+                    pass # Ignore if image lookup fails
             
             total_items = CartItem.objects.filter(
                 cart_id=cart_id, 
@@ -786,14 +810,71 @@ def template_gallery_view(request, category_slug, product_slug):
         templates = templates.filter(
             Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
         )
+        
+        # FIX: Para bodas, filtrar también por slug del producto para no mezclar diseños
+        # Los templates de bodas tienen formato: bodas-{product_slug}-{file_slug}
+        if product.subcategory.slug == 'bodas':
+            templates = templates.filter(slug__contains=product.slug)
 
     templates = templates.order_by('-is_popular', '-is_new', 'display_order', 'name').distinct()
+
+    # CONFIGURACIÓN DEL FORMULARIO DINÁMICO
+    form_config = None
+    if product.subcategory and product.subcategory.slug == 'bodas':
+        form_config = {
+            'is_dynamic': True,
+            'title': 'Personaliza tu Diseño',
+            'intro': 'Ingresa la información clave para tu invitación.',
+            'fields': [
+                {
+                    'name': 'event_names', 
+                    'label': 'Nombres (Novios/Festejado)', 
+                    'type': 'text', 
+                    'placeholder': 'Ej: Ana y Carlos',
+                    'required': True, 
+                    'icon': 'fa-user-friends'
+                },
+                {
+                    'name': 'event_date', 
+                    'label': 'Fecha del evento', 
+                    'type': 'date', 
+                    'placeholder': '',
+                    'required': True, 
+                    'icon': 'fa-calendar-alt'
+                },
+                {
+                    'name': 'event_time', 
+                    'label': 'Hora', 
+                    'type': 'time', 
+                    'placeholder': '',
+                    'required': True, 
+                    'icon': 'fa-clock'
+                },
+                {
+                    'name': 'event_location', 
+                    'label': 'Lugar / Dirección', 
+                    'type': 'text', 
+                    'placeholder': 'Ej: Iglesia San Pedro, Av. Principal 123',
+                    'required': True, 
+                    'icon': 'fa-map-marker-alt'
+                },
+                {
+                    'name': 'custom_notes', 
+                    'label': 'Indicaciones adicionales', 
+                    'type': 'textarea', 
+                    'placeholder': 'Detalles extra, cambios de color, etc.',
+                    'required': False, 
+                    'icon': 'fa-comment-dots'
+                }
+            ]
+        }
 
     context = {
         'product': product,
         'category': category,
         'templates': templates,
         'total_templates': templates.count(),
+        'form_config': form_config,
         # Para los filtros por industria (si usas el campo industry_slug)
         # 'categories': DesignTemplate.objects.filter(category=category).values('industry_slug').distinct(),
     }
