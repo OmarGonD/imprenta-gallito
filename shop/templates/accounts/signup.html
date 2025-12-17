@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% load socialaccount %}
 {% load crispy_forms_tags %}
 
 {% block metadescription %}
@@ -34,6 +34,18 @@
             {#                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mx-auto-bg-light">#}
             <br>
             <div class="row">
+                <div class="col-12 mb-4 text-center">
+                    <p class="text-muted">Regístrate rápidamente con:</p>
+                    <div class="d-flex justify-content-center" style="gap: 15px;">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger mr-2" style="border-radius: 5px;">
+                            <i class="fab fa-google mr-2"></i> Google
+                        </a>
+                        <a href="{% provider_login_url 'facebook' method='oauth2' %}" class="btn btn-outline-primary" style="border-radius: 5px;">
+                            <i class="fab fa-facebook-f mr-2"></i> Facebook
+                        </a>
+                    </div>
+                    <p class="mt-3 text-muted">- O completa tus datos -</p>
+                </div>
 
 
                 <div class="col-md-6">

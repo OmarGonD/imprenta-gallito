@@ -15,11 +15,11 @@ from django.shortcuts import redirect, HttpResponseRedirect, render, get_object_
 from django.template.loader import get_template
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic.edit import FormView
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.db.models import Q, Count, Min, Prefetch
 
@@ -818,6 +818,23 @@ def template_gallery_view(request, category_slug, product_slug):
 
     templates = templates.order_by('-is_popular', '-is_new', 'display_order', 'name').distinct()
 
+    # --- BÚSQUEDA POR NOMBRE (BACKEND) ---
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        templates = templates.filter(
+            Q(name__icontains=search_query) | Q(slug__icontains=search_query)
+        )
+
+    # --- PAGINACIÓN ---
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(templates, 24)  # 24 templates por página
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
     # CONFIGURACIÓN DEL FORMULARIO DINÁMICO
     form_config = None
     if product.subcategory and product.subcategory.slug == 'bodas':
@@ -872,8 +889,11 @@ def template_gallery_view(request, category_slug, product_slug):
     context = {
         'product': product,
         'category': category,
-        'templates': templates,
-        'total_templates': templates.count(),
+        'templates': page_obj, # Pasamos la página, no todo el queryset
+        'paginator': paginator,
+        'page_obj': page_obj,
+        'total_templates': paginator.count,
+
         'form_config': form_config,
         # Para los filtros por industria (si usas el campo industry_slug)
         # 'categories': DesignTemplate.objects.filter(category=category).values('industry_slug').distinct(),

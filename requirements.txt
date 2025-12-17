@@ -52,3 +52,4 @@ tzdata==2024.1
 urllib3==2.2.1
 wfastcgi==3.0.0
 whitenoise==6.6.0
+django-allauth>=0.57.0

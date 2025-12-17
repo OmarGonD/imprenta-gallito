@@ -209,29 +209,44 @@
     flex-wrap: wrap;
 }
 
-.filter-tabs {
+.pagination-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
+    margin-top: 50px;
 }
 
-.filter-tab {
-    padding: 10px 20px;
-    border-radius: 30px;
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     border: 1px solid var(--border-color);
     background: white;
-    cursor: pointer;
-    font-size: 0.9rem;
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: 600;
     transition: all 0.2s ease;
 }
 
-.filter-tab:hover {
+.page-link:hover {
     border-color: var(--primary);
+    color: var(--primary);
 }
 
-.filter-tab.active {
+.page-link.active {
     background: var(--primary);
     color: white;
     border-color: var(--primary);
+}
+
+.page-nav-btn {
+    padding: 0 20px;
+    width: auto;
+    border-radius: 30px;
 }
 
 .search-box {
@@ -1064,57 +1079,80 @@
         
         <!-- Templates Section -->
         <div id="templates-section">
-            <!-- Filters -->
-            <div class="filter-section">
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="filterTemplates('all', this)">
-                        Todos
-                    </button>
-                    {% for category in categories %}
-                    <button class="filter-tab" onclick="filterTemplates('{{ category.slug }}', this)">
-                        {{ category.name }}
-                    </button>
-                    {% endfor %}
-                </div>
-                
-                <div class="search-box">
+            <!-- Buscador por Nombre (Backend) -->
+            <div class="filter-section" style="justify-content: center;">
+                <form method="GET" class="search-box" style="max-width: 500px; width: 100%;">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar diseño..." id="search-input" onkeyup="searchTemplates(this.value)">
-                </div>
+                    <input type="text" name="search" placeholder="Buscar por nombre..." value="{% if request.GET.search %}{{ request.GET.search }}{% endif %}" style="border:none; outline:none; width:100%;">
+                </form>
             </div>
-            
-            <!-- Templates Grid -->
-            <div class="templates-grid" id="templates-grid">
+
+            <div class="templates-grid relative min-h-[400px]">
+                <!-- Custom Design Option -->
+                <div class="template-card custom-upload-card" onclick="document.getElementById('upload-zone').scrollIntoView({behavior: 'smooth'}); document.querySelector('.upload-section').classList.add('active');" style="border: 2px dashed var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; background: var(--light-bg);">
+                    <div class="upload-icon" style="width: 70px; height: 70px; margin-bottom: 15px;">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3 style="font-size: 1.1rem; color: var(--primary);">Subir mi propio diseño</h3>
+                    <p style="font-size: 0.85rem; color: #666;">Tengo mi archivo listo</p>
+                </div>
+
                 {% for template in templates %}
                 <div class="template-card" 
+                     data-template-id="{{ template.id }}"
                      data-template-slug="{{ template.slug }}"
                      data-template-name="{{ template.name }}"
-                     data-template-image="{{ template.thumbnail_url }}"
-                     data-template-category="{{ template.industry_slug }}"
                      onclick="selectTemplate(this)">
                     <div class="template-image">
-                        <img src="{{ template.thumbnail_url }}" 
-                             alt="{{ template.name }}"
-                             loading="lazy"
-                             onerror="this.src='/static/img/template-placeholder.png'">
+                        {% if template.thumbnail_url %}
+                        <img src="{{ template.thumbnail_url }}" alt="{{ template.name }}" loading="lazy">
+                        {% else %}
+                        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#eee; color:#ccc;">
+                            <i class="fas fa-image fa-2x"></i>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="template-info">
-                        <span class="template-name">{{ template.slug|upper }}</span>
+                        <span class="template-name">{{ template.name }}</span>
                         <div class="template-actions">
-                            <button class="action-btn" type="button" onclick="event.stopPropagation(); previewTemplate('{{ template.thumbnail_url }}', '{{ template.name }}', '{{ template.slug }}')" title="Vista previa">
-                                <i class="fas fa-expand"></i>
+                            <button class="action-btn" onclick="event.stopPropagation(); previewTemplate('{{ template.thumbnail_url }}', '{{ template.name }}', '{{ template.slug }}')">
+                                <i class="fas fa-eye"></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="no-templates">
-                    <i class="fas fa-images"></i>
-                    <h3>No hay templates disponibles</h3>
-                    <p>Puedes subir tu propio diseño</p>
-                </div>
+                    <div class="col-span-full py-12 text-center text-gray-500" style="grid-column: 1 / -1; padding: 40px; text-align: center;">
+                        <i class="fas fa-search mb-3 text-3xl opacity-30" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>No se encontraron resultados para "{{ request.GET.search }}".</p>
+                    </div>
                 {% endfor %}
             </div>
+
+            <!-- Pagination Controls -->
+            {% if paginator.num_pages > 1 %}
+            <div class="pagination-container">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}&filter={{ current_filter }}" class="page-link page-nav-btn">
+                        <i class="fas fa-chevron-left mr-2"></i> Anterior
+                    </a>
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <span class="page-link active">{{ i }}</span>
+                    {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                        <a href="?page={{ i }}&filter={{ current_filter }}" class="page-link">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}&filter={{ current_filter }}" class="page-link page-nav-btn">
+                        Siguiente <i class="fas fa-chevron-right ml-2"></i>
+                    </a>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
         
         <!-- Upload Section -->
@@ -1390,7 +1428,8 @@
         // Get data
         const slug = card.dataset.templateSlug;
         const name = card.dataset.templateName;
-        const image = card.dataset.templateImage;
+        // FIX: obtener imagen directamente del img tag para asegurar la url correcta
+        const image = card.querySelector('img') ? card.querySelector('img').src : '';
         
         selectedTemplate = { slug, name, image };
         
