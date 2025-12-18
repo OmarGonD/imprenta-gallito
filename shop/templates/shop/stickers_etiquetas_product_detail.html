@@ -1,0 +1,411 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | {{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="container-ultrawide">
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+            <ol class="flex items-center gap-2 text-sm text-gray-500">
+                <li><a href="{% url 'shop:home' %}" class="hover:text-blue-600 transition-colors">Inicio</a></li>
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li><a href="{% url 'shop:category' category.slug %}" class="hover:text-blue-600 transition-colors">{{ category.name }}</a></li>
+                {% if product.subcategory %}
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li><a href="{% url 'shop:subcategory' category.slug product.subcategory.slug %}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
+                {% endif %}
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li class="font-medium text-gray-900">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
+            <!-- Product Images Gallery -->
+            <div class="space-y-6">
+                <div class="aspect-square rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-sm relative group">
+                    <img id="mainImage" 
+                         src="{{ base_image_url }}" 
+                         alt="{{ product.name }}" 
+                         class="w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-105">
+                </div>
+                
+                {% if product_images %}
+                <div class="grid grid-cols-4 sm:grid-cols-5 gap-4">
+                    {% for img in product_images %}
+                    <button onclick="updateMainImage('{{ img.image_url }}')" 
+                            class="aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-blue-500 transition-all bg-white p-2">
+                        <img src="{{ img.image_url }}" alt="{{ product.name }}" class="w-full h-full object-contain">
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Product Info & Configuration -->
+            <div class="space-y-8">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+                    <div class="flex items-center gap-4 text-sm text-gray-500 mb-6">
+                        <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium">SKU: {{ product.sku }}</span>
+                        {% if product.subcategory %}
+                        <span>{{ product.subcategory.name }}</span>
+                        {% endif %}
+                    </div>
+                    {% if product.description %}
+                    <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Pricing Table -->
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="bg-gray-50 px-6 py-3 border-b border-gray-200">
+                        <h3 id="pricingTableHeader" class="font-semibold text-gray-900">Tabla de Precios (Base 5x5 cm)</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-gray-500">
+                                <tr>
+                                    <th class="px-6 py-3 font-medium">Cantidad</th>
+                                    <th class="px-6 py-3 font-medium text-right">Precio Unit.</th>
+                                    <th class="px-6 py-3 font-medium text-right text-green-600">Ahorro</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                {% for tier in pricing_tiers %}
+                                <tr class="hover:bg-blue-50/50 transition-colors cursor-pointer" onclick="selectQuantity({{ tier.min_quantity }})">
+                                    <td class="px-6 py-3 font-medium">{{ tier.min_quantity }}{% if tier.max_quantity < 999999 %} - {{ tier.max_quantity }}{% else %}+{% endif %}</td>
+                                    <td class="px-6 py-3 text-right">S/ <span class="tier-price" data-base-price="{{ tier.unit_price }}">{{ tier.unit_price|floatformat:2 }}</span></td>
+                                    <td class="px-6 py-3 text-right text-green-600 font-medium">
+                                        {% if tier.discount_percent > 0 %}{{ tier.discount_percent }}% OFF{% else %}-{% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Configuration Form -->
+                <form id="addToCartForm" class="space-y-8" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="category_slug" value="{{ category.slug }}">
+                    <input type="hidden" name="product_slug" value="{{ product.slug }}">
+                    <input type="hidden" name="quantity_tier" id="selectedQuantity" value="100">
+
+                    <!-- Size Selection -->
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Elige el Tamaño</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Preset Sizes -->
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="size" value="5x5" class="peer sr-only" checked onchange="updatePrice()">
+                                <div class="p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-center group">
+                                    <div class="font-bold text-gray-900 mb-1">5 x 5 cm</div>
+                                    <div class="text-xs text-gray-500">Estándar</div>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="size" value="5.7x5.7" class="peer sr-only" onchange="updatePrice()">
+                                <div class="p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-center">
+                                    <div class="font-bold text-gray-900 mb-1">5.7 x 5.7 cm</div>
+                                    <div class="text-xs text-gray-500">Popular</div>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="size" value="6.2x6.2" class="peer sr-only" onchange="updatePrice()">
+                                <div class="p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-center">
+                                    <div class="font-bold text-gray-900 mb-1">6.2 x 6.2 cm</div>
+                                    <div class="text-xs text-gray-500">Mediano</div>
+                                </div>
+                            </label>
+
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="size" value="6.3x6.3" class="peer sr-only" onchange="updatePrice()">
+                                <div class="p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-center">
+                                    <div class="font-bold text-gray-900 mb-1">6.3 x 6.3 cm</div>
+                                    <div class="text-xs text-gray-500">Destacado</div>
+                                </div>
+                            </label>
+
+                            <!-- Custom Size Option -->
+                            <label class="cursor-pointer relative col-span-2">
+                                <input type="radio" name="size" value="custom" id="customSizeRadio" class="peer sr-only" onchange="updatePrice()">
+                                <div class="p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all text-center flex items-center justify-center gap-2">
+                                    <span class="font-bold text-gray-900">Tamaño Personalizado</span>
+                                    <i class="fas fa-ruler-combined text-gray-400"></i>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Custom Size Inputs -->
+                        <div id="customSizeInputs" class="hidden mt-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm animate-fadeIn">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Ancho (cm)</label>
+                                    <input type="number" id="customWidth" name="custom_width" min="1" step="0.1" value="5" 
+                                           class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                           oninput="updatePrice()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Alto (cm)</label>
+                                    <input type="number" id="customHeight" name="custom_height" min="1" step="0.1" value="5" 
+                                           class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                           oninput="updatePrice()">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2"><i class="fas fa-info-circle"></i> El precio se calculará basado en el área del sticker.</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload Design -->
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Sube tu Diseño</h3>
+                        <div class="relative border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors">
+                            <input type="file" name="design_file" id="designFile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                   accept=".jpg,.jpeg,.png,.pdf,.ai,.psd"
+                                   onchange="handleFileSelect(this)">
+                            <div id="uploadPlaceholder">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-blue-500 mb-2"></i>
+                                <p class="font-medium text-gray-900">Arrastra tu archivo o haz clic</p>
+                                <p class="text-xs text-gray-500">PDF, JPG, PNG, AI</p>
+                            </div>
+                            <div id="fileInfo" class="hidden flex items-center justify-center gap-2 text-green-600 font-medium">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="fileName">archivo.pdf</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Section -->
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Cantidad</h3>
+                        <div class="flex flex-wrap gap-3" id="quantityButtons">
+                            {% for tier in pricing_tiers %}
+                            <button type="button" 
+                                    class="qty-btn px-5 py-3 rounded-xl border-2 font-medium transition-all {% if forloop.first %}border-blue-600 bg-blue-50 text-blue-700{% else %}border-gray-200 text-gray-700 hover:border-blue-300{% endif %}"
+                                    data-qty="{{ tier.min_quantity }}"
+                                    onclick="selectQuantity({{ tier.min_quantity }}, this)">
+                                {{ tier.min_quantity }} u.
+                            </button>
+                            {% endfor %}
+                            
+                            <!-- Custom Quantity Input -->
+                            <div class="relative flex items-center">
+                                <input type="number" id="customQuantity" 
+                                       placeholder="Otra cant." 
+                                       class="w-32 pl-4 pr-2 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:ring-0"
+                                       oninput="handleCustomQuantity(this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Price & CTA -->
+                    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 lg:relative lg:border-none lg:p-0 lg:bg-transparent z-50">
+                        <div class="container-ultrawide lg:px-0 flex items-center justify-between gap-6">
+                            <div class="flex flex-col">
+                                <span class="text-sm text-gray-500">Precio Total Estimado</span>
+                                <div class="text-3xl font-bold text-gray-900">S/ <span id="finalPrice">0.00</span></div>
+                                <span class="text-xs text-gray-400">Incluye IGV</span>
+                            </div>
+                            <button type="button" onclick="submitToCart()" 
+                                    class="flex-1 lg:flex-none bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                Agregar al Carrito
+                                <i class="fas fa-shopping-cart ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Data from Server ---
+    const pricingTiers = {{ pricing_tiers_json|safe }};
+    const baseArea = 25; // 5x5 cm
+
+    function updateMainImage(url) {
+        document.getElementById('mainImage').src = url;
+    }
+
+    function getSelectedSize() {
+        const checked = document.querySelector('input[name="size"]:checked');
+        if (!checked) return null;
+        
+        if (checked.value === 'custom') {
+            const w = parseFloat(document.getElementById('customWidth').value) || 5;
+            const h = parseFloat(document.getElementById('customHeight').value) || 5;
+            return { type: 'custom', width: w, height: h, label: `Custom ${w}x${h} cm` };
+        }
+        
+        // Parse preset WxH
+        const parts = checked.value.split('x');
+        return { 
+            type: 'preset', 
+            width: parseFloat(parts[0]), 
+            height: parseFloat(parts[1]),
+            label: `${checked.value} cm`
+        };
+    }
+
+    function getSizeMultiplier(size) {
+        if (!size) return 1.0;
+        
+        const area = size.width * size.height;
+        let multiplier = area / baseArea;
+        
+        // Ensure multiplier is not smaller than 1.0 (optionally)
+        return Math.max(1.0, multiplier);
+    }
+
+    function updatePrice() {
+        const size = getSelectedSize();
+        
+        // Show/Hide custom inputs
+        const customInputs = document.getElementById('customSizeInputs');
+        if (size && size.type === 'custom') {
+            customInputs.classList.remove('hidden');
+        } else {
+            customInputs.classList.add('hidden');
+        }
+
+        // Update Header
+        if (size) {
+            const headerText = size.type === 'custom' 
+                ? `Tabla de Precios (Base ${size.width}x${size.height} cm)` 
+                : `Tabla de Precios (Base ${size.label})`;
+            document.getElementById('pricingTableHeader').innerText = headerText;
+        }
+        
+        // Calculate Quantity & Unit Price
+        let quantity = parseInt(document.getElementById('selectedQuantity').value) || 100;
+        const customQtyInput = document.getElementById('customQuantity').value;
+        if (customQtyInput) quantity = parseInt(customQtyInput);
+
+        // Find tier for quantity
+        let tier = pricingTiers.find(t => quantity >= t.min_quantity && quantity <= t.max_quantity);
+        if (!tier) tier = pricingTiers[pricingTiers.length - 1]; // Fallback to last tier
+
+        // Parse base price safely
+        const baseUnitPrice = parseFloat(tier.unit_price) || 0;
+        const multiplier = getSizeMultiplier(size);
+        const finalUnitPrice = baseUnitPrice * multiplier;
+        const totalPrice = finalUnitPrice * quantity;
+
+        // Update UI
+        document.getElementById('finalPrice').innerText = totalPrice.toFixed(2);
+        
+        // Update table prices visually
+        document.querySelectorAll('.tier-price').forEach(el => {
+            const rowBase = parseFloat(el.dataset.basePrice) || 0;
+            const newPrice = rowBase * multiplier;
+            // Ensure no zero prices for visual unless base is actually 0
+            el.innerText = newPrice.toFixed(2);
+        });
+    }
+
+    function handleFileSelect(input) {
+        const file = input.files[0];
+        const placeholder = document.getElementById('uploadPlaceholder');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+
+        if (file) {
+            placeholder.classList.add('hidden');
+            fileInfo.classList.remove('hidden');
+            fileName.innerText = file.name;
+        } else {
+            placeholder.classList.remove('hidden');
+            fileInfo.classList.add('hidden');
+        }
+    }
+
+    function selectQuantity(qty, btn) {
+        document.getElementById('selectedQuantity').value = qty;
+        document.getElementById('customQuantity').value = ''; // Clear custom
+        
+        // Update styling
+        document.querySelectorAll('.qty-btn').forEach(b => {
+             b.classList.remove('border-blue-600', 'bg-blue-50', 'text-blue-700');
+             b.classList.add('border-gray-200', 'text-gray-700');
+        });
+        if (btn) {
+            btn.classList.remove('border-gray-200', 'text-gray-700');
+            btn.classList.add('border-blue-600', 'bg-blue-50', 'text-blue-700');
+        }
+        
+        updatePrice();
+    }
+
+    function handleCustomQuantity(val) {
+        if (!val) return;
+        document.getElementById('selectedQuantity').value = val;
+        
+        // Remove active class from buttons
+        document.querySelectorAll('.qty-btn').forEach(b => {
+             b.classList.remove('border-blue-600', 'bg-blue-50', 'text-blue-700');
+             b.classList.add('border-gray-200', 'text-gray-700');
+        });
+        
+        updatePrice();
+    }
+
+    function submitToCart() {
+        const form = document.getElementById('addToCartForm');
+        const formData = new FormData(form);
+        const size = getSelectedSize();
+        
+        // Add custom size info to formData
+        if (size.type === 'custom') {
+            formData.set('size', `Custom: ${size.width}x${size.height} cm`);
+        } else {
+            formData.set('size', `${size.width}x${size.height} cm`); // Clean format
+        }
+        
+        // Add custom quantity if manually entered
+        const customQty = document.getElementById('customQuantity').value;
+        if (customQty) {
+            formData.set('custom_quantity', customQty);
+            formData.set('quantity_tier', 'custom');
+        }
+
+        // Add additional info for backend pricing reconstruction
+        // We will pass the size width/height so backend can recalc
+        formData.append('additional_info', JSON.stringify({
+            width_cm: size.width,
+            height_cm: size.height,
+            sticker_type: 'custom_size'
+        }));
+
+        fetch("{% url 'shop:add_product_to_cart' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Determine redirect URL properly
+                if(data.action && data.action === 'created') {
+                     window.location.href = "/carrito-de-compras/";
+                } else {
+                     window.location.reload();
+                }
+            } else {
+                alert('Error al agregar al carrito: ' + data.error);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Initialize
+    updatePrice();
+</script>
+{% endblock %}

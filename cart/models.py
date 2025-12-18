@@ -278,8 +278,10 @@ class CartItem(models.Model):
         return 0
     
     def get_unit_price(self):
-        """Retorna el precio unitario según el tier de cantidad"""
+        """Retorna el precio unitario según el tier de cantidad, aplicando multiplicadores si es necesario"""
+        base_price = 0
         quantity = self.get_quantity_int()
+        
         if not quantity or not self.product:
             return 0
         
@@ -290,11 +292,32 @@ class CartItem(models.Model):
         ).first()
         
         if tier:
-            return tier.unit_price
-        
-        # Fallback: usar el primer tier disponible
-        first_tier = self.product.price_tiers.order_by('min_quantity').first()
-        return first_tier.unit_price if first_tier else 0
+            base_price = float(tier.unit_price)
+        else:
+            # Fallback: usar el primer tier disponible
+            first_tier = self.product.price_tiers.order_by('min_quantity').first()
+            base_price = float(first_tier.unit_price) if first_tier else 0
+
+        # --- Lógica para multiplicadores de Stickers ---
+        try:
+            if self.additional_info and '{' in self.additional_info:
+                import json
+                info = json.loads(self.additional_info)
+                if 'width_cm' in info and 'height_cm' in info:
+                    width = float(info['width_cm'])
+                    height = float(info['height_cm'])
+                    area = width * height
+                    base_area = 25.0 # 5x5 cm standard
+                    
+                    multiplier = area / base_area
+                    if multiplier < 1.0:
+                        multiplier = 1.0
+                        
+                    base_price = base_price * multiplier
+        except Exception:
+            pass # Si falla el parsing, usa precio base
+
+        return base_price
     
     # ===== MÉTODOS PARA DATOS DE CONTACTO =====
     

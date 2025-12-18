@@ -471,6 +471,8 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         # Use specialized template for bodas subcategory
         if subcategory_slug == 'bodas':
             context['template_name'] = 'shop/bodas_product_detail.html'
+        elif category_slug == 'stickers-etiquetas':
+            context['template_name'] = 'shop/stickers_etiquetas_product_detail.html'
 
     # -------------------------------------------------------------------------
     # 6. DEBUGGING
