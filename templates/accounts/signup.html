@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% trans "Registrarse" %} - Imprenta Gallito{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-2xl w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border border-gray-100">
+        <div class="text-center">
+            <h2 class="mt-2 text-3xl font-extrabold text-gray-900 font-display">
+                {% trans "Crear una cuenta" %}
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                {% trans "Únete a nosotros para una mejor experiencia" %}
+            </p>
+        </div>
+
+        <form class="mt-8 space-y-6" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if user_form.errors or profile_form.errors %}
+            <div class="rounded-md bg-red-50 p-4 mb-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">
+                            {% trans "Por favor corrige los siguientes errores:" %}
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            {{ user_form.non_field_errors }}
+                            {{ profile_form.non_field_errors }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                <!-- User Form Fields -->
+                <div class="sm:col-span-2 text-lg font-medium text-gray-900 border-b pb-2 mb-2">Información de Usuario</div>
+                
+                {% for field in user_form %}
+                <div class="{% if field.name == 'username' or field.name == 'email' %}sm:col-span-2{% endif %}">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ field.label }}{% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                    </label>
+                    <div class="mt-1">
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Profile Form Fields -->
+                <div class="sm:col-span-2 text-lg font-medium text-gray-900 border-b pb-2 mb-2 mt-4">Información de Perfil</div>
+
+                {% for field in profile_form %}
+                <div class="{% if field.name == 'address' %}sm:col-span-2{% endif %}">
+                     <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ field.label }}{% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                    </label>
+                    <div class="mt-1">
+                        {{ field }}
+                         {% if field.help_text %}
+                        <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-primary hover:bg-brand-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary transition-all duration-200 shadow-md hover:shadow-lg">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <i class="fas fa-user-plus text-brand-primary-dark group-hover:text-white transition-colors"></i>
+                    </span>
+                    {% trans "Registrarse" %}
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-600">
+                {% trans "¿Ya tienes una cuenta?" %}
+                <a href="{% url 'signin' %}" class="font-medium text-brand-primary hover:text-brand-primary-dark transition-colors">
+                    {% trans "Inicia sesión aquí" %}
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add Tailwind classes to inputs rendered by Django forms if they are not added by widgets
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="file"], select, textarea');
+        inputs.forEach(input => {
+            if (!input.classList.contains('appearance-none')) {
+                input.classList.add('appearance-none', 'block', 'w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'shadow-sm', 'placeholder-gray-400', 'focus:outline-none', 'focus:ring-brand-primary', 'focus:border-brand-primary', 'sm:text-sm');
+            }
+        });
+        
+        // Specific fix for file input if needed styling
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        fileInputs.forEach(input => {
+             input.classList.add('py-2', 'px-3', 'bg-white');
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Location Dropdown Logic -->
+    <script>
+        function get_provinces() {
+            return new Promise(function (resolve, reject) {
+                var val_d = $("#id_shipping_department").val();
+                $.ajax({
+                    url: "/province/",
+                    data: { d_name: val_d },
+                }).done(function (result) {
+                    $("#id_shipping_province").html(result);
+                    resolve(result);
+                });
+            });
+        }
+
+        function get_districts() {
+            return new Promise(function (resolve, reject) {
+                var val_d = $("#id_shipping_department").val();
+                var val_p = $("#id_shipping_province").val();
+                $.ajax({
+                    url: "/district/",
+                    data: { 
+                        d_name: val_d,
+                        p_name: val_p 
+                    },
+                }).done(function (result) {
+                    $("#id_shipping_district").html(result);
+                    resolve(result);
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            $("#id_shipping_department").change(async function () {
+                await get_provinces();
+                await get_districts();
+            });
+
+            $("#id_shipping_province").change(async function () {
+                await get_districts();
+            });
+        });
+    </script>
+{% endblock %}
+

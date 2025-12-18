@@ -739,6 +739,18 @@ class Profile(models.Model):
     shipping_district = models.CharField(max_length=100, blank=False)
     photo = models.ImageField(upload_to='profile_pics', default='profile_pics/default_profile_pic_white.png')
 
+    @property
+    def is_complete(self):
+        required_fields = [
+            self.dni, 
+            self.phone_number, 
+            self.shipping_address1, 
+            self.shipping_department, 
+            self.shipping_province, 
+            self.shipping_district,
+        ]
+        return all(field and str(field).strip() for field in required_fields)
+
     def __str__(self):
         return str(self.user.first_name) + "'s profile"
 
@@ -797,100 +809,3 @@ class DesignTemplate(models.Model):
     def __str__(self):
         return f"{self.name} ({self.category.name})"
 
-
-# ============================================================================
-# MODELOS LEGACY (Para compatibilidad - considerar migrar o eliminar)
-# ============================================================================
-
-class TarjetaPresentacion(models.Model):
-    name = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='tarjetas_presentacion', blank=True, null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    type = models.CharField(max_length=20,
-                            choices=[('standard', 'Standard'), ('premium', 'Premium'), ('deluxe', 'Deluxe')],
-                            default='standard')
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Folleto(models.Model):
-    name = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='folletos', blank=True, null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Poster(models.Model):
-    name = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='posters', blank=True, null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Etiqueta(models.Model):
-    name = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='etiquetas', blank=True, null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Empaque(models.Model):
-    name = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250, unique=True)
-    description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='empaques', blank=True, null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-
-# ============================================================================
-# NOTA SOBRE MODELOS ELIMINADOS:
-# ============================================================================
-# Los siguientes modelos han sido ELIMINADOS y reemplazados por el sistema
-# genérico de opciones (ProductOption + ProductOptionValue + ProductVariant):
-#
-# - ProductColor → usar ProductOption(key='color') + ProductOptionValue
-# - ProductSize → usar ProductOption(key='size') + ProductOptionValue
-# - VariantType → usar ProductOption
-# - VariantOption → usar ProductOptionValue
-# - ProductVariantType → usar ProductVariant
-#
-# Los campos eliminados de Product:
-# - available_colors (ManyToMany) → ahora via ProductVariant
-# - available_sizes (ManyToMany) → ahora via ProductVariant
-#
-# Para migrar datos existentes, ejecutar:
-# python manage.py migrate_colors_to_options  (crear este comando)
-# ============================================================================

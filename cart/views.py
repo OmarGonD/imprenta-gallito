@@ -16,7 +16,86 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
+from .models import Cart, CartItem
+from shop.models import Product, ProductOptionValue, Peru
+from marketing.models import Cupons
+from decimal import Decimal
+from django.conf import settings
+
 # Create your views here.
+
+@login_required
+def checkout(request):
+    """
+    Vista de checkout que valida el perfil antes de permitir el pago.
+    """
+    try:
+        profile = request.user.profile
+        if not profile.is_complete:
+            messages.warning(request, "Por favor complete su información de envío y contacto antes de procesar el pago.")
+            return redirect('shop:profile_edit')
+    except ObjectDoesNotExist:
+        messages.warning(request, "Por favor complete su perfil.")
+        return redirect('shop:profile_edit')
+
+    # Obtener el carrito
+    try:
+        cart_id = request.COOKIES.get('cart_id')
+        cart = Cart.objects.get(id=cart_id)
+        cart_items = CartItem.objects.filter(cart=cart)
+        
+        # Recalcular totales (similar a cart_detail)
+        total = 0
+        for item in cart_items:
+            total += Decimal(item.sub_total)
+            
+        # Lógica de costos de envío y cupones (simplificada o reutilizada)
+        costo_despacho = 15
+        if request.user.is_authenticated and profile.shipping_department:
+             try:
+                costo_despacho = Peru.objects.filter(
+                    departamento=profile.shipping_department,
+                    provincia=profile.shipping_province,
+                    distrito=profile.shipping_district
+                ).values_list("costo_despacho_con_recojo", flat=True)[0]
+             except:
+                costo_despacho = 15
+                
+        descuento_por_cupon = 0
+        try:
+             cupon = Cupons.objects.get(cupon=request.COOKIES.get("cupon"))
+             if cupon:
+                if cupon.free_shipping:
+                    descuento_por_cupon += costo_despacho
+                elif cupon.hard_discount:
+                    descuento_por_cupon += round(Decimal(cupon.hard_discount),2)
+                elif cupon.percentage:
+                    cupon_percentage = int(cupon.percentage) / int(100)
+                    descuento_por_cupon += round(total * Decimal(cupon_percentage),2)
+        except:
+             pass
+             
+        total_a_pagar = Decimal(total) + Decimal(costo_despacho) - Decimal(descuento_por_cupon)
+        
+        context = {
+            'cart': cart,
+            'cart_items': cart_items,
+            'total': total,
+            'costo_despacho': costo_despacho,
+            'descuento_por_cupon': descuento_por_cupon,
+            'total_a_pagar': total_a_pagar,
+            'culqi_public_key': settings.CULQI_PUBLISHABLE_KEY, # Pass key explicitly
+            'user_email': request.user.email
+        }
+        return render(request, 'cart/checkout.html', context)
+        
+    except (Cart.DoesNotExist, ObjectDoesNotExist):
+        return redirect('shop:home')
+
 
 @require_POST
 def add_to_cart(request, product_slug):

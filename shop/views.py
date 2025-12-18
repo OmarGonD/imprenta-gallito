@@ -28,10 +28,8 @@ from django.db.models import Q, Count, Min, Prefetch
 # =============================================================================
 from shop.models import (
     Profile, Peru, Category, Subcategory, Product,
-    ProductOption, ProductOptionValue, ProductVariant,  # ← NUEVO SISTEMA
-    ProductImage,
-    TarjetaPresentacion, Folleto, Poster, Etiqueta, Empaque,
-    DesignTemplate, PriceTier
+    ProductOption, ProductOptionValue, ProductVariant,
+    ProductImage, DesignTemplate, PriceTier
 )
 from shop.tokens import account_activation_token
 from cart.models import Cart, CartItem
@@ -904,52 +902,7 @@ def template_gallery_view(request, category_slug, product_slug):
     return render(request, 'shop/template_gallery.html', context)
 
 
-# ============================================================================
-# LEGACY LIST VIEWS
-# ============================================================================
 
-class FolletosListView(ListView):
-    model = Folleto
-    template_name = 'shop/folletos.html'
-    context_object_name = 'folletos-list'
-
-
-class PostersListView(ListView):
-    model = Poster
-    template_name = 'shop/posters.html'
-    context_object_name = 'posters'
-
-
-class EtiquetasListView(ListView):
-    model = Etiqueta
-    template_name = 'shop/etiquetas.html'
-    context_object_name = 'etiquetas'
-
-
-class EmpaquesListView(ListView):
-    model = Empaque
-    template_name = 'shop/empaques.html'
-    context_object_name = 'empaques'
-
-
-# ============================================================================
-# STATIC PAGES
-# ============================================================================
-
-def productos_promocionales(request):
-    return render(request, 'shop/productos_promocionales.html')
-
-def empaques(request):
-    return render(request, 'shop/empaques.html')
-
-def invitaciones_regalos(request):
-    return render(request, 'shop/invitaciones_regalos.html')
-
-def bodas(request):
-    return render(request, 'shop/bodas.html')
-
-def servicios_diseno(request):
-    return render(request, 'shop/servicios_diseno.html')
 
 
 # ============================================================================
@@ -1294,7 +1247,7 @@ def signinView(request):
                 return redirect('signup')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/signin.html', {'form': form})
+    return render(request, 'account/login.html', {'form': form})
 
 
 def signoutView(request):
@@ -1408,7 +1361,7 @@ def signupView(request):
             user.save()
             username = user_form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
-            customer_group = Group.objects.get(name='Clientes')
+            customer_group, created = Group.objects.get_or_create(name='Clientes')
             customer_group.user_set.add(signup_user)
             raw_password = user_form.cleaned_data.get('password1')
             user.refresh_from_db()
