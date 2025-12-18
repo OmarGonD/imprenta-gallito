@@ -1,9 +1,13 @@
 $(document).ready(function() {
 
-    var docHeight = $(window).height();
-    var footerHeight = $('#footer-navbar').height();
-    var footerTop = $('#footer-navbar').position().top + footerHeight;
+    var $footer = $('#footer-navbar');
+    
+    if ($footer.length > 0) {
+        var docHeight = $(window).height();
+        var footerHeight = $footer.height();
+        var footerTop = $footer.position().top + footerHeight;
 
-    if (footerTop < docHeight)
-        $('#footer-navbar').css('margin-top', 10+ (docHeight - footerTop) + 'px');
+        if (footerTop < docHeight)
+            $footer.css('margin-top', 10+ (docHeight - footerTop) + 'px');
+    }
 });

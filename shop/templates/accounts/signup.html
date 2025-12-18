@@ -176,61 +176,6 @@
             </div>
         </div>
 
-        <!-- NEW Javascript --- collects correctly Province and District -->
-
-        <script>
-
-            function get_provinces() {
-                // notice the promise
-                return new Promise(function (resolve, reject) {
-                    var val_d = $("#id_shipping_department").val()
-                    $.ajax({
-                        url: "/province/",
-                        data: { // Pass parameters in separate object
-                            d_name: val_d
-                        },
-                    }).done(function (result) {
-                        $("#id_shipping_province").html(result);
-                        resolve(result)
-                    });
-                });
-            }
-
-
-            function get_districts() {
-                return new Promise(function (resolve, reject) {
-                    var val_d = $("#id_shipping_department").val()
-                    var val_p = $("#id_shipping_province").val()
-                    $.ajax({
-                        url: "/district/",
-                        data: { // Pass parameters in separate object
-                            d_name: val_d,
-                            p_name: val_p
-                        },
-                    }).done(function (result) {
-                        $("#id_shipping_district").html(result);
-                        resolve(result)
-                    });
-                });
-            }
-
-            $("document").ready(function () {
-                $("#id_shipping_department").change(async /* <--- */ function () {
-                    await /* <--- */ get_provinces();
-                    await /* <--- */ get_districts();
-
-                });
-
-                $("#id_shipping_province").change(async /* <--- */ function () {
-                    await get_districts();
-                });
-
-            });
-        </script>
-
-
-        <!-- END of new Javascript -->
-
     {% else %}
         <div class="container">
             <br>
@@ -278,5 +223,59 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block extra_js %}
+    <!-- NEW Javascript --- collects correctly Province and District -->
+    <script>
+
+        function get_provinces() {
+            // notice the promise
+            return new Promise(function (resolve, reject) {
+                var val_d = $("#id_shipping_department").val()
+                $.ajax({
+                    url: "/province/",
+                    data: { // Pass parameters in separate object
+                        d_name: val_d
+                    },
+                }).done(function (result) {
+                    $("#id_shipping_province").html(result);
+                    resolve(result)
+                });
+            });
+        }
+
+
+        function get_districts() {
+            return new Promise(function (resolve, reject) {
+                var val_d = $("#id_shipping_department").val()
+                var val_p = $("#id_shipping_province").val()
+                $.ajax({
+                    url: "/district/",
+                    data: { // Pass parameters in separate object
+                        d_name: val_d,
+                        p_name: val_p
+                    },
+                }).done(function (result) {
+                    $("#id_shipping_district").html(result);
+                    resolve(result)
+                });
+            });
+        }
+
+        $("document").ready(function () {
+            $("#id_shipping_department").change(async /* <--- */ function () {
+                await /* <--- */ get_provinces();
+                await /* <--- */ get_districts();
+
+            });
+
+            $("#id_shipping_province").change(async /* <--- */ function () {
+                await get_districts();
+            });
+
+        });
+    </script>
+    <!-- END of new Javascript -->
 {% endblock %}
 

@@ -29,6 +29,7 @@ urlpatterns = [
     path('ingresar/', views.signinView, name='signin'),
     path('salir/', views.signoutView, name='signout'),
     path('province/', views.get_province, name='province'),
+    path('district/', views.get_district, name='district'),
     path('', include('shop.urls')),
 ]
 
