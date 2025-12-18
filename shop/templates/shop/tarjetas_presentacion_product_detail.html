@@ -318,12 +318,14 @@
     <!-- Main Product Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
         <!-- Left: Image -->
-        <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center">
-            {% if product.base_image_url %}
-                <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg">
-            {% else %}
-                <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg">
-            {% endif %}
+        <div>
+            <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center sticky top-24">
+                {% if product.base_image_url %}
+                    <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% else %}
+                    <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% endif %}
+            </div>
         </div>
 
         <!-- Right: Options -->
