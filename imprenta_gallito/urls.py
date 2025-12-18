@@ -24,12 +24,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('carrito-de-compras/', include('cart.urls')),
-    path('', include('shop.urls')),
     path('marketing/', include('marketing.urls')),
     path('registrarse/', views.signupView, name='signup'),
     path('ingresar/', views.signinView, name='signin'),
     path('salir/', views.signoutView, name='signout'),
     path('province/', views.get_province, name='province'),
+    path('', include('shop.urls')),
 ]
 
 if settings.DEBUG:
