@@ -367,7 +367,7 @@
                         {% for color in available_colors %}
                         <button type="button"
                                 class="color-swatch {% if selected_color and color.value == selected_color.value %}active{% endif %}"
-                                style="background-color: {{ color.hex_code }};"
+                                style="background-color: {{ color.hex_code|default:color.value }};"
                                 data-color-slug="{{ color.value }}"
                                 data-color-name="{{ color.display_name|default:color.value }}"
                                 title="{{ color.display_name|default:color.value }}"

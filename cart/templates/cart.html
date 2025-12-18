@@ -280,22 +280,26 @@
                         <!-- Subtotal -->
                         <div class="flex justify-between items-center py-3 border-b border-gray-200">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-semibold text-gray-900">S/ {{ total_price|floatformat:2 }}</span>
+                            <span class="font-semibold text-gray-900">S/ {{ total|floatformat:2 }}</span>
                         </div>
 
                         <!-- Envío -->
                         <div class="flex justify-between items-center py-3 border-b border-gray-200">
                             <span class="text-gray-600">Envío</span>
+                            {% if costo_despacho > 0 %}
+                            <span class="font-semibold text-gray-900">S/ {{ costo_despacho|floatformat:2 }}</span>
+                            {% else %}
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
                                 <i class="fas fa-check-circle"></i>
                                 Gratis
                             </span>
+                            {% endif %}
                         </div>
 
                         <!-- Total -->
                         <div class="flex justify-between items-center py-4 mt-2">
                             <span class="text-lg font-bold text-gray-900">Total</span>
-                            <span class="text-2xl font-bold text-blue-600">S/ {{ total_price|floatformat:2 }}</span>
+                            <span class="text-2xl font-bold text-blue-600">S/ {{ total_a_pagar|floatformat:2 }}</span>
                         </div>
 
                         <!-- Cupón -->
