@@ -103,13 +103,70 @@
     </div>
 </div>
 
+<style>
+    /* Custom dropdown styling for location selects */
+    .location-dropdown {
+        appearance: auto !important; /* Restore native dropdown arrow */
+        -webkit-appearance: menulist !important;
+        -moz-appearance: menulist !important;
+        background-color: white;
+        cursor: pointer;
+        padding-right: 2.5rem !important;
+    }
+    
+    /* Wrapper for dropdown with scroll indicator */
+    .dropdown-wrapper {
+        position: relative;
+    }
+    
+    .dropdown-wrapper::after {
+        content: "▼ Desliza para más opciones";
+        position: absolute;
+        right: 0;
+        top: 100%;
+        font-size: 0.7rem;
+        color: #6b7280;
+        margin-top: 2px;
+        opacity: 0.8;
+    }
+    
+    /* Hover effect for dropdowns */
+    .location-dropdown:hover {
+        border-color: #9ca3af;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .location-dropdown:focus {
+        border-color: var(--brand-primary, #0ea5e9);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+    }
+</style>
 <script>
     // Add Tailwind classes to inputs rendered by Django forms if they are not added by widgets
     document.addEventListener('DOMContentLoaded', function() {
-        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="file"], select, textarea');
-        inputs.forEach(input => {
+        // Style regular inputs (not selects)
+        const textInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="file"], textarea');
+        textInputs.forEach(input => {
             if (!input.classList.contains('appearance-none')) {
                 input.classList.add('appearance-none', 'block', 'w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'shadow-sm', 'placeholder-gray-400', 'focus:outline-none', 'focus:ring-brand-primary', 'focus:border-brand-primary', 'sm:text-sm');
+            }
+        });
+        
+        // Style select elements separately - keep native appearance for dropdown arrow
+        const selects = document.querySelectorAll('select');
+        selects.forEach(select => {
+            select.classList.add('location-dropdown', 'block', 'w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'shadow-sm', 'focus:outline-none', 'focus:ring-brand-primary', 'focus:border-brand-primary', 'sm:text-sm');
+            
+            // Wrap location dropdowns with hint
+            if (select.id === 'id_shipping_department' || select.id === 'id_shipping_province' || select.id === 'id_shipping_district') {
+                // Add hint below the dropdown
+                const wrapper = select.parentElement;
+                if (wrapper && !wrapper.querySelector('.scroll-hint')) {
+                    const hint = document.createElement('p');
+                    hint.className = 'scroll-hint text-xs text-gray-500 mt-1 flex items-center';
+                    hint.innerHTML = '<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>Haz clic para ver todas las opciones';
+                    wrapper.appendChild(hint);
+                }
             }
         });
         

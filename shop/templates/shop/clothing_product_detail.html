@@ -329,7 +329,7 @@
         <div>
             <!-- Main Image -->
             <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center mb-4">
-                <img id="main-product-image" src="{{ base_image_url }}" alt="{{ product.name }}" 
+                <img id="main-product-image" src="{% if detail_image_url %}{{ detail_image_url }}{% else %}{{ base_image_url }}{% endif %}" alt="{{ product.name }}" 
                      class="max-w-full h-auto rounded-lg" style="max-height: 600px;">
             </div>
 
@@ -525,6 +525,41 @@
                     </p>
                 </div>
                 {% endif %}
+
+                <!-- Uploaded Design Preview (shown when returning from template gallery) -->
+                <div id="uploaded-design-preview" class="mb-6 hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        <span class="inline-flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Tu diseño está listo
+                        </span>
+                    </label>
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4">
+                        <div class="flex items-center gap-4">
+                            <div id="uploaded-preview-image" class="flex-shrink-0"></div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-gray-900 truncate" id="uploaded-file-name"></p>
+                                <p class="text-sm text-gray-500" id="uploaded-file-size"></p>
+                                <div class="flex items-center gap-3 mt-2">
+                                    <button type="button" onclick="changeUploadedDesign()" class="text-sm text-blue-600 hover:text-blue-700 font-medium inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                        Cambiar
+                                    </button>
+                                    <button type="button" onclick="removeUploadedDesign()" class="text-sm text-red-600 hover:text-red-700 font-medium inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- File Upload Section -->
                 <div id="file-upload-section" class="mb-6">
@@ -1108,7 +1143,107 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar estado del botón
     updateAddToCartButton();
     console.log('✅ Sistema de subida de archivos configurado');
+    
+    // ===== CHECK FOR UPLOADED DESIGN FROM TEMPLATE GALLERY =====
+    checkForUploadedDesign();
 });
+
+// Function to check for uploaded design from template gallery
+function checkForUploadedDesign() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasDesignUploaded = urlParams.get('design_uploaded') === 'true';
+    
+    if (!hasDesignUploaded) return;
+    
+    const designName = sessionStorage.getItem('uploadedDesignName');
+    const designSize = sessionStorage.getItem('uploadedDesignSize');
+    const designData = sessionStorage.getItem('uploadedDesignData');
+    const designType = sessionStorage.getItem('uploadedDesignType');
+    
+    if (!designName || !designData) {
+        console.log('[DesignPreview] No design found in sessionStorage');
+        return;
+    }
+    
+    console.log('[DesignPreview] Found uploaded design:', designName);
+    
+    const previewSection = document.getElementById('uploaded-design-preview');
+    const previewImage = document.getElementById('uploaded-preview-image');
+    const fileNameEl = document.getElementById('uploaded-file-name');
+    const fileSizeEl = document.getElementById('uploaded-file-size');
+    
+    if (!previewSection || !previewImage) return;
+    
+    fileNameEl.textContent = designName;
+    fileSizeEl.textContent = formatFileSizeFromBytes(parseInt(designSize));
+    
+    if (designType && designType.startsWith('image/')) {
+        previewImage.innerHTML = `<img src="${designData}" alt="Preview" class="w-24 h-24 object-cover rounded-lg border-2 border-green-200 shadow-sm">`;
+    } else {
+        let iconColor = 'text-gray-500', iconClass = 'fa-file-alt';
+        if (designName.endsWith('.pdf')) { iconColor = 'text-red-500'; iconClass = 'fa-file-pdf'; }
+        else if (designName.endsWith('.ai')) { iconColor = 'text-orange-500'; iconClass = 'fa-file-image'; }
+        else if (designName.endsWith('.psd')) { iconColor = 'text-blue-500'; iconClass = 'fa-file-image'; }
+        previewImage.innerHTML = `<div class="w-24 h-24 rounded-lg bg-white border-2 border-green-200 flex items-center justify-center shadow-sm"><i class="fas ${iconClass} text-4xl ${iconColor}"></i></div>`;
+    }
+    
+    previewSection.classList.remove('hidden');
+    
+    const fileUploadSection = document.getElementById('file-upload-section');
+    if (fileUploadSection) fileUploadSection.classList.add('hidden');
+    
+    const addToCartBtn = document.getElementById('add-to-cart');
+    const validationMsg = document.getElementById('validation-message');
+    if (addToCartBtn) {
+        addToCartBtn.disabled = false;
+        addToCartBtn.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl';
+    }
+    if (validationMsg) validationMsg.classList.add('hidden');
+    
+    window.designFromGallery = true;
+}
+
+function formatFileSizeFromBytes(bytes) {
+    if (!bytes || isNaN(bytes)) return '';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+window.changeUploadedDesign = function() {
+    sessionStorage.removeItem('uploadedDesignName');
+    sessionStorage.removeItem('uploadedDesignSize');
+    sessionStorage.removeItem('uploadedDesignData');
+    sessionStorage.removeItem('uploadedDesignType');
+    window.location.reload();
+};
+
+window.removeUploadedDesign = function() {
+    sessionStorage.removeItem('uploadedDesignName');
+    sessionStorage.removeItem('uploadedDesignSize');
+    sessionStorage.removeItem('uploadedDesignData');
+    sessionStorage.removeItem('uploadedDesignType');
+    
+    const previewSection = document.getElementById('uploaded-design-preview');
+    if (previewSection) previewSection.classList.add('hidden');
+    
+    const fileUploadSection = document.getElementById('file-upload-section');
+    if (fileUploadSection) fileUploadSection.classList.remove('hidden');
+    
+    const addToCartBtn = document.getElementById('add-to-cart');
+    const validationMsg = document.getElementById('validation-message');
+    if (addToCartBtn) {
+        addToCartBtn.disabled = true;
+        addToCartBtn.className = 'w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-lg cursor-not-allowed transition-all';
+    }
+    if (validationMsg) validationMsg.classList.remove('hidden');
+    
+    const url = new URL(window.location.href);
+    url.searchParams.delete('design_uploaded');
+    window.history.replaceState({}, '', url);
+    
+    window.designFromGallery = false;
+};
 </script>
 
 {% endblock %}

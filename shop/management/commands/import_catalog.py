@@ -222,6 +222,8 @@ class Command(BaseCommand):
                 # NUEVO: Importar imágenes con option_value
                 if not self.only or self.only in ['images', 'polos']:
                     counts['product_images'] = self.import_product_images()
+                    # Also import product images from static files (files mapping)
+                    counts['product_images'] += self.import_product_images_from_static()
                 
                 if not self.only or self.only == 'prices':
                     counts['price_tiers'] = self.import_price_tiers()
@@ -234,6 +236,31 @@ class Command(BaseCommand):
                 # NUEVO: Actualizar códigos HEX de colores (lógica integrada de update_polo_hexes)
                 if not self.only or self.only in ['product_options', 'polos', 'colors']:
                     self.update_hex_codes()
+
+                # Resumen
+                self.stdout.write('\n' + '=' * 70)
+                self.stdout.write(self.style.SUCCESS('IMPORTACIÓN COMPLETADA'))
+                self.stdout.write('=' * 70)
+                self.stdout.write(f'\nRegistros importados:')
+                
+                for key, count in counts.items():
+                    if count > 0:
+                        self.stdout.write(f'   • {key.replace("_", " ").title()}: {count}')
+                
+                total = sum(counts.values())
+                self.stdout.write(f'\nTotal: {total} registros')
+                
+                if self.dry_run:
+                    self.stdout.write(self.style.WARNING('\nDRY-RUN: Revertiendo transacción...'))
+                    raise Exception('Dry run - rolling back')
+                    
+        except Exception as e:
+            if not self.dry_run:
+                self.stdout.write(self.style.ERROR(f'\nError: {str(e)}'))
+                raise
+            else:
+                self.stdout.write(self.style.SUCCESS('\n✓ Dry-run completado'))
+
 
     def update_hex_codes(self):
         """Actualiza los códigos hexadecimales de los colores basándose en un mapa predefinido."""
@@ -370,29 +397,6 @@ class Command(BaseCommand):
         
         self.stdout.write(f'   OK {updated_count} colores actualizados con HEX')
                 
-                # Resumen
-                self.stdout.write('\n' + '=' * 70)
-                self.stdout.write(self.style.SUCCESS('IMPORTACIÓN COMPLETADA'))
-                self.stdout.write('=' * 70)
-                self.stdout.write(f'\nRegistros importados:')
-                
-                for key, count in counts.items():
-                    if count > 0:
-                        self.stdout.write(f'   • {key.replace("_", " ").title()}: {count}')
-                
-                total = sum(counts.values())
-                self.stdout.write(f'\nTotal: {total} registros')
-                
-                if self.dry_run:
-                    self.stdout.write(self.style.WARNING('\nDRY-RUN: Revertiendo transacción...'))
-                    raise Exception('Dry run - rolling back')
-                    
-        except Exception as e:
-            if not self.dry_run:
-                self.stdout.write(self.style.ERROR(f'\nError: {str(e)}'))
-                raise
-            else:
-                self.stdout.write(self.style.SUCCESS('\n✓ Dry-run completado'))
 
     def confirm_action(self, message):
         """Solicita confirmación del usuario"""
@@ -1277,6 +1281,7 @@ class Command(BaseCommand):
         category_mappings = {
             'tarjetas_presentacion': 'tarjetas-presentacion',
             'invitaciones_papeleria': 'invitaciones-papeleria',
+            'calendarios_regalos': 'calendarios-regalos',
         }
         
         total_created = 0
@@ -1296,6 +1301,14 @@ class Command(BaseCommand):
             
             self.stdout.write(f'\n  Procesando: {folder_name} -> {category.name}')
             
+            # SPECIAL CASE: CALENDARIOS (Products as folders)
+            if category_slug == 'calendarios-regalos':
+                 # Passing the BASE folder path (e.g. static/media/template_images/calendarios_regalos)
+                 created, updated = self._import_calendarios_nested(folder_path, category)
+                 total_created += created
+                 total_updated += updated
+                 continue
+
             # Check if this folder has subfolders (like bodas has product subfolders)
             items = os.listdir(folder_path)
             subdirs = [d for d in items if os.path.isdir(os.path.join(folder_path, d))]
@@ -1317,6 +1330,8 @@ class Command(BaseCommand):
                          total_created += created
                          total_updated += updated
                          continue
+
+                    # Removed previous calendarios check here because we handle it at category level now
                     
                     created, updated = self._import_templates_from_folder(
                         subdir_path, category, subcategory, f'{folder_name}/{subdir}'
@@ -1401,8 +1416,8 @@ class Command(BaseCommand):
             'guarda_la_fecha': 'guarda-la-fecha',
             'servilletas': 'servilletas',
             'carteles_carton_espuma': 'carteles-carton-espuma',
-            'invitaciones_despedida_soltera': 'invitaciones-despedida-soltera',
-            'libro_firmas_invitados': 'libro-firmas-invitados',
+            'invitaciones_despedida_soltera': 'invitaciones-despedida-de-soltera',
+            'libro_firmas_invitados': 'libro-de-firmas',
             'programas_boda': 'programas-boda',
             'tarjetas_de_gracias': 'tarjetas-de-gracias',
             'tarjetas_informativas': 'tarjetas-informativas',
@@ -1477,6 +1492,198 @@ class Command(BaseCommand):
                             total_updated += 1
                     except Exception as e:
                          # Silently skip
+                         pass
+                else:
+                    total_created += 1
+                    
+        return total_created, total_updated
+                    
+    def import_product_images_from_static(self):
+        """
+        Importa imágenes de productos desde static/media/product_images
+        Convención:
+        - slug.jpg -> Imagen Principal (Product.base_image_url)
+        - slug-detalle.jpg -> Imagen de Galería (ProductImage)
+        """
+        self.stdout.write('Importando imágenes de productos desde archivos estáticos...')
+        
+        base_path = os.path.join(settings.BASE_DIR, 'static', 'media', 'product_images')
+        
+        if not os.path.exists(base_path):
+            self.stdout.write(self.style.WARNING(f'    SKIP Directorio no encontrado: {base_path}\n'))
+            return 0
+            
+        total_updated_main = 0
+        total_created_detail = 0
+        
+        # Walk through all directories
+        for root, dirs, files in os.walk(base_path):
+            if not files:
+                continue
+                
+            relative_path = os.path.relpath(root, base_path)
+            self.stdout.write(f'  Escaneando: {relative_path}')
+            
+            image_extensions = ('.jpg', '.jpeg', '.png', '.webp')
+            images = [f for f in files if f.lower().endswith(image_extensions)]
+            
+            for image_file in images:
+                file_slug = os.path.splitext(image_file)[0].lower()
+                
+                # Determine type and product slug
+                is_detail = False
+                product_slug = file_slug
+                
+                if file_slug.endswith('-detalle'):
+                    is_detail = True
+                    product_slug = file_slug[:-8] # Remove '-detalle'
+                
+                # Try to find product
+                try:
+                    product = Product.objects.get(slug=product_slug)
+                except Product.DoesNotExist:
+                    # Silent skip or verbose debug?
+                    # self.stdout.write(f'    SKIP Producto no encontrado: {product_slug}')
+                    continue
+                
+                # Construct URL
+                # Path relative to static/media is what we want? 
+                # Or relative to MEDIA_ROOT? 
+                # Existing import uses /static/media/... so let's stick to that for consistence
+                # root is absolute path.
+                rel_dir = os.path.relpath(root, settings.BASE_DIR).replace('\\', '/')
+                if not rel_dir.startswith('/'):
+                    rel_dir = '/' + rel_dir
+                
+                image_url = f'{rel_dir}/{image_file}'
+                
+                if not self.dry_run:
+                    if is_detail:
+                        # Gallery Image
+                        _, created = ProductImage.objects.update_or_create(
+                            product=product,
+                            image_url=image_url,
+                            defaults={
+                                'is_primary': True, # It's a high res detail image
+                                'display_order': 0,
+                                'alt_text': f'{product.name} - Detalle'
+                            }
+                        )
+                        if created:
+                            total_created_detail += 1
+                    else:
+                        # Main Image (Thumbnail)
+                        # Only update if empty or if forced? 
+                        # Let's update to ensure it matches file
+                        product.base_image_url = image_url
+                        if not product.hover_image_url:
+                            product.hover_image_url = image_url
+                        product.save()
+                        total_updated_main += 1
+                else:
+                    if is_detail:
+                        total_created_detail += 1
+                    else:
+                        total_updated_main += 1
+        
+        self.stdout.write(self.style.SUCCESS(f'    ✓ Imágenes: {total_updated_main} principales actualizadas | {total_created_detail} detalles creados/actualizados'))
+        self.stdout.write('')
+        return total_created_detail # Return count of new records (ProductImage)
+
+    def _import_calendarios_nested(self, base_path, category):
+        """
+        Importa templates de calendarios que tienen estructura anidada.
+        """
+        try:
+            subcategory = Subcategory.objects.get(slug='calendarios-familiares', category=category)
+        except Subcategory.DoesNotExist:
+            self.stdout.write(self.style.WARNING('    Subcategoría "calendarios-familiares" no encontrada, omitiendo...'))
+            return 0, 0
+            
+        folder_to_product = {
+            'calendarios_magneticos': 'calendario-magnetico',
+            'calendarios_escritorio': 'calendario-escritorio', 
+            'calendarios_marcapaginas': 'calendario-marcapaginas',
+            'calendarios_mousepad': 'calendario-mousepad',
+            'calendarios_pared': 'calendario-pared',
+            'calendarios_poster': 'tipos-calendario-poster',
+            'calendarios': 'calendarios-familiares', # Generic/Fallback
+            'calendarios_familiares': 'calendarios-familiares', # Generic/Fallback
+        }
+        
+        total_created = 0
+        total_updated = 0
+        
+        if not os.path.exists(base_path):
+            return 0, 0
+            
+        try:
+            items = os.listdir(base_path)
+        except OSError:
+            return 0, 0
+
+        for folder_name in items:
+            folder_path = os.path.join(base_path, folder_name)
+            
+            if not os.path.isdir(folder_path):
+                continue
+
+            # Determine product slug
+            product_slug = folder_to_product.get(folder_name)
+            if not product_slug:
+                 # If not mapped, use folder name as product slug (or generic identifier)
+                 # User asked to load ALL.
+                 product_slug = folder_name.replace('_', '-')
+            
+            # Get all image files
+            image_extensions = ('.jpg', '.jpeg', '.png', '.webp', '.svg')
+            try:
+                images = [f for f in os.listdir(folder_path) if f.lower().endswith(image_extensions)]
+            except OSError:
+                continue
+            
+            if not images:
+                continue
+
+            self.stdout.write(f'     > Calendarios: {product_slug} ({len(images)} imgs)')
+            
+            for i, image_file in enumerate(images):
+                file_slug = os.path.splitext(image_file)[0].lower()
+                # Slug format: calendarios-{product_slug}-{file_slug}
+                # Keep 'calendarios' prefix to identify typical calendar templates
+                template_slug = f'calendarios-{product_slug}-{file_slug}'[:100]
+                
+                # Image URL
+                # Construct relative path from static root
+                # base_path is .../calendarios_regalos
+                # folder_path is .../calendarios_regalos/folder_name
+                image_url = f'/static/media/template_images/calendarios_regalos/{folder_name}/{image_file}'
+                
+                # Template name
+                template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
+                
+                if not self.dry_run:
+                    try:
+                        template, created = DesignTemplate.objects.update_or_create(
+                            slug=template_slug,
+                            defaults={
+                                'name': template_name,
+                                'category': category,
+                                'subcategory': subcategory,
+                                'thumbnail_url': image_url,
+                                'preview_url': image_url,
+                                'is_popular': i < 10,  # Arbitrary popular logic
+                                'is_new': i < 5,
+                                'display_order': i,
+                            }
+                        )
+                        
+                        if created:
+                            total_created += 1
+                        else:
+                            total_updated += 1
+                    except Exception as e:
+                         # Silently skip errors (e.g. duplicate slug if shortened)
                          pass
                 else:
                     total_created += 1

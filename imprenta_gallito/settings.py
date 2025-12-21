@@ -299,6 +299,11 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)  # Placeholder 
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='user@example.com')  # Placeholder for email user
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='password')  # Placeholder for email password
 
+### BREVO CONFIGURATION ###
+BREVO_API_KEY = config('BREVO_API_KEY', default='YOUR_BREVO_API_KEY')
+BREVO_SENDER_EMAIL = config('BREVO_SENDER_EMAIL', default='imprentagallito@imprentagallito.pe') # Use a valid verified sender
+BREVO_SENDER_NAME = config('BREVO_SENDER_NAME', default='Imprenta Gallito')
+
 ### manage.py check --deploy
 
 SECURE_BROWSER_XSS_FILTER = True

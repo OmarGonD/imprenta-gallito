@@ -36,7 +36,9 @@ from cart.models import Cart, CartItem
 from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
 from marketing.forms import EmailSignUpForm
 from shop.utils.pricing import PricingService
+from shop.utils.pricing import PricingService
 from .template_loader import TemplateLoader
+from shop.services.brevo_service import BrevoService
 
 import os
 import json
@@ -318,6 +320,64 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     # 3. INICIALIZAR CONTEXTO BASE
     # -------------------------------------------------------------------------
     
+    # BUSCAR IMAGEN DETALLE (*-detalle.jpg) - DESDE FILESYSTEM
+    detail_image_url = None
+    
+    # Construir path basado en category_slug/subcategory_slug/product_slug
+    # Convertir slugs a formato de carpeta (guiones a guiones bajos)
+    category_folder = category_slug.replace('-', '_')
+    subcategory_folder = subcategory_slug.replace('-', '_')
+    product_folder = product_slug.replace('-', '_')
+    
+    # Path base de la subcategoría
+    subcategory_images_path = os.path.join(
+        settings.BASE_DIR, 'static', 'media', 'product_images',
+        category_folder, subcategory_folder
+    )
+    
+    # FASE 1: Buscar carpeta con nombre EXACTO (product_slug con guiones bajos)
+    exact_product_path = os.path.join(subcategory_images_path, product_folder)
+    if os.path.isdir(exact_product_path):
+        for filename in os.listdir(exact_product_path):
+            if filename.lower().endswith('-detalle.jpg') or filename.lower().endswith('_detalle.jpg'):
+                detail_image_url = f"/static/media/product_images/{category_folder}/{subcategory_folder}/{product_folder}/{filename}"
+                break
+    
+    # FASE 2: Buscar imagen directamente en la carpeta de subcategoría (sin subcarpetas)
+    # Ej: stickers_etiquetas/stickers/stickers-circulares-detalle.jpg
+    if not detail_image_url and os.path.isdir(subcategory_images_path):
+        expected_filename = f"{product_slug}-detalle.jpg"
+        for filename in os.listdir(subcategory_images_path):
+            if not os.path.isdir(os.path.join(subcategory_images_path, filename)):
+                if filename.lower() == expected_filename:
+                    detail_image_url = f"/static/media/product_images/{category_folder}/{subcategory_folder}/{filename}"
+                    break
+    
+    # FASE 3: Buscar en subcarpetas por nombre de imagen exacto
+    if not detail_image_url and os.path.isdir(subcategory_images_path):
+        for folder_name in os.listdir(subcategory_images_path):
+            folder_path = os.path.join(subcategory_images_path, folder_name)
+            if os.path.isdir(folder_path):
+                for filename in os.listdir(folder_path):
+                    filename_lower = filename.lower()
+                    if filename_lower.endswith('-detalle.jpg') or filename_lower.endswith('_detalle.jpg'):
+                        # El nombre del archivo debe coincidir EXACTAMENTE con el product_slug
+                        # Ej: product_slug="guarda-la-fecha" → archivo="guarda-la-fecha-detalle.jpg"
+                        expected_filename = f"{product_slug}-detalle.jpg"
+                        if filename_lower == expected_filename:
+                            detail_image_url = f"/static/media/product_images/{category_folder}/{subcategory_folder}/{folder_name}/{filename}"
+                            break
+            if detail_image_url:
+                break
+    
+    # Fallback a la lógica anterior (buscar en ProductImage model)
+    if not detail_image_url:
+        all_product_images = product.images.all().order_by('display_order')
+        for img in all_product_images:
+            if img.image_url and ('-detalle.jpg' in img.image_url.lower() or '_detalle.jpg' in img.image_url.lower()):
+                detail_image_url = img.image_url
+                break
+
     context = {
         'category': category,
         'product': product,
@@ -327,6 +387,7 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         'images_by_color': '{}',
         'selected_color_slug': '',
         'base_image_url': product.base_image_url or '',
+        'detail_image_url': detail_image_url, # Nueva variable para imagen detalle
         'safe_starting_price': safe_starting_price,
         'safe_base_price': safe_base_price,
     }
@@ -468,9 +529,77 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         
         # Use specialized template for bodas subcategory
         if subcategory_slug == 'bodas':
+            # Load bodas templates for inline selection
+            from django.db.models import Q
+            bodas_templates = DesignTemplate.objects.filter(
+                category__slug='invitaciones-papeleria',
+                subcategory__slug='bodas'
+            ).order_by('display_order')[:12]
+            context['product_templates'] = bodas_templates
+            context['total_templates'] = DesignTemplate.objects.filter(
+                category__slug='invitaciones-papeleria',
+                subcategory__slug='bodas'
+            ).count()
             context['template_name'] = 'shop/bodas_product_detail.html'
+        elif category_slug == 'tarjetas-presentacion':
+            # Load tarjetas templates for inline selection
+            from django.db.models import Q
+            tarjetas_templates = DesignTemplate.objects.filter(
+                category=category
+            )
+            if product.subcategory:
+                tarjetas_templates = tarjetas_templates.filter(
+                    Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
+                )
+            tarjetas_templates = tarjetas_templates.order_by('display_order')[:12]
+            context['product_templates'] = tarjetas_templates
+            # Fix: Count templates matching the same query as product_templates
+            from django.db.models import Q
+            if product.subcategory:
+                context['total_templates'] = DesignTemplate.objects.filter(
+                    category=category
+                ).filter(
+                    Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
+                ).count()
+            else:
+                context['total_templates'] = DesignTemplate.objects.filter(category=category).count()
+            context['template_name'] = 'shop/tarjetas_presentacion_product_detail.html'
         elif category_slug == 'stickers-etiquetas':
             context['template_name'] = 'shop/stickers_etiquetas_product_detail.html'
+        elif category_slug == 'calendarios-regalos':
+            # Load calendar templates for this category/subcategory
+            from django.db.models import Q
+            calendar_templates = DesignTemplate.objects.filter(category=category)
+            if product.subcategory:
+                calendar_templates = calendar_templates.filter(
+                    Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
+                )
+                # FIX: Filter by product slug to show only templates for THIS calendar type
+                if product.subcategory.slug == 'calendarios-familiares':
+                    calendar_templates = calendar_templates.filter(slug__contains=product.slug)
+            
+            context['calendar_templates'] = calendar_templates.order_by('display_order')[:12]
+            context['total_templates'] = calendar_templates.count()
+            
+            # Calendar size options
+            # Calendar size options
+            all_calendar_sizes = {
+                'calendario-escritorio': [{'value': 'escritorio-15x10', 'label': 'Escritorio 15x10cm', 'price_modifier': 0}],
+                'calendario-pared': [{'value': 'pared-30x40', 'label': 'Pared 30x40cm', 'price_modifier': 5}],
+                'tipos-calendario-poster': [{'value': 'poster-50x70', 'label': 'Poster 50x70cm', 'price_modifier': 15}],
+                'calendario-magnetico': [{'value': 'magnetico-10x15', 'label': 'Magnético 10x15cm', 'price_modifier': 0}],
+                'calendario-mousepad': [{'value': 'mousepad-20x25', 'label': 'Mousepad 20x25cm', 'price_modifier': 8}],
+                'calendario-marcapaginas': [{'value': 'marcapaginas-5x15', 'label': 'Marcapáginas 5x15cm', 'price_modifier': 0}],
+            }
+            context['calendar_sizes'] = all_calendar_sizes.get(product.slug, [
+                {'value': 'escritorio-15x10', 'label': 'Escritorio 15x10cm', 'price_modifier': 0},
+                {'value': 'pared-30x40', 'label': 'Pared 30x40cm', 'price_modifier': 5},
+                {'value': 'poster-50x70', 'label': 'Poster 50x70cm', 'price_modifier': 15},
+                {'value': 'magnetico-10x15', 'label': 'Magnético 10x15cm', 'price_modifier': 0},
+                {'value': 'mousepad-20x25', 'label': 'Mousepad 20x25cm', 'price_modifier': 8},
+                {'value': 'marcapaginas-5x15', 'label': 'Marcapáginas 5x15cm', 'price_modifier': 0},
+            ])
+            context['template_name'] = 'shop/calendarios_product_detail.html'
 
     # -------------------------------------------------------------------------
     # 6. DEBUGGING
@@ -815,6 +944,10 @@ def template_gallery_view(request, category_slug, product_slug):
         # Los templates de bodas tienen formato: bodas-{product_slug}-{file_slug}
         if product.subcategory.slug == 'bodas':
             templates = templates.filter(slug__contains=product.slug)
+
+        # FIX: Para calendarios, misma lógica
+        if product.subcategory.slug == 'calendarios-familiares':
+             templates = templates.filter(slug__contains=product.slug)
 
     templates = templates.order_by('-is_popular', '-is_new', 'display_order', 'name').distinct()
 
@@ -1277,6 +1410,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         send_email_new_registered_user(user.pk)
         return redirect('shop:home')
@@ -1357,7 +1491,7 @@ def signupView(request):
 
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
-            user.is_active = True
+            user.is_active = False # Disable account until email confirmation
             user.save()
             username = user_form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
@@ -1370,10 +1504,12 @@ def signupView(request):
                                        instance=user.profile)
             profile_form.full_clean()
             profile_form.save()
-            send_email_new_registered_user(user.pk)
-            login(request, user)
+            
+            # Send activation email using Brevo
+            BrevoService.send_activation_email(user, request)
+            # send_email_new_registered_user(user.pk) # Replaced by BrevoService
 
-            return redirect('carrito-de-compras:cart_detail')
+            return redirect('shop:email_confirmation_needed')
         else:
             pass
 

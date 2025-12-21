@@ -31,7 +31,7 @@ function loadProductData() {
     window.categorySlug = dataContainer.dataset.categorySlug || '';
     window.productSlug = dataContainer.dataset.productSlug || '';
     window.addToCartUrl = dataContainer.dataset.addToCartUrl || '';
-    
+
     console.log('✅ Category slug:', window.categorySlug);
     console.log('✅ Product slug:', window.productSlug);
     console.log('✅ Add to cart URL:', window.addToCartUrl);
@@ -146,85 +146,101 @@ if (typeof window.isAddingToCart === 'undefined') {
     window.isAddingToCart = false;
 }
 
-function addToCart() {
+async function addToCart() {
     // Prevenir ejecuciones múltiples
     if (window.isAddingToCart) {
         console.log('⚠️ Ya se está agregando al carrito, espera...');
         return;
     }
-    
+
     console.log('🛒 addToCart llamado');
-    
+
     // Validar que tengamos la URL
     if (!window.addToCartUrl) {
         alert('❌ Error: URL del carrito no disponible');
         console.error('addToCartUrl no está definida');
         return;
     }
-    
+
     // Validar category y product slugs
     if (!window.categorySlug || !window.productSlug) {
         alert('❌ Error: Información del producto no disponible');
         console.error('Category o Product slug no definidos');
         return;
     }
-    
+
     // Validar color (si aplica)
     if (window.selectedColorSlug === '' && document.querySelector('.color-swatch')) {
         alert('❌ Por favor selecciona un color');
         return;
     }
-    
+
     // Validar talla (si aplica)
     if (window.selectedSizeSlug === '' && document.querySelector('.size-btn')) {
         alert('❌ Por favor selecciona una talla');
         return;
     }
-    
+
     // Validar cantidad
     const quantityInput = document.getElementById('quantity');
     const quantity = parseInt(quantityInput.value);
-    
+
     if (!quantity || quantity < 1) {
         alert('❌ Por favor ingresa una cantidad válida');
         return;
     }
-    
+
     // Validar archivo (si se requiere)
     const fileInput = document.getElementById('file-upload-input');
     const fileRequired = fileInput && fileInput.hasAttribute('required');
-    
+
     if (fileRequired && (!fileInput.files || fileInput.files.length === 0)) {
         alert('❌ Por favor sube tu diseño para continuar');
         return;
     }
-    
+
     // Marcar que estamos agregando al carrito
     window.isAddingToCart = true;
-    
+
     // Deshabilitar botón
     const addBtn = document.getElementById('add-to-cart-btn') || document.getElementById('add-to-cart');
     if (!addBtn) {
         window.isAddingToCart = false;
         return;
     }
-    
+
     const originalText = addBtn.innerHTML;
     addBtn.disabled = true;
     addBtn.innerHTML = '⏳ Agregando...';
-    
+
     // Preparar FormData para enviar archivos
     const formData = new FormData();
     formData.append('category_slug', window.categorySlug);
     formData.append('product_slug', window.productSlug);
     formData.append('quantity', quantity.toString());
     formData.append('design_type', 'custom');
-    
-    // Agregar archivo si existe
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
+
+    // Check for file from sessionStorage (uploaded via template gallery)
+    const designDataFromGallery = sessionStorage.getItem('uploadedDesignData');
+    const designNameFromGallery = sessionStorage.getItem('uploadedDesignName');
+    const designTypeFromGallery = sessionStorage.getItem('uploadedDesignType');
+
+    // Agregar archivo - priorizar sessionStorage, luego input file
+    if (designDataFromGallery && designNameFromGallery) {
+        // Convert base64 data URL to Blob/File
+        try {
+            const base64Response = await fetch(designDataFromGallery);
+            const blob = await base64Response.blob();
+            const file = new File([blob], designNameFromGallery, { type: designTypeFromGallery || 'application/octet-stream' });
+            formData.append('design_file', file);
+            console.log('📎 Archivo del template gallery adjuntado:', designNameFromGallery);
+        } catch (e) {
+            console.error('Error convirtiendo archivo de sessionStorage:', e);
+        }
+    } else if (fileInput && fileInput.files && fileInput.files.length > 0) {
         formData.append('design_file', fileInput.files[0]);
     }
-    
+
     // Agregar color y talla solo si fueron seleccionados
     if (window.selectedColorSlug) {
         formData.append('color_slug', window.selectedColorSlug);
@@ -232,16 +248,17 @@ function addToCart() {
     if (window.selectedSizeSlug) {
         formData.append('size_slug', window.selectedSizeSlug);
     }
-    
+
     console.log('📦 Enviando al servidor:', {
         category_slug: window.categorySlug,
         product_slug: window.productSlug,
         quantity: quantity,
         color: window.selectedColorSlug,
         size: window.selectedSizeSlug,
-        has_file: fileInput && fileInput.files && fileInput.files.length > 0
+        has_file_input: fileInput && fileInput.files && fileInput.files.length > 0,
+        has_file_from_gallery: !!(designDataFromGallery && designNameFromGallery)
     });
-    
+
     // Hacer petición al servidor
     fetch(window.addToCartUrl, {
         method: 'POST',
@@ -250,38 +267,44 @@ function addToCart() {
         },
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('📥 Respuesta del servidor:', data);
-        
-        if (data.success) {
-            // Mostrar modal o mensaje de éxito
-            const modal = document.getElementById('cart-success-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
+        .then(response => response.json())
+        .then(data => {
+            console.log('📥 Respuesta del servidor:', data);
+
+            if (data.success) {
+                // Clear sessionStorage design data
+                sessionStorage.removeItem('uploadedDesignName');
+                sessionStorage.removeItem('uploadedDesignSize');
+                sessionStorage.removeItem('uploadedDesignData');
+                sessionStorage.removeItem('uploadedDesignType');
+
+                // Mostrar modal o mensaje de éxito
+                const modal = document.getElementById('cart-success-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                } else {
+                    alert(`✅ ${data.message}`);
+                }
+
+                // Actualizar contador del carrito
+                const cartCounter = document.getElementById('cart-count');
+                if (cartCounter && data.cart_count) {
+                    cartCounter.textContent = data.cart_count;
+                }
             } else {
-                alert(`✅ ${data.message}`);
+                alert('❌ Error: ' + (data.error || 'No se pudo agregar al carrito'));
             }
-            
-            // Actualizar contador del carrito
-            const cartCounter = document.getElementById('cart-count');
-            if (cartCounter && data.cart_count) {
-                cartCounter.textContent = data.cart_count;
-            }
-        } else {
-            alert('❌ Error: ' + (data.error || 'No se pudo agregar al carrito'));
-        }
-    })
-    .catch(error => {
-        console.error('❌ Error:', error);
-        alert('❌ Error al agregar al carrito. Por favor intenta de nuevo.');
-    })
-    .finally(() => {
-        // Rehabilitar botón y resetear flag
-        addBtn.disabled = false;
-        addBtn.innerHTML = originalText;
-        window.isAddingToCart = false;
-    });
+        })
+        .catch(error => {
+            console.error('❌ Error:', error);
+            alert('❌ Error al agregar al carrito. Por favor intenta de nuevo.');
+        })
+        .finally(() => {
+            // Rehabilitar botón y resetear flag
+            addBtn.disabled = false;
+            addBtn.innerHTML = originalText;
+            window.isAddingToCart = false;
+        });
 }
 
 // Función auxiliar para obtener el CSRF token
@@ -342,8 +365,8 @@ function setupTiersToggle() {
     toggleBtn.addEventListener('click', () => {
         tiersTable.classList.toggle('hidden');
         if (chevron) {
-            chevron.style.transform = tiersTable.classList.contains('hidden') 
-                ? 'rotate(0deg)' 
+            chevron.style.transform = tiersTable.classList.contains('hidden')
+                ? 'rotate(0deg)'
                 : 'rotate(180deg)';
         }
     });
@@ -386,7 +409,7 @@ function setupSuccessModal() {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Inicializando product_logic.js...');
-    
+
     // 1. Cargar datos críticos primero
     loadProductData();
 

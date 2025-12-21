@@ -1,0 +1,724 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}{{ product.name }} - {{ category.name }}{% endblock %}
+
+{% block content %}
+<style>
+/* ===== ESTILOS PARA CALENDARIOS PRODUCT DETAIL ===== */
+@keyframes bounce-once {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-once {
+    animation: bounce-once 0.6s ease-in-out;
+}
+
+/* Upload zone */
+.upload-zone {
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #3B82F6;
+    background-color: #F0F9FF;
+}
+
+.upload-zone.dragover {
+    border-color: #2563EB;
+    background-color: #DBEAFE;
+    transform: scale(1.01);
+}
+
+/* File preview */
+.file-preview-box {
+    background: white;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.file-preview-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #E5E7EB;
+}
+
+/* Template cards */
+.template-card {
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.template-card:hover {
+    border-color: #93C5FD;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.template-card.selected {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.template-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #2563EB;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.template-card img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+}
+
+/* Pricing table */
+.pricing-table thead {
+    background: #F9FAFB;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.pricing-table th {
+    color: #374151;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.pricing-table td {
+    padding: 1rem;
+    text-align: center;
+}
+
+.tiers-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.tiers-collapse.show {
+    max-height: 500px;
+}
+
+/* Preview modal */
+.preview-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(4px);
+}
+
+.preview-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-modal img {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 12px;
+}
+
+/* Section styling */
+.section-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+.section-title i {
+    color: #3B82F6;
+}
+</style>
+
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Breadcrumb -->
+    <nav class="mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600">
+            <li><a href="{% url 'shop:home' %}" class="hover:text-blue-600 transition-colors">Inicio</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ category.get_url }}" class="hover:text-blue-600 transition-colors">{{ category.name }}</a></li>
+            {% if product.subcategory %}
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ product.subcategory.get_url }}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
+            {% endif %}
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-900 font-medium">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Main Product Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+        <!-- Left: Product Image & Preview -->
+        <div>
+            <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center sticky top-24">
+                <div id="product-preview-container">
+                    {% if detail_image_url %}
+                        <img id="product-image" src="{{ detail_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                    {% elif product.images.exists %}
+                        <img id="product-image" src="{{ product.images.first.image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                    {% elif product.base_image_url %}
+                        <img id="product-image" src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                    {% else %}
+                        <img id="product-image" src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Preview de foto subida -->
+            <div id="photo-preview-section" class="hidden mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <p class="text-sm font-medium text-blue-800 mb-2">
+                    <i class="fas fa-image mr-2"></i>Tu foto personal:
+                </p>
+                <img id="uploaded-photo-preview" src="" alt="Tu foto" class="w-full max-h-48 object-contain rounded-lg">
+            </div>
+        </div>
+
+        <!-- Right: Options -->
+        <div class="space-y-6">
+            <div>
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">{{ product.name }}</h1>
+                <p class="text-sm text-gray-500">SKU: {{ product.sku }}</p>
+            </div>
+            
+            {% if product.description %}
+            <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+            {% endif %}
+
+            <form id="productForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="category_slug" value="{{ category.slug }}">
+                <input type="hidden" name="product_slug" value="{{ product.slug }}">
+                <input type="hidden" id="selected-template" name="template_slug" value="">
+                <input type="hidden" id="design-type" name="design_type" value="template">
+
+                <!-- ===== SECCIÓN 1: TAMAÑO ===== -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                        Elige el tamaño
+                    </h3>
+                    <select id="size-select" name="size" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all">
+                        {% for size in calendar_sizes %}
+                        <option value="{{ size.value }}" data-price-modifier="{{ size.price_modifier }}">
+                            {{ size.label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- ===== SECCIÓN 2: CANTIDAD ===== -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-layer-group"></i>
+                        Cantidad
+                    </h3>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <button type="button" id="qty-decrease" class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold">−</button>
+                        <input type="number" id="quantity" name="quantity" value="10" min="1" max="10000" class="w-24 text-center border-2 border-gray-300 rounded-lg py-2 font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <button type="button" id="qty-increase" class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold">+</button>
+                    </div>
+
+                    <!-- Price Display -->
+                    <div id="pricing-display" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                        <div class="flex w-full divide-x divide-gray-200">
+                            <div class="flex-1 text-center px-4 py-4 bg-gradient-to-br from-blue-50 to-blue-100">
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Precio c/u</p>
+                                <p class="text-2xl font-extrabold text-blue-600" id="unit-price">S/ 0.00</p>
+                            </div>
+                            <div class="flex-1 text-center px-4 py-4 bg-gradient-to-br from-emerald-50 to-green-100">
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Descuento</p>
+                                <p class="text-2xl font-extrabold text-emerald-600" id="discount-badge">0%</p>
+                            </div>
+                            <div class="flex-1 text-center px-4 py-4 bg-gradient-to-br from-gray-50 to-gray-100">
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Total</p>
+                                <p class="text-2xl font-extrabold text-gray-900" id="total-price">S/ 0.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECCIÓN 3: DISEÑO (TEMPLATE) ===== -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-palette"></i>
+                        Elige un diseño
+                        <span class="ml-auto text-sm font-normal text-gray-500">{{ total_templates }} diseños disponibles</span>
+                    </h3>
+                    
+                    <div id="templates-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                        {% for template in calendar_templates %}
+                        <div class="template-card relative" 
+                             data-template-slug="{{ template.slug }}"
+                             data-template-name="{{ template.name }}"
+                             onclick="selectTemplate(this)">
+                            <img src="{{ template.thumbnail_url }}" alt="{{ template.name }}" loading="lazy">
+                            <div class="p-2 text-center">
+                                <p class="text-xs text-gray-700 truncate">{{ template.name }}</p>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-span-3 text-center py-8 text-gray-500">
+                            <i class="fas fa-images text-4xl mb-2 text-gray-300"></i>
+                            <p>No hay diseños disponibles para este producto</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if total_templates > 12 %}
+                    <a href="{% url 'shop:template_gallery' category.slug product.slug %}" 
+                       class="inline-flex items-center justify-center w-full py-3 border-2 border-blue-200 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors">
+                        <i class="fas fa-th-large mr-2"></i>
+                        Ver todos los {{ total_templates }} diseños
+                    </a>
+                    {% endif %}
+                    
+                    <div id="selected-template-preview" class="hidden mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-200">
+                        <div class="flex items-center gap-4">
+                            <img id="selected-template-img" src="" alt="Template seleccionado" class="w-20 h-20 object-cover rounded-lg border-2 border-white shadow">
+                            <div>
+                                <p class="text-sm font-semibold text-indigo-800">Diseño seleccionado:</p>
+                                <p id="selected-template-name" class="text-indigo-600"></p>
+                            </div>
+                            <button type="button" onclick="clearTemplate()" class="ml-auto text-indigo-400 hover:text-indigo-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECCIÓN 4: SUBIR FOTO PERSONAL ===== -->
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Sube tu foto personal
+                        <span class="ml-2 text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded">Opcional</span>
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-4">Añade tus fotos familiares para personalizar el calendario</p>
+                    
+                    <!-- Upload Zone -->
+                    <div id="upload-button-container">
+                        <div class="upload-zone border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer" 
+                             onclick="document.getElementById('file-upload-input').click()"
+                             ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <p class="mt-4 text-sm text-gray-600">
+                                <span class="font-semibold text-blue-600">Haz clic para subir</span> o arrastra tu foto aquí
+                            </p>
+                            <p class="text-xs text-gray-500 mt-2">JPG, PNG (Max. 10MB)</p>
+                        </div>
+                        <input type="file" id="file-upload-input" name="design_file" class="hidden" accept=".jpg,.jpeg,.png,.webp">
+                    </div>
+
+                    <!-- File Preview -->
+                    <div id="file-preview-container" class="hidden">
+                        <div class="file-preview-box">
+                            <div id="preview-image-container"></div>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900" id="file-name">archivo.jpg</p>
+                                <p class="text-sm text-gray-500" id="file-size">2.4 MB</p>
+                                <span class="inline-flex items-center text-xs font-medium text-green-600 mt-1">
+                                    <i class="fas fa-check-circle mr-1"></i> Foto cargada
+                                </span>
+                            </div>
+                            <button type="button" id="change-file-btn" class="px-4 py-2 border-2 border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                                Cambiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== BOTÓN AGREGAR AL CARRITO ===== -->
+                <button type="button" id="add-to-cart" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                    <i class="fas fa-shopping-cart"></i>
+                    Agregar al carrito
+                </button>
+                
+                <p id="selection-hint" class="hidden text-sm text-orange-600 mt-3 flex items-center justify-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Selecciona un diseño o sube tu foto para continuar
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="border-t border-gray-200 pt-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Productos relacionados</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for related in related_products %}
+            <a href="{% url 'shop:product_detail' related.category.slug related.subcategory.slug related.slug %}" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="aspect-square bg-gray-100 flex items-center justify-center">
+                    {% if related.base_image_url %}
+                        <img src="{{ related.base_image_url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <span class="text-gray-400 text-sm">Sin imagen</span>
+                    {% endif %}
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-1 line-clamp-2">{{ related.name }}</h3>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal: Producto agregado -->
+<div id="cart-success-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50 backdrop-blur-sm">
+    <div class="relative top-20 mx-auto p-6 w-full max-w-md shadow-2xl rounded-xl bg-white">
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 animate-bounce-once">
+                <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="mt-5 text-xl font-bold text-gray-900">¡Producto agregado!</h3>
+            <p class="mt-3 text-sm text-gray-600">Tu calendario ha sido agregado al carrito.</p>
+            <div class="mt-6 space-y-3">
+                <button id="modal-go-to-cart" class="w-full px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all">
+                    🛒 Ir al carrito
+                </button>
+                <button id="modal-continue-shopping" class="w-full px-5 py-3 border-2 border-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all">
+                    Seguir comprando
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="preview-modal" class="preview-modal" onclick="if(event.target === this) closePreview()">
+    <button class="absolute top-4 right-4 text-white text-3xl hover:text-gray-300" onclick="closePreview()">&times;</button>
+    <img id="preview-modal-img" src="" alt="Preview">
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ===== CONFIGURATION =====
+const pricingTiers = {{ pricing_tiers_json|safe }};
+const addToCartUrl = "{% url 'shop:add_product_to_cart' %}";
+const cartUrl = "{% url 'carrito-de-compras:cart_detail' %}";
+
+// ===== STATE =====
+let selectedTemplateSlug = '';
+let selectedTemplateName = '';
+let selectedTemplateImg = '';
+let fileSelected = false;
+
+// ===== CSRF =====
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// ===== QUANTITY & PRICING =====
+document.addEventListener('DOMContentLoaded', function() {
+    const qtyInput = document.getElementById('quantity');
+    const qtyDecrease = document.getElementById('qty-decrease');
+    const qtyIncrease = document.getElementById('qty-increase');
+    
+    function updatePricing() {
+        const qty = parseInt(qtyInput.value) || 1;
+        let tier = pricingTiers[0] || { unit_price: 0, discount_percent: 0 };
+        
+        for (const t of pricingTiers) {
+            if (qty >= t.min_quantity && qty <= t.max_quantity) {
+                tier = t;
+                break;
+            }
+        }
+        
+        const unitPrice = tier.unit_price || 0;
+        const discount = tier.discount_percent || 0;
+        const total = unitPrice * qty;
+        
+        document.getElementById('unit-price').textContent = 'S/ ' + unitPrice.toFixed(2);
+        document.getElementById('discount-badge').textContent = discount > 0 ? '-' + discount.toFixed(0) + '%' : '0%';
+        document.getElementById('total-price').textContent = 'S/ ' + total.toFixed(2);
+    }
+    
+    qtyDecrease.addEventListener('click', function() {
+        const current = parseInt(qtyInput.value) || 1;
+        if (current > 1) {
+            qtyInput.value = current - 1;
+            updatePricing();
+        }
+    });
+    
+    qtyIncrease.addEventListener('click', function() {
+        const current = parseInt(qtyInput.value) || 1;
+        qtyInput.value = current + 1;
+        updatePricing();
+    });
+    
+    qtyInput.addEventListener('change', updatePricing);
+    qtyInput.addEventListener('input', updatePricing);
+    
+    updatePricing();
+});
+
+// ===== TEMPLATE SELECTION =====
+function selectTemplate(card) {
+    // Remove previous selection
+    document.querySelectorAll('.template-card.selected').forEach(c => c.classList.remove('selected'));
+    
+    // Add selection
+    card.classList.add('selected');
+    
+    selectedTemplateSlug = card.dataset.templateSlug;
+    selectedTemplateName = card.dataset.templateName;
+    selectedTemplateImg = card.querySelector('img').src;
+    
+    document.getElementById('selected-template').value = selectedTemplateSlug;
+    document.getElementById('design-type').value = 'template';
+    
+    // Show preview
+    document.getElementById('selected-template-preview').classList.remove('hidden');
+    document.getElementById('selected-template-img').src = selectedTemplateImg;
+    document.getElementById('selected-template-name').textContent = selectedTemplateName;
+    
+    updateAddToCartButton();
+}
+
+function clearTemplate() {
+    document.querySelectorAll('.template-card.selected').forEach(c => c.classList.remove('selected'));
+    selectedTemplateSlug = '';
+    selectedTemplateName = '';
+    selectedTemplateImg = '';
+    document.getElementById('selected-template').value = '';
+    document.getElementById('selected-template-preview').classList.add('hidden');
+    updateAddToCartButton();
+}
+
+// ===== FILE UPLOAD =====
+const fileInput = document.getElementById('file-upload-input');
+const uploadContainer = document.getElementById('upload-button-container');
+const previewContainer = document.getElementById('file-preview-container');
+const photoPreviewSection = document.getElementById('photo-preview-section');
+const uploadedPhotoPreview = document.getElementById('uploaded-photo-preview');
+
+fileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        handleFileSelected(file);
+    }
+});
+
+document.getElementById('change-file-btn').addEventListener('click', function() {
+    fileInput.value = '';
+    fileInput.click();
+});
+
+function handleFileSelected(file) {
+    // Validate
+    if (file.size > 10 * 1024 * 1024) {
+        alert('El archivo es demasiado grande. Máximo 10MB.');
+        return;
+    }
+    
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+        alert('Formato no válido. Usa JPG, PNG o WebP.');
+        return;
+    }
+    
+    // Update UI
+    document.getElementById('file-name').textContent = file.name;
+    document.getElementById('file-size').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+    
+    // Preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('preview-image-container').innerHTML = 
+            '<img src="' + e.target.result + '" class="file-preview-image">';
+        
+        // Also show in sidebar
+        uploadedPhotoPreview.src = e.target.result;
+        photoPreviewSection.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+    
+    uploadContainer.classList.add('hidden');
+    previewContainer.classList.remove('hidden');
+    fileSelected = true;
+    
+    updateAddToCartButton();
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('dragover');
+}
+
+function handleDragLeave(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        fileInput.files = files;
+        handleFileSelected(files[0]);
+    }
+}
+
+// ===== ADD TO CART BUTTON STATE =====
+function updateAddToCartButton() {
+    const addBtn = document.getElementById('add-to-cart');
+    const hint = document.getElementById('selection-hint');
+    
+    // For calendars, we allow adding with just template OR just photo OR both
+    const hasTemplate = selectedTemplateSlug !== '';
+    const hasFile = fileSelected;
+    
+    if (hasTemplate || hasFile) {
+        addBtn.disabled = false;
+        addBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        hint.classList.add('hidden');
+    } else {
+        addBtn.disabled = true;
+        addBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        hint.classList.remove('hidden');
+    }
+}
+
+// ===== ADD TO CART =====
+document.getElementById('add-to-cart').addEventListener('click', function() {
+    const btn = this;
+    const originalText = btn.innerHTML;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Agregando...';
+    
+    const formData = new FormData(document.getElementById('productForm'));
+    formData.append('quantity_tier', document.getElementById('quantity').value);
+    
+    fetch(addToCartUrl, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update cart counter
+            const counter = document.querySelector('.cart-count, #cart-counter');
+            if (counter) counter.textContent = data.cart_items_counter;
+            
+            // Show success modal
+            document.getElementById('cart-success-modal').classList.remove('hidden');
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo agregar'));
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error de conexión');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    });
+});
+
+// ===== MODAL HANDLERS =====
+document.getElementById('modal-go-to-cart').addEventListener('click', function() {
+    window.location.href = cartUrl;
+});
+
+document.getElementById('modal-continue-shopping').addEventListener('click', function() {
+    document.getElementById('cart-success-modal').classList.add('hidden');
+    // Reset form
+    clearTemplate();
+    fileSelected = false;
+    uploadContainer.classList.remove('hidden');
+    previewContainer.classList.add('hidden');
+    photoPreviewSection.classList.add('hidden');
+    fileInput.value = '';
+    updateAddToCartButton();
+});
+
+// ===== PREVIEW MODAL =====
+function openPreview(imgUrl) {
+    document.getElementById('preview-modal-img').src = imgUrl;
+    document.getElementById('preview-modal').classList.add('active');
+}
+
+function closePreview() {
+    document.getElementById('preview-modal').classList.remove('active');
+}
+
+// ESC to close
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePreview();
+        document.getElementById('cart-success-modal').classList.add('hidden');
+    }
+});
+
+// Initial state
+updateAddToCartButton();
+</script>
+{% endblock %}

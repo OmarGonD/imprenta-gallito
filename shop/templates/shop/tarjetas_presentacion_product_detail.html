@@ -85,6 +85,73 @@
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+/* ===== INLINE TEMPLATE CARDS ===== */
+.template-card {
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+}
+
+.template-card:hover {
+    border-color: #93C5FD;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.template-card.selected {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.template-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #2563EB;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.template-card img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+}
+
+.section-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+.section-title i {
+    color: #3B82F6;
+}
+
 /* ===== DESIGN CHOICE CARDS ===== */
 .design-choice-card {
     border: 2px solid #E5E7EB;
@@ -320,7 +387,11 @@
         <!-- Left: Image -->
         <div>
             <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center sticky top-24">
-                {% if product.base_image_url %}
+                {% if detail_image_url %}
+                    <img src="{{ detail_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% elif product.images.exists %}
+                    <img src="{{ product.images.first.image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% elif product.base_image_url %}
                     <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
                 {% else %}
                     <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
@@ -481,53 +552,143 @@
                 </div>
                 {% endif %}
 
-                <!-- Design Choice Cards (solo para tarjetas de presentación) -->
-                {% if category.slug == 'tarjetas-presentacion' %}
-                <div class="mb-6">
+                <!-- Uploaded Design Preview (shown when returning from template gallery) -->
+                <div id="uploaded-design-preview" class="mb-6 hidden">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
-                        ¿Cómo quieres tu diseño? <span class="text-red-500">*</span>
+                        <span class="inline-flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Tu diseño está listo
+                        </span>
                     </label>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Opción 1: Elegir template -->
-                        <button type="button" class="design-choice-card text-left" id="choice-template" data-choice="template">
-                            <div class="design-choice-icon">
-                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4">
+                        <div class="flex items-center gap-4">
+                            <div id="uploaded-preview-image" class="flex-shrink-0"></div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-gray-900 truncate" id="uploaded-file-name"></p>
+                                <p class="text-sm text-gray-500" id="uploaded-file-size"></p>
+                                <div class="flex items-center gap-3 mt-2">
+                                    <button type="button" onclick="changeUploadedDesign()" class="text-sm text-blue-600 hover:text-blue-700 font-medium inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                        </svg>
+                                        Cambiar
+                                    </button>
+                                    <button type="button" onclick="removeUploadedDesign()" class="text-sm text-red-600 hover:text-red-700 font-medium inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Eliminar
+                                    </button>
+                                </div>
                             </div>
-                            <h4 class="font-bold text-gray-900 text-lg mb-1">Elegir template profesional</h4>
-                            <p class="text-gray-500 text-sm mb-3">Personaliza uno de nuestros +450 diseños</p>
-                            <span class="inline-flex items-center text-blue-600 font-semibold text-sm">
-                                Ver galería
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </span>
-                            
-                            {% if template_samples %}
-                            <div class="template-mini-grid">
-                                {% for sample in template_samples|slice:":3" %}
-                                <img src="{{ sample.image_url }}" alt="{{ sample.name }}" loading="lazy">
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        </button>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Opción 2: Subir diseño propio -->
-                        <button type="button" class="design-choice-card text-left" id="choice-upload" data-choice="upload">
-                            <div class="design-choice-icon">
-                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Hidden Inputs for Design -->
+                <input type="hidden" id="selected-template" name="template_slug" value="">
+                <input type="hidden" id="design-type" name="design_type" value="template">
+
+                <!-- Inline Template Selection -->
+                <div class="section-card" id="design-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-palette"></i>
+                        Elige un diseño
+                        {% if total_templates %}
+                        <span class="ml-auto text-sm font-normal text-gray-500">{{ total_templates }} diseños disponibles</span>
+                        {% endif %}
+                    </h3>
+                    
+                    <!-- Selected Template Preview (shown when template is selected) -->
+                    <div id="selected-template-preview" class="hidden">
+                        <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200 p-6">
+                            <div class="flex items-center gap-6">
+                                <div class="flex-shrink-0">
+                                    <img id="selected-template-img" src="" alt="Template seleccionado" 
+                                         class="w-32 h-24 object-cover rounded-lg border-2 border-white shadow-lg">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i class="fas fa-check-circle text-green-500"></i>
+                                        <p class="text-sm font-semibold text-green-700">Diseño seleccionado</p>
+                                    </div>
+                                    <p id="selected-template-name" class="text-lg font-bold text-indigo-800 truncate"></p>
+                                </div>
+                                <div class="flex flex-col gap-2 flex-shrink-0">
+                                    <a href="{% url 'shop:template_gallery' category.slug product.slug %}" 
+                                       class="inline-flex items-center px-4 py-2 bg-white border-2 border-indigo-300 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-colors">
+                                        <i class="fas fa-exchange-alt mr-2"></i>
+                                        Cambiar diseño
+                                    </a>
+                                    <button type="button" onclick="clearTemplateAndShowGrid()" 
+                                            class="inline-flex items-center justify-center px-4 py-2 text-sm text-gray-500 hover:text-red-600 transition-colors">
+                                        <i class="fas fa-times mr-1"></i>
+                                        Quitar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Template Selection Container (hidden when template is selected) -->
+                    <div id="template-selection-container">
+                        {% if product_templates %}
+                        <div id="templates-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                            {% for template in product_templates %}
+                            <div class="template-card relative" 
+                                 data-template-slug="{{ template.slug }}"
+                                 data-template-name="{{ template.name }}"
+                                 onclick="selectTemplate(this)">
+                                <img src="{{ template.thumbnail_url }}" alt="{{ template.name }}" loading="lazy">
+                                <div class="p-2 text-center">
+                                    <p class="text-xs text-gray-700 truncate">{{ template.name }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if total_templates > 12 %}
+                        <a href="{% url 'shop:template_gallery' category.slug product.slug %}" 
+                           class="inline-flex items-center justify-center w-full py-3 border-2 border-blue-200 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors mb-4">
+                            <i class="fas fa-th-large mr-2"></i>
+                            Ver todos los {{ total_templates }} diseños
+                        </a>
+                        {% endif %}
+                        {% else %}
+                        <div class="text-center py-8 text-gray-500 mb-4">
+                            <i class="fas fa-images text-4xl mb-2 text-gray-300"></i>
+                            <p>No hay diseños disponibles para este producto</p>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Divider -->
+                        <div class="relative my-6">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-200"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-white text-gray-500">o sube tu propio diseño</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload My Own Design Button -->
+                        <button type="button" id="btn-show-upload" onclick="showUploadSection()" 
+                                class="w-full py-4 px-6 rounded-xl border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50/50 transition-all text-left flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                 </svg>
                             </div>
-                            <h4 class="font-bold text-gray-900 text-lg mb-1">Subir mi propio diseño</h4>
-                            <p class="text-gray-500 text-sm">Ya tengo un diseño listo para imprimir</p>
-                            <p class="text-xs text-gray-400 mt-2">Formatos aceptados: PDF, AI, PSD, JPG, PNG</p>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Subir mi propio diseño</h4>
+                                <p class="text-sm text-gray-500">Ya tengo un diseño listo para imprimir</p>
+                                <p class="text-xs text-gray-400 mt-1">Formatos: PDF, AI, PSD, JPG, PNG (Max. 10MB)</p>
+                            </div>
                         </button>
                     </div>
                 </div>
-                {% endif %}
 
                 <!-- File Upload Section -->
                 <div id="file-upload-section" class="mb-6 {% if category.slug == 'tarjetas-presentacion' %}hidden{% endif %}">
@@ -677,6 +838,93 @@
             }
         }
         return cookieValue;
+    }
+    
+    // ===== INLINE TEMPLATE SELECTION =====
+    let selectedTemplateSlug = '';
+    let selectedTemplateName = '';
+    let selectedTemplateImg = '';
+    
+    function selectTemplate(card) {
+        // Remove previous selection
+        document.querySelectorAll('.template-card.selected').forEach(c => c.classList.remove('selected'));
+        
+        // Add selection
+        card.classList.add('selected');
+        
+        selectedTemplateSlug = card.dataset.templateSlug;
+        selectedTemplateName = card.dataset.templateName;
+        selectedTemplateImg = card.querySelector('img').src;
+        
+        document.getElementById('selected-template').value = selectedTemplateSlug;
+        document.getElementById('design-type').value = 'template';
+        
+        // Show preview
+        document.getElementById('selected-template-preview').classList.remove('hidden');
+        document.getElementById('selected-template-img').src = selectedTemplateImg;
+        document.getElementById('selected-template-name').textContent = selectedTemplateName;
+        
+        // Hide the template selection container, show preview
+        const selectionContainer = document.getElementById('template-selection-container');
+        if (selectionContainer) selectionContainer.classList.add('hidden');
+        
+        updateAddToCartButtonForDesign();
+        console.log('✅ Template seleccionado:', selectedTemplateSlug);
+    }
+    
+    function clearTemplate() {
+        document.querySelectorAll('.template-card.selected').forEach(c => c.classList.remove('selected'));
+        selectedTemplateSlug = '';
+        selectedTemplateName = '';
+        selectedTemplateImg = '';
+        document.getElementById('selected-template').value = '';
+        document.getElementById('selected-template-preview').classList.add('hidden');
+        updateAddToCartButtonForDesign();
+    }
+    
+    function clearTemplateAndShowGrid() {
+        clearTemplate();
+        // Show the template selection container again
+        const selectionContainer = document.getElementById('template-selection-container');
+        if (selectionContainer) selectionContainer.classList.remove('hidden');
+    }
+    
+    function showUploadSection() {
+        // Clear template selection
+        clearTemplate();
+        
+        // Show file upload section
+        const fileUploadSection = document.getElementById('file-upload-section');
+        if (fileUploadSection) {
+            fileUploadSection.classList.remove('hidden');
+            fileUploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        document.getElementById('design-type').value = 'custom';
+    }
+    
+    function updateAddToCartButtonForDesign() {
+        const addToCartBtn = document.getElementById('add-to-cart');
+        const fileRequiredMessage = document.getElementById('file-required-message');
+        const hasTemplate = selectedTemplateSlug !== '';
+        const hasFile = document.getElementById('file-upload-input')?.files?.length > 0;
+        const hasDesignFromGallery = window.designFromGallery === true;
+        
+        if (hasTemplate || hasFile || hasDesignFromGallery) {
+            if (addToCartBtn) {
+                addToCartBtn.disabled = false;
+                addToCartBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                addToCartBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+            }
+            if (fileRequiredMessage) fileRequiredMessage.classList.add('hidden');
+        } else {
+            if (addToCartBtn) {
+                addToCartBtn.disabled = true;
+                addToCartBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                addToCartBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+            }
+            if (fileRequiredMessage) fileRequiredMessage.classList.remove('hidden');
+        }
     }
 
     // 🆕 2. TOGGLE DE TABLA DE DESCUENTOS MEJORADO
@@ -916,6 +1164,169 @@
 
         // Inicializar estado del botón
         updateAddToCartButton();
+        
+        // ===== CHECK FOR UPLOADED DESIGN FROM TEMPLATE GALLERY =====
+        checkForUploadedDesign();
+    });
+    
+    // Function to check for uploaded design from template gallery
+    function checkForUploadedDesign() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasDesignUploaded = urlParams.get('design_uploaded') === 'true';
+        
+        if (!hasDesignUploaded) return;
+        
+        const designName = sessionStorage.getItem('uploadedDesignName');
+        const designSize = sessionStorage.getItem('uploadedDesignSize');
+        const designData = sessionStorage.getItem('uploadedDesignData');
+        const designType = sessionStorage.getItem('uploadedDesignType');
+        
+        if (!designName || !designData) {
+            console.log('[DesignPreview] No design found in sessionStorage');
+            return;
+        }
+        
+        console.log('[DesignPreview] Found uploaded design:', designName);
+        
+        const previewSection = document.getElementById('uploaded-design-preview');
+        const previewImage = document.getElementById('uploaded-preview-image');
+        const fileName = document.getElementById('uploaded-file-name');
+        const fileSize = document.getElementById('uploaded-file-size');
+        
+        if (!previewSection || !previewImage) return;
+        
+        fileName.textContent = designName;
+        fileSize.textContent = formatFileSizeFromBytes(parseInt(designSize));
+        
+        if (designType && designType.startsWith('image/')) {
+            previewImage.innerHTML = `<img src="${designData}" alt="Preview" class="w-24 h-24 object-cover rounded-lg border-2 border-green-200 shadow-sm">`;
+        } else {
+            let iconColor = 'text-gray-500';
+            let iconClass = 'fa-file-alt';
+            if (designName.endsWith('.pdf')) { iconColor = 'text-red-500'; iconClass = 'fa-file-pdf'; }
+            else if (designName.endsWith('.ai')) { iconColor = 'text-orange-500'; iconClass = 'fa-file-image'; }
+            else if (designName.endsWith('.psd')) { iconColor = 'text-blue-500'; iconClass = 'fa-file-image'; }
+            previewImage.innerHTML = `<div class="w-24 h-24 rounded-lg bg-white border-2 border-green-200 flex items-center justify-center shadow-sm"><i class="fas ${iconClass} text-4xl ${iconColor}"></i></div>`;
+        }
+        
+        previewSection.classList.remove('hidden');
+        
+        const designChoiceSection = document.querySelector('.design-choice-card')?.closest('.mb-6');
+        if (designChoiceSection) designChoiceSection.classList.add('hidden');
+        
+        const fileUploadSection = document.getElementById('file-upload-section');
+        if (fileUploadSection) fileUploadSection.classList.add('hidden');
+        
+        const addToCartBtn = document.getElementById('add-to-cart');
+        const fileRequiredMessage = document.getElementById('file-required-message');
+        if (addToCartBtn) {
+            addToCartBtn.disabled = false;
+            addToCartBtn.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl';
+        }
+        if (fileRequiredMessage) fileRequiredMessage.classList.add('hidden');
+        
+        window.designFromGallery = true;
+    }
+    
+    function formatFileSizeFromBytes(bytes) {
+        if (!bytes || isNaN(bytes)) return '';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+    
+    window.changeUploadedDesign = function() {
+        sessionStorage.removeItem('uploadedDesignName');
+        sessionStorage.removeItem('uploadedDesignSize');
+        sessionStorage.removeItem('uploadedDesignData');
+        sessionStorage.removeItem('uploadedDesignType');
+        const qty = document.getElementById('quantity')?.value || 10;
+        window.location.href = '{% url "shop:template_gallery" category.slug product.slug %}?quantity=' + qty;
+    };
+    
+    window.removeUploadedDesign = function() {
+        sessionStorage.removeItem('uploadedDesignName');
+        sessionStorage.removeItem('uploadedDesignSize');
+        sessionStorage.removeItem('uploadedDesignData');
+        sessionStorage.removeItem('uploadedDesignType');
+        
+        const previewSection = document.getElementById('uploaded-design-preview');
+        if (previewSection) previewSection.classList.add('hidden');
+        
+        const designChoiceSection = document.querySelector('.design-choice-card')?.closest('.mb-6');
+        if (designChoiceSection) designChoiceSection.classList.remove('hidden');
+        
+        const addToCartBtn = document.getElementById('add-to-cart');
+        const fileRequiredMessage = document.getElementById('file-required-message');
+        if (addToCartBtn) {
+            addToCartBtn.disabled = true;
+            addToCartBtn.className = 'w-full bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-lg cursor-not-allowed transition-all';
+        }
+        if (fileRequiredMessage) fileRequiredMessage.classList.remove('hidden');
+        
+        const url = new URL(window.location.href);
+        url.searchParams.delete('design_uploaded');
+        window.history.replaceState({}, '', url);
+        
+        window.designFromGallery = false;
+    };
+    
+    // ===== DETECT TEMPLATE SELECTION FROM GALLERY =====
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check URL for template parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const templateSlug = urlParams.get('template');
+        
+        if (templateSlug) {
+            // Try to get template info from sessionStorage
+            const templateName = sessionStorage.getItem('selectedTemplateName') || templateSlug;
+            const templateImage = sessionStorage.getItem('selectedTemplateImage') || '';
+            
+            // Set the selected template
+            selectedTemplateSlug = templateSlug;
+            selectedTemplateName = templateName;
+            selectedTemplateImg = templateImage;
+            
+            // Update hidden inputs
+            document.getElementById('selected-template').value = templateSlug;
+            document.getElementById('design-type').value = 'template';
+            
+            // Show the selected template preview
+            const previewSection = document.getElementById('selected-template-preview');
+            if (previewSection) {
+                previewSection.classList.remove('hidden');
+                const previewImg = document.getElementById('selected-template-img');
+                const previewName = document.getElementById('selected-template-name');
+                
+                if (previewImg && templateImage) previewImg.src = templateImage;
+                if (previewName) previewName.textContent = templateName;
+            }
+            
+            // Also try to highlight the card if it's visible in the inline grid
+            const card = document.querySelector(`[data-template-slug="${templateSlug}"]`);
+            if (card) {
+                card.classList.add('selected');
+            }
+            
+            // Hide the template selection container
+            const selectionContainer = document.getElementById('template-selection-container');
+            if (selectionContainer) selectionContainer.classList.add('hidden');
+            
+            // Update add to cart button
+            updateAddToCartButtonForDesign();
+            
+            // Clear sessionStorage after using
+            sessionStorage.removeItem('selectedTemplateSlug');
+            sessionStorage.removeItem('selectedTemplateName');
+            sessionStorage.removeItem('selectedTemplateImage');
+            
+            // Clean URL without reloading
+            const cleanUrl = new URL(window.location.href);
+            cleanUrl.searchParams.delete('template');
+            window.history.replaceState({}, '', cleanUrl);
+            
+            console.log('✅ Template from gallery applied:', templateSlug);
+        }
     });
 </script>
 
