@@ -566,6 +566,63 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             context['template_name'] = 'shop/tarjetas_presentacion_product_detail.html'
         elif category_slug == 'stickers-etiquetas':
             context['template_name'] = 'shop/stickers_etiquetas_product_detail.html'
+        elif category_slug == 'letreros-banners':
+            from django.db.models import Q
+            
+            # Base query
+            banners_templates = DesignTemplate.objects.filter(category=category)
+            
+            # Subcategory/Product specific filtering
+            p_slug = product.slug if product else ''
+            
+            # 1. Horizontal Banners
+            horizontal_slugs = [
+                'banners-malla', 'banners-polyester', 'banners-tensados', 'banners-vinyl'
+            ]
+            
+            # 2. Vertical Banners
+            vertical_slugs = [
+                'banners-rectractables', 'banners-x'
+            ]
+            
+            if p_slug in horizontal_slugs:
+                # Show only templates ending in horizontal.jpg from letreros_banners/banners (or root)
+                banners_templates = banners_templates.filter(
+                    thumbnail_url__icontains='horizontal.jpg'
+                )
+            elif p_slug in vertical_slugs:
+                 # Show only templates ending in vertical.jpg
+                 banners_templates = banners_templates.filter(
+                    thumbnail_url__icontains='vertical.jpg'
+                 )
+            elif p_slug == 'banners-postes':
+                # Show templates from banners_postes path
+                banners_templates = banners_templates.filter(
+                    thumbnail_url__icontains='banners_postes'
+                )
+            elif p_slug == 'banners-repaso-repeticion':
+                # Show templates from banners_repaso_repeticion path
+                banners_templates = banners_templates.filter(
+                    thumbnail_url__icontains='banners_repaso_repeticion'
+                )
+            else:
+                 # Default fallback: strictly respect subcategory if set, else show everything or nothing?
+                 # Previously: filter(Q(subcategory=product.subcategory) | Q(subcategory__isnull=True))
+                 # Let's keep a sensible fallback
+                if product.subcategory:
+                    banners_templates = banners_templates.filter(
+                        Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
+                    )
+
+            # Apply limits and totals
+            # Note: We must replicate the query for the count to be accurate
+            total_count_qs = banners_templates # Use the already filtered queryset for count
+            
+            banners_templates = banners_templates.order_by('display_order')[:12]
+            context['product_templates'] = banners_templates
+            context['total_templates'] = total_count_qs.count()
+                
+            context['template_name'] = 'shop/letreros_banners_product_detail.html'
         elif category_slug == 'calendarios-regalos':
             # Load calendar templates for this category/subcategory
             from django.db.models import Q
@@ -948,6 +1005,26 @@ def template_gallery_view(request, category_slug, product_slug):
         # FIX: Para calendarios, misma lógica
         if product.subcategory.slug == 'calendarios-familiares':
              templates = templates.filter(slug__contains=product.slug)
+
+    # SPECIAL LOGIC: LETREROS BANNERS
+    if category.slug == 'letreros-banners':
+        # 1. Horizontal Banners
+        horizontal_slugs = [
+            'banners-malla', 'banners-polyester', 'banners-tensados', 'banners-vinyl'
+        ]
+        # 2. Vertical Banners
+        vertical_slugs = [
+            'banners-rectractables', 'banners-x'
+        ]
+        
+        if product.slug in horizontal_slugs:
+            templates = templates.filter(thumbnail_url__icontains='horizontal.jpg')
+        elif product.slug in vertical_slugs:
+            templates = templates.filter(thumbnail_url__icontains='vertical.jpg')
+        elif product.slug == 'banners-postes':
+            templates = templates.filter(thumbnail_url__icontains='banners_postes')
+        elif product.slug == 'banners-repaso-repeticion':
+            templates = templates.filter(thumbnail_url__icontains='banners_repaso_repeticion')
 
     templates = templates.order_by('-is_popular', '-is_new', 'display_order', 'name').distinct()
 

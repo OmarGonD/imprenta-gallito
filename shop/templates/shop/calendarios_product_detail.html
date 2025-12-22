@@ -91,8 +91,10 @@
 
 .template-card img {
     width: 100%;
-    aspect-ratio: 4/3;
-    object-fit: cover;
+    height: 200px;
+    object-fit: contain;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #E5E7EB;
 }
 
 /* Pricing table */
@@ -315,7 +317,7 @@
                     
                     <div id="selected-template-preview" class="hidden mt-4 p-4 bg-indigo-50 rounded-xl border border-indigo-200">
                         <div class="flex items-center gap-4">
-                            <img id="selected-template-img" src="" alt="Template seleccionado" class="w-20 h-20 object-cover rounded-lg border-2 border-white shadow">
+                            <img id="selected-template-img" src="" alt="Template seleccionado" class="w-20 h-20 object-contain bg-white rounded-lg border-2 border-white shadow">
                             <div>
                                 <p class="text-sm font-semibold text-indigo-800">Diseño seleccionado:</p>
                                 <p id="selected-template-name" class="text-indigo-600"></p>

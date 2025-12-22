@@ -126,8 +126,10 @@
 
 .template-card img {
     width: 100%;
-    aspect-ratio: 4/3;
-    object-fit: cover;
+    height: 200px;
+    object-fit: contain;
+    background-color: #f8fafc;
+    border-radius: 8px 8px 0 0;
 }
 
 .section-card {
@@ -607,7 +609,7 @@
                             <div class="flex items-center gap-6">
                                 <div class="flex-shrink-0">
                                     <img id="selected-template-img" src="" alt="Template seleccionado" 
-                                         class="w-32 h-24 object-cover rounded-lg border-2 border-white shadow-lg">
+                                         class="w-32 h-24 object-contain bg-white rounded-lg border-2 border-white shadow-lg">
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 mb-1">

@@ -259,7 +259,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(f'\nError: {str(e)}'))
                 raise
             else:
-                self.stdout.write(self.style.SUCCESS('\n✓ Dry-run completado'))
+                self.stdout.write(self.style.SUCCESS('\n Dry-run completado'))
 
 
     def update_hex_codes(self):
@@ -443,7 +443,7 @@ class Command(BaseCommand):
                 f'Archivos Excel faltantes: {", ".join(missing_files)}'
             )
         
-        self.stdout.write(self.style.SUCCESS('   ✓ Verificación completada\n'))
+        self.stdout.write(self.style.SUCCESS('    Verificación completada\n'))
 
     def clear_existing_data(self):
         """Elimina datos existentes"""
@@ -1282,6 +1282,7 @@ class Command(BaseCommand):
             'tarjetas_presentacion': 'tarjetas-presentacion',
             'invitaciones_papeleria': 'invitaciones-papeleria',
             'calendarios_regalos': 'calendarios-regalos',
+            'letreros_banners': 'letreros-banners',
         }
         
         total_created = 0
@@ -1289,15 +1290,20 @@ class Command(BaseCommand):
         
         for folder_name, category_slug in category_mappings.items():
             folder_path = os.path.join(base_path, folder_name)
-            
             if not os.path.isdir(folder_path):
                 continue
             
             try:
                 category = Category.objects.get(slug=category_slug)
             except Category.DoesNotExist:
-                self.stdout.write(self.style.WARNING(f'    Categoría no encontrada: {category_slug}'))
-                continue
+                # Auto-create category if it doesn't exist (useful for static-only categories like letreros)
+                name = category_slug.replace('-', ' ').title()
+                category = Category.objects.create(
+                    slug=category_slug,
+                    name=name,
+                    status='active'
+                )
+                self.stdout.write(self.style.SUCCESS(f'    Categoría creada: {name} ({category_slug})'))
             
             self.stdout.write(f'\n  Procesando: {folder_name} -> {category.name}')
             
@@ -1346,7 +1352,7 @@ class Command(BaseCommand):
                 total_created += created
                 total_updated += updated
         
-        self.stdout.write(self.style.SUCCESS(f'\n    ✓ Archivos estáticos: {total_created} creados | {total_updated} actualizados'))
+        self.stdout.write(self.style.SUCCESS(f'\n    Archivos estáticos: {total_created} creados | {total_updated} actualizados'))
         self.stdout.write('')
         return total_created + total_updated
 

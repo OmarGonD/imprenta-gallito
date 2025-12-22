@@ -218,7 +218,17 @@ async function addToCart() {
     formData.append('category_slug', window.categorySlug);
     formData.append('product_slug', window.productSlug);
     formData.append('quantity', quantity.toString());
-    formData.append('design_type', 'custom');
+
+    // Check for template slug from hidden input (set by inline template selector)
+    const templateInput = document.getElementById('selected-template');
+    const designTypeInput = document.getElementById('design-type');
+
+    if (templateInput && templateInput.value) {
+        formData.append('template_slug', templateInput.value);
+        formData.append('design_type', designTypeInput ? designTypeInput.value : 'template');
+    } else {
+        formData.append('design_type', 'custom');
+    }
 
     // Check for file from sessionStorage (uploaded via template gallery)
     const designDataFromGallery = sessionStorage.getItem('uploadedDesignData');
