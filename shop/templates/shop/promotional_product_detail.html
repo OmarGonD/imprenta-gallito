@@ -1,0 +1,801 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load l10n %}
+
+{% block title %}{{ product.name }} - {{ category.name }}{% endblock %}
+
+{% block content %}
+<style>
+/* ===== ESTILOS ESPECÍFICOS DE PRODUCT DETAIL ===== */
+@keyframes bounce-once {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-once {
+    animation: bounce-once 0.6s ease-in-out;
+}
+
+.upload-zone {
+    transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+    border-color: #3B82F6;
+    background-color: #F0F9FF;
+}
+
+.upload-zone.dragover {
+    border-color: #2563EB;
+    background-color: #DBEAFE;
+    transform: scale(1.01);
+}
+
+.template-card {
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+}
+
+.template-card:hover {
+    border-color: #93C5FD;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.template-card.selected {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.template-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #2563EB;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.template-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background-color: #f8fafc;
+    border-radius: 8px 8px 0 0;
+}
+
+.section-card {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+.section-title i {
+    color: #3B82F6;
+}
+
+/* Price display styles */
+#unit-price {
+    color: #2563EB !important;
+    font-weight: 800 !important;
+}
+
+#discount-badge {
+    color: #059669 !important;
+    font-weight: 800 !important;
+}
+
+#total-price {
+    color: #111827 !important;
+    font-weight: 800 !important;
+}
+
+/* Pricing table */
+.pricing-table {
+    background: white;
+}
+
+.pricing-table thead {
+    background: #F9FAFB;
+    border-bottom: 2px solid #E5E7EB;
+}
+
+.pricing-table th {
+    color: #374151;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    width: 33.33%;
+}
+
+.pricing-table td {
+    padding: 1rem;
+    text-align: center;
+    width: 33.33%;
+}
+
+.pricing-table tbody tr {
+    border-bottom: 1px solid #F3F4F6;
+    transition: background-color 0.15s ease;
+}
+
+.pricing-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.price-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.discount-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background: #ECFDF5;
+    color: #059669;
+    border: 1px solid #D1FAE5;
+}
+
+.discount-badge-none {
+    color: #D1D5DB;
+    font-size: 1rem;
+}
+
+.tiers-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.tiers-collapse.show {
+    max-height: 500px;
+    transition: max-height 0.4s ease-in;
+}
+
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+}
+</style>
+
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Breadcrumb -->
+    <nav class="mb-6">
+        <ol class="flex items-center space-x-2 text-sm text-gray-600">
+            <li><a href="{% url 'shop:home' %}" class="hover:text-blue-600 transition-colors">Inicio</a></li>
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ category.get_url }}" class="hover:text-blue-600 transition-colors">{{ category.name }}</a></li>
+            {% if product.subcategory %}
+            <li><span class="mx-2">/</span></li>
+            <li><a href="{{ product.subcategory.get_url }}" class="hover:text-blue-600 transition-colors">{{ product.subcategory.name }}</a></li>
+            {% endif %}
+            <li><span class="mx-2">/</span></li>
+            <li class="text-gray-900 font-medium">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Main Product Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+        <!-- Left: Image -->
+        <div>
+            <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center sticky top-24">
+                {% if detail_image_url %}
+                    <img src="{{ detail_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% elif product.images.exists %}
+                    <img src="{{ product.images.first.image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% elif product.base_image_url %}
+                    <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% else %}
+                    <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right: Options -->
+        <div class="space-y-6">
+            <div>
+                <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">{{ product.name }}</h1>
+                <p class="text-sm text-gray-500 mt-2">SKU: {{ product.sku }}</p>
+            </div>
+            
+            {% if product.description %}
+            <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+            {% endif %}
+
+            <form id="productForm" method="POST" action="#" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Quantity Selector -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Cantidad <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex items-center space-x-3">
+                        <button 
+                            type="button" 
+                            id="qty-decrease" 
+                            class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold"
+                        >
+                            −
+                        </button>
+                        <input 
+                            type="number" 
+                            id="quantity" 
+                            name="quantity" 
+                            value="10" 
+                            min="1" 
+                            max="10000" 
+                            class="w-20 text-center border-2 border-gray-300 rounded-lg py-2 font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                        >
+                        <button 
+                            type="button" 
+                            id="qty-increase" 
+                            class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-bold"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Mínimo 1 unidad</p>
+                </div>
+
+                <!-- Price Display -->
+                <div id="pricing-display" class="mb-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md">
+                    <div class="flex w-full divide-x divide-gray-200">
+                        <div class="flex-1 text-center px-6 py-6 bg-gradient-to-br from-blue-50 to-blue-100" style="width: 33.33%;">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-4 h-4 text-blue-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold">Precio c/u</p>
+                            </div>
+                            <p class="text-3xl leading-tight" id="unit-price">S/ 0.00</p>
+                        </div>
+                        
+                        <div class="flex-1 text-center px-6 py-6 bg-gradient-to-br from-emerald-50 to-green-100" style="width: 33.33%;">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-4 h-4 text-emerald-600 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold">Descuento</p>
+                            </div>
+                            <p class="text-3xl leading-tight" id="discount-badge">0%</p>
+                        </div>
+                        
+                        <div class="flex-1 text-center px-6 py-6 bg-gradient-to-br from-gray-50 to-gray-100" style="width: 33.33%;">
+                            <div class="flex items-center justify-center mb-2">
+                                <svg class="w-4 h-4 text-gray-700 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-semibold">Total a pagar</p>
+                            </div>
+                            <p class="text-3xl leading-tight" id="total-price">S/ 0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Tiers Table -->
+                {% if pricing_tiers %}
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-semibold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Descuentos por volumen
+                        </h3>
+                        <button 
+                            type="button" 
+                            id="toggle-tiers-btn"
+                            class="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center transition-colors"
+                        >
+                            <span id="toggle-text">Ocultar</span>
+                            <svg class="w-4 h-4 ml-1 transition-transform" id="tiers-chevron" style="transform: rotate(180deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div id="tiers-table" class="tiers-collapse show overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+                        <table class="w-full text-sm pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Precio c/u</th>
+                                    <th>Descuento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tiers-tbody">
+                                {% for tier in pricing_tiers %}
+                                <tr data-tier-min="{{ tier.min_quantity }}">
+                                    <td>
+                                        <span class="font-medium">
+                                            {{ tier.min_quantity }}{% if tier.max_quantity %} - {{ tier.max_quantity }}{% else %}+{% endif %}
+                                        </span>
+                                        <span class="text-xs text-gray-400 ml-1">unidades</span>
+                                    </td>
+                                    <td>
+                                        <span class="price-value">S/ {{ tier.unit_price|floatformat:2 }}</span>
+                                    </td>
+                                    <td>
+                                        {% if tier.discount_percent > 0 %}
+                                        <span class="discount-badge">
+                                            -{{ tier.discount_percent|floatformat:0 }}%
+                                        </span>
+                                        {% else %}
+                                        <span class="discount-badge-none">—</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-3 flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Los precios se actualizan automáticamente según la cantidad seleccionada
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- Hidden Inputs for Design -->
+                <input type="hidden" id="selected-template" name="template_slug" value="">
+                <input type="hidden" id="design-type" name="design_type" value="template">
+
+                <!-- ============================== -->
+                <!-- PASO 1: ELIGE UNA PLANTILLA (Solo si hay templates) -->
+                <!-- ============================== -->
+                {% if total_templates %}
+                <div class="section-card mb-6" id="design-section">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">1</div>
+                        <h3 class="text-lg font-bold text-gray-900">Elige un Diseño</h3>
+                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Opcional</span>
+                        <span class="ml-auto text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">{{ total_templates }} diseños</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">Selecciona un diseño de nuestra galería, <strong>o salta este paso y sube tu propio diseño</strong>.</p>
+                    
+                    <!-- Selected Template Preview -->
+                    <div id="selected-template-preview" class="hidden mb-4">
+                        <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200 p-4">
+                            <div class="flex items-center gap-4">
+                                <div class="flex-shrink-0 relative">
+                                    <img id="selected-template-img" src="" alt="Template seleccionado" 
+                                         class="w-24 h-20 object-contain bg-white rounded-lg border-2 border-white shadow-lg">
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-check text-white text-xs"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-green-700 mb-1">✓ Diseño seleccionado</p>
+                                    <p id="selected-template-name" class="text-base font-bold text-indigo-800 truncate"></p>
+                                </div>
+                                <div class="flex flex-col gap-2 flex-shrink-0">
+                                    <button type="button" onclick="clearTemplateAndShowGrid()" 
+                                            class="inline-flex items-center px-3 py-1.5 text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                                        <i class="fas fa-exchange-alt mr-1"></i> Cambiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Template Selection Container -->
+                    <div id="template-selection-container">
+                        {% if product_templates %}
+                        <div id="templates-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                            {% for template in product_templates %}
+                            <div class="template-card relative cursor-pointer group" 
+                                 data-template-slug="{{ template.slug }}"
+                                 data-template-name="{{ template.name }}"
+                                 onclick="selectTemplate(this)">
+                                <img src="{{ template.thumbnail_url }}" alt="{{ template.name }}" loading="lazy" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-indigo-600 bg-opacity-0 group-hover:bg-opacity-10 rounded-lg transition-all"></div>
+                                <p class="text-xs text-gray-600 mt-1 text-center truncate">{{ template.name }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if total_templates > 12 %}
+                        <a href="{% url 'shop:template_gallery' category.slug product.slug %}" 
+                           class="inline-flex items-center justify-center w-full py-2.5 border-2 border-indigo-200 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-colors">
+                            <i class="fas fa-th-large mr-2"></i>
+                            Ver todos los {{ total_templates }} diseños
+                        </a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ======================================= -->
+                <!-- PASO 2: AÑADE TU LOGO O IMAGEN -->
+                <!-- ======================================= -->
+                <div class="section-card mb-6" id="upload-section-card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">{% if total_templates %}2{% else %}1{% endif %}</div>
+                        <h3 class="text-lg font-bold text-gray-900">Añade tu Logo o Imagen</h3>
+                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Opcional</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">¿Tienes un logo o imagen? Súbelo aquí y lo imprimiremos en tu producto.</p>
+                    
+                    <div id="file-upload-section">
+                        <div id="upload-button-container">
+                            <div class="upload-zone border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all" 
+                                 onclick="document.getElementById('file-upload-input').click()">
+                                <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <p class="mt-3 text-sm text-gray-600">
+                                    <span class="font-semibold text-blue-600">Haz clic para subir</span> o arrastra tu archivo
+                                </p>
+                                <p class="text-xs text-gray-400 mt-1">PDF, AI, PSD, JPG, PNG (Máx. 10MB)</p>
+                            </div>
+                            <input type="file" id="file-upload-input" name="design_file" class="hidden" accept=".pdf,.ai,.psd,.jpg,.jpeg,.png,.svg,.webp,.gif">
+                        </div>
+
+                        <div id="file-preview-container" class="hidden">
+                            <div class="flex items-center gap-4 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
+                                <div id="preview-image-container" class="w-14 h-14 bg-white rounded-lg border flex items-center justify-center overflow-hidden">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-semibold text-gray-900 truncate" id="file-name">archivo.png</p>
+                                    <p class="text-sm text-gray-500" id="file-size">2.4 MB</p>
+                                    <span class="inline-flex items-center text-xs font-medium text-green-600 mt-1">
+                                        <i class="fas fa-check-circle mr-1"></i> Archivo listo
+                                    </span>
+                                </div>
+                                <button type="button" id="change-file-btn" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                                    Cambiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================================= -->
+                <!-- PASO 3: TEXTO PERSONALIZADO (SIMPLIFICADO) -->
+                <!-- ======================================= -->
+                <div class="section-card mb-6" id="contact-section-card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm">{% if total_templates %}3{% else %}2{% endif %}</div>
+                        <h3 class="text-lg font-bold text-gray-900">Texto Personalizado</h3>
+                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">Opcional</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">¿Quieres agregar texto a tu producto? Escríbelo aquí (ej: nombre, slogan, sitio web).</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label for="custom_text_line1" class="block text-sm font-medium text-gray-700 mb-1">Línea de texto 1</label>
+                            <input type="text" id="custom_text_line1" name="custom_text_line1" 
+                                   class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500 p-2.5 shadow-sm" 
+                                   placeholder="Ej: Primer nombre de ser querido" maxlength="50">
+                            <p class="text-xs text-gray-400 mt-1">Máximo 50 caracteres</p>
+                        </div>
+                        
+                        <div>
+                            <label for="custom_text_line2" class="block text-sm font-medium text-gray-700 mb-1">Línea de texto 2</label>
+                            <input type="text" id="custom_text_line2" name="custom_text_line2" 
+                                   class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500 p-2.5 shadow-sm" 
+                                   placeholder="Ej: frase, cita, etc." maxlength="50">
+                            <p class="text-xs text-gray-400 mt-1">Máximo 50 caracteres</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button 
+                    type="button"
+                    id="add-to-cart"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl"
+                >
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    Agregar al carrito
+                </button>
+
+            </form>
+
+            <!-- Modal: Producto agregado -->
+            <div id="cart-success-modal" class="modal-backdrop hidden fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-6 w-full max-w-md shadow-2xl rounded-xl bg-white">
+                    <div class="text-center">
+                        <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 animate-bounce-once">
+                            <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="mt-5 text-xl font-bold text-gray-900">¡Producto agregado!</h3>
+                        <p class="mt-3 text-sm text-gray-600" id="cart-modal-message">
+                            Tu producto ha sido agregado al carrito correctamente.
+                        </p>
+                        
+                        <div class="mt-6 space-y-3">
+                            <button id="modal-go-to-cart" class="w-full px-5 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all">
+                                🛒 Ir al carrito
+                            </button>
+                            <button id="modal-continue" class="w-full px-5 py-3 text-gray-700 font-medium hover:bg-gray-100 rounded-lg transition-all">
+                                Seguir comprando
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <section class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Productos relacionados</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {% for related in related_products %}
+            <a href="{{ related.get_url }}" class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all p-4">
+                <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+                    <img src="{{ related.base_image_url }}" alt="{{ related.name }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+                <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ related.name }}</h3>
+                {% if related.starting_price %}
+                <p class="text-blue-600 font-bold mt-1">Desde S/ {{ related.starting_price|floatformat:2 }}</p>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/product_logic.js' %}"></script>
+<script>
+// Initialize pricing system
+document.addEventListener('DOMContentLoaded', function() {
+    // Pricing tiers data from Django
+    const pricingTiers = {{ pricing_tiers_json|safe }};
+    
+    // Initialize quantity controls
+    const qtyInput = document.getElementById('quantity');
+    const qtyDecrease = document.getElementById('qty-decrease');
+    const qtyIncrease = document.getElementById('qty-increase');
+    
+    function updatePricing() {
+        const qty = parseInt(qtyInput.value) || 1;
+        let currentTier = pricingTiers[0];
+        
+        for (const tier of pricingTiers) {
+            if (qty >= tier.min_quantity && qty <= tier.max_quantity) {
+                currentTier = tier;
+                break;
+            }
+        }
+        
+        const unitPrice = currentTier.unit_price;
+        const total = unitPrice * qty;
+        const discount = currentTier.discount_percent || 0;
+        
+        document.getElementById('unit-price').textContent = 'S/ ' + unitPrice.toFixed(2);
+        document.getElementById('discount-badge').textContent = discount > 0 ? '-' + discount + '%' : '0%';
+        document.getElementById('total-price').textContent = 'S/ ' + total.toFixed(2);
+        
+        // Highlight active tier row
+        document.querySelectorAll('#tiers-tbody tr').forEach(row => {
+            const minQty = parseInt(row.dataset.tierMin);
+            if (minQty === currentTier.min_quantity) {
+                row.classList.add('bg-blue-50');
+            } else {
+                row.classList.remove('bg-blue-50');
+            }
+        });
+    }
+    
+    qtyDecrease.addEventListener('click', function() {
+        const current = parseInt(qtyInput.value) || 1;
+        if (current > 1) {
+            qtyInput.value = current - 1;
+            updatePricing();
+        }
+    });
+    
+    qtyIncrease.addEventListener('click', function() {
+        const current = parseInt(qtyInput.value) || 1;
+        qtyInput.value = current + 1;
+        updatePricing();
+    });
+    
+    qtyInput.addEventListener('change', updatePricing);
+    qtyInput.addEventListener('input', updatePricing);
+    
+    // Toggle pricing tiers table
+    const toggleBtn = document.getElementById('toggle-tiers-btn');
+    const tiersTable = document.getElementById('tiers-table');
+    const toggleText = document.getElementById('toggle-text');
+    const chevron = document.getElementById('tiers-chevron');
+    
+    if (toggleBtn && tiersTable) {
+        toggleBtn.addEventListener('click', function() {
+            tiersTable.classList.toggle('show');
+            if (tiersTable.classList.contains('show')) {
+                toggleText.textContent = 'Ocultar';
+                chevron.style.transform = 'rotate(180deg)';
+            } else {
+                toggleText.textContent = 'Ver descuentos';
+                chevron.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+    
+    // Initialize pricing
+    updatePricing();
+    
+    // File upload handling
+    const fileInput = document.getElementById('file-upload-input');
+    const uploadContainer = document.getElementById('upload-button-container');
+    const previewContainer = document.getElementById('file-preview-container');
+    const changeFileBtn = document.getElementById('change-file-btn');
+    
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            document.getElementById('file-name').textContent = file.name;
+            document.getElementById('file-size').textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+            
+            // Show preview for images
+            const previewImageContainer = document.getElementById('preview-image-container');
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImageContainer.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImageContainer.innerHTML = '<i class="fas fa-file text-2xl text-gray-400"></i>';
+            }
+            
+            uploadContainer.classList.add('hidden');
+            previewContainer.classList.remove('hidden');
+        }
+    });
+    
+    if (changeFileBtn) {
+        changeFileBtn.addEventListener('click', function() {
+            fileInput.value = '';
+            uploadContainer.classList.remove('hidden');
+            previewContainer.classList.add('hidden');
+        });
+    }
+    
+    // Template selection
+    window.selectTemplate = function(element) {
+        // Remove selection from all
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Add selection to clicked
+        element.classList.add('selected');
+        
+        const slug = element.dataset.templateSlug;
+        const name = element.dataset.templateName;
+        const imgSrc = element.querySelector('img').src;
+        
+        // Update hidden input
+        document.getElementById('selected-template').value = slug;
+        document.getElementById('design-type').value = 'template';
+        
+        // Show preview
+        document.getElementById('selected-template-img').src = imgSrc;
+        document.getElementById('selected-template-name').textContent = name;
+        document.getElementById('selected-template-preview').classList.remove('hidden');
+        document.getElementById('template-selection-container').classList.add('hidden');
+    };
+    
+    window.clearTemplateAndShowGrid = function() {
+        document.getElementById('selected-template').value = '';
+        document.getElementById('selected-template-preview').classList.add('hidden');
+        document.getElementById('template-selection-container').classList.remove('hidden');
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+    };
+    
+    // Add to cart
+    const addToCartBtn = document.getElementById('add-to-cart');
+    const successModal = document.getElementById('cart-success-modal');
+    
+    addToCartBtn.addEventListener('click', function() {
+        const formData = new FormData(document.getElementById('productForm'));
+        formData.append('product_slug', '{{ product.slug }}');
+        formData.append('category_slug', '{{ category.slug }}');
+        
+        // Add custom text fields to additional_info
+        const line1 = document.getElementById('custom_text_line1').value;
+        const line2 = document.getElementById('custom_text_line2').value;
+        if (line1 || line2) {
+            formData.append('additional_info', JSON.stringify({
+                custom_text_line1: line1,
+                custom_text_line2: line2
+            }));
+        }
+        
+        fetch('/add-to-cart/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update cart counter
+                const counter = document.getElementById('headerCartBadge');
+                if (counter) {
+                    counter.textContent = data.cart_items_counter;
+                    counter.classList.remove('hidden');
+                }
+                
+                // Show success modal
+                successModal.classList.remove('hidden');
+            } else {
+                alert('Error: ' + (data.error || 'No se pudo agregar al carrito'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error de conexión');
+        });
+    });
+    
+    // Modal buttons
+    document.getElementById('modal-go-to-cart').addEventListener('click', function() {
+        window.location.href = '/cart/';
+    });
+    
+    document.getElementById('modal-continue').addEventListener('click', function() {
+        successModal.classList.add('hidden');
+    });
+    
+    successModal.addEventListener('click', function(e) {
+        if (e.target === successModal) {
+            successModal.classList.add('hidden');
+        }
+    });
+});
+</script>
+{% endblock %}

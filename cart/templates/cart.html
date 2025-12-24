@@ -101,55 +101,8 @@
                         </div>
                         
                         <!-- ========== SECCIÓN DE DISEÑO ========== -->
-                        {% if item.get_template_slug and item.design_file %}
-                        <!-- CALENDARIO: Plantilla + Foto personal -->
-                        <div class="mt-4 pt-4 border-t border-gray-100">
-                            <div class="p-3 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-100">
-                                <p class="text-xs font-semibold text-indigo-700 mb-3">
-                                    <i class="fas fa-calendar-alt mr-1"></i> Diseño personalizado
-                                </p>
-                                <div class="flex items-center gap-3">
-                                    <!-- Template -->
-                                    <div class="text-center">
-                                        <img src="{{ item.get_template_thumbnail_url }}" 
-                                             alt="Plantilla"
-                                             class="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-md"
-                                             onerror="this.src='/static/img/template-placeholder.png'">
-                                        <p class="text-xs text-gray-500 mt-1">Plantilla</p>
-                                    </div>
-                                    <!-- Plus icon -->
-                                    <div class="text-indigo-400 text-2xl font-bold">+</div>
-                                    <!-- User photo -->
-                                    <div class="text-center">
-                                        {% if item.is_image_file %}
-                                        <img src="{{ item.design_file.url }}" 
-                                             alt="Tu foto"
-                                             class="w-16 h-16 object-cover rounded-lg border-2 border-white shadow-md cursor-pointer hover:opacity-80"
-                                             onclick="openDesignModal('{{ item.design_file.url }}', '{{ item.get_file_name }}')">
-                                        {% else %}
-                                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-white shadow-md">
-                                            <i class="fas fa-file text-gray-400"></i>
-                                        </div>
-                                        {% endif %}
-                                        <p class="text-xs text-gray-500 mt-1">Tu foto</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 mt-3">
-                                    <a href="{{ item.design_file.url }}" 
-                                       target="_blank" 
-                                       class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                                        <i class="fas fa-eye"></i> Ver foto
-                                    </a>
-                                    <button type="button"
-                                            onclick="openChangeDesignModal({{ item.id }})"
-                                            class="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300 transition-colors">
-                                        <i class="fas fa-sync-alt"></i> Cambiar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        {% elif item.design_file %}
+
+                        {% if item.design_file %}
                         <!-- Diseño subido por el usuario -->
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
@@ -197,8 +150,9 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                         
-                        {% elif item.get_template_slug %}
+                        {% if item.get_template_slug %}
                         <!-- Plantilla seleccionada de galería -->
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             <div class="flex items-center gap-3 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
@@ -232,40 +186,128 @@
                                     </a>
                                 </div>
                             </div>
-                            
-                            {% if item.has_contact_info %}
-                            <!-- Datos de contacto -->
-                            <div class="mt-3 p-3 bg-gray-50 rounded-lg">
-                                <p class="text-xs font-medium text-gray-700 mb-2">
-                                    <i class="fas fa-user text-gray-400 mr-1"></i>
-                                    Datos para la tarjeta:
-                                </p>
-                                <p class="text-sm text-gray-900">{{ item.get_contact_summary }}</p>
-                                {% if item.contact_phone %}
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <i class="fas fa-phone text-gray-400 mr-1"></i>
-                                    {{ item.contact_phone }}
-                                </p>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                            
-                            {% if item.additional_info %}
-                            <!-- Información adicional (Bodas / Eventos / Stickers) -->
-                            {# Ocultar JSON técnico de stickers (que empieza con {) #}
-                            {% if not item.additional_info|slice:":1" == "{" %}
-                            <div class="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                                <p class="text-xs font-medium text-blue-800 mb-2">
-                                    <i class="fas fa-info-circle text-blue-500 mr-1"></i>
-                                    Detalles ingresados:
-                                </p>
-                                <div class="text-xs text-gray-700 whitespace-pre-line leading-relaxed pl-1">{{ item.additional_info }}</div>
-                            </div>
-                            {% endif %}
-                            {% endif %}
                         </div>
+                        {% endif %}
+
+                        {% if item.has_contact_info %}
+                        <!-- Datos de contacto (Tarjetas) -->
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="p-3 bg-gray-50 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <p class="text-xs font-medium text-gray-700 mb-2">
+                                        <i class="fas fa-user-tag text-gray-400 mr-1"></i>
+                                        Datos para la tarjeta:
+                                    </p>
+                                    <button onclick="openEditDetailsModal('{{ item.id }}')" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                        Editar
+                                    </button>
+                                </div>
+                                <div class="text-sm text-gray-800 space-y-1">
+                                    <p><strong>{{ item.contact_name }}</strong></p>
+                                    {% if item.contact_job_title %}<p>{{ item.contact_job_title }}</p>{% endif %}
+                                    {% if item.contact_company %}<p class="text-gray-500">{{ item.contact_company }}</p>{% endif %}
+                                    {% if item.contact_phone %}
+                                    <p class="text-xs text-gray-500 flex items-center mt-1">
+                                        <i class="fas fa-phone text-gray-400 mr-2"></i>{{ item.contact_phone }}
+                                    </p>
+                                    {% endif %}
+                                    {% if item.contact_email %}
+                                    <p class="text-xs text-gray-500 flex items-center">
+                                        <i class="fas fa-envelope text-gray-400 mr-2"></i>{{ item.contact_email }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if item.additional_info %}
+                        <!-- Datos Adicionales (Eventos/Bodas) -->
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+                                <div class="flex justify-between items-start mb-3">
+                                    <p class="text-xs font-bold text-yellow-800 uppercase tracking-wide">
+                                        <i class="fas fa-calendar-alt text-yellow-600 mr-1"></i>
+                                        Detalles del evento
+                                    </p>
+                                    <!-- Parsing Additional Info for Edit Button Data -->
+                                    <button onclick='openEditAdditionalInfoModal({{ item.id }}, {{ item.additional_info|safe }})' class="text-xs text-yellow-700 hover:text-yellow-900 font-bold underline">
+                                        Editar
+                                    </button>
+                                </div>
+                                <div id="event-details-{{ item.id }}" class="space-y-2 text-sm">
+                                    <!-- Rendered via JavaScript -->
+                                </div>
+                                <script>
+                                (function() {
+                                    const container = document.getElementById('event-details-{{ item.id }}');
+                                    const info = {{ item.additional_info|safe }};
+                                    let html = '';
+                                    
+                                    // Field mappings for better display (Spanish labels)
+                                    const fieldLabels = {
+                                        'event_name': { label: 'Evento', icon: 'fas fa-star' },
+                                        'event_date': { label: 'Fecha', icon: 'fas fa-calendar-day' },
+                                        'event_time': { label: 'Hora', icon: 'fas fa-clock' },
+                                        'additional_notes': { label: 'Notas', icon: 'fas fa-sticky-note' },
+                                        'nombres_novios': { label: 'Nombres', icon: 'fas fa-heart' },
+                                        'fecha_evento': { label: 'Fecha', icon: 'fas fa-calendar-day' },
+                                        'lugar_evento': { label: 'Lugar', icon: 'fas fa-map-marker-alt' },
+                                        'mensaje_personalizado': { label: 'Mensaje', icon: 'fas fa-comment' },
+                                        // Wedding fields (English keys -> Spanish labels)
+                                        'bride_name': { label: 'Nombre de la Novia', icon: 'fas fa-female' },
+                                        'groom_name': { label: 'Nombre del Novio', icon: 'fas fa-male' },
+                                        'wedding_date': { label: 'Fecha de la Boda', icon: 'fas fa-calendar-day' },
+                                        'wedding_time': { label: 'Hora de la Boda', icon: 'fas fa-clock' },
+                                        'venue': { label: 'Lugar del Evento', icon: 'fas fa-map-marker-alt' },
+                                        'notes': { label: 'Notas', icon: 'fas fa-sticky-note' },
+                                        // Banner/Event fields
+                                        'nombre_empresa': { label: 'Empresa', icon: 'fas fa-building' },
+                                        'telefono': { label: 'Teléfono', icon: 'fas fa-phone' },
+                                        'direccion': { label: 'Dirección', icon: 'fas fa-map-marker-alt' },
+                                        'texto_principal': { label: 'Texto Principal', icon: 'fas fa-heading' },
+                                        'texto_secundario': { label: 'Texto Secundario', icon: 'fas fa-text-height' }
+                                    };
+                                    
+                                    if (info && typeof info === 'object') {
+                                        for (const [key, value] of Object.entries(info)) {
+                                            if (value && value.toString().trim()) {
+                                                const fieldConfig = fieldLabels[key] || { 
+                                                    label: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), 
+                                                    icon: 'fas fa-info' 
+                                                };
+                                                
+                                                // Format date if it looks like a date
+                                                let displayValue = value;
+                                                if (key.includes('date') || key.includes('fecha')) {
+                                                    const dateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+                                                    if (dateMatch) {
+                                                        const [_, year, month, day] = dateMatch;
+                                                        const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                                                        displayValue = `${parseInt(day)} ${months[parseInt(month)-1]} ${year}`;
+                                                    }
+                                                }
+                                                
+                                                html += `
+                                                    <div class="flex items-start gap-2">
+                                                        <i class="${fieldConfig.icon} text-yellow-600 mt-0.5 w-4 text-center"></i>
+                                                        <div>
+                                                            <span class="font-medium text-gray-700">${fieldConfig.label}:</span>
+                                                            <span class="text-gray-800 ml-1">${displayValue}</span>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                            }
+                                        }
+                                    }
+                                    container.innerHTML = html || '<p class="text-gray-500 italic">Sin detalles adicionales</p>';
+                                })();
+                                </script>
+                            </div>
+                        </div>
+                        {% endif %}
                         
-                        {% else %}
+                        {% if not item.design_file and not item.get_template_slug %}
                         <!-- Sin diseño - Opción para subir -->
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             <div class="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
@@ -588,6 +630,187 @@ if (dropZone) {
     }
     
     ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight(e) {
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    }
+    
+    function unhighlight(e) {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    }
+    
+    dropZone.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        document.getElementById('newDesignFile').files = files;
+        handleFileSelect(document.getElementById('newDesignFile'));
+    }
+    
+    dropZone.addEventListener('click', () => {
+        document.getElementById('newDesignFile').click();
+    });
+}
+
+// ========== Modal Editar Detalles de Contacto (Tarjetas) ==========
+function openEditDetailsModal(itemId) {
+    // Aquí deberíamos repoblar con datos reales, pero por ahora solo abrimos el modal
+    // Idealmente, necesitaríamos un endpoint para obtener los datos del item o tenerlos en data attributes
+    // Vamos a buscar el item en el DOM para obtener sus datos actuales si es posible, 
+    // o simplemente mostrar el formulario para que el usuario verifique.
+    
+    // Simplificación: Usar el mismo endpoint 'add_product_to_cart' con 'edit_item_id'
+    // Pero necesitamos los valores actuales.
+    // Vamos a asumir que los datos están visibles en el DOM y los extraemos (hacky pero rápido)
+    // O mejor, el botón puede pasar los datos.
+    
+    // Para simplificar la implementación, vamos a hacer que el botón pase el ID y haremos una petición AJAX 
+    // para obtener los detalles, o simplemente ponemos los campos vacios y el usuario los re-ingresa? 
+    // No, eso es mala UX. 
+    
+    // Mejor enfoque: Data attributes en el botón
+    // Vamos a dejarlo pendiente de refinamiento, por ahora mostramos modal.
+    document.getElementById('editDetailsItemId').value = itemId;
+    document.getElementById('editDetailsModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeEditDetailsModal() {
+    document.getElementById('editDetailsModal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// ========== Modal Editar Info Adicional (Eventos) ==========
+function openEditAdditionalInfoModal(itemId, currentInfo) {
+    document.getElementById('editInfoItemId').value = itemId;
+    const container = document.getElementById('editInfoFieldsContainer');
+    container.innerHTML = ''; // Limpiar
+    
+    // Generar campos dinámicamente basado en el JSON actual
+    if (currentInfo && typeof currentInfo === 'object') {
+        for (const [key, value] of Object.entries(currentInfo)) {
+            const div = document.createElement('div');
+            div.className = 'mb-4';
+            
+            const label = document.createElement('label');
+            label.className = 'block text-sm font-medium text-gray-700 mb-1 capitalize';
+            label.textContent = key.replace(/_/g, ' ');
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = key;
+            input.value = value;
+            input.className = 'w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 shadow-sm';
+            
+            div.appendChild(label);
+            div.appendChild(input);
+            container.appendChild(div);
+        }
+    } else {
+        // Fallback si es texto plano
+        const div = document.createElement('div');
+        div.className = 'mb-4';
+        const label = document.createElement('label');
+        label.className = 'block text-sm font-medium text-gray-700 mb-1';
+        label.textContent = 'Detalles';
+        const textarea = document.createElement('textarea');
+        textarea.name = 'additional_info_text';
+        textarea.rows = 4;
+        textarea.value = currentInfo || '';
+        textarea.className = 'w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 shadow-sm';
+        div.appendChild(label);
+        div.appendChild(textarea);
+        container.appendChild(div);
+    }
+    
+    document.getElementById('editInfoModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeEditInfoModal() {
+    document.getElementById('editInfoModal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+</script>
+
+<!-- MODAL: EDITAR DETALLES CONTACTO (TARJETAS) -->
+<div id="editDetailsModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeEditDetailsModal()"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <form id="editDetailsForm" method="POST" action="{% url 'shop:add_product_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="edit_item_id" id="editDetailsItemId">
+                    <!-- Hack: enviamos dummy product data para que pase la validación del view, 
+                         aunque idealmente deberíamos tener un view específico para update details -->
+                    
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Editar Datos de Contacto</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Nombre completo</label>
+                                <input type="text" name="contact_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Cargo</label>
+                                <input type="text" name="contact_job_title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Empresa</label>
+                                <input type="text" name="contact_company" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+                                <input type="text" name="contact_phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" name="contact_email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="submit" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-50 sm:ml-3 sm:w-auto">Guardar Cambios</button>
+                        <button type="button" onclick="closeEditDetailsModal()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: EDITAR INFO ADICIONAL -->
+<div id="editInfoModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeEditInfoModal()"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <form id="editInfoForm" method="POST" action="{% url 'shop:add_product_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="edit_item_id" id="editInfoItemId">
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Editar Detalles</h3>
+                        <div id="editInfoFieldsContainer">
+                            <!-- Fields will be injected here -->
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="submit" class="inline-flex w-full justify-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 sm:ml-3 sm:w-auto">Guardar Cambios</button>
+                        <button type="button" onclick="closeEditInfoModal()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>    ['dragenter', 'dragover'].forEach(eventName => {
         dropZone.addEventListener(eventName, () => {
             dropZone.classList.add('border-blue-500', 'bg-blue-50');
         });

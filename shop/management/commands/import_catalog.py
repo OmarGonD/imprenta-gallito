@@ -1283,6 +1283,8 @@ class Command(BaseCommand):
             'invitaciones_papeleria': 'invitaciones-papeleria',
             'calendarios_regalos': 'calendarios-regalos',
             'letreros_banners': 'letreros-banners',
+            'productos_promocionales': 'productos-promocionales',
+            'postales_publicidad': 'postales-publicidad',
         }
         
         total_created = 0
@@ -1321,6 +1323,14 @@ class Command(BaseCommand):
             
             if subdirs:
                 # Has subfolders - each is a product/subcategory
+                
+                # SPECIAL CASE: LETREROS_BANNERS (3-level nested structure)
+                if category_slug == 'letreros-banners':
+                    created, updated = self._import_letreros_banners_nested(folder_path, category)
+                    total_created += created
+                    total_updated += updated
+                    continue
+                
                 for subdir in subdirs:
                     subdir_path = os.path.join(folder_path, subdir)
                     subcategory_slug = subdir.replace('_', '-')
@@ -1412,6 +1422,140 @@ class Command(BaseCommand):
                 created += 1
         
         return created, updated
+
+    def _import_letreros_banners_nested(self, base_path, category):
+        """
+        Importa templates de letreros_banners que tienen estructura anidada de 3 niveles.
+        Estructura: letreros_banners/banderas/banderines/imagen.jpg
+        """
+        total_created = 0
+        total_updated = 0
+        
+        if not os.path.exists(base_path):
+            return 0, 0
+        
+        try:
+            subdirs = os.listdir(base_path)
+        except OSError:
+            return 0, 0
+        
+        # Iterate through first-level subdirectories (banderas, banners, letreros, etc.)
+        for subdir in subdirs:
+            subdir_path = os.path.join(base_path, subdir)
+            
+            if not os.path.isdir(subdir_path):
+                continue
+            
+            subcategory_slug = subdir.replace('_', '-')
+            
+            # Try to get subcategory
+            try:
+                subcategory = Subcategory.objects.get(slug=subcategory_slug, category=category)
+            except Subcategory.DoesNotExist:
+                subcategory = None
+            
+            # Check if this subdirectory has further nesting (e.g., banderas/banderines)
+            try:
+                subdir_items = os.listdir(subdir_path)
+            except OSError:
+                continue
+            
+            nested_dirs = [d for d in subdir_items if os.path.isdir(os.path.join(subdir_path, d))]
+            image_extensions = ('.jpg', '.jpeg', '.png', '.webp')
+            direct_images = [f for f in subdir_items if f.lower().endswith(image_extensions)]
+            
+            if nested_dirs:
+                # Has 3rd level nesting (e.g., banderas/banderines, banderas/banderas_pluma)
+                for nested_dir in nested_dirs:
+                    nested_path = os.path.join(subdir_path, nested_dir)
+                    
+                    # Get images from this nested directory
+                    try:
+                        nested_images = [f for f in os.listdir(nested_path) if f.lower().endswith(image_extensions)]
+                    except OSError:
+                        continue
+                    
+                    if not nested_images:
+                        continue
+                    
+                    self.stdout.write(f'    • letreros_banners/{subdir}/{nested_dir}: {len(nested_images)} imágenes')
+                    
+                    # Import templates from this nested folder
+                    for i, image_file in enumerate(nested_images):
+                        file_slug = os.path.splitext(image_file)[0].lower()
+                        template_slug = f'letreros-{nested_dir.replace("_", "-")}-{file_slug}'[:100]
+                        
+                        # Image URL
+                        image_url = f'/static/media/template_images/letreros_banners/{subdir}/{nested_dir}/{image_file}'
+                        
+                        # Template name
+                        template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
+                        
+                        if not self.dry_run:
+                            try:
+                                template, created = DesignTemplate.objects.update_or_create(
+                                    slug=template_slug,
+                                    defaults={
+                                        'name': template_name,
+                                        'category': category,
+                                        'subcategory': subcategory,
+                                        'thumbnail_url': image_url,
+                                        'preview_url': image_url,
+                                        'is_popular': i < 10,
+                                        'is_new': i < 5,
+                                        'display_order': i,
+                                    }
+                                )
+                                
+                                if created:
+                                    total_created += 1
+                                else:
+                                    total_updated += 1
+                            except Exception as e:
+                                pass  # Silently skip errors
+                        else:
+                            total_created += 1
+            
+            if direct_images:
+                # Has images directly in this subdirectory (2-level structure)
+                self.stdout.write(f'    • letreros_banners/{subdir}: {len(direct_images)} imágenes')
+                
+                for i, image_file in enumerate(direct_images):
+                    file_slug = os.path.splitext(image_file)[0].lower()
+                    template_slug = f'letreros-{subcategory_slug}-{file_slug}'[:100]
+                    
+                    # Image URL
+                    image_url = f'/static/media/template_images/letreros_banners/{subdir}/{image_file}'
+                    
+                    # Template name
+                    template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
+                    
+                    if not self.dry_run:
+                        try:
+                            template, created = DesignTemplate.objects.update_or_create(
+                                slug=template_slug,
+                                defaults={
+                                    'name': template_name,
+                                    'category': category,
+                                    'subcategory': subcategory,
+                                    'thumbnail_url': image_url,
+                                    'preview_url': image_url,
+                                    'is_popular': i < 10,
+                                    'is_new': i < 5,
+                                    'display_order': i,
+                                }
+                            )
+                            
+                            if created:
+                                total_created += 1
+                            else:
+                                total_updated += 1
+                        except Exception as e:
+                            pass  # Silently skip errors
+                    else:
+                        total_created += 1
+        
+        return total_created, total_updated
 
     def _import_bodas_nested(self, base_path, category, subcategory):
         """

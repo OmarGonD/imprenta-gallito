@@ -572,47 +572,44 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             # Base query
             banners_templates = DesignTemplate.objects.filter(category=category)
             
-            # Subcategory/Product specific filtering
+            # Get product slug for folder matching
             p_slug = product.slug if product else ''
             
-            # 1. Horizontal Banners
+            # Convert product slug to folder name format (hyphens to underscores)
+            # e.g., 'banderines' -> 'banderines', 'banderas-pluma' -> 'banderas_pluma'
+            folder_name = p_slug.replace('-', '_')
+            
+            # 1. Horizontal Banners - only from 'banners' folder
             horizontal_slugs = [
                 'banners-malla', 'banners-polyester', 'banners-tensados', 'banners-vinyl'
             ]
             
-            # 2. Vertical Banners
+            # 2. Vertical Banners - only from 'banners' folder 
             vertical_slugs = [
                 'banners-rectractables', 'banners-x'
             ]
             
             if p_slug in horizontal_slugs:
-                # Show only templates ending in horizontal.jpg from letreros_banners/banners (or root)
+                # Show only templates ending in horizontal.jpg from letreros_banners/banners
                 banners_templates = banners_templates.filter(
-                    thumbnail_url__icontains='horizontal.jpg'
+                    Q(thumbnail_url__icontains='horizontal.jpg') & Q(thumbnail_url__icontains='/banners/')
                 )
             elif p_slug in vertical_slugs:
                  # Show only templates ending in vertical.jpg
                  banners_templates = banners_templates.filter(
-                    thumbnail_url__icontains='vertical.jpg'
+                    Q(thumbnail_url__icontains='vertical.jpg') & Q(thumbnail_url__icontains='/banners/')
                  )
-            elif p_slug == 'banners-postes':
-                # Show templates from banners_postes path
+            elif folder_name:
+                # DYNAMIC FILTERING: Use product slug to match folder path
+                # Filter templates where the URL contains the folder name
+                # e.g., for 'banderines', filter by '/banderines/'
+                # e.g., for 'banderas-pluma', filter by '/banderas_pluma/'
                 banners_templates = banners_templates.filter(
-                    thumbnail_url__icontains='banners_postes'
-                )
-            elif p_slug == 'banners-repaso-repeticion':
-                # Show templates from banners_repaso_repeticion path
-                banners_templates = banners_templates.filter(
-                    thumbnail_url__icontains='banners_repaso_repeticion'
+                    thumbnail_url__icontains=f'/{folder_name}/'
                 )
             else:
-                 # Default fallback: strictly respect subcategory if set, else show everything or nothing?
-                 # Previously: filter(Q(subcategory=product.subcategory) | Q(subcategory__isnull=True))
-                 # Let's keep a sensible fallback
-                if product.subcategory:
-                    banners_templates = banners_templates.filter(
-                        Q(subcategory=product.subcategory) | Q(subcategory__isnull=True)
-                    )
+                # No product slug - show no templates
+                banners_templates = banners_templates.none()
 
             # Apply limits and totals
             # Note: We must replicate the query for the count to be accurate
@@ -657,6 +654,54 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
                 {'value': 'marcapaginas-5x15', 'label': 'Marcapáginas 5x15cm', 'price_modifier': 0},
             ])
             context['template_name'] = 'shop/calendarios_product_detail.html'
+        elif category_slug == 'productos-promocionales':
+            # Subcategories that should NOT show design templates
+            no_templates_subcategories = [
+                'usb', 'llaveros', 'cuadernos', 'vasos', 'snacks-caramelos'
+            ]
+            
+            # Check if this subcategory should show templates
+            current_subcategory = product.subcategory.slug if product.subcategory else ''
+            
+            if current_subcategory in no_templates_subcategories:
+                # Don't load templates for these subcategories
+                context['product_templates'] = []
+                context['total_templates'] = 0
+            else:
+                # Load promotional product templates
+                promo_templates = DesignTemplate.objects.filter(category=category)
+                
+                if product.subcategory:
+                    promo_templates = promo_templates.filter(
+                        subcategory=product.subcategory
+                    )
+                
+                # Show up to 12 templates initially
+                context['product_templates'] = promo_templates.order_by('display_order')[:12]
+                context['total_templates'] = promo_templates.count()
+            
+            # Use appropriate HTML template - reusing tarjetas default or specific one?
+            # Reusing tarjetas_presentacion_product_detail.html as it has the 'Elige una Plantilla' logic
+            # defined in line 385, so we just stick with that default or set explicitly.
+            # However, looking at letreros_banners_product_detail vs tarjetas...
+            # The URL user visited showed "Elige una Plantilla" so the default template (tarjetas...) is likely fine 
+            # as long as product_templates is populated.
+            context['template_name'] = 'shop/promotional_product_detail.html'
+        elif category_slug == 'postales-publicidad':
+            # Load postales publicidad templates for inline selection
+            from django.db.models import Q
+            postales_templates = DesignTemplate.objects.filter(category=category)
+            
+            if product.subcategory:
+                # Filter by subcategory folder path in URL
+                subcategory_folder = product.subcategory.slug.replace('-', '_')
+                postales_templates = postales_templates.filter(
+                    thumbnail_url__icontains=f'/postales_publicidad/{subcategory_folder}/'
+                )
+            
+            context['product_templates'] = postales_templates.order_by('display_order')[:12]
+            context['total_templates'] = postales_templates.count()
+            context['template_name'] = 'shop/tarjetas_presentacion_product_detail.html'
 
     # -------------------------------------------------------------------------
     # 6. DEBUGGING
@@ -851,9 +896,11 @@ def add_product_to_cart(request):
                 
                 if design_type == 'template' and template_slug and template_slug != 'custom':
                     cart_item.comment = f"template:{template_slug[:80]}"
-                    if cart_item.design_file:
-                        cart_item.design_file.delete(save=False)
-                        cart_item.design_file = None
+                    # Allow design_file to persist or be updated even with template
+                    if request.FILES.get('design_file'):
+                         if cart_item.design_file:
+                             cart_item.design_file.delete(save=False)
+                         cart_item.design_file = request.FILES.get('design_file')
                 elif design_type == 'custom':
                     cart_item.comment = "custom"
                     if request.FILES.get('design_file'):
@@ -1006,25 +1053,34 @@ def template_gallery_view(request, category_slug, product_slug):
         if product.subcategory.slug == 'calendarios-familiares':
              templates = templates.filter(slug__contains=product.slug)
 
-    # SPECIAL LOGIC: LETREROS BANNERS
+    # SPECIAL LOGIC: LETREROS BANNERS - Dynamic folder-based filtering
     if category.slug == 'letreros-banners':
-        # 1. Horizontal Banners
+        # Convert product slug to folder name format (hyphens to underscores)
+        folder_name = product.slug.replace('-', '_')
+        
+        # 1. Horizontal Banners - only from 'banners' folder
         horizontal_slugs = [
             'banners-malla', 'banners-polyester', 'banners-tensados', 'banners-vinyl'
         ]
-        # 2. Vertical Banners
+        # 2. Vertical Banners - only from 'banners' folder
         vertical_slugs = [
             'banners-rectractables', 'banners-x'
         ]
         
         if product.slug in horizontal_slugs:
-            templates = templates.filter(thumbnail_url__icontains='horizontal.jpg')
+            templates = templates.filter(
+                Q(thumbnail_url__icontains='horizontal.jpg') & Q(thumbnail_url__icontains='/banners/')
+            )
         elif product.slug in vertical_slugs:
-            templates = templates.filter(thumbnail_url__icontains='vertical.jpg')
-        elif product.slug == 'banners-postes':
-            templates = templates.filter(thumbnail_url__icontains='banners_postes')
-        elif product.slug == 'banners-repaso-repeticion':
-            templates = templates.filter(thumbnail_url__icontains='banners_repaso_repeticion')
+            templates = templates.filter(
+                Q(thumbnail_url__icontains='vertical.jpg') & Q(thumbnail_url__icontains='/banners/')
+            )
+        elif folder_name:
+            # DYNAMIC FILTERING: Use product slug to match folder path
+            # e.g., for 'banderas-pared', filter by '/banderas_pared/'
+            templates = templates.filter(
+                thumbnail_url__icontains=f'/{folder_name}/'
+            )
 
     templates = templates.order_by('-is_popular', '-is_new', 'display_order', 'name').distinct()
 

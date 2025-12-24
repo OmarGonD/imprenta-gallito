@@ -190,14 +190,95 @@ async function addToCart() {
         return;
     }
 
-    // Validar archivo (si se requiere)
-    const fileInput = document.getElementById('file-upload-input');
-    const fileRequired = fileInput && fileInput.hasAttribute('required');
+    // 4. VALIDADES ESTRICTAS (Nuevo Requerimiento)
+    // ============================================
 
-    if (fileRequired && (!fileInput.files || fileInput.files.length === 0)) {
-        alert('❌ Por favor sube tu diseño para continuar');
+    // 4.1 Validar que se haya seleccionado un diseño (Template) O subido un archivo
+    let templateInput = document.getElementById('selected-template');
+    const fileInput = document.getElementById('file-upload-input');
+
+    // Check for file from sessionStorage (uploaded via template gallery)
+    const galleryData = sessionStorage.getItem('uploadedDesignData');
+    const hasGalleryFile = !!(galleryData && sessionStorage.getItem('uploadedDesignName'));
+
+    // Check for file from input
+    const hasInputFile = fileInput && fileInput.files && fileInput.files.length > 0;
+
+    // Check for template selection
+    const hasTemplate = templateInput && templateInput.value;
+
+    if (!hasTemplate && !hasInputFile && !hasGalleryFile) {
+        alert('❌ Debes elegir un diseño:\n\n1. Selecciona una plantilla del catálogo.\nÓ\n2. Sube tu propio diseño listo para imprimir.');
+
+        // Scroll to design section
+        const designSection = document.getElementById('design-section') || document.querySelector('.design-choice-card');
+        if (designSection) designSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        window.isAddingToCart = false; // Reset lock
         return;
     }
+
+    // 4.2 Validar Campos de Contacto / Evento (Si existen en la página)
+    let missingFields = [];
+
+    // Lista de campos de contacto obligatorios (si existen en el DOM)
+    const requiredContactFields = [
+        { id: 'contact_name', label: 'Nombre completo' },
+        { id: 'contact_phone', label: 'Celular / Teléfono' },
+        // { id: 'contact_job_title', label: 'Cargo' }, // Opcional?
+        // { id: 'contact_company', label: 'Empresa' }, // Opcional?
+    ];
+
+    requiredContactFields.forEach(field => {
+        const input = document.getElementById(field.id);
+        if (input && !input.value.trim()) {
+            missingFields.push(field.label);
+            input.classList.add('border-red-500', 'ring-1', 'ring-red-500'); // Highlight error
+
+            // Remove error on input
+            input.addEventListener('input', () => {
+                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            }, { once: true });
+        }
+    });
+
+    // Lista de campos adicionales obligatorios (Eventos, Bodas, etc.)
+    // Asumimos que todos los inputs visibles con clase 'js-additional-info' son obligatorios
+    // salvo los que sean explicitamente opcionales (ej: notas)
+    const addInfoInputs = document.querySelectorAll('.js-additional-info');
+    addInfoInputs.forEach(input => {
+        // Ignorar campos opcionales (textarea de notas por ejemplo, si se desea)
+        // Por ahora exigimos todo lo que no sea textarea o tenga placeholder "Opcional"
+        const isOptional = input.tagName === 'TEXTAREA' || input.placeholder.toLowerCase().includes('opcional');
+
+        if (!isOptional && !input.value.trim()) {
+            // Try to find a label
+            let labelText = input.name || 'Campo requerido';
+            const label = input.previousElementSibling; // Asumiendo label antes del input
+            if (label && label.tagName === 'LABEL') {
+                labelText = label.textContent.replace('*', '').trim();
+            }
+
+            missingFields.push(labelText);
+            input.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+
+            input.addEventListener('input', () => {
+                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            }, { once: true });
+        }
+    });
+
+    if (missingFields.length > 0) {
+        alert(`❌ Por favor completa los siguientes datos obligatorios:\n\n- ${missingFields.join('\n- ')}`);
+
+        // Scroll to first error
+        const firstError = document.querySelector('.border-red-500');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        window.isAddingToCart = false;
+        return;
+    }
+
 
     // Marcar que estamos agregando al carrito
     window.isAddingToCart = true;
@@ -220,7 +301,7 @@ async function addToCart() {
     formData.append('quantity', quantity.toString());
 
     // Check for template slug from hidden input (set by inline template selector)
-    const templateInput = document.getElementById('selected-template');
+    templateInput = document.getElementById('selected-template');
     const designTypeInput = document.getElementById('design-type');
 
     if (templateInput && templateInput.value) {
@@ -257,6 +338,41 @@ async function addToCart() {
     }
     if (window.selectedSizeSlug) {
         formData.append('size_slug', window.selectedSizeSlug);
+    }
+
+    // 🆕 Collect Contact Info (Tarjetas de Presentación)
+    const contactFields = [
+        'contact_name', 'contact_job_title', 'contact_company',
+        'contact_phone', 'contact_email', 'contact_social', 'contact_address'
+    ];
+
+    contactFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (input && input.value) {
+            formData.append(field, input.value.trim());
+        }
+    });
+
+    // 🆕 Collect Additional Info (Bodas, Calendarios, Banners)
+    // Looking for inputs with class 'js-additional-info'
+    const additionalInfoInputs = document.querySelectorAll('.js-additional-info');
+    if (additionalInfoInputs.length > 0) {
+        const info = {};
+        additionalInfoInputs.forEach(input => {
+            if (input.value && input.name) {
+                info[input.name] = input.value.trim();
+            }
+        });
+
+        if (Object.keys(info).length > 0) {
+            formData.append('additional_info', JSON.stringify(info));
+        }
+    } else {
+        // Fallback: Check if there is a direct additional_info input (hidden or otherwise)
+        const directInfo = document.getElementById('additional_info');
+        if (directInfo && directInfo.value) {
+            formData.append('additional_info', directInfo.value);
+        }
     }
 
     console.log('📦 Enviando al servidor:', {
@@ -386,6 +502,131 @@ function setupTiersToggle() {
 // G. MODAL DE ÉXITO
 // ====================================================================
 
+function resetProductForm() {
+    console.log('🔄 Reseteando formulario del producto...');
+
+    // 1. Reset quantity to default
+    const quantityInput = document.getElementById('quantity');
+    if (quantityInput) {
+        quantityInput.value = quantityInput.min || 10;
+        updatePriceAndHighlight();
+    }
+
+    // 2. Clear template selection
+    const templateInput = document.getElementById('selected-template');
+    if (templateInput) templateInput.value = '';
+
+    const designTypeInput = document.getElementById('design-type');
+    if (designTypeInput) designTypeInput.value = 'template';
+
+    // Hide template preview if visible
+    const templatePreview = document.getElementById('selected-template-preview');
+    if (templatePreview) templatePreview.classList.add('hidden');
+
+    // Remove selected class from template cards
+    document.querySelectorAll('.template-card.selected').forEach(card => {
+        card.classList.remove('selected');
+    });
+
+    // Reset global template variables if they exist
+    if (typeof window.selectedTemplateSlug !== 'undefined') window.selectedTemplateSlug = '';
+    if (typeof window.selectedTemplateName !== 'undefined') window.selectedTemplateName = '';
+    if (typeof window.selectedTemplateImg !== 'undefined') window.selectedTemplateImg = '';
+
+    // 3. Clear file input
+    const fileInput = document.getElementById('file-upload-input');
+    if (fileInput) {
+        fileInput.value = '';
+    }
+
+    // Reset file preview UI
+    const filePreviewContainer = document.getElementById('file-preview-container');
+    if (filePreviewContainer) filePreviewContainer.classList.add('hidden');
+
+    const uploadButtonContainer = document.getElementById('upload-button-container');
+    if (uploadButtonContainer) uploadButtonContainer.classList.remove('hidden');
+
+    // 4. Clear sessionStorage design data
+    sessionStorage.removeItem('uploadedDesignName');
+    sessionStorage.removeItem('uploadedDesignSize');
+    sessionStorage.removeItem('uploadedDesignData');
+    sessionStorage.removeItem('uploadedDesignType');
+    window.designFromGallery = false;
+
+    // Hide uploaded design preview (from gallery)
+    const uploadedDesignPreview = document.getElementById('uploaded-design-preview');
+    if (uploadedDesignPreview) uploadedDesignPreview.classList.add('hidden');
+
+    // 5. Clear contact fields (Tarjetas de Presentación)
+    const contactFields = [
+        'contact_name', 'contact_job_title', 'contact_company',
+        'contact_phone', 'contact_email', 'contact_social', 'contact_address'
+    ];
+    contactFields.forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        if (input) input.value = '';
+    });
+
+    // 6. Clear additional info fields (Bodas, Eventos, Banners)
+    document.querySelectorAll('.js-additional-info').forEach(input => {
+        input.value = '';
+    });
+
+    // 7. Reset option cards to first/default selection (bodas options)
+    document.querySelectorAll('[data-option]').forEach(card => {
+        const cards = document.querySelectorAll(`[data-option="${card.dataset.option}"]`);
+        cards.forEach((c, index) => {
+            if (index === 0) {
+                c.classList.add('selected');
+                const radio = c.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+            } else {
+                c.classList.remove('selected');
+            }
+        });
+    });
+
+    // Reset color swatches to first
+    const colorSwatches = document.querySelectorAll('.color-swatch');
+    if (colorSwatches.length > 0) {
+        colorSwatches.forEach((s, i) => {
+            if (i === 0) s.classList.add('selected');
+            else s.classList.remove('selected');
+        });
+        const hiddenColor = document.getElementById('selected-color');
+        if (hiddenColor && colorSwatches[0]) {
+            hiddenColor.value = colorSwatches[0].dataset.color || '';
+        }
+    }
+
+    // 8. Reset Add to Cart button to disabled state
+    const addToCartBtn = document.getElementById('add-to-cart');
+    const fileRequiredMessage = document.getElementById('file-required-message');
+
+    if (addToCartBtn) {
+        addToCartBtn.disabled = true;
+        addToCartBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+        addToCartBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+    }
+    if (fileRequiredMessage) {
+        fileRequiredMessage.classList.remove('hidden');
+    }
+
+    // 9. Show design section again if hidden
+    const designSection = document.getElementById('design-section');
+    if (designSection) designSection.classList.remove('hidden');
+
+    // Show design choice cards if hidden
+    const designChoiceSection = document.querySelector('.design-choice-card')?.closest('.mb-6');
+    if (designChoiceSection) designChoiceSection.classList.remove('hidden');
+
+    // Show file upload section if hidden
+    const fileUploadSection = document.getElementById('file-upload-section');
+    if (fileUploadSection) fileUploadSection.classList.remove('hidden');
+
+    console.log('✅ Formulario reseteado correctamente');
+}
+
 function setupSuccessModal() {
     const modal = document.getElementById('cart-success-modal');
     const goToCartBtn = document.getElementById('modal-go-to-cart');
@@ -402,6 +643,8 @@ function setupSuccessModal() {
     if (continueShoppingBtn) {
         continueShoppingBtn.addEventListener('click', () => {
             modal.classList.add('hidden');
+            // Reset the form to allow fresh product addition
+            resetProductForm();
         });
     }
 
@@ -409,6 +652,8 @@ function setupSuccessModal() {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.classList.add('hidden');
+            // Also reset form when closing by clicking outside
+            resetProductForm();
         }
     });
 }

@@ -1,28 +1,22 @@
+
 import pandas as pd
 import os
-from django.conf import settings
 
-# Setup Django (although purely for path access, not needed if we use absolute path)
-# But let's just use the absolute path directly for simplicity in this script run
-base_path = r'd:\web_proyects\imprenta_gallito\static\data'
-filename = 'products_complete.xlsx'
-filepath = os.path.join(base_path, filename)
+file_path = r'D:\web_proyects\imprenta_gallito\static\data\products_complete.xlsx'
 
-print(f"Reading {filepath}...")
 try:
-    df = pd.read_excel(filepath)
-    print("\nALL COLUMNS:")
-    print(df.columns.tolist())
+    df = pd.read_excel(file_path)
+    print("Columns:", df.columns.tolist())
+    print("\nFirst 5 rows:")
+    print(df.head().to_string())
     
-    # Filter for specific product
-    polos = df[df['product_slug'].astype(str).str.contains('gildan-r-softstyle-r-unisex-t-shirt', case=False, na=False)]
-    
-    if not polos.empty:
-        print(f"\nFOUND {len(polos)} POLOS.")
-        row = polos.iloc[0]
-        print(f"available_colors: {row.get('available_colors')}")
-        print(f"colores_hex: {row.get('colores_hex')}")
+    # Check for similar category if exists
+    print("\nChecking for existing 'vasos' in 'productos_promocionales':")
+    existing = df[(df['category_slug'] == 'productos_promocionales') & (df['subcategory_slug'] == 'vasos')]
+    if not existing.empty:
+        print(existing.head().to_string())
     else:
-        print("\nNO POLOS FOUND IN THIS FILE.")
+        print("No existing entries found.")
+        
 except Exception as e:
-    print(f"Error: {e}")
+    print(f"Error reading excel: {e}")
