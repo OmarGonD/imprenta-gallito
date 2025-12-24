@@ -1388,11 +1388,16 @@ class Command(BaseCommand):
             file_slug = os.path.splitext(image_file)[0].lower()
             template_slug = f'{category.slug}-{file_slug}'[:100]
             
-            # Image URL
+            # Image URL calculation
             relative_path = folder_path.replace(str(settings.BASE_DIR), '').replace('\\', '/')
             if relative_path.startswith('/'):
                 relative_path = relative_path[1:]
-            image_url = f'/{relative_path}/{image_file}'
+            
+            # Remove 'static/' from start if present
+            if relative_path.startswith('static/'):
+                relative_path = relative_path[7:]
+            
+            image_url = f'{relative_path}/{image_file}'
             
             # Template name
             template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
@@ -1486,7 +1491,7 @@ class Command(BaseCommand):
                         template_slug = f'letreros-{nested_dir.replace("_", "-")}-{file_slug}'[:100]
                         
                         # Image URL
-                        image_url = f'/static/media/template_images/letreros_banners/{subdir}/{nested_dir}/{image_file}'
+                        image_url = f'media/template_images/letreros_banners/{subdir}/{nested_dir}/{image_file}'
                         
                         # Template name
                         template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
@@ -1525,7 +1530,7 @@ class Command(BaseCommand):
                     template_slug = f'letreros-{subcategory_slug}-{file_slug}'[:100]
                     
                     # Image URL
-                    image_url = f'/static/media/template_images/letreros_banners/{subdir}/{image_file}'
+                    image_url = f'media/template_images/letreros_banners/{subdir}/{image_file}'
                     
                     # Template name
                     template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
@@ -1615,7 +1620,7 @@ class Command(BaseCommand):
                 template_slug = f'bodas-{product_slug}-{file_slug}'[:100]
                 
                 # Image URL
-                image_url = f'/static/media/template_images/invitaciones_papeleria/bodas/{folder_name}/{image_file}'
+                image_url = f'media/template_images/invitaciones_papeleria/bodas/{folder_name}/{image_file}'
                 
                 # Create template name
                 template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]
@@ -1696,14 +1701,16 @@ class Command(BaseCommand):
                     # self.stdout.write(f'    SKIP Producto no encontrado: {product_slug}')
                     continue
                 
-                # Construct URL
-                # Path relative to static/media is what we want? 
-                # Or relative to MEDIA_ROOT? 
-                # Existing import uses /static/media/... so let's stick to that for consistence
-                # root is absolute path.
+                # Construct URL relative to static folder (for use with {% static %})
                 rel_dir = os.path.relpath(root, settings.BASE_DIR).replace('\\', '/')
-                if not rel_dir.startswith('/'):
-                    rel_dir = '/' + rel_dir
+                
+                # Remove 'static/' prefix if present
+                if rel_dir.startswith('static/'):
+                    rel_dir = rel_dir[7:]
+                
+                # Ensure no leading slash
+                if rel_dir.startswith('/'):
+                    rel_dir = rel_dir[1:]
                 
                 image_url = f'{rel_dir}/{image_file}'
                 
@@ -1807,7 +1814,7 @@ class Command(BaseCommand):
                 # Construct relative path from static root
                 # base_path is .../calendarios_regalos
                 # folder_path is .../calendarios_regalos/folder_name
-                image_url = f'/static/media/template_images/calendarios_regalos/{folder_name}/{image_file}'
+                image_url = f'media/template_images/calendarios_regalos/{folder_name}/{image_file}'
                 
                 # Template name
                 template_name = file_slug.replace('-', ' ').replace('_', ' ').title()[:200]

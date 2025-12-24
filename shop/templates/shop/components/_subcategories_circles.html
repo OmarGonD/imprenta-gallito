@@ -17,7 +17,7 @@
                class="subcategory-circle {% if selected_subcategory == sub.slug %}active{% endif %}">
                 <div class="circle-image">
                     {% if sub.image_url %}
-                    <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
+                    <img src="{% static sub.image_url %}" alt="{{ sub.name }}">
                     {% else %}
                     <div class="circle-placeholder" style="background: linear-gradient(135deg, 
                         {% cycle '#0066cc' '#f59e0b' '#10b981' '#8b5cf6' '#ec4899' '#ef4444' %}, 

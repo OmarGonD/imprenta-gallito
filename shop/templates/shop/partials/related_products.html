@@ -7,9 +7,11 @@
             <div class="col-md-3 col-sm-6 mb-4">
                 <div class="product-card-related">
                     <a href="{% url 'shop:clothing_product_detail' category_slug=category.slug subcategory_slug=subcategory.slug product_slug=product.slug %}">
-                        <img src="{{ product.base_image_url|default:'/static/img/placeholder-product-image.png' }}" 
-                             alt="{{ product.name }}" 
-                             class="img-fluid">
+                        {% if product.base_image_url %}
+                            <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="img-fluid">
+                        {% else %}
+                            <img src="{% static 'img/placeholder-product-image.png' %}" alt="{{ product.name }}" class="img-fluid">
+                        {% endif %}
                         <h6 class="product-name mt-2">{{ product.name }}</h6>
                         <div class="price-from">Desde S/ {{ product.current_price|floatformat:2 }}</div>
                     </a>

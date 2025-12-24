@@ -138,7 +138,7 @@
                    class="template-card group">
                     <div class="template-image">
                         {% if template.thumbnail_url %}
-                        <img src="{{ template.thumbnail_url }}" 
+                        <img src="{% static template.thumbnail_url %}" 
                              alt="{{ template.name }}"
                              loading="lazy"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">

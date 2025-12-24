@@ -214,9 +214,9 @@
                 {% if detail_image_url %}
                     <img src="{{ detail_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
                 {% elif product.images.exists %}
-                    <img src="{{ product.images.first.image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                    <img src="{% static product.images.first.image_url %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
                 {% elif product.base_image_url %}
-                    <img src="{{ product.base_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                    <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
                 {% else %}
                     <img src="{% static 'img/placeholder-product.png' %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
                 {% endif %}
@@ -423,7 +423,7 @@
                                  data-template-slug="{{ template.slug }}"
                                  data-template-name="{{ template.name }}"
                                  onclick="selectTemplate(this)">
-                                <img src="{{ template.thumbnail_url }}" alt="{{ template.name }}" loading="lazy" class="w-full h-auto rounded-lg">
+                                <img src="{% static template.thumbnail_url %}" alt="{{ template.name }}" loading="lazy" class="w-full h-auto rounded-lg">
                                 <div class="absolute inset-0 bg-indigo-600 bg-opacity-0 group-hover:bg-opacity-10 rounded-lg transition-all"></div>
                                 <p class="text-xs text-gray-600 mt-1 text-center truncate">{{ template.name }}</p>
                             </div>
@@ -566,7 +566,7 @@
             {% for related in related_products %}
             <a href="{{ related.get_url }}" class="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all p-4">
                 <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
-                    <img src="{{ related.base_image_url }}" alt="{{ related.name }}" 
+                    <img src="{% static related.base_image_url %}" alt="{{ related.name }}" 
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                 </div>
                 <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ related.name }}</h3>

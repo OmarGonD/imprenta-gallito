@@ -17,7 +17,7 @@
                class="subcategory-card {% if selected_subcategory == sub.slug %}active{% endif %}">
                 <div class="card-image">
                     {% if sub.image_url %}
-                    <img src="{{ sub.image_url }}" alt="{{ sub.name }}">
+                    <img src="{% static sub.image_url %}" alt="{{ sub.name }}">
                     {% else %}
                     <div class="card-placeholder">
                         <i class="fas fa-layer-group"></i>

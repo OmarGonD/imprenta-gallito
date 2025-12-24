@@ -329,7 +329,7 @@
         <div>
             <!-- Main Image -->
             <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center mb-4">
-                <img id="main-product-image" src="{% if detail_image_url %}{{ detail_image_url }}{% else %}{{ base_image_url }}{% endif %}" alt="{{ product.name }}" 
+                <img id="main-product-image" src="{% if detail_image_url %}{{ detail_image_url }}{% else %}{% static base_image_url %}{% endif %}" alt="{{ product.name }}" 
                      class="max-w-full h-auto rounded-lg" style="max-height: 600px;">
             </div>
 
@@ -681,7 +681,7 @@
             <a href="{{ related.get_absolute_url }}" class="product-card-hover bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="aspect-square bg-gray-100 flex items-center justify-center">
                     {% if related.base_image_url %}
-                        <img src="{{ related.base_image_url }}" alt="{{ related.name }}" class="w-full h-full object-cover">
+                        <img src="{% static related.base_image_url %}" alt="{{ related.name }}" class="w-full h-full object-cover">
                     {% else %}
                         <span class="text-gray-400 text-sm">Sin imagen</span>
                     {% endif %}
