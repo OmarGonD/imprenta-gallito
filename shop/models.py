@@ -737,6 +737,11 @@ class Profile(models.Model):
     shipping_department = models.CharField(max_length=100, blank=False)
     shipping_province = models.CharField(max_length=100, blank=False)
     shipping_district = models.CharField(max_length=100, blank=False)
+    GENDER_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Femenino'),
+    ]
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=False, null=True, verbose_name="Sexo")
     photo = models.ImageField(upload_to='profile_pics', default='profile_pics/default_profile_pic_white.png')
 
     @property
@@ -748,6 +753,8 @@ class Profile(models.Model):
             self.shipping_department, 
             self.shipping_province, 
             self.shipping_district,
+            self.gender,
+            self.birthdate,
         ]
         return all(field and str(field).strip() for field in required_fields)
 

@@ -68,6 +68,13 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>{{ profile_form.gender.label_tag }}</th>
+                                <td>
+                                    {{ profile_form.gender.errors }}
+                                    {{ profile_form.gender }}
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>{{ user_form.username.label_tag }}</th>
                                 <td>
                                     {{ user_form.username.errors }}

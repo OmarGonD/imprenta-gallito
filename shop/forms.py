@@ -66,13 +66,14 @@ class ProfileForm(ModelForm):
 
     dni = forms.CharField(label='DNI', max_length=100, required=True)
     phone_number = forms.CharField(label='Celular')
-    birthdate = forms.DateField(label='Fecha de nacimiento', widget=SelectDateWidget(years=range(1980, 2012), months=MONTHS))
+    birthdate = forms.DateField(label='Fecha de nacimiento', widget=SelectDateWidget(years=range(1940, 2015), months=MONTHS), required=True)
+    gender = forms.ChoiceField(choices=Profile.GENDER_CHOICES, widget=forms.RadioSelect, label='Sexo', required=True)
     shipping_address1 = forms.CharField(label='Dirección para los envíos', max_length=100, required=True)
     shipping_address2 = forms.CharField(label='Referencia (opcional)', max_length=100, required=False)
 
     class Meta:
         model = Profile
-        fields = ('dni', 'phone_number', 'birthdate', 'shipping_address1',
+        fields = ('dni', 'phone_number', 'birthdate', 'gender', 'shipping_address1',
                   'shipping_address2', 'shipping_department', 'shipping_province', 'shipping_district')
 
 
