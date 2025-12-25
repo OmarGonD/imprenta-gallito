@@ -1,0 +1,55 @@
+Table Names in DB:
+ - Cart
+ - CartItem
+ - Order
+ - OrderItem
+ - account_emailaddress
+ - account_emailconfirmation
+ - auth_group
+ - auth_group_permissions
+ - auth_permission
+ - auth_user
+ - auth_user_groups
+ - auth_user_user_permissions
+ - categories
+ - design_templates
+ - django_admin_log
+ - django_content_type
+ - django_migrations
+ - django_session
+ - django_site
+ - marketing_cupons
+ - marketing_promotions
+ - marketing_signup
+ - marketing_used_cupons
+ - price_tiers
+ - product_images
+ - product_option_values
+ - product_options
+ - product_variants
+ - product_variants_available_values
+ - products
+ - shop_peru
+ - shop_profile
+ - socialaccount_socialaccount
+ - socialaccount_socialapp
+ - socialaccount_socialapp_sites
+ - socialaccount_socialtoken
+ - subcategories
+
+has_categories: True
+has_products: True
+Popular Categories Count: 6
+ - Tarjetas de Presentación (tarjetas-presentacion) | Active Subcats: 3
+ - Postales y Publicidad Impresa (postales-publicidad) | Active Subcats: 6
+ - Letreros Banners y Pósters (letreros-banners) | Active Subcats: 5
+ - Stickers y Etiquetas (stickers-etiquetas) | Active Subcats: 5
+ - Ropa y Bolsos (ropa-bolsos) | Active Subcats: 4
+ - Productos Promocionales (productos-promocionales) | Active Subcats: 9
+Featured Products Count: 6
+ - Tarjetas White Plastic (tarjetas-white-plastic)
+ - Tarjetas Uncoated (tarjetas-uncoated)
+ - Tarjetas Ultra Thick (tarjetas-ultra-thick)
+ - Tarjetas Soft Touch (tarjetas-soft-touch)
+ - Tarjetas Recycled Matte (tarjetas-recycled-matte)
+ - Tarjetas Raised Foil (tarjetas-raised-foil)

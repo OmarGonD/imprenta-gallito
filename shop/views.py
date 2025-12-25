@@ -69,7 +69,7 @@ def Home(request):
         try:
             popular_categories = list(Category.objects.filter(
                 status='active'
-            ).prefetch_related('subcategories').order_by('display_order')[:6])
+            ).prefetch_related('subcategories').order_by('display_order')[:20])
         except Exception as e:
             print(f"Error loading categories: {e}")
             popular_categories = []
@@ -119,10 +119,10 @@ def Home(request):
     ]
     
     context = {
-        'popular_categories': popular_categories,
-        'new_products': new_products,
+        'categories': popular_categories,
+        'featured_products': new_products,
         'special_offers': special_offers,
-        'hero_banners': hero_banners,
+        'hero_slides': hero_banners,
         'testimonials': testimonials,
     }
     
