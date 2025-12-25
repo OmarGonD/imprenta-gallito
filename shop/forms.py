@@ -130,3 +130,10 @@ class StepTwoForm_Sample(forms.ModelForm):
         instance = super(StepTwoForm_Sample, self).save(commit=commit)
         # self.send_email()
         return instance
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(label='Nombre', max_length=100, required=True, widget=forms.TextInput(attrs={'class': 'block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-4 bg-gray-50 border transition duration-150 ease-in-out', 'placeholder': 'Tu nombre'}))
+    email = forms.EmailField(label='Correo Electrónico', required=True, widget=forms.EmailInput(attrs={'class': 'block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-4 bg-gray-50 border transition duration-150 ease-in-out', 'placeholder': 'tu@email.com'}))
+    phone = forms.CharField(label='Teléfono (Opcional)', max_length=20, required=False, widget=forms.TextInput(attrs={'class': 'block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-4 bg-gray-50 border transition duration-150 ease-in-out', 'placeholder': '999 999 999'}))
+    message = forms.CharField(label='Mensaje', required=True, widget=forms.Textarea(attrs={'class': 'block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-4 bg-gray-50 border transition duration-150 ease-in-out', 'rows': 4, 'placeholder': '¿En qué podemos ayudarte?'}))

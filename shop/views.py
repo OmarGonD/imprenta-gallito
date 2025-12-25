@@ -5,6 +5,7 @@ Migrado de ProductColor/ProductSize a ProductOption/ProductOptionValue/ProductVa
 Todas las vistas usan el sistema Category → Subcategory → Product.
 """
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group, User
 from django.core.exceptions import ObjectDoesNotExist
@@ -33,7 +34,7 @@ from shop.models import (
 )
 from shop.tokens import account_activation_token
 from cart.models import Cart, CartItem
-from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample
+from .forms import SignUpForm, StepOneForm, StepTwoForm, ProfileForm, StepOneForm_Sample, StepTwoForm_Sample, ContactForm
 from marketing.forms import EmailSignUpForm
 from shop.utils.pricing import PricingService
 from shop.utils.pricing import PricingService
@@ -1376,7 +1377,45 @@ def como_comprar(request):
     return render(request, "footer_links/como_comprar.html")
 
 def contactanos(request):
-    return render(request, "footer_links/contactanos.html")
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            message = form.cleaned_data['message']
+
+            # Send email
+            subject = f"Nuevo Mensaje de Contacto: {name}"
+            email_body = f"""
+            Nuevo mensaje de contacto recibido:
+            
+            Nombre: {name}
+            Correo: {email}
+            Teléfono: {phone}
+            
+            Mensaje:
+            {message}
+            """
+            
+            try:
+                msg = EmailMessage(
+                    subject,
+                    email_body,
+                    # Send TO default email (hola@imprentagallito.com)
+                    to=['hola@imprentagallito.com'], 
+                    reply_to=[email]
+                )
+                msg.send()
+                messages.success(request, '¡Gracias! Tu mensaje ha sido enviado correctamente. Te responderemos pronto.')
+                return redirect('shop:contactanos')
+            except Exception as e:
+                messages.error(request, 'Hubo un error al enviar el mensaje. Por favor intenta de nuevo o escríbenos directamente.')
+                print(f"Error sending contact email: {e}")
+    else:
+        form = ContactForm()
+
+    return render(request, "footer_links/contactanos.html", {'form': form})
 
 def legales_privacidad(request):
     return render(request, 'footer_links/legales_privacidad.html')
@@ -1603,7 +1642,7 @@ def activate(request, uidb64, token):
         send_email_new_registered_user(user.pk)
         return redirect('shop:home')
     else:
-        return HttpResponse('¡Enlace de activación inválido! Intente registrarse nuevamente.')
+        return render(request, 'accounts/activation_error.html')
 
 
 def send_email_new_registered_user(user_id):
@@ -1693,9 +1732,32 @@ def signupView(request):
             profile_form.full_clean()
             profile_form.save()
             
-            # Send activation email using Brevo
-            BrevoService.send_activation_email(user, request)
-            # send_email_new_registered_user(user.pk) # Replaced by BrevoService
+            # Send activation email using Standard Django (Hostinger)
+            # BrevoService.send_activation_email(user, request) <--- REMOVED
+            
+            # Generate token and uid
+            from django.contrib.auth.tokens import default_token_generator
+            from django.utils.http import urlsafe_base64_encode
+            from django.utils.encoding import force_bytes
+            from django.contrib.sites.shortcuts import get_current_site
+            from django.template.loader import render_to_string
+            from django.core.mail import EmailMessage
+            from django.conf import settings
+
+            current_site = get_current_site(request)
+            mail_subject = 'Activa tu cuenta en Imprenta Gallito'
+            message = render_to_string('accounts/account_verification_email.html', {
+                'user': user,
+                'domain': request.get_host(), # Use dynamic domain (localhost vs prod)
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            to_email = user.email
+            send_email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            send_email.content_subtype = "html"
+            send_email.send()
 
             return redirect('shop:email_confirmation_needed')
         else:

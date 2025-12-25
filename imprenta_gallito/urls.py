@@ -16,12 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from shop import views
+from allauth.account import views as allauth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('cuenta-inactiva/', allauth_views.account_inactive, name='account_inactive'),
     path('accounts/', include('allauth.urls')),
     path('carrito-de-compras/', include('cart.urls')),
     path('marketing/', include('marketing.urls')),

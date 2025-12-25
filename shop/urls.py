@@ -61,7 +61,7 @@ urlpatterns = [
     # =============================================
     # ACTIVACIÓN DE EMAIL
     # =============================================
-    path('email_confirmation_needed/', views.email_confirmation_needed, name='email_confirmation_needed'),
+    path('confirmacion-necesaria/', views.email_confirmation_needed, name='email_confirmation_needed'),
     re_path(
         r'^confirmacion-de-correo-electronico/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,50})/$',
         views.activate,

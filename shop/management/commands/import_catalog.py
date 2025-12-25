@@ -31,7 +31,9 @@ from shop.models import (
     ProductVariant,
     ProductImage,
     DesignTemplate,
-    PriceTier
+    DesignTemplate,
+    PriceTier,
+    Peru
 )
 
 
@@ -160,8 +162,8 @@ class Command(BaseCommand):
             '--only',
             type=str,
             choices=['categories', 'subcategories', 'products', 'options',
-                     'prices', 'templates', 'images', 'polos'],
-            help='Importar solo un tipo específico de datos'
+                     'prices', 'templates', 'images', 'polos', 'ubigeo'],
+            help='Importa solo un tipo específico de datos'
         )
 
     def handle(self, *args, **options):
@@ -236,6 +238,10 @@ class Command(BaseCommand):
                 # NUEVO: Actualizar códigos HEX de colores (lógica integrada de update_polo_hexes)
                 if not self.only or self.only in ['product_options', 'polos', 'colors']:
                     self.update_hex_codes()
+
+                # NUEVO: Importar Ubigeo
+                if not self.only or self.only == 'ubigeo':
+                    counts['ubigeo'] = self.import_ubigeo()
 
                 # Resumen
                 self.stdout.write('\n' + '=' * 70)

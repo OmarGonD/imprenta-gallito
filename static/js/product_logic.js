@@ -111,7 +111,9 @@ function selectColor(colorSlug, colorName) {
     window.selectedColorSlug = colorSlug;
 
     document.querySelectorAll('.color-swatch').forEach(btn => {
-        if (btn.dataset.colorSlug === colorSlug) {
+        // Match against colorSlug or color (legacy)
+        const btnSlug = btn.dataset.colorSlug || btn.dataset.color;
+        if (btnSlug === colorSlug) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
@@ -335,6 +337,8 @@ async function addToCart() {
     // Agregar color y talla solo si fueron seleccionados
     if (window.selectedColorSlug) {
         formData.append('color_slug', window.selectedColorSlug);
+        // Also send as 'color' for legacy views
+        formData.append('color', window.selectedColorSlug);
     }
     if (window.selectedSizeSlug) {
         formData.append('size_slug', window.selectedSizeSlug);
@@ -697,9 +701,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Botones de color
     document.querySelectorAll('.color-swatch').forEach(btn => {
         btn.addEventListener('click', () => {
-            selectColor(btn.dataset.colorSlug, btn.dataset.colorName);
+            // Support both data-color-slug (standard) and data-color (legacy/template specific)
+            const slug = btn.dataset.colorSlug || btn.dataset.color;
+            const name = btn.dataset.colorName || btn.title || slug;
+            selectColor(slug, name);
         });
     });
+
+    // 🆕 6.1 AUTO-DETECT SELECTED COLOR (Fix for "Por favor elija color")
+    const defaultColorBtn = document.querySelector('.color-swatch.selected') || document.querySelector('.color-swatch.active');
+    if (defaultColorBtn) {
+        const slug = defaultColorBtn.dataset.colorSlug || defaultColorBtn.dataset.color;
+        if (slug) {
+            console.log('✅ Auto-detecting default color:', slug);
+            window.selectedColorSlug = slug;
+            // Ensure hidden input is synced if exists
+            const hiddenInput = document.getElementById('selected-color');
+            if (hiddenInput) hiddenInput.value = slug;
+        }
+    }
 
     // 7. Botones de talla
     document.querySelectorAll('.size-btn').forEach(btn => {
