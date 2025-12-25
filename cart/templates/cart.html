@@ -50,7 +50,7 @@
                             <!-- Imagen del producto -->
                             <div class="flex-shrink-0">
                                 {% if item.product.base_image_url %}
-                                <img src="{{ item.product.base_image_url }}" 
+                                <img src="{% static item.product.base_image_url %}" 
                                      alt="{{ item.product.name }}"
                                      class="w-24 h-24 object-cover rounded-lg border border-gray-200">
                                 {% else %}
