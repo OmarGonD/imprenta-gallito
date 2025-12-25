@@ -19,10 +19,17 @@ IS_PYTHONANYWHERE = "PYTHONANYWHERE_DOMAIN" in os.environ
 
 if IS_PYTHONANYWHERE:
     DEBUG = False
-    ALLOWED_HOSTS = ["ogonzales.pythonanywhere.com"]
+    ALLOWED_HOSTS = [
+        'www.imprentagallito.com',
+        'imprentagallito.com',
+        'webapp-2888354.pythonanywhere.com',
+        '127.0.0.1',
+        'localhost',
+    ]
 else:
     DEBUG = True
     ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
 
 # ------------------------------------------------------------------
 # APPLICATIONS

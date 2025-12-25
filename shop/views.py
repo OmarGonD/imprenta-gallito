@@ -449,6 +449,79 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             'subcategory': subcategory,
             'category_slug': subcategory.slug,
         })
+
+        # NUEVO: Mapa de redirección y metadatos (si son productos separados)
+        color_product_map = {}
+        variant_metadata = {}
+        images_by_color = {}
+        detected_color_from_slug = None
+        
+        if available_colors:
+            # Intentar encontrar base_slug (slug sin el sufijo de color)
+            base_slug = product.slug
+            for color_val in available_colors:
+                suffix = "-" + color_val.value
+                if base_slug.endswith(suffix):
+                    base_slug = base_slug[:-len(suffix)]
+                    detected_color_from_slug = color_val
+                    break
+            
+            # Buscar hermanos en la misma subcategoría que compartan el base_slug
+            siblings = Product.objects.filter(
+                subcategory=subcategory,
+                slug__startswith=base_slug
+            ).prefetch_related('images', 'images__option_value')
+            
+            # Recolectar imágenes de todos los hermanos, evitando duplicados y mejorando metadatos
+            seen_images = set()
+            for sibling in siblings:
+                sib_color = None
+                # Identificar qué color es este hermano (por su slug)
+                for color_val in available_colors:
+                    if sibling.slug == base_slug + "-" + color_val.value:
+                        sib_color = color_val
+                        color_product_map[color_val.value] = sibling.get_absolute_url()
+                        variant_metadata[color_val.value] = {
+                            'slug': sibling.slug,
+                            'name': sibling.name
+                        }
+                        break
+                
+                # Recolectar imágenes de este hermano
+                for img in sibling.images.all():
+                    img_url = img.image_url or ''
+                    if not img_url or img_url in seen_images:
+                        continue
+                    seen_images.add(img_url)
+
+                    # DETERMINAR CATEGORÍA DE COLOR DE LA IMAGEN
+                    img_color_key = 'default'
+                    if img.option_value:
+                        img_color_key = img.option_value.value
+                    elif sib_color:
+                        img_color_key = sib_color.value
+                    
+                    if img_color_key not in images_by_color:
+                        images_by_color[img_color_key] = []
+                    
+                    # DETERMINAR ALT TEXT SEGURO
+                    alt = img.alt_text
+                    if not alt:
+                        if img.option_value:
+                            alt = f"{product.name} - {img.option_value.display_name}"
+                        elif sib_color:
+                            alt = f"{product.name} - {sib_color.display_name}"
+                        else:
+                            alt = sibling.name
+
+                    images_by_color[img_color_key].append({
+                        'image': img_url,
+                        'is_primary': img.is_primary,
+                        'alt_text': alt
+                    })
+        
+        context['color_product_map'] = json.dumps(color_product_map)
+        context['variant_metadata'] = json.dumps(variant_metadata)
         
         # MANEJO DE COLORES E IMÁGENES - ACTUALIZADO
         selected_color_slug = request.GET.get('color', '')
@@ -460,47 +533,29 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
                     selected_color = color
                     break
         
-        if not selected_color and available_colors:
-            selected_color = available_colors[0]
-            selected_color_slug = selected_color.value
+        # Si no hay color en URL, usar el detectado por el slug o el primero
+        if not selected_color:
+            if detected_color_from_slug:
+                selected_color = detected_color_from_slug
+            elif available_colors:
+                selected_color = available_colors[0]
+            
+            if selected_color:
+                selected_color_slug = selected_color.value
             
         context.update({
             'selected_color': selected_color,
             'selected_color_slug': selected_color_slug or '',
         })
 
-        # ACTUALIZADO: Construir images_by_color con nuevo sistema
-        images_by_color = {}
+        # DETERMINAR IMAGEN INICIAL
         base_image_url = product.base_image_url or ''
-        
-        # Obtener imágenes relacionadas con option_value
-        all_images = product.images.select_related('option_value').order_by(
-            'option_value__value', '-is_primary', 'display_order'
-        )
-        
-        for img in all_images:
-            color_key = img.option_value.value if img.option_value else 'default'
-            if color_key not in images_by_color:
-                images_by_color[color_key] = []
-            
-            images_by_color[color_key].append({
-                'image': img.image_url or '',
-                'is_primary': img.is_primary,
-                'alt_text': img.alt_text or product.name
-            })
-        
         if selected_color:
-            primary_image = product.images.filter(
-                option_value=selected_color, 
-                is_primary=True
-            ).first()
-            
-            if primary_image:
-                base_image_url = primary_image.image_url or base_image_url
-            else:
-                first_image = product.images.filter(option_value=selected_color).first()
-                if first_image:
-                    base_image_url = first_image.image_url or base_image_url
+            color_imgs = images_by_color.get(selected_color.value, [])
+            if color_imgs:
+                # Priorizar primaria
+                primary = next((img for img in color_imgs if img['is_primary']), color_imgs[0])
+                base_image_url = primary['image']
 
         context.update({
             'base_image_url': base_image_url,

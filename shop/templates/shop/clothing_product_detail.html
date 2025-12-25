@@ -726,6 +726,14 @@
 
 <script>
     const imagesByColor = {{ images_by_color|default:"{}"|safe }};
+    const variantMetadata = {{ variant_metadata|default:"{}"|safe }};
+    const STATIC_URL = "{% static '' %}";
+
+    function getFullImageUrl(path) {
+        if (!path) return '';
+        if (path.startsWith('http') || path.startsWith('/')) return path;
+        return STATIC_URL + path;
+    }
 </script>
 
 <div id="product-data" 
@@ -748,10 +756,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const originalSelectColor = window.selectColor;
     
     window.selectColor = function(colorSlug, colorName) {
-        // Llamar a la función original
+        console.log('🎨 Switching to color:', colorSlug);
+
+        // 1. Actualizar metadatos del producto (Slug, Nombre)
+        const metadata = variantMetadata[colorSlug];
+        if (metadata) {
+            console.log('✅ Updating product metadata:', metadata);
+            
+            // Actualizar window.productSlug para que addToCart use el correcto
+            window.productSlug = metadata.slug;
+            
+            // Actualizar H1 (Título del producto)
+            const h1 = document.querySelector('.product-title');
+            if (h1) h1.textContent = metadata.name;
+            
+            // Actualizar Breadcrumb (Último item)
+            const breadcrumbLast = document.querySelector('nav ol li:last-child');
+            if (breadcrumbLast) breadcrumbLast.textContent = metadata.name;
+            
+            // Opcional: Actualizar URL en el historial (sin recargar)
+            const newUrl = `/shop/product/${metadata.slug}/`; // Ajustar según patrón de URL si es necesario
+            // history.pushState({slug: metadata.slug}, metadata.name, newUrl);
+        }
+
+        // Llamar a la función original de product_logic.js para resaltar UI
         if (originalSelectColor) {
             originalSelectColor(colorSlug, colorName);
         }
+
+        // 2. Renderizar miniaturas para el nuevo color
+        renderThumbnails(colorSlug);
         
         // 🆕 Actualizar el input hidden de color
         const colorInput = document.getElementById('selected-color');
@@ -772,12 +806,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mostrar loading
             mainImage.style.opacity = '0.5';
             
-            const newSrc = colorData[0].image;
+            const imageData = colorData[0];
+            const newSrc = getFullImageUrl(imageData.image);
             
             // Precargar la imagen
             const img = new Image();
             img.onload = function() {
                 mainImage.src = newSrc;
+                mainImage.alt = imageData.alt_text || '';
                 mainImage.style.opacity = '1';
                 console.log('✅ Imagen actualizada para color:', colorSlug);
             };
@@ -790,6 +826,56 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('ℹ️ No hay imágenes específicas para el color:', colorSlug);
         }
     };
+
+    /**
+     * Renderiza las miniaturas dinámicamente según el color seleccionado
+     */
+    function renderThumbnails(colorSlug) {
+        const container = document.getElementById('thumbnail-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        const imgs = imagesByColor[colorSlug] || [];
+        
+        // Si hay 1 o menos imágenes, no mostramos el contenedor de miniaturas
+        // Pero NO ocultamos el padre, que es la columna de imagen
+        if (imgs.length <= 1) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        container.style.display = 'flex';
+        
+        imgs.forEach((imgData, index) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `thumbnail-btn ${index === 0 ? 'active' : ''}`;
+            
+            btn.onclick = () => {
+                const mainImg = document.getElementById('main-product-image');
+                if (mainImg) {
+                    mainImg.style.opacity = '0.5';
+                    setTimeout(() => {
+                        mainImg.src = getFullImageUrl(imgData.image);
+                        mainImg.alt = imgData.alt_text || '';
+                        mainImg.style.opacity = '1';
+                    }, 100);
+                }
+                document.querySelectorAll('.thumbnail-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+            
+            const thumbImg = document.createElement('img');
+            thumbImg.src = getFullImageUrl(imgData.image);
+            thumbImg.alt = imgData.alt_text || 'Thumbnail';
+            thumbImg.className = 'thumbnail-image';
+            
+            btn.appendChild(thumbImg);
+            container.appendChild(btn);
+        });
+        
+        console.log(`📸 Miniaturas renderizadas para ${colorSlug}: ${imgs.length}`);
+    }
     
     console.log('✅ Cambio de imagen por color configurado');
     
@@ -837,6 +923,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         console.log('✅ Manejo de colores configurado');
+
+        // Renderizar miniaturas iniciales
+        const activeColor = document.querySelector('.color-swatch.active');
+        if (activeColor) {
+            renderThumbnails(activeColor.dataset.colorSlug);
+        }
     } else {
         console.warn('⚠️ No se encontraron color swatches');
     }

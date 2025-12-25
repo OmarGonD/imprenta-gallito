@@ -747,6 +747,17 @@ function closeEditInfoModal() {
     document.getElementById('editInfoModal').classList.add('hidden');
     document.body.style.overflow = '';
 }
+
+// Cerrar modales con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDesignModal();
+        closeChangeDesignModal();
+        if (typeof closeEditDetailsModal === 'function') closeEditDetailsModal();
+        if (typeof closeEditInfoModal === 'function') closeEditInfoModal();
+        if (typeof closeIncompleteProfileModal === 'function') closeIncompleteProfileModal();
+    }
+});
 </script>
 
 <!-- MODAL: EDITAR DETALLES CONTACTO (TARJETAS) -->
@@ -819,35 +830,7 @@ function closeEditInfoModal() {
             </div>
         </div>
     </div>
-</div>    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.add('border-blue-500', 'bg-blue-50');
-        });
-    });
-    
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
-        });
-    });
-    
-    dropZone.addEventListener('drop', (e) => {
-        const files = e.dataTransfer.files;
-        if (files.length) {
-            document.getElementById('newDesignFile').files = files;
-            handleFileSelect(document.getElementById('newDesignFile'));
-        }
-    });
-}
-
-// Cerrar modales con ESC
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeDesignModal();
-        closeChangeDesignModal();
-    }
-});
-</script>
+</div>
 
 <!-- MODAL: PERFIL INCOMPLETO -->
 <div id="incompleteProfileModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">

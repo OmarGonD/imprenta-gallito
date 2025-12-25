@@ -1,8 +1,0 @@
-Subcategory: Calendarios Familia (calendarios)
- - Product: Calendario de Escritorio 2025, Slug: calendario-escritorio-2025
- - Product: Tipos Calendario Escritorio, Slug: calendario-escritorio
- - Product: Tipos Calendario Magnetico, Slug: calendario-magnetico
- - Product: Tipos Calendario Marcapaginas, Slug: calendario-marcapaginas
- - Product: Tipos Calendario Mousepad, Slug: calendario-mousepad
- - Product: Tipos Calendario Pared, Slug: calendario-pared
- - Product: Tipos Calendario Poster, Slug: tipos-calendario-poster

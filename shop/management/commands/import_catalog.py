@@ -267,110 +267,63 @@ class Command(BaseCommand):
         self.stdout.write('\nActualizando códigos HEX de colores...')
         
         COLOR_MAP = {
-            'amarillo': '#FFEB3B',
-            'arena': '#F4D03F',
-            'asfalto': '#4D5656',
-            'azalea': '#F48FB1',
-            'azul': '#2196F3',
-            'azul-carolina': '#90CAF9',
-            'azul-cielo-nocturno': '#1A237E',
+            'amarillo': '#FFEE58',
+            'azul': '#1E88E5',
             'azul-claro': '#BBDEFB',
-            'azul-marino': '#0D47A1',
-            'azul-marino-jaspeado': '#546E7A',
-            'azul-medianoche': '#1A237E',
-            'azul-metro': '#3F51B5',
-            'azul-real': '#2962FF',
+            'azul-marino': '#1A237E',
+            'azul-real': '#0D47A1',
+            'azul-cielo-nocturno': '#283593',
             'blanco': '#FFFFFF',
-            'borgo-a': '#880E4F', 
-            'borgona': '#880E4F', 
-            'cafe': '#6D4C41',
-            'carb-n': '#424242', 
-            'carbon': '#424242',
-            'cardinal-red': '#C62828',
-            'celed-n': '#81C784',
-            'celeste': '#81D4FA',
-            'cereza-roja': '#D32F2F',
-            'chocolate': '#5D4037',
-            'coral': '#FF8A65',
-            'coral-seda': '#FFAB91',
-            'crema': '#FFF9C4',
-            'fucsia': '#E91E63',
-            'grafito': '#616161',
-            'grafito-jaspeado': '#757575',
+            'blanco-brillante': '#F5F5F5',
+            'negro': '#212121',
+            'negro-profundo': '#000000',
+            'rojo': '#E53935',
             'gris': '#9E9E9E',
-            'gris-ceniza': '#BDBDBD',
-            'gris-deportivo': '#9E9E9E', 
-            'gris-jaspeado': '#B0BEC5',
-            'heliconia': '#EC407A',
-            'indigo': '#3949AB',
-            'jade-dome': '#00897B',
-            'kiwi': '#AED581',
-            'lavanda': '#CE93D8',
-            'lima': '#CDDC39',
-            'lima-electrico': '#C6FF00',
-            'maiz-seda': '#FFF176',
-            'mandarina': '#FF9800',
-            'margarita': '#FDD835',
-            'marron': '#795548',
-            'menta': '#A5D6A7',
-            'mora': '#7B1FA2',
-            'morado': '#9C27B0',
-            'naranja': '#FF5722',
-            'naranja-atardecer': '#FF7043',
-            'naranja-seguridad': '#FF6E40',
-            'natural': '#F5F5DC',
-            'negro': '#000000',
-            'negro-jaspeado': '#424242',
-            'oro-viejo': '#BCAAA4',
-            'pistacho': '#C5E1A5',
-            'platino': '#E0E0E0',
-            'purpura': '#8E24AA',
-            'rojo': '#F44336',
-            'rojo-cereza': '#D32F2F',
-            'rojo-granate': '#B71C1C',
-            'rojo-ladrillo': '#A1887F',
-            'rosa': '#F48FB1',
-            'rosa-claro': '#F8BBD0',
-            'rosa-n-n': '#F06292', 
-            'rosa-neon': '#FF4081',
-            'rosa-seguridad': '#FF80AB',
-            'russet': '#795548',
-            'safari': '#A1887F',
-            'salmon': '#FF8A65',
-            'sapphire': '#1E88E5',
-            'texas-orange': '#FFCC80',
-            'tweed': '#424242',
-            'verde': '#4CAF50',
-            'verde-bosque': '#2E7D32',
-            'verde-botella': '#2E7D32',
-            'verde-cali': '#66BB6A',
-            'verde-cesped': '#66BB6A',
-            'verde-irlandes': '#43A047',
-            'verde-lima': '#CDDC39',
-            'verde-militar': '#558B2F',
-            'verde-oscuro': '#1B5E20',
-            'verde-seguridad': '#CCFF90',
-            'vintage-turquoise': '#80DEEA',
+            'gris-terreno': '#616161',
+            'arena': '#C2B280',
+            'asfalto': '#424242',
+            'azalea': '#F06292',
+            'carbon': '#333333',
             'cardenal': '#C62828',
             'ceniza': '#E0E0E0',
+            'coral': '#FF7043',
+            'coral-seda': '#FF8A65',
             'deep-forest': '#1B5E20',
-            'dorado': '#FFD700',
-            'fuchsia-frost': '#E91E63',
+            'dorado': '#FBC02D',
+            'fuchsia': '#D81B60',
+            'fuchsia-frost': '#C2185B',
             'granate': '#880E4F',
-            'graphite': '#616161',
-            'heather-peach': '#FFCC80',
-            'heather-sangria': '#880E4F',
-            'kelly': '#4CAF50',
+            'graphite': '#455A64',
+            'heather-peach': '#FFCCBC',
+            'heather-sangria': '#AD1457',
+            'indigo': '#3F51B5',
+            'kelly': '#43A047',
             'light-steel': '#B0BEC5',
             'lila': '#CE93D8',
-            'sangria': '#880E4F',
-            'shiraz': '#4A148C',
+            'margarita': '#FFF176',
+            'marron': '#5D4037',
+            'morado': '#7B1FA2',
+            'morado-equipo': '#4A148C',
+            'naranja': '#FB8C00',
+            'natural': '#F5F5DC',
+            'rosa': '#F06292',
+            'rosa-claro': '#F8BBD0',
+            'rosa-fucsia': '#E91E63',
+            'sangria': '#92113D',
+            'shiraz': '#880E4F',
             'sky': '#81D4FA',
-            'smoked-paprika': '#FF5722',
-            'turquoise': '#00BCD4',
-            'turquoise-frost': '#00BCD4',
+            'smoked-paprika': '#B71C1C',
+            'turquoise': '#00CED1',
+            'turquoise-frost': '#4DD0E1',
+            'verde': '#4CAF50',
+            'verde-bosque': '#2E7D32',
+            'verde-irlandes': '#388E3C',
+            'verde-kelly': '#2E7D32',
+            'verde-militar': '#558B2F',
+            'verde-oscuro': '#1B5E20',
+            'vintage-turquoise': '#40E0D0',
             'violeta': '#9C27B0',
-            'zafiro': '#01579B'
+            'zafiro': '#0277BD'
         }
         
         updated_count = 0
@@ -1042,60 +995,70 @@ class Command(BaseCommand):
                 
                 if not self.dry_run:
                     try:
-                        product = Product.objects.get(slug=product_slug)
-                    except Product.DoesNotExist:
+                        # Buscamos el producto exacto o todos los que empiecen por este slug
+                        # (para casos donde cada color es un producto separado con slug compuesto)
+                        from django.db.models import Q
+                        products_to_process = Product.objects.filter(
+                            Q(slug=product_slug) | Q(slug__startswith=product_slug + "-")
+                        )
+                        if not products_to_process.exists():
+                            skipped += 1
+                            continue
+                    except Exception:
                         skipped += 1
                         continue
                     
-                    # NUEVO: Buscar option_value en lugar de color
-                    option_value = None
-                    color_slug = str(row.get('color_slug', '')).strip()
-                    display_order = int(row.get('display_order', 0))
+                    for product in products_to_process:
                     
-                    if color_slug and color_option:
-                        # Auto-create color if missing (from image filename source)
-                        # Try to find standard color first to get 'hex' if possible? 
-                        # For now, just create with default if missing.
-                        option_value, created_val = ProductOptionValue.objects.get_or_create(
-                            option=color_option,
-                            value=color_slug,
+                        # NUEVO: Buscar option_value en lugar de color
+                        option_value = None
+                        color_slug = str(row.get('color_slug', '')).strip()
+                        display_order = int(row.get('display_order', 0))
+                        
+                        if color_slug and color_option:
+                            # Auto-create color if missing (from image filename source)
+                            # Try to find standard color first to get 'hex' if possible? 
+                            # For now, just create with default if missing.
+                            option_value, created_val = ProductOptionValue.objects.get_or_create(
+                                option=color_option,
+                                value=color_slug,
+                                defaults={
+                                    'display_name': color_slug.replace('-', ' ').title(),
+                                    'hex_code': '#CCCCCC', # Default placeholder
+                                    'is_active': True,
+                                    'display_order': display_order
+                                }
+                            )
+                            
+                            # CRITICAL: Ensure this color is available for the product variant!
+                            # This enables the swatch to appear even if products.xlsx was missing it.
+                            variant, _ = ProductVariant.objects.get_or_create(
+                                product=product, 
+                                option=color_option,
+                                defaults={'display_order': 1}
+                            )
+                            variant.available_values.add(option_value)
+                        
+                        is_primary = str(row.get('is_primary', 'False')).lower() == 'true'
+                        
+                        _, was_created = ProductImage.objects.update_or_create(
+                            product=product,
+                            image_url=image_url, # Key by URL to avoid dupes logic (or product+option?)
+                            # Using product + option_value as unique might be better, but multiple images per color allowed
+                            # update_or_create defaults to lookup by first args. 
+                            # We want to create or update specific image entry. 
+                            # Let's map by image_url as unique ID for import? 
+                            # Actually previous code used product, option_value, image_url as lookup?
+                            # No, previous code used (product=product, option_value=..., image_url=...) which means GET by all 3.
+                            # That's strict. Let's stick to update_or_create on image_url + product
                             defaults={
-                                'display_name': color_slug.replace('-', ' ').title(),
-                                'hex_code': '#CCCCCC', # Default placeholder
-                                'is_active': True,
-                                'display_order': display_order
+                                'option_value': option_value,
+                                'is_primary': is_primary,
+                                'display_order': display_order,
                             }
                         )
-                        
-                        # CRITICAL: Ensure this color is available for the product variant!
-                        # This enables the swatch to appear even if products.xlsx was missing it.
-                        variant, _ = ProductVariant.objects.get_or_create(
-                            product=product, 
-                            option=color_option,
-                            defaults={'display_order': 1}
-                        )
-                        variant.available_values.add(option_value)
-                    
-                    is_primary = str(row.get('is_primary', 'False')).lower() == 'true'
-                    
-                    _, was_created = ProductImage.objects.update_or_create(
-                        product=product,
-                        image_url=image_url, # Key by URL to avoid dupes logic (or product+option?)
-                        # Using product + option_value as unique might be better, but multiple images per color allowed
-                        # update_or_create defaults to lookup by first args. 
-                        # We want to create or update specific image entry. 
-                        # Let's map by image_url as unique ID for import? 
-                        # Actually previous code used product, option_value, image_url as lookup?
-                        # No, previous code used (product=product, option_value=..., image_url=...) which means GET by all 3.
-                        # That's strict. Let's stick to update_or_create on image_url + product
-                        defaults={
-                            'option_value': option_value,
-                            'is_primary': is_primary,
-                            'display_order': display_order,
-                        }
-                    )
-                    if was_created:
-                        created += 1
+                        if was_created:
+                            created += 1
                 else:
                     created += 1
                     
