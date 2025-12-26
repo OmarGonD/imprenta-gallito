@@ -21,7 +21,7 @@ config/secrets.py
 __pycache__/
 db.sqlite3
 db.sqlite3-journal
-media/
+/media/
 staticfiles/
 
 # Python
@@ -47,14 +47,9 @@ ENV/
 
 # User uploads
 files/
-media/
 
 # Python
-__pycache__/
-*.py[cod]
-*.pyc
-db.sqlite3
+# (duplicates removed)
 
 # API Keys
-.env
-*.key
+# (duplicates removed)

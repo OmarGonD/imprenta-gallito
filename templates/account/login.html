@@ -3,7 +3,7 @@
 {% load account socialaccount %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head_title %}{% trans "Iniciar Sesión" %}{% endblock %}
 
 {% block content %}
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -28,13 +28,13 @@
                 <a title="{{ provider.name }}" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150 ease-in-out gap-3"
                    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5" alt="Google">
-                    <span>{% trans "Continue with Google" %}</span>
+                    <span>{% trans "Continuar con Google" %}</span>
                 </a>
                 {% elif provider.id == "facebook" %}
                 <a title="{{ provider.name }}" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150 ease-in-out gap-3"
                    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
                     <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="h-5 w-5" alt="Facebook">
-                    <span>{% trans "Continue with Facebook" %}</span>
+                    <span>{% trans "Continuar con Facebook" %}</span>
                 </a>
                 {% endif %}
             {% endfor %}
@@ -53,21 +53,30 @@
         <form class="mt-8 space-y-6" id="login_form" method="POST" action="{% url 'account_login' %}">
             {% csrf_token %}
             
-            {% if form.errors %}
+            {% if form.errors or messages %}
             <div class="rounded-md bg-red-50 p-4 mb-4">
                 <div class="flex">
                     <div class="flex-shrink-0">
-                        <!-- Heroicon name: solid/x-circle -->
                         <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                         </svg>
                     </div>
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-red-800">
-                            {% trans "There were errors with your submission" %}
+                            {% trans "Hubo errores en el inicio de sesión" %}
                         </h3>
                         <div class="mt-2 text-sm text-red-700">
-                            {{ form.non_field_errors }}
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -78,9 +87,9 @@
                 <div>
                     <label for="id_login" class="block text-sm font-medium text-gray-700">{% trans "Email o nombre de usuario" %}</label>
                     <div class="mt-1">
-                        <input type="text" name="login" autocomplete="username" required id="id_login" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm" placeholder="{% trans 'Ingresa tu email o nombre de usuario' %}">
-                        {% if form.login.errors %}
-                        <p class="mt-2 text-sm text-red-600">{{ form.login.errors.0 }}</p>
+                        <input type="text" name="username" autocomplete="username" required id="id_login" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm" placeholder="{% trans 'Ingresa tu email o nombre de usuario' %}">
+                        {% if form.username.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.username.errors.0 }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -119,7 +128,7 @@
                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                         <i class="fas fa-sign-in-alt text-brand-primary-dark group-hover:text-white transition-colors"></i>
                     </span>
-                    {% trans "Sign In" %}
+                    {% trans "Ingresar" %}
                 </button>
             </div>
         </form>
@@ -127,7 +136,7 @@
         <div class="text-center mt-4">
             <p class="text-sm text-gray-600">
                 {% trans "¿No tienes una cuenta?" %}
-                <a href="{{ signup_url }}" class="font-medium text-brand-primary hover:text-brand-primary-dark transition-colors">
+                <a href="{% url 'account_signup' %}{% if redirect_field_value %}?next={{ redirect_field_value|urlencode }}{% endif %}" class="font-medium text-brand-primary hover:text-brand-primary-dark transition-colors">
                     {% trans "Regístrate aquí" %}
                 </a>
             </p>

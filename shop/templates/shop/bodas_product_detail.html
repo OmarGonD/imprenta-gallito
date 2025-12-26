@@ -458,8 +458,8 @@
         <div>
             <div class="bg-gray-50 rounded-xl p-6 flex items-center justify-center sticky top-24">
                 {% if detail_image_url %}
-                    <img src="{{ detail_image_url }}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
-                {% elif product.images.exists %}
+                    <img src="{% static detail_image_url %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
+                {% elif product.images.first %}
                     <img src="{% static product.images.first.image_url %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
                 {% elif product.base_image_url %}
                     <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="max-w-full h-auto rounded-lg shadow-sm">
@@ -500,8 +500,8 @@
                             type="number" 
                             id="quantity" 
                             name="quantity" 
-                            value="10" 
-                            min="1" 
+                            value="{{ min_quantity|default:10 }}" 
+                            min="{{ min_quantity|default:1 }}" 
                             max="10000" 
                             class="w-20 text-center border-2 border-gray-300 rounded-lg py-2 font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
                         >
@@ -513,8 +513,33 @@
                             +
                         </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2">Mínimo 10 unidades</p>
+                    {% if min_quantity %}
+                    <p class="text-xs text-gray-500 mt-2">Mínimo {{ min_quantity }} unidades</p>
+                    {% endif %}
                 </div>
+
+                {% if can_order_sample %}
+                <!-- Sample Ordering System -->
+                <div class="mb-6 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-yellow-800">¿Quieres ver la calidad?</h4>
+                            <p class="text-sm text-yellow-700">Pide una muestra de 5 unidades</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-yellow-900 text-lg">S/ 20.00</p>
+                            <p class="text-xs text-yellow-600">+ envío</p>
+                        </div>
+                    </div>
+                    <button 
+                        type="button"
+                        onclick="orderSample()"
+                        class="w-full mt-3 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2 rounded-lg transition-colors shadow-sm"
+                    >
+                        Pedir Muestra
+                    </button>
+                </div>
+                {% endif %}
 
                 <!-- Price Display -->
                 <div id="pricing-display" class="mb-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md">
@@ -1153,10 +1178,62 @@
                 }
             });
             
-            console.log('✅ Toggle de tabla de descuentos configurado');
+            console.log('✅ Template from gallery applied:', templateSlug);
         }
     });
 
+    // 🆕 FUNCIÓN PARA PEDIR MUESTRAS
+    async function orderSample() {
+        if (window.isAddingToCart) return;
+        
+        const addToCartUrl = document.getElementById('product-data').dataset.addToCartUrl;
+        const productSlug = document.getElementById('product-data').dataset.productSlug;
+        const categorySlug = document.getElementById('product-data').dataset.categorySlug;
+        
+        const formData = new FormData();
+        formData.append('product_slug', productSlug);
+        formData.append('category_slug', categorySlug);
+        formData.append('is_sample', 'true');
+        
+        window.isAddingToCart = true;
+        
+        try {
+            const response = await fetch(addToCartUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const modal = document.getElementById('cart-success-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    const messageEl = document.getElementById('cart-modal-message');
+                    if (messageEl) messageEl.textContent = 'Muestra agregada al carrito correctamente.';
+                } else {
+                    alert(`✅ ${data.message}`);
+                }
+                
+                const cartCounter = document.getElementById('cart-count');
+                if (cartCounter && data.cart_count) {
+                    cartCounter.textContent = data.cart_count;
+                }
+            } else {
+                alert('❌ Error: ' + (data.error || 'No se pudo agregar la muestra'));
+            }
+        } catch (error) {
+            console.error('❌ Error:', error);
+            alert('❌ Error al agregar la muestra');
+        } finally {
+            window.isAddingToCart = false;
+        }
+    }
+</script>
+<script>
     // 3. MANEJO DE SUBIDA DE ARCHIVOS
     document.addEventListener('DOMContentLoaded', function() {
         const fileInput = document.getElementById('file-upload-input');
@@ -1561,6 +1638,7 @@
      data-tiers-id="product-tiers-data"
      data-category-slug="{{ category.slug }}"
      data-product-slug="{{ product.slug }}"
+     data-min-quantity="{{ min_quantity|default:1 }}"
      data-add-to-cart-url="{% url 'shop:add_product_to_cart' %}">
 </div>
 

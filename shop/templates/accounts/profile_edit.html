@@ -2,225 +2,339 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="fas fa-edit me-2"></i>Editar Perfil
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <!-- Profile Photo -->
-                        <div class="mb-4 text-center">
-                            <img src="{{ profile.photo.url }}" alt="Profile Photo" class="img-fluid rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;" id="profile-preview">
-                            <div>
-                                <label for="{{ profile_form.photo.id_for_label }}" class="form-label">Foto de Perfil</label>
-                                {{ profile_form.photo }}
-                                {% if profile_form.photo.errors %}
-                                    <div class="text-danger small">{{ profile_form.photo.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <!-- Personal Information -->
-                        <h5 class="mb-3"><i class="fas fa-user me-2"></i>Información Personal</h5>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.dni.id_for_label }}" class="form-label">DNI</label>
-                                {{ profile_form.dni }}
-                                {% if profile_form.dni.errors %}
-                                    <div class="text-danger small">{{ profile_form.dni.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.birthdate.id_for_label }}" class="form-label">Fecha de Nacimiento</label>
-                                {{ profile_form.birthdate }}
-                                {% if profile_form.birthdate.errors %}
-                                    <div class="text-danger small">{{ profile_form.birthdate.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ profile_form.phone_number.id_for_label }}" class="form-label">Teléfono</label>
-                            {{ profile_form.phone_number }}
-                            {% if profile_form.phone_number.errors %}
-                                <div class="text-danger small">{{ profile_form.phone_number.errors }}</div>
-                            {% endif %}
-                        </div>
-
-                        <hr>
-
-                        <!-- Delivery Address -->
-                        <h5 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Dirección de Entrega</h5>
-                        
-                        <div class="mb-3">
-                            <label for="{{ profile_form.shipping_address1.id_for_label }}" class="form-label">Dirección <span class="text-danger">*</span></label>
-                            {{ profile_form.shipping_address1 }}
-                            {% if profile_form.shipping_address1.errors %}
-                                <div class="text-danger small">{{ profile_form.shipping_address1.errors }}</div>
-                            {% endif %}
-                            <div class="form-text">Ingrese su dirección completa (calle, número, urbanización, etc.)</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ profile_form.reference.id_for_label }}" class="form-label">Referencia <span class="text-danger">*</span></label>
-                            {{ profile_form.reference }}
-                            {% if profile_form.reference.errors %}
-                                <div class="text-danger small">{{ profile_form.reference.errors }}</div>
-                            {% endif %}
-                            <div class="form-text">Referencia para que el repartidor pueda encontrar su dirección fácilmente</div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="{{ profile_form.shipping_department.id_for_label }}" class="form-label">Departamento <span class="text-danger">*</span></label>
-                                {{ profile_form.shipping_department }}
-                                {% if profile_form.shipping_department.errors %}
-                                    <div class="text-danger small">{{ profile_form.shipping_department.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <label for="{{ profile_form.shipping_province.id_for_label }}" class="form-label">Provincia <span class="text-danger">*</span></label>
-                                {{ profile_form.shipping_province }}
-                                {% if profile_form.shipping_province.errors %}
-                                    <div class="text-danger small">{{ profile_form.shipping_province.errors }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <label for="{{ profile_form.shipping_district.id_for_label }}" class="form-label">Distrito <span class="text-danger">*</span></label>
-                                {{ profile_form.shipping_district }}
-                                {% if profile_form.shipping_district.errors %}
-                                    <div class="text-danger small">{{ profile_form.shipping_district.errors }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info" role="alert">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Los campos marcados con <span class="text-danger">*</span> son obligatorios para poder realizar envíos.
-                        </div>
-
-                        <hr>
-
-                        <!-- Action Buttons -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'shop:profile' %}" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i>Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Guardar Cambios
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<div class="profile-edit-body py-10">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="glass-card overflow-hidden">
+            <!-- Header Section -->
+            <div class="edit-header p-8 text-center text-white relative h-48 flex flex-col items-center justify-center">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-700 opacity-90"></div>
+                <!-- Dynamic Pattern Overlay (subtle) -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+                
+                <h1 class="text-3xl font-extrabold relative z-10 mb-2">Actualizar Perfil</h1>
+                <p class="text-blue-100 relative z-10 font-medium">Mantén tu información al día para una mejor experiencia</p>
             </div>
+
+            <form method="post" enctype="multipart/form-data" class="p-8 md:p-12">
+                {% csrf_token %}
+
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <!-- Left Column: Avatar -->
+                    <div class="lg:col-span-1 flex flex-col items-center">
+                        <div class="relative group">
+                            <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-2xl relative bg-gray-100 flex items-center justify-center">
+                                {% if profile.photo and 'default' not in profile.photo.name %}
+                                    <img src="{{ profile.photo.url }}" alt="Profile Photo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" id="profile-preview">
+                                    <div id="profile-icon-placeholder" class="hidden">
+                                        <i class="fas fa-user text-6xl text-gray-300"></i>
+                                    </div>
+                                {% else %}
+                                    <img src="" alt="Profile Photo" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 hidden" id="profile-preview">
+                                    <div id="profile-icon-placeholder">
+                                        <i class="fas fa-user text-6xl text-gray-300"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Hover Overlay -->
+                                <label for="{{ profile_form.photo.id_for_label }}" class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-opacity duration-300">
+                                    <i class="fas fa-camera text-white text-3xl mb-2"></i>
+                                    <span class="text-white text-xs font-bold uppercase tracking-wider">Cambiar Foto</span>
+                                </label>
+                            </div>
+                            
+                            <!-- Hidden File Input -->
+                            <div class="hidden">
+                                {{ profile_form.photo }}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <h3 class="font-bold text-gray-800 text-lg">{{ user.username }}</h3>
+                            <p class="text-gray-500 text-sm">{{ user.email }}</p>
+                        </div>
+                        
+                        <!-- Completeness Badge -->
+                        <div class="mt-6 w-full p-4 rounded-xl {% if profile.is_complete %}bg-emerald-50 border border-emerald-100 text-emerald-700{% else %}bg-amber-50 border border-amber-100 text-amber-700{% endif %} flex flex-col items-center gap-2">
+                            <span class="text-xs font-bold uppercase tracking-widest">Estado de Perfil</span>
+                            <div class="flex items-center gap-2 font-bold">
+                                {% if profile.is_complete %}
+                                    <i class="fas fa-check-circle"></i> Completo
+                                {% else %}
+                                    <i class="fas fa-exclamation-circle"></i> Incompleto
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Form Fields -->
+                    <div class="lg:col-span-2 space-y-10">
+                        
+                        <!-- Section: Personal -->
+                        <div class="form-section">
+                            <h2 class="section-title"><i class="fas fa-user-tag mr-3"></i>Información Personal</h2>
+                            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                                <div class="input-group">
+                                    <label class="input-label">Número de DNI</label>
+                                    {{ profile_form.dni }}
+                                    {% if profile_form.dni.errors %}
+                                        <p class="error-msg">{{ profile_form.dni.errors|striptags }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Fecha de Nacimiento</label>
+                                    {{ profile_form.birthdate }}
+                                    {% if profile_form.birthdate.errors %}
+                                        <p class="error-msg">{{ profile_form.birthdate.errors|striptags }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                                <div class="input-group">
+                                    <label class="input-label">Género / Sexo</label>
+                                    <div class="gender-radio-grid">
+                                        {{ profile_form.gender }}
+                                    </div>
+                                    {% if profile_form.gender.errors %}
+                                        <p class="error-msg">{{ profile_form.gender.errors|striptags }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Celular / Teléfono</label>
+                                    {{ profile_form.phone_number }}
+                                    {% if profile_form.phone_number.errors %}
+                                        <p class="error-msg">{{ profile_form.phone_number.errors|striptags }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Shipping -->
+                        <div class="form-section pt-4">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="section-title mb-0"><i class="fas fa-truck mr-3"></i>Datos de Envío</h2>
+                                <span class="bg-blue-100 text-blue-700 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-tighter">Obligatorio</span>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="input-group">
+                                    <label class="input-label">Dirección Exacta</label>
+                                    {{ profile_form.shipping_address1 }}
+                                    <p class="helper-text">Calle, número, urbanización o edificio.</p>
+                                    {% if profile_form.shipping_address1.errors %}
+                                        <p class="error-msg">{{ profile_form.shipping_address1.errors|striptags }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="input-group">
+                                    <label class="input-label">Punto de Referencia</label>
+                                    {{ profile_form.reference }}
+                                    <p class="helper-text">Ej: Frente al parque, cerca a la tienda X.</p>
+                                    {% if profile_form.reference.errors %}
+                                        <p class="error-msg">{{ profile_form.reference.errors|striptags }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="grid md:grid-cols-3 gap-4 mt-6">
+                                    <div class="input-group">
+                                        <label class="input-label text-xs">Departamento</label>
+                                        {{ profile_form.shipping_department }}
+                                    </div>
+                                    <div class="input-group">
+                                        <label class="input-label text-xs">Provincia</label>
+                                        {{ profile_form.shipping_province }}
+                                    </div>
+                                    <div class="input-group">
+                                        <label class="input-label text-xs">Distrito</label>
+                                        {{ profile_form.shipping_district }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Area -->
+                        <div class="flex flex-col md:flex-row gap-4 pt-8 border-t border-gray-100">
+                            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+                                <i class="fas fa-save"></i>
+                                Guardar Cambios
+                            </button>
+                            <a href="{% url 'shop:profile' %}" class="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-xl transition-all text-center">
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <style>
-.card {
-    border: none;
-    border-radius: 10px;
-}
+    /* Premium Look Overrides */
+    
+    .profile-edit-body {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        min-height: 100vh;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
 
-.card-header {
-    border-radius: 10px 10px 0 0 !important;
-    border-bottom: none;
-    padding: 1rem 1.5rem;
-}
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+    }
 
-.card-body {
-    padding: 2rem;
-}
+    .section-title {
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: #1e293b;
+        border-left: 4px solid #2563eb;
+        padding-left: 1rem;
+        margin-bottom: 0.5rem;
+    }
 
-.form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid #ced4da;
-    padding: 0.6rem 0.75rem;
-}
+    .input-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
 
-.form-control:focus, .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
+    /* Target Django autogenerated inputs */
+    .input-group input, 
+    .input-group select, 
+    .input-group textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border-radius: 0.75rem;
+        border: 1.5px solid #e2e8f0;
+        background-color: #fbfcfd;
+        color: #1e293b;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
 
-.form-label {
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 0.5rem;
-}
+    .input-group input:focus, 
+    .input-group select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        transform: translateY(-1px);
+    }
 
-.shadow-sm {
-    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.075) !important;
-}
+    .helper-text {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 0.4rem;
+        margin-left: 0.2rem;
+    }
 
-input[type="file"] {
-    padding: 0.5rem;
-}
+    .error-msg {
+        color: #ef4444;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.4rem;
+    }
 
-#profile-preview {
-    border: 3px solid #dee2e6;
-}
+    /* Gender Radio Custom Styling */
+    .gender-radio-grid ul {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .gender-radio-grid label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.9rem;
+    }
+
+    .gender-radio-grid input[type="radio"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+    }
+
+    /* Date Select Grid */
+    .input-group select {
+        display: inline-block;
+        width: auto;
+        min-width: 80px;
+        margin-right: 0.5rem;
+    }
+
+    /* Animation */
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .glass-card {
+        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Preview profile photo
-    document.getElementById('{{ profile_form.photo.id_for_label }}').addEventListener('change', function(e) {
+    // Real-time photo preview
+    $(document).on('change', '#id_photo', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('profile-preview').src = e.target.result;
+                $('#profile-preview').attr('src', e.target.result).removeClass('hidden');
+                $('#profile-icon-placeholder').addClass('hidden');
             }
             reader.readAsDataURL(file);
         }
     });
 
-    // AJAX for dynamic province and district loading
-    function get_provinces() {
-        return new Promise(function(resolve, reject) {
-            var val_d = $("#id_shipping_department").val();
-            $.ajax({
+    // Dynamic Cascading Selects (Province & District)
+    async function get_provinces() {
+        const val_d = $("#id_shipping_department").val();
+        if(!val_d) return;
+        
+        $("#id_shipping_province").addClass('opacity-50 pointer-events-none');
+        try {
+            const result = await $.ajax({
                 url: "/province/",
-                data: {
-                    d_name: val_d
-                },
-            }).done(function(result) {
-                $("#id_shipping_province").html(result);
-                resolve(result);
+                data: { d_name: val_d },
             });
-        });
+            $("#id_shipping_province").html(result).removeClass('opacity-50 pointer-events-none');
+        } catch (e) {
+            console.error("Error loading provinces", e);
+        }
     }
 
-    function get_districts() {
-        return new Promise(function(resolve, reject) {
-            var val_d = $("#id_shipping_department").val();
-            var val_p = $("#id_shipping_province").val();
-            $.ajax({
+    async function get_districts() {
+        const val_d = $("#id_shipping_department").val();
+        const val_p = $("#id_shipping_province").val();
+        if(!val_d || !val_p) return;
+
+        $("#id_shipping_district").addClass('opacity-50 pointer-events-none');
+        try {
+            const result = await $.ajax({
                 url: "/district/",
-                data: {
-                    d_name: val_d,
-                    p_name: val_p
-                },
-            }).done(function(result) {
-                $("#id_shipping_district").html(result);
-                resolve(result);
+                data: { d_name: val_d, p_name: val_p },
             });
-        });
+            $("#id_shipping_district").html(result).removeClass('opacity-50 pointer-events-none');
+        } catch (e) {
+            console.error("Error loading districts", e);
+        }
     }
 
     $(document).ready(function() {
+        // Handle change events
         $("#id_shipping_department").change(async function() {
             await get_provinces();
             await get_districts();
@@ -228,6 +342,13 @@ input[type="file"] {
 
         $("#id_shipping_province").change(async function() {
             await get_districts();
+        });
+
+        // Add some tailwind-like transitions with jQuery if needed
+        $('input, select, textarea').on('focus', function() {
+            $(this).closest('.input-group').find('.input-label').addClass('text-blue-600');
+        }).on('blur', function() {
+            $(this).closest('.input-group').find('.input-label').removeClass('text-blue-600');
         });
     });
 </script>

@@ -11,6 +11,7 @@ window.selectedSizeSlug = '';
 window.categorySlug = '';
 window.productSlug = '';
 window.addToCartUrl = '';
+window.minQuantity = 1;
 
 // ====================================================================
 // A. CARGAR DATOS DEL PRODUCTO DE FORMA SEGURA
@@ -31,6 +32,7 @@ function loadProductData() {
     window.categorySlug = dataContainer.dataset.categorySlug || '';
     window.productSlug = dataContainer.dataset.productSlug || '';
     window.addToCartUrl = dataContainer.dataset.addToCartUrl || '';
+    window.minQuantity = parseInt(dataContainer.dataset.minQuantity) || 1;
 
     console.log('✅ Category slug:', window.categorySlug);
     console.log('✅ Product slug:', window.productSlug);
@@ -67,7 +69,14 @@ function updatePriceAndHighlight() {
 
     if (!quantityInput) return;
 
-    const quantity = parseInt(quantityInput.value, 10) || 1;
+    let quantity = parseInt(quantityInput.value, 10) || window.minQuantity;
+
+    // Enforce minimum
+    if (quantity < window.minQuantity) {
+        quantity = window.minQuantity;
+        quantityInput.value = quantity;
+    }
+
     let unitPrice = window.basePrice;
     let discount = 0;
     let activeMinQuantity = null;
@@ -465,15 +474,15 @@ function setupQuantityControls() {
     if (!quantityInput || !decreaseBtn || !increaseBtn) return;
 
     decreaseBtn.addEventListener('click', () => {
-        let currentValue = parseInt(quantityInput.value) || 10;
-        if (currentValue > 10) {
+        let currentValue = parseInt(quantityInput.value) || window.minQuantity;
+        if (currentValue > window.minQuantity) {
             quantityInput.value = currentValue - 1;
             updatePriceAndHighlight();
         }
     });
 
     increaseBtn.addEventListener('click', () => {
-        let currentValue = parseInt(quantityInput.value) || 10;
+        let currentValue = parseInt(quantityInput.value) || window.minQuantity;
         if (currentValue < 10000) {
             quantityInput.value = currentValue + 1;
             updatePriceAndHighlight();

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #1f2937; margin: 0; padding: 0; background-color: #f9fafb; }
+        .wrapper { width: 100%; background-color: #f9fafb; padding: 40px 0; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
+        .header { background-color: #0066cc; padding: 30px; text-align: center; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.025em; }
+        .content { padding: 40px; }
+        .content p { margin-bottom: 24px; font-size: 16px; color: #4b5563; }
+        .button-wrapper { text-align: center; margin: 40px 0; }
+        .button { display: inline-block; padding: 16px 32px; background-color: #0066cc; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 16px; transition: background-color 0.2s; }
+        .footer { padding: 30px; background-color: #f3f4f6; text-align: center; font-size: 14px; color: #6b7280; border-top: 1px solid #e5e7eb; }
+        .footer p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>Imprenta Gallito</h1>
+            </div>
+            <div class="content">
+                <p>Hola <strong>{{ user_display }}</strong>,</p>
+                <p>¡Gracias por unirte a Imprenta Gallito! Para activar tu cuenta y comenzar a disfrutar de todos nuestros servicios, por favor confirma tu dirección de correo electrónico haciendo clic en el botón de abajo:</p>
+                
+                <div class="button-wrapper">
+                    <a href="{{ activate_url }}" class="button">Confirmar Correo Electrónico</a>
+                </div>
+                
+                <p>Si el botón no funciona, puedes copiar y pegar este enlace en tu navegador:</p>
+                <p style="word-break: break-all; font-size: 14px; color: #0066cc;">{{ activate_url }}</p>
+                
+                <p>Si no has solicitado este registro, puedes ignorar este correo sin problemas.</p>
+            </div>
+            <div class="footer">
+                <p>&copy; 2025 Imprenta Gallito. Todos los derechos reservados.</p>
+                <p>Calidad que impresiona.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

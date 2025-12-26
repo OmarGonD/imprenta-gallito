@@ -37,6 +37,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=ORDER_STATUS, default='recibido_pagado')
     comments = models.CharField(max_length=400, blank=True, null=True, default='')
     cupon = models.ForeignKey('marketing.Cupons', blank=True, null=True, default=None, on_delete=models.SET_NULL)
+    payment_proof = models.ImageField(upload_to='payment_proofs', blank=True, null=True)
 
 
     class Meta:

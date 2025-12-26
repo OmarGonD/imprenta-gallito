@@ -128,6 +128,7 @@ class CartItem(models.Model):
         null=True, 
         verbose_name="Información Adicional"
     )
+    is_sample = models.BooleanField(default=False, verbose_name="Es muestra")
     # =========================================================
 
     class Meta:
@@ -135,11 +136,14 @@ class CartItem(models.Model):
         ordering = ['-uploaded_at']
 
     def __str__(self):
-        return f"{self.product.name} - {self.quantity}"
+        return f"{self.product.name} - {self.quantity}{' (Muestra)' if self.is_sample else ''}"
     
     @property
     def sub_total(self):
         """Calcula el subtotal basándose en la cantidad y precio del tier"""
+        if self.is_sample:
+            return 20.00
+            
         quantity = self.get_quantity_int()
         unit_price = self.get_unit_price()
         return quantity * unit_price

@@ -4,8 +4,6 @@
 {% block title %}Checkout - Imprenta Gallito{% endblock %}
 
 {% block content %}
-<!-- Culqi V4 -->
-<script src="https://checkout.culqi.com/js/v4"></script>
 
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,21 +42,6 @@
 
                     <!-- Pestañas / Opciones -->
                     <div class="space-y-4">
-                        <!-- Opción Tarjeta -->
-                        <div class="border rounded-xl overflow-hidden hover:border-blue-500 transition-colors cursor-pointer group" onclick="selectPayment('card')">
-                            <div class="p-4 flex items-center gap-4">
-                                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                                    <i class="fas fa-credit-card text-blue-600 text-xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="font-bold text-gray-900">Tarjeta de Crédito / Débito</h3>
-                                    <p class="text-sm text-gray-500">Visa, Mastercard, Amex, Diners</p>
-                                </div>
-                                <div class="payment-radio w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                                    <div class="w-3 h-3 rounded-full bg-blue-600 hidden" id="check-card"></div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Opción Transferencia -->
                         <div class="border rounded-xl overflow-hidden hover:border-blue-500 transition-colors cursor-pointer group" onclick="selectPayment('deposit')">
@@ -124,44 +107,67 @@
 <div id="depositModal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeDepositModal()"></div>
     <div class="absolute inset-4 md:inset-[20%] flex items-center justify-center">
-        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8">
-            <h3 class="text-2xl font-bold mb-4 text-center">Cuentas Bancarias</h3>
-            <div class="space-y-4 text-sm text-gray-700 bg-gray-50 p-6 rounded-xl">
-                <p><strong>BCP Soles:</strong> 193-xxxxxxxx-0-xx</p>
-                <p><strong>Interbank:</strong> 200-xxxxxxxx-xx</p>
-                <p><strong>Yape/Plin:</strong> 999 999 999</p>
-                <p class="text-xs text-gray-500 mt-2">Titular: Imprenta Gallito SAC</p>
+        <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 border-t-8 border-yellow-500">
+            <div class="text-center mb-6">
+                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100 mb-4">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                 </div>
+                 <h3 class="text-2xl font-bold text-gray-900">Instrucciones de Pago</h3>
             </div>
-            <p class="text-gray-600 mt-4 text-center">
-                Al confirmar, tu pedido será registrado y nos pondremos en contacto para confirmar la transacción.
+            
+            <div class="space-y-4 text-sm text-left bg-blue-50/50 p-6 rounded-2xl border border-blue-100/50 mb-6">
+                <div class="flex items-start gap-4 p-3 bg-white rounded-xl shadow-sm border border-red-50">
+                    <div class="flex-shrink-0 w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-user-slash text-red-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">Solo Pagos del Titular</p>
+                        <p class="text-xs text-gray-500 leading-relaxed">No aceptamos pagos realizados desde cuentas de terceras personas.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-3 bg-white rounded-xl shadow-sm border border-red-50">
+                    <div class="flex-shrink-0 w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-exchange-alt text-red-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">Transferencias Directas</p>
+                        <p class="text-xs text-gray-500 leading-relaxed">Solo BCP e Interbank directo. No se permiten transferencias interbancarias.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-3 bg-white rounded-xl shadow-sm border border-red-50">
+                    <div class="flex-shrink-0 w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-money-bill-transfer text-red-500 text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">Sin Depósitos en Efectivo</p>
+                        <p class="text-xs text-gray-500 leading-relaxed">Solo transferencias vía App o Web. No se admiten depósitos físicos.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-blue-100 flex items-start gap-3">
+                    <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                    <p class="text-[11px] text-blue-700 leading-relaxed italic">
+                        <strong>IMPORTANTE:</strong> El comprobante debe ser completamente legible. Si algún dato no es visible, se solicitará un nuevo envío.
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-gray-500 text-center text-xs mb-8 italic">
+                Al continuar, se generará tu orden y serás dirigido a los datos de cuenta.
             </p>
-            <div class="mt-8 flex gap-4">
-                 <button onclick="closeDepositModal()" class="flex-1 py-3 bg-gray-100 rounded-lg font-bold text-gray-600">Cancelar</button>
-                 <button onclick="processDeposit()" class="flex-1 py-3 bg-blue-600 text-white rounded-lg font-bold shadow-lg hover:bg-blue-700">Confirmar Pedido</button>
+
+            <div class="flex gap-4">
+                 <button onclick="closeDepositModal()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-bold text-gray-600 transition-colors">Cancelar</button>
+                 <button onclick="processDeposit()" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-0.5">
+                    Entendido, Continuar <i class="fas fa-arrow-right ml-2"></i>
+                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Form oculto para Culqi -->
-<form id="culqi-form" method="POST" action="{% url 'carrito-de-compras:cart_charge_credit_card' %}">
-    {% csrf_token %}
-    <input type="hidden" name="payment_method" value="credit_card_payment">
-    <input type="hidden" name="amount" value="{{ total_a_pagar|floatformat:0|add:'00' }}"> <!-- Culqi expects cents? Adjust based on view logic -->
-    <!-- View expects 'amount' as integer cents for grid? No, view divides by 100 IF from charge. 
-         Let's check view logic: amount = request.POST.get('amount') -> int(amount). 
-         Then transaction_amount = int(charge['amount']) / 100.
-         So we should pass total in CENTS to Culqi if creating charge manually?
-         Wait, Culqi Checkout handles the token. We send the TOKEN to backend.
-         Backend uses token to Charge.
-         Backend expects: amount, currency_code, email, source_id (token), shipping info.
-    -->
-    <input type="hidden" name="currency_code" value="PEN">
-    <input type="hidden" name="email" id="card_email" value="{{ user.email }}">
-    <input type="hidden" name="source_id" id="culqi_token">
-    <input type="hidden" name="shipping_cost" value="{{ costo_despacho }}">
-    <input type="hidden" name="shipping_address" value="{{ user.profile.shipping_address1 }}">
-</form>
 
 <!-- Form oculto para Depósito -->
 <form id="deposit-form" method="POST" action="{% url 'carrito-de-compras:cart_charge_deposit_payment' %}">
@@ -173,37 +179,15 @@
 </form>
 
 <script>
-    Culqi.publicKey = "{{ culqi_public_key }}";
-    
-    // Configuración Culqi
-    Culqi.options({
-        style: {
-            logo: "{% static 'media/gallito_logo.png' %}",
-            maincolor: "#2563EB"
-        }
-    });
-
-    // Forzar monto en céntimos para Culqi (si la librería lo usa por defecto)
-    // Pero aquí configuramos Culqi settings
-    Culqi.settings({
-        title: 'Imprenta Gallito',
-        currency: 'PEN', 
-        description: 'Compra en Imprenta Gallito',
-        amount: Math.round({{ total_a_pagar }} * 100)
-    });
-
     let selectedMethod = null;
 
     function selectPayment(method) {
         selectedMethod = method;
         
         // Visual
-        document.getElementById('check-card').classList.add('hidden');
         document.getElementById('check-deposit').classList.add('hidden');
         
-        if (method === 'card') {
-            document.getElementById('check-card').classList.remove('hidden');
-        } else {
+        if (method === 'deposit') {
             document.getElementById('check-deposit').classList.remove('hidden');
         }
 
@@ -212,14 +196,10 @@
         btn.disabled = false;
         btn.classList.remove('bg-gray-400');
         btn.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'hover:from-blue-700', 'hover:to-purple-700');
-        btn.textContent = method === 'card' ? 'Pagar con Tarjeta' : 'Generar Orden de Transferencia';
+        btn.textContent = 'Generar Orden de Transferencia';
         
         btn.onclick = function() {
-            if (method === 'card') {
-                Culqi.open();
-            } else {
-                document.getElementById('depositModal').classList.remove('hidden');
-            }
+            document.getElementById('depositModal').classList.remove('hidden');
         };
     }
 
@@ -230,26 +210,6 @@
     function processDeposit() {
         document.getElementById('deposit-form').submit();
     }
-
-    // Handler de Culqi
-    function culqi() {
-        if (Culqi.token) { 
-            // ¡Objeto Token creado exitosamente!
-            const token = Culqi.token.id;
-            const email = Culqi.token.email;
-            
-            document.getElementById('culqi_token').value = token;
-            document.getElementById('card_email').value = email;
-            
-            // Send to backend
-            document.getElementById('culqi-form').submit();
-        } else { 
-            // ¡Hubo algún problema!
-            // Mostramos JSON de objeto error en consola
-            console.log(Culqi.error);
-            alert(Culqi.error.user_message);
-        }
-    };
 </script>
 
 {% endblock %}

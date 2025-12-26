@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% trans "Confirmar Correo Electrónico" %}{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50/50">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-gray-100 transition-all hover:shadow-2xl">
+        <div class="text-center">
+            <!-- Animated Icon Container -->
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-blue-50 mb-8 relative">
+                <div class="absolute inset-0 rounded-full bg-blue-100 animate-pulse opacity-50"></div>
+                <i class="fas fa-envelope-open-text text-blue-600 text-3xl relative z-10"></i>
+            </div>
+            
+            <h2 class="text-3xl font-black text-gray-900 font-display tracking-tight">
+                {% trans "Confirmar Correo" %}
+            </h2>
+            
+            <div class="h-1.5 w-12 bg-blue-600 mx-auto mt-4 rounded-full"></div>
+            
+            {% if confirmation %}
+                {% user_display confirmation.email_address.user as user_display %}
+                <div class="mt-6 space-y-4">
+                    <p class="text-gray-600 leading-relaxed">
+                        {% blocktrans with confirmation.email_address.email as email %}Hola <strong>{{ user_display }}</strong>, por favor confirma que <span class="text-blue-600 font-bold underline decoration-2 underline-offset-4">{{ email }}</span> es tu dirección de correo electrónico.{% endblocktrans %}
+                    </p>
+
+                    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}" class="pt-4">
+                        {% csrf_token %}
+                        <button type="submit" class="group w-full flex items-center justify-center py-4 px-6 border border-transparent text-base font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-300 shadow-[0_8px_30px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_30px_rgb(37,99,235,0.4)] transform hover:-translate-y-0.5">
+                            <span>{% trans "Sí, confirmar correo ahora" %}</span>
+                            <i class="fas fa-check-circle ml-3 opacity-80 group-hover:opacity-100 transition-opacity"></i>
+                        </button>
+                    </form>
+                </div>
+            {% else %}
+                {% url 'account_email' as email_url %}
+                <div class="mt-8 space-y-6">
+                    <div class="p-6 bg-red-50 rounded-2xl border border-red-100">
+                        <div class="flex items-center justify-center text-red-600 mb-3">
+                            <i class="fas fa-exclamation-triangle text-xl"></i>
+                        </div>
+                        <p class="text-sm text-red-800 font-medium text-center leading-relaxed">
+                            {% blocktrans %}Lo sentimos, este enlace de confirmación ha expirado o ya no es válido.{% endblocktrans %}
+                        </p>
+                    </div>
+                    
+                    <a href="{{ email_url }}" class="w-full flex items-center justify-center py-3.5 px-6 border-2 border-gray-200 text-sm font-bold rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200">
+                        {% trans "Solicitar un nuevo enlace" %}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Footer link -->
+        <div class="text-center pt-8 border-t border-gray-50">
+            <a href="/" class="group text-sm font-semibold text-gray-400 hover:text-gray-900 transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-arrow-left text-xs transition-transform group-hover:-translate-x-1"></i>
+                {% trans "Volver a la tienda" %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    .fa-envelope-open-text {
+        animation: bounce-subtle 3s ease-in-out infinite;
+    }
+</style>
+{% endblock %}

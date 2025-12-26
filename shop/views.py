@@ -16,6 +16,8 @@ from django.shortcuts import redirect, HttpResponseRedirect, render, get_object_
 from django.template.loader import get_template
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
+from allauth.account.utils import send_email_confirmation
+from allauth.account.models import EmailAddress
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic.edit import FormView
 from django.views.generic import ListView
@@ -330,7 +332,15 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     # Construir path basado en category_slug/subcategory_slug/product_slug
     # Convertir slugs a formato de carpeta (guiones a guiones bajos)
     category_folder = category_slug.replace('-', '_')
-    subcategory_folder = subcategory_slug.replace('-', '_')
+    
+    # The subcategory_slug may be namespaced (e.g., "invitaciones-papeleria-bodas")
+    # We need to strip the category prefix to get the actual folder name
+    if subcategory_slug.startswith(category_slug + '-'):
+        actual_subcat_slug = subcategory_slug[len(category_slug) + 1:]  # Remove "category-" prefix
+    else:
+        actual_subcat_slug = subcategory_slug
+    
+    subcategory_folder = actual_subcat_slug.replace('-', '_')
     product_folder = product_slug.replace('-', '_')
     
     # Path base de la subcategoría
@@ -369,7 +379,8 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
                         # Ej: product_slug="guarda-la-fecha" → archivo="guarda-la-fecha-detalle.jpg"
                         expected_filename = f"{product_slug}-detalle.jpg"
                         if filename_lower == expected_filename:
-                            detail_image_url = f"/static/media/product_images/{category_folder}/{subcategory_folder}/{folder_name}/{filename}"
+                            # Use relative path for consistency with other image paths
+                            detail_image_url = f"media/product_images/{category_folder}/{subcategory_folder}/{folder_name}/{filename}"
                             break
             if detail_image_url:
                 break
@@ -401,9 +412,26 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
     # -------------------------------------------------------------------------
     
     pricing_tiers_qs = product.price_tiers.all().order_by('min_quantity')
+    
+    # ENFORCE MINIMUM QUANTITY
+    final_min_quantity = product.min_quantity or 1
+    if category_slug in ['tarjetas-presentacion', 'invitaciones-papeleria']:
+        final_min_quantity = 50
+    
+    can_order_sample = category_slug in ['tarjetas-presentacion', 'invitaciones-papeleria']
+    
     formatted_tiers = []
     
     for tier in pricing_tiers_qs:
+        # Skip tiers below the absolute minimum we just defined? 
+        # Better to keep them but show the user the minimum start.
+        # Actually, the user asked "mejora la tabla... para que esto se vea reflejado".
+        # If the minimum is 50, the table shouldn't show 1-49.
+        if tier.max_quantity < final_min_quantity:
+            continue
+            
+        current_min = max(tier.min_quantity, final_min_quantity)
+        
         savings = 0.0
         current_unit_price = float(tier.unit_price) 
         
@@ -411,7 +439,7 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
             savings = safe_base_price - current_unit_price
         
         formatted_tiers.append({
-            'min_quantity': int(tier.min_quantity),
+            'min_quantity': int(current_min),
             'max_quantity': int(tier.max_quantity),
             'unit_price': current_unit_price,
             'discount_percent': tier.discount_percentage,
@@ -420,7 +448,7 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
 
     if not formatted_tiers:
         formatted_tiers = [{
-            'min_quantity': 1,
+            'min_quantity': final_min_quantity,
             'max_quantity': 999999,
             'unit_price': safe_base_price,
             'discount_percent': 0,
@@ -429,6 +457,8 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
 
     context['pricing_tiers'] = formatted_tiers
     context['pricing_tiers_json'] = json.dumps(formatted_tiers)
+    context['min_quantity'] = final_min_quantity
+    context['can_order_sample'] = can_order_sample
 
     # -------------------------------------------------------------------------
     # 5. LÓGICA ESPECÍFICA (Ropa vs. Imprenta) - ACTUALIZADO
@@ -924,6 +954,7 @@ def add_product_to_cart(request):
         custom_quantity = request.POST.get('custom_quantity')
         template_slug = request.POST.get('template_slug', '')
         design_type = request.POST.get('design_type', 'custom')
+        is_sample = request.POST.get('is_sample') == 'true'
         
         # Contact data
         contact_name = request.POST.get('contact_name', '').strip()
@@ -990,14 +1021,16 @@ def add_product_to_cart(request):
                 })
         
         # Create new item
-        if quantity_tier == 'custom' and custom_quantity:
+        if is_sample:
+            quantity = '5'
+        elif quantity_tier == 'custom' and custom_quantity:
             quantity = str(custom_quantity)
         elif quantity_tier:
             quantity = str(quantity_tier)
         else:
             quantity = '100'
         
-        quantity = ''.join(filter(str.isdigit, quantity)) or '100'
+        quantity = ''.join(filter(str.isdigit, quantity)) or ('5' if is_sample else '100')
         
         try:
             product = Product.objects.get(
@@ -1018,6 +1051,7 @@ def add_product_to_cart(request):
                 design_file=request.FILES.get('design_file'),
                 logo_file=request.FILES.get('logo_file'),
                 comment=comment,
+                is_sample=is_sample,
                 step_two_complete=True,
                 contact_name=contact_name or None,
                 contact_phone=contact_phone or None,
@@ -1603,16 +1637,26 @@ class StepTwoView_Sample(FormView):
 
 def signinView(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
+            user = form.get_user()
             if user is not None:
+                # Verificar si el correo está validado (si ACCOUNT_EMAIL_VERIFICATION = "mandatory")
+                email_address = EmailAddress.objects.filter(user=user, verified=True).exists()
+                if not email_address and settings.ACCOUNT_EMAIL_VERIFICATION == 'mandatory':
+                    # Guardamos el ID del usuario en la sesión para poder reenviar el correo
+                    request.session['pending_verification_user_id'] = user.pk
+                    return redirect('email_confirmation_needed')
+                
                 login(request, user)
                 return redirect('carrito-de-compras:cart_detail')
-            else:
-                return redirect('signup')
+        else:
+            # Check specifically if the user exists to provide better feedback
+            username = request.POST.get('username')
+            if username:
+                exists = User.objects.filter(Q(username=username) | Q(email=username)).exists()
+                if not exists:
+                    messages.error(request, f"El usuario o correo '{username}' no está registrado en nuestra base de datos.")
     else:
         form = AuthenticationForm()
     return render(request, 'account/login.html', {'form': form})
@@ -1626,14 +1670,38 @@ def signoutView(request):
         request.session.modified = True
         logout(request)
 
-    response = redirect('signin')
+    response = redirect('account_login')
     response.delete_cookie("cart_id")
     response.delete_cookie("cupon")
     return response
 
 
 def email_confirmation_needed(request):
-    return render(request, "accounts/email_confirmation_needed.html")
+    user_id = request.session.get('pending_verification_user_id')
+    if not user_id:
+        return redirect('account_login')
+    
+    user = get_object_or_404(User, pk=user_id)
+    email = user.email
+    
+    return render(request, "accounts/email_confirmation_needed.html", {
+        'email': email
+    })
+
+
+def resend_verification_email(request):
+    user_id = request.session.get('pending_verification_user_id')
+    if not user_id:
+        messages.error(request, "No se pudo identificar al usuario.")
+        return redirect('account_login')
+    
+    user = get_object_or_404(User, pk=user_id)
+    
+    # Re-enviar confirmación usando allauth
+    send_email_confirmation(request, user, signup=True)
+    
+    messages.success(request, f"Se ha reenviado el correo de confirmación a {user.email}")
+    return redirect('email_confirmation_needed')
 
 
 def activate(request, uidb64, token):
@@ -1740,34 +1808,10 @@ def signupView(request):
             profile_form.full_clean()
             profile_form.save()
             
-            # Send activation email using Standard Django (Hostinger)
-            # BrevoService.send_activation_email(user, request) <--- REMOVED
+            # Send verification via allauth (consistent with resend logic)
+            send_email_confirmation(request, user, signup=True)
             
-            # Generate token and uid
-            from django.contrib.auth.tokens import default_token_generator
-            from django.utils.http import urlsafe_base64_encode
-            from django.utils.encoding import force_bytes
-            from django.contrib.sites.shortcuts import get_current_site
-            from django.template.loader import render_to_string
-            from django.core.mail import EmailMessage
-            from django.conf import settings
-
-            current_site = get_current_site(request)
-            mail_subject = 'Activa tu cuenta en Imprenta Gallito'
-            message = render_to_string('accounts/account_verification_email.html', {
-                'user': user,
-                'domain': request.get_host(), # Use dynamic domain (localhost vs prod)
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user),
-            })
-            to_email = user.email
-            send_email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            send_email.content_subtype = "html"
-            send_email.send()
-
-            return redirect('shop:email_confirmation_needed')
+            return redirect('account_email_verification_sent')
         else:
             pass
 

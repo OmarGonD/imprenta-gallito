@@ -80,10 +80,14 @@ def run():
             product_basename = os.path.splitext(img_file)[0]
             product_slug = product_basename.lower().replace('_', '-').replace(' ', '-')
             
-            # Ensure unique slug if collision with other folders (unlikely but possible)
+            # Ensure unique slug if collision with other folders
             if product_slug in existing_product_slugs:
-                # print(f"Skipping existing product: {product_slug}")
-                continue
+                # Try prepending subcategory to make it unique
+                product_slug = f"{sub_slug}-{product_slug}"
+                
+            if product_slug in existing_product_slugs:
+                 # print(f"Skipping existing product: {product_slug}")
+                 continue
 
             product_name = product_basename.replace('-', ' ').replace('_', ' ').title()
             sku = f"ROPA-{sub_slug[:3].upper()}-{len(existing_product_slugs) + len(new_products):04d}"

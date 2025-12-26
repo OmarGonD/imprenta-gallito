@@ -192,9 +192,12 @@ class Command(BaseCommand):
         
         if self.force and not self.dry_run:
             self.stdout.write(self.style.WARNING('\nModo FORCE activado: Se eliminarán datos existentes\n'))
-            # if not self.confirm_action('¿Está seguro de que desea continuar?'):
-            #     self.stdout.write(self.style.ERROR('Operación cancelada'))
-            #     return
+            
+            # AUTOMATIC SCAN AND REGENERATE
+            from django.core.management import call_command
+            self.stdout.write(self.style.SUCCESS('\n>>> EJECUTANDO ESCANEO DE CATÁLOGO (GENERACIÓN DE EXCELS) <<<\n'))
+            call_command('scan_catalog')
+            self.stdout.write(self.style.SUCCESS('\n>>> ESCANEO COMPLETADO. INICIANDO IMPORTACIÓN DB... <<<\n'))
         
         try:
             with transaction.atomic():
@@ -242,7 +245,10 @@ class Command(BaseCommand):
                 # NUEVO: Importar Ubigeo
                 if not self.only or self.only == 'ubigeo':
                     counts['ubigeo'] = self.import_ubigeo()
-                # counts['ubigeo'] = 0
+
+                # NUEVO: Desactivar subcategorías vacías
+                if not self.dry_run:
+                    self.deactivate_empty_subcategories()
 
                 # Resumen
                 self.stdout.write('\n' + '=' * 70)
@@ -666,11 +672,25 @@ class Command(BaseCommand):
         updated = 0
         
         for _, row in df.iterrows():
+            category_slug = str(row['category_slug']).strip()
+            
+            # Poblar imagen desde Excel
+            image_url = str(row['image_url']) if pd.notna(row['image_url']) else ''
+            
+            # Dinámico: Si está vacío en Excel, buscar {slug}.jpg o {slug}.png en media/category_images/
+            if not image_url:
+                search_dir = os.path.join(settings.BASE_DIR, 'static', 'media', 'category_images')
+                for ext in ['.jpg', '.png', '.jpeg', '.webp']:
+                    potential_file = f"{category_slug}{ext}"
+                    if os.path.exists(os.path.join(search_dir, potential_file)):
+                        image_url = f"media/category_images/{potential_file}"
+                        break
+
             defaults = {
                 'name': row['category_name'],
                 # Maneja mejor los nulos de Excel para strings/int
                 'description': str(row['description']) if pd.notna(row['description']) else '',
-                'image_url': str(row['image_url']) if pd.notna(row['image_url']) else None,
+                'image_url': image_url,
                 # Conversión explícita a int
                 'display_order': int(row['display_order']),
                 'status': str(row['status']) if 'status' in row and pd.notna(row['status']) else 'active',
@@ -682,7 +702,7 @@ class Command(BaseCommand):
             if not self.dry_run:
                 _, was_created = Category.objects.update_or_create(
                     # Asegura que el slug es string
-                    slug=str(row['category_slug']).strip(),
+                    slug=category_slug,
                     defaults=defaults
                 )
                 if was_created:
@@ -717,9 +737,10 @@ class Command(BaseCommand):
                         'name': row['subcategory_name'],
                         'category': category,
                         'description': str(row['description']) if pd.notna(row['description']) else '',
-                        'image_url': str(row['image_url']) if pd.notna(row['image_url']) else None,
+                        'image_url': str(row['image_url']) if pd.notna(row['image_url']) else '',
                         # Conversión explícita a int
                         'display_order': int(row['display_order']),
+                        'status': str(row['status']) if 'status' in row and pd.notna(row['status']) else 'active',
                     }
                     
                     if 'display_style' in row and pd.notna(row['display_style']):
@@ -957,12 +978,12 @@ class Command(BaseCommand):
         ACTUALIZADO: Usa option_value en lugar de color.
         """
         self.stdout.write('Importando imágenes de productos...')
-        filename = 'polo_imagenes_colores.xlsx' # Extensión actualizada y nombre corregido
+        filename = 'ropa_product_images.xlsx' # NUEVO ARCHIVO GENERADO
         filepath = os.path.join(self.data_dir, filename)
         
         if not os.path.exists(filepath):
             # Fallback a nombre antiguo si no existe el nuevo
-            alt_filename = 'polos_images.xlsx'
+            alt_filename = 'polo_imagenes_colores.xlsx'
             alt_filepath = os.path.join(self.data_dir, alt_filename)
             if os.path.exists(alt_filepath):
                 filename = alt_filename
@@ -1095,22 +1116,27 @@ class Command(BaseCommand):
         
         for _, row in df.iterrows():
             try:
-                product_slug = str(row['product_slug']).strip()
+                # Match scan_catalog output column 'product'
+                slug_key = 'product' if 'product' in row else 'product_slug'
+                product_slug = str(row[slug_key]).strip()
                 
                 if not self.dry_run:
                     product = Product.objects.get(slug=product_slug)
+                    
+                    # Handling variation in column names (scan_catalog uses full names, legacy used short)
+                    min_q = int(row.get('min_quantity', row.get('min_quan', 1)))
+                    max_q = int(row.get('max_quantity', row.get('max_quan', 999999)))
+                    price = Decimal(str(row.get('unit_price', '0.00')))
+                    disc = int(row.get('discount_percentage', row.get('discount_percent', 0)))
+
                     defaults = {
-                        # Conversión explícita a int
-                        'max_quantity': int(row['max_quan']),
-                        # Conversión a Decimal a través de string
-                        'unit_price': Decimal(str(row['unit_price'])),
-                        # Conversión explícita a int
-                        'discount_percentage': int(row['discount_percent'])
+                        'max_quantity': max_q,
+                        'unit_price': price,
+                        'discount_percentage': disc
                     }
                     _, was_created = PriceTier.objects.update_or_create(
                         product=product,
-                        # Conversión explícita a int
-                        min_quantity=int(row['min_quan']),
+                        min_quantity=min_q,
                         defaults=defaults
                     )
                     if was_created:
@@ -1672,6 +1698,34 @@ class Command(BaseCommand):
                     total_created += 1
                     
         return total_created, total_updated
+
+    def deactivate_empty_subcategories(self):
+        """Desactiva subcategorías que no tienen productos activos."""
+        self.stdout.write('\nLimpiando subcategorías vacías...')
+        
+        # Solo procesar si no se está importando algo específico (como solo subcategories)
+        if self.only and self.only not in ['products', 'subcategories', 'polos']:
+            return
+
+        deactivated_count = 0
+        from django.db.models import Count, Q
+        from shop.models import Subcategory
+        
+        # Buscar subcategorías activas que no tienen productos con status='active'
+        empty_subs = Subcategory.objects.filter(status='active').annotate(
+            active_product_count=Count('products', filter=Q(products__status='active'))
+        ).filter(active_product_count=0)
+        
+        for sub in empty_subs:
+            sub.status = 'inactive'
+            sub.save()
+            deactivated_count += 1
+            # self.stdout.write(f'   - Desactivada: {sub.slug}')
+            
+        if deactivated_count > 0:
+            self.stdout.write(self.style.SUCCESS(f'   OK {deactivated_count} subcategorías vacías desactivadas'))
+        else:
+            self.stdout.write('   No se encontraron subcategorías vacías')
                     
     def import_product_images_from_static(self):
         """

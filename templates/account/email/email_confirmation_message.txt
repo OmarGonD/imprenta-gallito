@@ -1,0 +1,10 @@
+Hola {{ user_display }},
+
+Gracias por registrarte en Imprenta Gallito. Por favor, confirma tu correo electrónico haciendo clic en el siguiente enlace:
+
+{{ activate_url }}
+
+Si no has solicitado este registro, puedes ignorar este mensaje.
+
+¡Gracias!
+Imprenta Gallito

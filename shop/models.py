@@ -447,10 +447,11 @@ class Product(models.Model):
             'invitaciones-regalos', 'bodas', 'productos-promocionales'
         ]
         if self.category and self.category.slug in special_categories:
+            subref = self.subcategory.slug if self.subcategory else 'general'
             return reverse('shop:product_detail',
                            kwargs={
                                'category_slug': self.category.slug,
-                               'subcategory_slug': self.subcategory.slug,
+                               'subcategory_slug': subref, 
                                'product_slug': self.slug
                            })
 
@@ -746,16 +747,17 @@ class Profile(models.Model):
 
     @property
     def is_complete(self):
+        """Checks if minimal required info for shipping is present."""
         required_fields = [
             self.dni, 
             self.phone_number, 
             self.shipping_address1, 
+            self.reference,
             self.shipping_department, 
             self.shipping_province, 
             self.shipping_district,
-            self.gender,
-            self.birthdate,
         ]
+        # gender and birthdate removed from critical 'is_complete' to be more user friendly
         return all(field and str(field).strip() for field in required_fields)
 
     def __str__(self):

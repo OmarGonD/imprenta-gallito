@@ -140,6 +140,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/ingresar/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/ingresar/"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # Ahora es obligatorio validar el correo

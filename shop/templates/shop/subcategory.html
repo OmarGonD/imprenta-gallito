@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load shop_extras %}
 
 {% block title %}{{ subcategory.name }} - {{ category.name }} - Imprenta Gallito{% endblock %}
 
@@ -136,10 +137,10 @@
             {% if products %}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {% for product in products %}
-                <a href="{{ product.get_absolute_url }}" class="material-card">
+                <a href="{{ product.get_absolute_url }}" class="material-card" data-product-id="{{ product.id }}">
                     <div class="material-image">
                         {% if product.base_image_url %}
-                        <img src="{% static product.base_image_url %}" alt="{{ product.name }}">
+                        <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="product-main-image" data-original="{% static product.base_image_url %}">
                         {% else %}
                         <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
                             <i class="fas fa-image text-4xl mb-2"></i>
@@ -166,6 +167,29 @@
                         </div>
                         {% endwith %}
                         
+                        {% comment %} Color Swatches for Clothing Products {% endcomment %}
+                        {% if category.slug == 'ropa-bolsos' %}
+                        <div class="product-color-swatches flex flex-wrap gap-1.5 my-2">
+                            {% for variant_option in product.variant_options.all %}
+                                {% if variant_option.option.key == 'color' %}
+                                    {% for color in variant_option.available_values.all|slice:":8" %}
+                                    <span class="color-swatch-mini w-5 h-5 rounded-full border-2 border-gray-200 hover:border-blue-500 hover:scale-110 transition-all cursor-pointer shadow-sm"
+                                          style="background-color: {{ color.hex_code|default:'#CCCCCC' }};"
+                                          title="{{ color.label|default:color.value|title }}"
+                                          data-color="{{ color.value }}"
+                                          data-image-url="{{ product|get_image_by_color:color.value }}"
+                                          onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this);"></span>
+                                    {% endfor %}
+                                    {% if variant_option.available_values.count > 8 %}
+                                    <span class="w-5 h-5 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center text-xs text-gray-500 font-medium">
+                                        +{{ variant_option.available_values.count|add:"-8" }}
+                                    </span>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
                         <p class="text-xs text-gray-400 mb-3">SKU: {{ product.sku }}</p>
                         
                         <span class="material-cta">Ver Detalles</span>
@@ -188,4 +212,59 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function selectCardColor(swatch) {
+    const card = swatch.closest('.material-card');
+    const allSwatches = card.querySelectorAll('.color-swatch-mini');
+    const colorValue = swatch.dataset.color;
+    const imageUrl = swatch.dataset.imageUrl;
+    const productImg = card.querySelector('.product-main-image');
+    
+    // Update swatch selection visuals
+    allSwatches.forEach(s => {
+        s.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-1');
+    });
+    swatch.classList.add('ring-2', 'ring-blue-500', 'ring-offset-1');
+    
+    // Update the card href to include color parameter for better UX
+    const originalHref = card.dataset.originalHref || card.getAttribute('href');
+    if (!card.dataset.originalHref) {
+        card.dataset.originalHref = originalHref; // Store original
+    }
+    // Add color as query parameter
+    const separator = originalHref.includes('?') ? '&' : '?';
+    card.setAttribute('href', originalHref + separator + 'color=' + encodeURIComponent(colorValue));
+    
+    // Change product image if we have a direct URL
+    if (productImg && imageUrl) {
+        productImg.src = imageUrl;
+        return;
+    }
+    
+    // Fallback: Try to find an image with this color value in the image path
+    if (productImg) {
+        const originalSrc = productImg.dataset.original || productImg.src;
+        // Replace the color portion of the filename
+        // e.g., /product-name-azul.jpg -> /product-name-rojo.jpg
+        const basePath = originalSrc.replace(/(-[^-\/]+)(\.[^.]+)$/, '');
+        const ext = originalSrc.match(/\.[^.]+$/)?.[0] || '.jpg';
+        const colorSlug = colorValue.toLowerCase().replace(/ /g, '-');
+        const newSrc = basePath.replace(/(-[a-z-]+)$/, '') + '-' + colorSlug + ext;
+        
+        // Try loading the new image, fallback to original if not found
+        const testImg = new Image();
+        testImg.onload = function() {
+            productImg.src = newSrc;
+        };
+        testImg.onerror = function() {
+            // Keep original image if color variant doesn't exist
+            console.log('Color image not found:', newSrc);
+        };
+        testImg.src = newSrc;
+    }
+}
+</script>
 {% endblock %}

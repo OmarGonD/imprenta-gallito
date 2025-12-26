@@ -25,11 +25,19 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('cuenta-inactiva/', allauth_views.account_inactive, name='account_inactive'),
     path('accounts/', include('allauth.urls')),
+    
+    # Overrides de Allauth para usar rutas en español y nombres de vista compatibles
+    path('registrarse/', views.signupView, name='account_signup'),
+    path('ingresar/', views.signinView, name='account_login'),
+    path('salir/', views.signoutView, name='account_logout'),
+    path('verificacion-enviada/', allauth_views.email_verification_sent, name='account_email_verification_sent'),
+    path('confirmar-correo/', allauth_views.confirm_email, name='account_confirm_email_no_key'),
+    path('confirmar-correo/<str:key>/', allauth_views.confirm_email, name='account_confirm_email'),
+    
     path('carrito-de-compras/', include('cart.urls')),
     path('marketing/', include('marketing.urls')),
-    path('registrarse/', views.signupView, name='signup'),
-    path('ingresar/', views.signinView, name='signin'),
-    path('salir/', views.signoutView, name='signout'),
+    path('email-necesita-validacion/', views.email_confirmation_needed, name='email_confirmation_needed'),
+    path('reenviar-confirmacion-email/', views.resend_verification_email, name='resend_verification_email'),
     path('province/', views.get_province, name='province'),
     path('district/', views.get_district, name='district'),
     path('', include('shop.urls')),

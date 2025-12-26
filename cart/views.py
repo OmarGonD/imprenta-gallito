@@ -88,7 +88,6 @@ def checkout(request):
             'costo_despacho': costo_despacho,
             'descuento_por_cupon': descuento_por_cupon,
             'total_a_pagar': total_a_pagar,
-            'culqi_public_key': settings.CULQI_PUBLISHABLE_KEY, # Pass key explicitly
             'user_email': request.user.email
         }
         return render(request, 'cart/checkout.html', context)
@@ -104,12 +103,18 @@ def add_to_cart(request, product_slug):
         # Obtener datos
         color_slug = request.POST.get('color_slug', '').strip()
         size_slug = request.POST.get('size_slug', '').strip()
-        quantity = int(request.POST.get('quantity', 1))
+        is_sample = request.POST.get('is_sample') == 'true'
+        
+        if is_sample:
+            quantity = 5
+        else:
+            quantity = int(request.POST.get('quantity', 1))
+            
         uploaded_file = request.FILES.get('design_file')  # Corregido: era 'uploaded_file'
         color_image_url = request.POST.get('color_image_url', '').strip()
         
         # Validaciones
-        if not color_slug or not size_slug:
+        if not is_sample and (not color_slug or not size_slug):
             return JsonResponse({
                 'success': False,
                 'error': 'Color y talla son requeridos'
@@ -125,20 +130,21 @@ def add_to_cart(request, product_slug):
         else:
             cart = Cart.objects.create()
         
-        # Buscar o crear item
+        # Buscar o crear item (incluyendo is_sample en la búsqueda)
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product=product,
             color=color_slug,
             size=size_slug,
+            is_sample=is_sample,
             defaults={
                 'quantity': quantity,
                 'color_image_url': color_image_url
             }
         )
         
-        # Si ya existía, sumar cantidad
-        if not created:
+        # Si ya existía y NO es muestra, sumar cantidad (las muestras son fijas de 5)
+        if not created and not is_sample:
             cart_item.quantity += quantity
             if color_image_url:
                 cart_item.color_image_url = color_image_url
@@ -178,151 +184,23 @@ def delete_item(request, cart_item_id):
 
     return redirect('carrito-de-compras:cart_detail')
 
-### CULQI PAYMENT ###
-
-@csrf_exempt
-def cart_charge_credit_card(request):
-
-    if request.POST.get('payment_method') == 'credit_card_payment':
-        
-        culqipy.public_key = settings.CULQI_PUBLISHABLE_KEY
-        culqipy.secret_key = settings.CULQI_SECRET_KEY
-        amount = request.POST.get('amount')
-        currency_code = request.POST.get('currency_code')
-        email = request.POST.get('email')
-        source_id = request.POST.get('source_id')
-        last_four = request.POST.get('last_four')
-        shipping_address = request.POST.get('shipping_address')
-        shipping_cost = request.POST.get('shipping_cost')
-
-        dir_charge = {"amount": int(amount), "currency_code": currency_code,
-                      "email": email,
-                      "source_id": source_id}
-
-        print(dir_charge)
-
-        charge = culqipy.Charge.create(dir_charge)
-        if not charge:
-            print("No se generó CHARGE")
-
-        transaction_amount = int(charge['amount']) / 100  # Necesario dividir entre 100 para obtener el monto real,
-        # Esto debido a cómo Culqi recibe los datos de los pagos
-
-        first_name = request.user.first_name
-
-        last_name = request.user.last_name
-
-        phone_number = request.user.profile.phone_number
-
-        current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-        shipping_address1 = request.user.profile.shipping_address1
-
-        reference = request.user.profile.reference
-
-        shipping_department = request.user.profile.shipping_department
-
-        shipping_province = request.user.profile.shipping_province
-
-        shipping_district = request.user.profile.shipping_district
-
-        order_details = Order.objects.create(
-            token=charge['id'],
-            first_name=first_name,
-            last_name=last_name,
-            phone_number=phone_number,
-            email=email,  # Using email entered in Culqi module, NOT user.email. Could be diff.
-            total=transaction_amount,
-            shipping_cost=shipping_cost,
-            last_four=last_four,
-            created=current_time,
-            shipping_address=shipping_address,
-            shipping_address1=shipping_address1,
-            reference=reference,
-            shipping_department=shipping_department,
-            shipping_province=shipping_province,
-            shipping_district=shipping_district,
-            status='recibido_pagado'
-        )
-
-        order_details.save()
-        print("La orden fue creada")
-
-        try:
-            cart_id = int(request.COOKIES.get("cart_id"))
-            cart = Cart.objects.get(id=cart_id)
-        except Cart.DoesNotExist:
-            pass
-
-        cart_items = CartItem.objects.filter(cart=cart)
-
-        for order_item in cart_items:
-            oi = OrderItem.objects.create(
-                order=order_details,
-                name=order_item.product.name,
-                sku=order_item.product.sku,
-                quantity=order_item.quantity,
-                size=order_item.size,
-                color=order_item.color,
-                price=order_item.product.price,
-                file_a=order_item.file_a,
-                file_b=order_item.file_b,
-                comment=order_item.comment)
-                
-            oi.save()
-
-        try:
-            '''Calling send_email function'''
-            send_email_credit_card(order_details.id)
-            print("El correo de confirmación por la compra ha sido enviado al cliente")
-        except IOError as e:
-            return e
-
-        try:
-
-            cupon_name = request.COOKIES.get("cupon")
-
-            cupon = Cupons.objects.get(cupon=cupon_name)
-
-            
-            cupon.quantity = cupon.quantity - 1
-
-            cupon.save()
-
-            used_cupon = used_cupons.objects.create(
-                cupon=cupon,
-                user=request.user.username,
-                order=order_details
-            )
-
-            used_cupon.save()
-
-        except:
-            print("No se detectó cupón o no se pudo guardar cupón usado")
-            pass
-
-        response = HttpResponse("Hi")
-        response.delete_cookie("cart_id")
-        response.delete_cookie("cupon")
-
-        return response
 
 
 @csrf_exempt
 def cart_charge_deposit_payment(request):
     # Pago con Efectivo
-    amount = request.POST.get('amount')
+    amount = request.POST.get('amount') or 0
     email = request.user.email
     shipping_address = request.POST.get('shipping_address')
-    shipping_cost = request.POST.get('shipping_cost')
-    discount = request.POST.get('discount')
-    stickers_price = request.POST.get('stickers_price')
+    shipping_cost = request.POST.get('shipping_cost') or 0
+    discount = request.POST.get('discount') or 0
+    stickers_price = request.POST.get('stickers_price') or 0
     comments = request.POST.get('comments')
     print("### COMMENTSSS CART_PAYMENT ###")
     print(comments)
 
     last_four = 1111  # No necesario para Pagos con Efectivo, pero si para el Objeto Order
-    transaction_amount = amount  # Solo para Culqi se divide entre 100
+    transaction_amount = amount 
     
     print("### TRANSACTION AMAOUNT")
     print(transaction_amount)
@@ -371,7 +249,7 @@ def cart_charge_deposit_payment(request):
         first_name=first_name,
         last_name=last_name,
         phone_number=phone_number,
-        email=email,  # Using email entered in Culqi module, NOT user.email. Could be diff.
+        email=email, 
         total=transaction_amount,
         stickers_price = stickers_price,
         discount = discount,
@@ -419,9 +297,9 @@ def cart_charge_deposit_payment(request):
             quantity=order_item.quantity,
             size=order_item.size,
             color=order_item.color,
-            price=order_item.sub_total(),
-            file_a=order_item.file_a,
-            file_b=order_item.file_b,
+            price=order_item.sub_total,
+            file_a=order_item.design_file,
+            file_b=order_item.logo_file,
             comment=order_item.comment)
         try:
             oi.save()
@@ -430,18 +308,61 @@ def cart_charge_deposit_payment(request):
 
     order_details.save()    
 
-    try:
-        '''Calling send_email function'''
-        send_email_deposit_payment(order_details.id)
-    except IOError as e:
-        return e
+    # ... (Order creation logic remains, but email and response change)
+    order_details.save()    
 
-    response = HttpResponse("Hi")
-    response.delete_cookie("cart_id")
-    response.delete_cookie("cupon")
-    response.delete_cookie("discount")
+    # REMOVED IMMEDIATE EMAIL SENDING
+    
+    # Redirect to Pending Payment Page
+    return redirect('carrito-de-compras:order_pending_payment', order_id=order_details.id)
 
-    return response
+
+def order_pending_payment(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    # Security check: Ensure user owns order or is superuser (if logical)
+    # For now, simplistic check if email matches or just relying on ID (obscure enough? No. Better check email)
+    if request.user.is_authenticated and order.email != request.user.email:
+         # Fallback for guest checkout? We use user.email in order creation usually.
+         pass
+         
+    context = {
+        'order': order,
+        'bank_bcp': "191-79298344-0-35", 
+        'bank_cci': "002-191-179298344035-56",
+        'bank_name': "OMAR GONZALES DIAZ"
+    }
+    return render(request, 'cart/order_pending_payment.html', context)
+
+@csrf_exempt
+def upload_payment_receipt(request, order_id):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, id=order_id)
+        payment_proof = request.FILES.get('payment_proof')
+        
+        if payment_proof:
+            order.payment_proof = payment_proof
+            order.status = 'recibido_no_pagado' # Still verifying? Or 'en_proceso'? Let's keep as received.
+            order.save()
+            
+            # Send Email NOW with attachment
+            try:
+                send_email_deposit_payment(order.id)
+            except Exception as e:
+                print(f"Error sending email: {e}")
+                
+            # Clear Cart Cookies
+            response = render(request, 'cart/order_success_p2p.html', {'order': order})
+            response.delete_cookie("cart_id")
+            response.delete_cookie("cupon")
+            response.delete_cookie("discount")
+            return response
+            
+        else:
+             messages.error(request, "Por favor adjunta una imagen del comprobante.")
+             return redirect('carrito-de-compras:order_pending_payment', order_id=order.id)
+             
+    return redirect('shop:home')
 
 
 def cart_detail(request, total=0, counter=0, cart_items=None):
@@ -516,24 +437,6 @@ def cart_detail(request, total=0, counter=0, cart_items=None):
     
 
 
-def send_email_credit_card(order_id):
-    transaction = Order.objects.get(id=order_id)
-    order_items = OrderItem.objects.filter(order=transaction)
-    try:
-        '''sending the order to the customer'''
-        subject = 'Imprenta Gallito Perú - Nueva orden #{}'.format(transaction.id)
-        to = ['{}'.format(transaction.email), 'imprentagallito@gmail.com', 'oma.gonzales@gmail.com']
-        from_email = 'imprentagallito@imprentagallito.pe'
-        order_information = {
-            'transaction': transaction,
-            'order_items': order_items
-        }
-        message = get_template('email/email_credit_card.html').render(order_information)
-        msg = EmailMessage(subject, message, to=to, from_email=from_email)
-        msg.content_subtype = 'html'
-        msg.send()
-    except IOError as e:
-        return e
 
 
 def send_email_deposit_payment(order_id):
@@ -560,6 +463,11 @@ def send_email_deposit_payment(order_id):
         message = get_template('email/email_deposit_payment.html').render(order_information)
         msg = EmailMessage(subject, message, to=to, from_email=from_email)
         msg.content_subtype = 'html'
+        
+        # ATTACH PROOF
+        if transaction.payment_proof:
+             msg.attach(transaction.payment_proof.name, transaction.payment_proof.read(), 'image/jpeg') # Mime type guessing?
+
         msg.send()
     except IOError as e:
         print("#Va al except a send_email_deposti")

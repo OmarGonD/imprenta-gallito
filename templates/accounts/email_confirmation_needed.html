@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Validación requerida" %}{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50/50">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-gray-100 transition-all hover:shadow-2xl">
+        <div class="text-center">
+            <!-- Animated Icon Container -->
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-amber-50 mb-8 relative">
+                <div class="absolute inset-0 rounded-full bg-amber-100 animate-pulse opacity-50"></div>
+                <i class="fas fa-user-clock text-amber-600 text-3xl relative z-10"></i>
+            </div>
+            
+            <h2 class="text-3xl font-black text-gray-900 font-display tracking-tight">
+                {% trans "Validación requerida" %}
+            </h2>
+            
+            <div class="h-1.5 w-12 bg-amber-500 mx-auto mt-4 rounded-full"></div>
+            
+            <div class="mt-8 space-y-6">
+                <p class="text-gray-600 leading-relaxed font-medium">
+                    {% blocktrans %}Tu cuenta para <strong>{{ email }}</strong> ya está registrada, pero aún no ha sido activada.{% endblocktrans %}
+                </p>
+                
+                <div class="p-6 bg-blue-50 rounded-2xl border border-blue-100 text-left">
+                    <p class="text-sm text-blue-800 leading-relaxed">
+                        {% trans "Para poder ingresar, primero debes confirmar tu correo electrónico haciendo clic en el enlace que te enviamos al momento de registrarte." %}
+                    </p>
+                </div>
+
+                <div class="space-y-4 pt-4">
+                    <a href="{% url 'resend_verification_email' %}" class="group w-full flex items-center justify-center py-4 px-6 border border-transparent text-base font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-300 shadow-md hover:shadow-xl transform hover:-translate-y-0.5">
+                        <i class="fas fa-paper-plane mr-3 opacity-80 group-hover:animate-bounce"></i>
+                        <span>{% trans "Reenviar correo de validación" %}</span>
+                    </a>
+
+                    <div class="relative py-2">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-xs">
+                            <span class="px-3 bg-white text-gray-400 uppercase tracking-widest font-bold">{% trans "o" %}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <a href="{% url 'account_login' %}" class="w-full flex items-center justify-center py-3.5 px-6 border-2 border-gray-100 text-sm font-bold rounded-xl text-gray-600 hover:bg-gray-50 hover:border-gray-200 transition-all">
+                            {% trans "Intentar con otra cuenta" %}
+                        </a>
+                        <p class="text-xs text-gray-400 mt-2">
+                            {% trans "¿Sigues teniendo problemas?" %} 
+                            <a href="{% url 'shop:contactanos' %}" class="text-blue-600 font-bold hover:underline">{% trans "Contactar soporte" %}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes pulse-subtle {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .bg-amber-100 {
+        animation: pulse-subtle 2s ease-in-out infinite;
+    }
+</style>
+{% endblock %}
