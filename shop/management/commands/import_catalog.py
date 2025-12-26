@@ -246,9 +246,9 @@ class Command(BaseCommand):
                 if not self.only or self.only == 'ubigeo':
                     counts['ubigeo'] = self.import_ubigeo()
 
-                # NUEVO: Desactivar subcategorías vacías
+                # Asegurar que todas las categorías y subcategorías estén activas
                 if not self.dry_run:
-                    self.deactivate_empty_subcategories()
+                    self.activate_all_categories()
 
                 # Resumen
                 self.stdout.write('\n' + '=' * 70)
@@ -362,6 +362,16 @@ class Command(BaseCommand):
                 # self.stdout.write(f"   Updated {slug} -> {new_hex}")
         
         self.stdout.write(f'   OK {updated_count} colores actualizados con HEX')
+
+    def activate_all_categories(self):
+        """Activa todas las categorías y subcategorías después de la importación."""
+        self.stdout.write('\nActivando todas las categorías y subcategorías...')
+        
+        cat_count = Category.objects.filter(status='inactive').update(status='active')
+        subcat_count = Subcategory.objects.filter(status='inactive').update(status='active')
+        
+        self.stdout.write(f'   OK {cat_count} categorías activadas')
+        self.stdout.write(f'   OK {subcat_count} subcategorías activadas')
                 
 
     def confirm_action(self, message):
