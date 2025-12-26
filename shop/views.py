@@ -163,11 +163,14 @@ def category_view(request, category_slug):
         status='active'
     ).order_by('display_order', 'name')
     
+    from shop.utils.comparison_data import get_comparison_data
+    
     context = {
         'category': category,
         'subcategories': subcategories,
         'products': products_without_subcategory,  # Para productos sin subcategoría
         'product_count': Product.objects.filter(category=category, status='active').count(),
+        'comparison_data': get_comparison_data(category_slug),
     }
     
     return render(request, 'shop/category.html', context)
@@ -1378,12 +1381,13 @@ def como_comprar(request):
 
 def contactanos(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = ContactForm(request.POST, request.FILES)
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             phone = form.cleaned_data['phone']
             message = form.cleaned_data['message']
+            image = form.cleaned_data.get('image')
 
             # Send email
             subject = f"Nuevo Mensaje de Contacto: {name}"
@@ -1406,6 +1410,10 @@ def contactanos(request):
                     to=['hola@imprentagallito.com'], 
                     reply_to=[email]
                 )
+                
+                if image:
+                    msg.attach(image.name, image.read(), image.content_type)
+
                 msg.send()
                 messages.success(request, '¡Gracias! Tu mensaje ha sido enviado correctamente. Te responderemos pronto.')
                 return redirect('shop:contactanos')

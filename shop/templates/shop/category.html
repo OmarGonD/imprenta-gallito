@@ -54,7 +54,7 @@
                 {% for sub in subcategories %}
                 <a href="{% url 'shop:subcategory' category.slug sub.slug %}" 
                    class="subcategory-link-card group">
-                    <div class="aspect-square rounded-xl overflow-hidden bg-gray-100 mb-3">
+                    <div class="{% if category.slug == 'ropa-bolsos' %}w-40 h-40 mx-auto rounded-full shadow-md{% else %}aspect-square rounded-xl{% endif %} overflow-hidden bg-gray-100 mb-3">
                         {% if sub.image_url %}
                         <img src="{% static sub.image_url %}" 
                              alt="{{ sub.name }}" 
@@ -195,37 +195,20 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Característica</th>
-                            <th>Estándar</th>
-                            <th>Premium</th>
-                            <th>Deluxe</th>
+                            {% for header in comparison_data.headers %}
+                            <th>{{ header }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
+                        {% for row in comparison_data.rows %}
                         <tr>
-                            <td class="font-medium text-gray-900">Grosor</td>
-                            <td>300g</td>
-                            <td>350g</td>
-                            <td>400g+</td>
+                            <td class="font-medium text-gray-900">{{ row.label }}</td>
+                            {% for val in row.values %}
+                            <td>{{ val|safe }}</td>
+                            {% endfor %}
                         </tr>
-                        <tr>
-                            <td class="font-medium text-gray-900">Acabados</td>
-                            <td>Mate, Brillante</td>
-                            <td>+ Soft Touch</td>
-                            <td>+ Foil, Relieve</td>
-                        </tr>
-                        <tr>
-                            <td class="font-medium text-gray-900">Bordes pintados</td>
-                            <td><i class="fas fa-times cross-icon"></i></td>
-                            <td><i class="fas fa-times cross-icon"></i></td>
-                            <td><i class="fas fa-check check-icon"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="font-medium text-gray-900">Precio desde</td>
-                            <td><strong class="text-blue-600">S/ 25</strong></td>
-                            <td><strong class="text-blue-600">S/ 45</strong></td>
-                            <td><strong class="text-blue-600">S/ 75</strong></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

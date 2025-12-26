@@ -242,6 +242,7 @@ class Command(BaseCommand):
                 # NUEVO: Importar Ubigeo
                 if not self.only or self.only == 'ubigeo':
                     counts['ubigeo'] = self.import_ubigeo()
+                # counts['ubigeo'] = 0
 
                 # Resumen
                 self.stdout.write('\n' + '=' * 70)
@@ -1396,6 +1397,56 @@ class Command(BaseCommand):
                 created += 1
         
         return created, updated
+
+    def import_ubigeo(self):
+        """Importa datos de Ubigeo (Departamentos, Provincias, Distritos)"""
+        self.stdout.write('Importando Ubigeo...')
+        filename = 'ubigeo-peru.xlsx'
+        filepath = os.path.join(self.data_dir, filename)
+        
+        if not os.path.exists(filepath):
+            self.stdout.write(self.style.WARNING(f'    SKIP Archivo {filename} no encontrado\n'))
+            return 0
+            
+        try:
+            # Using pandas directly as in original script, but safer
+            df = pd.read_excel(filepath, sheet_name="ubigeo-peru")
+            
+            if not self.dry_run:
+                # Clear existing if force? Or just append? 
+                # Original script did bulk_create without checking duplicates?
+                # It's better to clear if force is True.
+                if self.force:
+                    self.stdout.write('    Limpiando tabla Peru...')
+                    Peru.objects.all().delete()
+                    
+                products = []
+                for _, row in df.iterrows():
+                    products.append(
+                        Peru(
+                            departamento=row['departamento'],
+                            provincia=row['provincia'],
+                            distrito=row['distrito'],
+                            costo_despacho_con_recojo=row['costo_despacho_con_recojo'],
+                            costo_despacho_sin_recojo=row['costo_despacho_sin_recojo'],
+                            dias_despacho=row['dias_despacho']
+                        )
+                    )
+                
+                # Bulk create is efficient
+                Peru.objects.bulk_create(products, ignore_conflicts=True) # ignore_conflicts to avoid unique errors if not cleared
+                
+                count = len(products)
+                self.stdout.write(f'   OK {count} registros de Ubigeo importados')
+                return count
+            else:
+                count = len(df)
+                self.stdout.write(f'   OK {count} registros se importarían (DRY RUN)')
+                return count
+                
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'   ERROR importando Ubigeo: {e}'))
+            return 0
 
     def _import_letreros_banners_nested(self, base_path, category):
         """
