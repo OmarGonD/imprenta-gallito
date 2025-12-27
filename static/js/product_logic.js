@@ -113,14 +113,98 @@ function updatePriceAndHighlight() {
 }
 
 // ====================================================================
-// C. SELECCIÓN DE COLOR Y TALLA (ropa, etc.)
+// C. SELECCIÓN DE OPCIONES Y PRECIOS DINÁMICOS
 // ====================================================================
 
-function selectColor(colorSlug, colorName) {
+// Almacén de surcharges por opción: { 'color': 5.00, 'size': 0.00, 'print_size': 8.50, ... }
+window.optionSurcharges = {};
+
+function calculateTotalSurcharge() {
+    let total = 0;
+    for (const key in window.optionSurcharges) {
+        total += window.optionSurcharges[key];
+    }
+    return total;
+}
+
+// Sobrescribimos updatePriceAndHighlight para incluir surcharges
+const originalUpdatePrice = updatePriceAndHighlight;
+updatePriceAndHighlight = function () {
+    // 1. Obtener precio base del tier (original logic)
+    // Copiamos lógica porque necesitamos intervenir "unitPrice" antes del total
+
+    const quantityInput = document.getElementById('quantity');
+    const unitPriceDisplay = document.getElementById('unit-price');
+    const discountBadge = document.getElementById('discount-badge');
+    const totalPriceEl = document.getElementById('total-price');
+    const tierRows = document.querySelectorAll('[data-tier-min]');
+
+    if (!quantityInput) return;
+
+    let quantity = parseInt(quantityInput.value, 10) || window.minQuantity;
+    if (quantity < window.minQuantity) {
+        quantity = window.minQuantity;
+        quantityInput.value = quantity;
+    }
+
+    let tierPrice = window.basePrice;
+    let discount = 0;
+    let activeMinQuantity = null;
+
+    // Buscar tier activo
+    for (const tier of window.priceTiers) {
+        const min = tier.min_quantity ?? tier.min ?? 0;
+        const max = tier.max_quantity ?? tier.max ?? Infinity;
+
+        if (quantity >= min && quantity <= max) {
+            tierPrice = tier.price_per_unit ?? tier.unit_price ?? tier.price ?? window.basePrice;
+            discount = tier.discount_percentage ?? tier.discount_percent ?? tier.discount ?? 0;
+            activeMinQuantity = min.toString();
+            break;
+        }
+    }
+
+    // Calcular precio final unitario = Precio Tier + Surcharges
+    const totalSurcharge = calculateTotalSurcharge();
+    const finalUnitPrice = parseFloat(tierPrice) + totalSurcharge;
+
+    // Resaltar fila activa Y ACTUALIZAR PRECIOS EN LA TABLA
+    tierRows.forEach(row => {
+        const rowMin = parseInt(row.dataset.tierMin);
+
+        // 1. Highlight active row
+        if (rowMin == activeMinQuantity) {
+            row.classList.add('tier-row-active');
+        } else {
+            row.classList.remove('tier-row-active');
+        }
+
+        // 2. Update displayed price in table (Add surcharge to tier base price)
+        const tierData = window.priceTiers.find(t => (t.min_quantity ?? t.min ?? 0) == rowMin);
+        if (tierData) {
+            const baseTierPrice = parseFloat(tierData.price_per_unit ?? tierData.unit_price ?? tierData.price ?? window.basePrice);
+            const currentTierPrice = baseTierPrice + totalSurcharge;
+
+            const priceCell = row.querySelector('.price-value');
+            if (priceCell) {
+                priceCell.textContent = `S/ ${currentTierPrice.toFixed(2)}`;
+            }
+        }
+    });
+
+    // Actualizar precios en pantalla
+    const total = (finalUnitPrice * quantity).toFixed(2);
+
+    if (unitPriceDisplay) unitPriceDisplay.textContent = `S/ ${finalUnitPrice.toFixed(2)}`;
+    if (discountBadge) discountBadge.textContent = `${discount}%`;
+    if (totalPriceEl) totalPriceEl.textContent = `S/ ${total}`;
+};
+
+function selectColor(colorSlug, colorName, surcharge = 0) {
     window.selectedColorSlug = colorSlug;
+    window.optionSurcharges['color'] = parseFloat(surcharge) || 0;
 
     document.querySelectorAll('.color-swatch').forEach(btn => {
-        // Match against colorSlug or color (legacy)
         const btnSlug = btn.dataset.colorSlug || btn.dataset.color;
         if (btnSlug === colorSlug) {
             btn.classList.add('active');
@@ -131,22 +215,64 @@ function selectColor(colorSlug, colorName) {
 
     const display = document.getElementById('selected-color-name');
     if (display) display.textContent = colorName;
+
+    // Actualizar input hidden
+    const hiddenInput = document.getElementById('selected-color');
+    if (hiddenInput) hiddenInput.value = colorSlug;
+
+    updatePriceAndHighlight();
 }
+window.selectColor = selectColor;
 
-function selectSize(sizeSlug, sizeName) {
-    window.selectedSizeSlug = sizeSlug;
+function selectOption(optionKey, valueSlug, valueName, surcharge = 0) {
+    if (optionKey === 'size') {
+        window.selectedSizeSlug = valueSlug;
+    }
 
-    document.querySelectorAll('.size-btn').forEach(btn => {
-        if (btn.dataset.sizeSlug === sizeSlug) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
+    // Guardar surcharge
+    window.optionSurcharges[optionKey] = parseFloat(surcharge) || 0;
+
+    // Actualizar UI activa
+    // Buscamos botones dentro del container de esta opción
+    const container = document.querySelector(`.product-option[data-option-key="${optionKey}"]`);
+    if (container) {
+        container.querySelectorAll('.option-btn').forEach(btn => {
+            if (btn.dataset.valueSlug === valueSlug) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Actualizar etiqueta de nombre
+        const display = container.querySelector('.selected-option-name');
+        if (display) display.textContent = valueName;
+
+        // Actualizar input hidden
+        const hiddenInput = container.querySelector('input.option-input');
+        if (hiddenInput) hiddenInput.value = valueSlug;
+    } else {
+        // Fallback para legacy 'size' hardcoded html si existe
+        if (optionKey === 'size') {
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                // Ignore option-btn class buttons here to avoid double toggling if mix
+                if (btn.classList.contains('option-btn')) return;
+
+                if (btn.dataset.sizeSlug === valueSlug) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            const display = document.getElementById('selected-size-name');
+            if (display) display.textContent = valueName;
+            if (hidden) hidden.value = valueSlug;
         }
-    });
+    }
 
-    const display = document.getElementById('selected-size-name');
-    if (display) display.textContent = sizeName;
+    updatePriceAndHighlight();
 }
+window.selectOption = selectOption;
 
 // ====================================================================
 // D. AÑADIR AL CARRITO
@@ -186,8 +312,23 @@ async function addToCart() {
         return;
     }
 
-    // Validar talla (si aplica)
-    if (window.selectedSizeSlug === '' && document.querySelector('.size-btn')) {
+    // Validar opciones genéricas (Talla, Tamaño, etc.)
+    let missingOption = false;
+    document.querySelectorAll('.product-option').forEach(optionContainer => {
+        const optionKey = optionContainer.dataset.optionKey;
+        const input = optionContainer.querySelector('input.option-input');
+        if (input && !input.value) {
+            // Highlight container or show alert
+            const label = optionContainer.querySelector('label').textContent.replace('*', '').trim();
+            alert(`❌ Por favor selecciona: ${label}`);
+            missingOption = true;
+        }
+    });
+
+    if (missingOption) return;
+
+    // Legacy Size Validation (Fallout)
+    if (window.selectedSizeSlug === '' && document.querySelector('.size-btn') && !document.querySelector('.product-option[data-option-key="size"]')) {
         alert('❌ Por favor selecciona una talla');
         return;
     }
@@ -710,30 +851,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Botones de color
     document.querySelectorAll('.color-swatch').forEach(btn => {
         btn.addEventListener('click', () => {
-            // Support both data-color-slug (standard) and data-color (legacy/template specific)
             const slug = btn.dataset.colorSlug || btn.dataset.color;
             const name = btn.dataset.colorName || btn.title || slug;
-            selectColor(slug, name);
+            // Surcharge logic? You might need to add data-price-add to your color loop in html
+            // For now assume 0 or read if available.
+            // Note: My python script updated color DB, need to update HTML to output this data attr.
+            const surcharge = btn.dataset.priceAdd || 0;
+            window.selectColor(slug, name, surcharge);
         });
     });
 
-    // 🆕 6.1 AUTO-DETECT SELECTED COLOR (Fix for "Por favor elija color")
+    // 🆕 6.1 AUTO-DETECT SELECTED COLOR
     const defaultColorBtn = document.querySelector('.color-swatch.selected') || document.querySelector('.color-swatch.active');
     if (defaultColorBtn) {
         const slug = defaultColorBtn.dataset.colorSlug || defaultColorBtn.dataset.color;
         if (slug) {
             console.log('✅ Auto-detecting default color:', slug);
-            window.selectedColorSlug = slug;
-            // Ensure hidden input is synced if exists
-            const hiddenInput = document.getElementById('selected-color');
-            if (hiddenInput) hiddenInput.value = slug;
+            const name = defaultColorBtn.dataset.colorName || defaultColorBtn.title || slug;
+            const surcharge = defaultColorBtn.dataset.priceAdd || 0;
+            // Call selectColor to init defaults and pricing
+            window.selectColor(slug, name, surcharge);
         }
     }
 
-    // 7. Botones de talla
-    document.querySelectorAll('.size-btn').forEach(btn => {
+    // 7. Botones de opción comúnes (Talla, Print Size, etc)
+    document.querySelectorAll('.option-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            selectSize(btn.dataset.sizeSlug, btn.dataset.sizeName);
+            const key = btn.dataset.optionKey; // 'size', 'print_size'
+            const slug = btn.dataset.valueSlug;
+            const name = btn.dataset.valueName;
+            const surcharge = btn.dataset.priceAdd || 0;
+            window.selectOption(key, slug, name, surcharge);
+        });
+    });
+
+    // Legacy Size Buttons (if any exist not using option-btn class)
+    document.querySelectorAll('.size-btn:not(.option-btn)').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectOption('size', btn.dataset.sizeSlug, btn.dataset.sizeName, 0);
         });
     });
 

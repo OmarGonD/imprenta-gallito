@@ -571,11 +571,9 @@ def product_detail(request, category_slug, subcategory_slug, product_slug):
         if not selected_color:
             if detected_color_from_slug:
                 selected_color = detected_color_from_slug
-            elif available_colors:
-                selected_color = available_colors[0]
-            
-            if selected_color:
                 selected_color_slug = selected_color.value
+            # REMOVED: Fallback to available_colors[0]
+            # This ensures no color is selected by default unless specified in URL or Slug
             
         context.update({
             'selected_color': selected_color,

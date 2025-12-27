@@ -6,6 +6,7 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils.text import slugify
+import math
 
 class Command(BaseCommand):
     help = 'Scans static/media/product_images and generates catalog Excel files (Fresh Start with Backups).'
@@ -348,20 +349,46 @@ class Command(BaseCommand):
                  slug = f"{slug}-{uuid.uuid4().hex[:4]}"
             
             name = slug.replace('-', ' ').title()
-            
             base_image_url = f"media/product_images/{rel_path}/{first_img}".replace('\\', '/')
             
-            products_list.append({
-                'product_slug': slug,
-                'product_name': name,
-                'category_slug': cat_slug,
-                'subcategory_slug': sub_slug,
-                'sku': f"{cat_slug[:3].upper()}-{sub_slug[:3].upper()}-{len(products_list):04d}",
-                'base_image_url': base_image_url,
-                'min_quantity': 100 if cat_slug != 'ropa-bolsos' else 1, 
-                'status': 'active',
-                'description': f"{name} - Colección {cat_slug}"
-            })
+            # --- CUSTOM LOGIC FOR STICKERS: EXPLODE SIZES ---
+            is_generic_sticker = False
+            if cat_slug == 'stickers-etiquetas':
+                # Exclude specific non-sticker items from expansion
+                exclusions = ['cinta', 'sobres', 'letras', 'plancha']
+                if not any(exc in slug for exc in exclusions):
+                    is_generic_sticker = True
+            
+            if is_generic_sticker:
+                sizes = ["4x4", "5x5", "6x6", "7x7", "8x8", "9x9", "10x10"]
+                for size in sizes:
+                    variant_slug = f"{slug}-{size}"
+                    variant_name = f"{name} {size}cm"
+                    
+                    products_list.append({
+                        'product_slug': variant_slug,
+                        'product_name': variant_name,
+                        'category_slug': cat_slug,
+                        'subcategory_slug': sub_slug,
+                        'sku': f"{cat_slug[:3].upper()}-{sub_slug[:3].upper()}-{len(products_list):04d}",
+                        'base_image_url': base_image_url,
+                        'min_quantity': 100, # Stickers default min
+                        'status': 'active',
+                        'description': f"{variant_name} - Colección {cat_slug}"
+                    })
+            else:
+                # STANDARD PRODUCT creation
+                products_list.append({
+                    'product_slug': slug,
+                    'product_name': name,
+                    'category_slug': cat_slug,
+                    'subcategory_slug': sub_slug,
+                    'sku': f"{cat_slug[:3].upper()}-{sub_slug[:3].upper()}-{len(products_list):04d}",
+                    'base_image_url': base_image_url,
+                    'min_quantity': 100 if cat_slug != 'ropa-bolsos' else 1, 
+                    'status': 'active',
+                    'description': f"{name} - Colección {cat_slug}"
+                })
             
             # Images/Variants
             for idx, img in enumerate(group):
@@ -422,16 +449,74 @@ class Command(BaseCommand):
             # Default Tiers
             if p['category_slug'] == 'ropa-bolsos':
                 tiers = [
-                    (1, 11, 25.00),
-                    (12, 49, 22.00),
-                    (50, 999999, 20.00)
+                    (1, 11, 67.00),
+                    (12, 49, 62.00),
+                    (50, 99, 56.00),
+                    (100, 499, 50.00),
+                    (500, 999999, 48.00)
                 ]
             else:
-                tiers = [
-                    (100, 499, 0.50),
-                    (500, 999, 0.40),
-                    (1000, 999999, 0.30)
-                ]
+                # CHECK FOR STICKER SIZES
+                # Using the config: (Full cost, Half cost, Markup)
+                # FULL_BATCH_COST = 45.0
+                # HALF_BATCH_COST = 25.0
+                # MANAGEMENT_FEE = 12.00
+                
+                sticker_config = {
+                    "-4x4":   (500, 250, 0.15), 
+                    "-5x5":   (360, 180, 0.20),
+                    "-6x6":   (280, 140, 0.30),
+                    "-7x7":   (200, 100, 0.40),
+                    "-8x8":   (150, 75,  0.50),
+                    "-9x9":   (130, 65,  0.60),
+                    "-10x10": (100, 50,  0.80),
+                }
+                
+                matched_config = None
+                for suffix, config in sticker_config.items():
+                    if slug.endswith(suffix):
+                        matched_config = config
+                        break
+                
+                if matched_config:
+                    # SMART PRICING LOGIC
+                    full_units, half_units, unit_markup = matched_config
+                    quantities = [10, 20, 50, 100, 500, 1000]
+                    mgmt_fee = 12.00
+                    
+                    tiers = []
+                    for qty in quantities:
+                        # 1. Costo Real
+                        num_full = qty // full_units
+                        rem = qty % full_units
+                        
+                        cost = num_full * 45.0
+                        if rem > 0:
+                            cost += 25.0 if rem <= half_units else 45.0
+                            
+                        # 2. Precio Venta
+                        var_profit = unit_markup * qty
+                        smart = cost + mgmt_fee + var_profit
+                        
+                        total = math.ceil(smart * 2) / 2
+                        unit = round(total / qty, 3)
+                        
+                        # Max Qty logic
+                        max_q = 999999
+                        if qty == 10: max_q = 19
+                        elif qty == 20: max_q = 49
+                        elif qty == 50: max_q = 99
+                        elif qty == 100: max_q = 499
+                        elif qty == 500: max_q = 999
+                        
+                        tiers.append((qty, max_q, unit))
+                else:
+                    # GENERIC FALLBACK
+                    tiers = [
+                        (100, 499, 0.50),
+                        (500, 999, 0.40),
+                        (1000, 999999, 0.30)
+                    ]
                 
             base_price = tiers[0][2] if tiers else 0
             for min_q, max_q, price in tiers:

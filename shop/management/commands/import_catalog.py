@@ -462,6 +462,8 @@ class Command(BaseCommand):
             {'key': 'material', 'name': 'Material', 'display_order': 3, 'is_required': True, 'selection_type': 'single'},
             {'key': 'finish', 'name': 'Acabado', 'display_order': 4, 'is_required': False, 'selection_type': 'single'},
             {'key': 'cassette', 'name': 'Sistema de Sujeción', 'display_order': 5, 'is_required': False, 'selection_type': 'single'},
+            # Opciones para ropa (Smart Pricing)
+            {'key': 'print_size', 'name': 'Tamaño de Impresión', 'display_order': 6, 'is_required': True, 'selection_type': 'single'},
         ]
         
         created = 0
@@ -915,6 +917,12 @@ class Command(BaseCommand):
                         # Añadir valores de color disponibles
                         for color_slug, hex_code in colors_data.items():
                             # Asegurar que el color existe o actualizar hex
+                            # SMART PRICING: Calculate surcharge for ropa-bolsos
+                            additional_price = Decimal('0.00')
+                            if category_slug == 'ropa-bolsos':
+                                if 'blanco' not in color_slug.lower() and 'white' not in color_slug.lower():
+                                    additional_price = Decimal('9.00')
+
                             color_val, created_val = ProductOptionValue.objects.get_or_create(
                                 option=color_option,
                                 value=color_slug,
@@ -922,10 +930,18 @@ class Command(BaseCommand):
                                     'display_name': color_slug.replace('-', ' ').title(),
                                     'hex_code': hex_code,
                                     'is_active': True,
-                                    'display_order': 0 # Default, podría mejorarse
+                                    'display_order': 0,
+                                    'additional_price': additional_price
                                 }
                             )
                             
+                             # Validar si hay que actualizar precio (si ya existía pero es incorrecto)
+                            if not created_val and category_slug == 'ropa-bolsos':
+                                if color_val.additional_price != additional_price:
+                                    color_val.additional_price = additional_price
+                                    # Don't save yet, wait for hex check? Or save now.
+                                    color_val.save()
+
                             # Si ya existía, actualizar hex si es diferente (y viene del excel)
                             if not created_val and hex_code and color_val.hex_code != hex_code:
                                 color_val.hex_code = hex_code
@@ -940,22 +956,57 @@ class Command(BaseCommand):
                             variant.available_values.clear()
                     
                     # NUEVO: Asignar tallas para ropa
-                    # Nota: Hay que asegurar que 'category_slug' sea 'ropa-bolsos'
-                    if category_slug == 'ropa-bolsos' and size_option:
-                        # Crear/obtener ProductVariant para talla
-                        variant, _ = ProductVariant.objects.get_or_create(
-                            product=product,
-                            option=size_option,
-                            defaults={'display_order': 2}
-                        )
-                        
-                        # Añadir tallas estándar
-                        sizes = ProductOptionValue.objects.filter(
-                            option=size_option,
-                            value__in=['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-                            is_active=True
-                        )
-                        variant.available_values.set(sizes)
+                    if category_slug == 'ropa-bolsos':
+                        # 1. TALLAS DE ROPA
+                        if size_option:
+                            variant, _ = ProductVariant.objects.get_or_create(
+                                product=product,
+                                option=size_option,
+                                defaults={'display_order': 2}
+                            )
+                            
+                            sizes = ProductOptionValue.objects.filter(
+                                option=size_option,
+                                value__in=['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+                                is_active=True
+                            )
+                            variant.available_values.set(sizes)
+
+                        # 2. TAMAÑO DE IMPRESIÓN (SMART PRICING)
+                        try:
+                            # Asegurar que la opción existe
+                            print_opt, _ = ProductOption.objects.get_or_create(
+                                key='print_size', 
+                                defaults={'name': 'Tamaño de Impresión', 'display_order': 3, 'selection_type': 'single'}
+                            )
+                            
+                            # Asegurar valores y precios
+                            # 14x21 -> 0
+                            v1, _ = ProductOptionValue.objects.update_or_create(
+                                option=print_opt, value='14x21', 
+                                defaults={'display_name': '14cm x 21cm', 'additional_price': Decimal('0.00'), 'display_order': 1}
+                            )
+                            # 21x30 -> 9
+                            v2, _ = ProductOptionValue.objects.update_or_create(
+                                option=print_opt, value='21x30', 
+                                defaults={'display_name': '21cm x 30cm', 'additional_price': Decimal('9.00'), 'display_order': 2}
+                            )
+                            # 32x38 -> 17
+                            v3, _ = ProductOptionValue.objects.update_or_create(
+                                option=print_opt, value='32x38', 
+                                defaults={'display_name': '32cm x 38cm', 'additional_price': Decimal('17.00'), 'display_order': 3}
+                            )
+                            
+                            # Crear Variante y asignar valores
+                            pv, _ = ProductVariant.objects.get_or_create(
+                                product=product,
+                                option=print_opt,
+                                defaults={'display_order': 3}
+                            )
+                            pv.available_values.set([v1, v2, v3])
+                            
+                        except Exception as e:
+                            self.stdout.write(self.style.WARNING(f'Error creating print_size: {e}'))
                     
                     if was_created:
                         created += 1
