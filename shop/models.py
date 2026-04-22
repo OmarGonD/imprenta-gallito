@@ -407,6 +407,14 @@ class Product(models.Model):
     is_new = models.BooleanField(default=False, verbose_name="Nuevo")
     is_bestseller = models.BooleanField(default=False, verbose_name="Más vendido")
 
+    # Productos pre-diseñados (Ready to Buy)
+    is_pre_designed = models.BooleanField(default=False, verbose_name="Es pre-diseñado", 
+                                          help_text="Si es True, el usuario no necesita subir diseño ni elegir template.")
+    design_text = models.TextField(blank=True, verbose_name="Texto del diseño", help_text="Frase o texto estampado predefinido")
+    design_reference = models.CharField(max_length=100, blank=True, verbose_name="Referencia", help_text="Ej: Mateo 17:20")
+    design_image = models.ImageField(upload_to='pre_designed_mockups/', blank=True, null=True, 
+                                     verbose_name="Mockup del diseño", help_text="Imagen que muestra el diseño final")
+
     # Estado y orden
     status = models.CharField(max_length=20, default='active',
                               choices=[('active', 'Activo'), ('inactive', 'Inactivo'), ('seasonal', 'Temporal')],

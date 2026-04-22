@@ -359,7 +359,10 @@ async function addToCart() {
     // Check for template selection
     const hasTemplate = templateInput && templateInput.value;
 
-    if (!hasTemplate && !hasInputFile && !hasGalleryFile) {
+    // Check for pre-designed flag
+    const isPreDesigned = !!document.getElementById('is-pre-designed-flag');
+
+    if (!hasTemplate && !hasInputFile && !hasGalleryFile && !isPreDesigned) {
         alert('❌ Debes elegir un diseño:\n\n1. Selecciona una plantilla del catálogo.\nÓ\n2. Sube tu propio diseño listo para imprimir.');
 
         // Scroll to design section
@@ -459,6 +462,8 @@ async function addToCart() {
     if (templateInput && templateInput.value) {
         formData.append('template_slug', templateInput.value);
         formData.append('design_type', designTypeInput ? designTypeInput.value : 'template');
+    } else if (document.getElementById('is-pre-designed-flag')) {
+        formData.append('design_type', 'pre_designed');
     } else {
         formData.append('design_type', 'custom');
     }

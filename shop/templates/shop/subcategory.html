@@ -129,74 +129,215 @@
     <!-- Products Section -->
     <section class="py-12">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">Productos</h2>
-                <span class="text-gray-500">{{ products|length }} producto{{ products|length|pluralize }}</span>
-            </div>
-
             {% if products %}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {% for product in products %}
-                <a href="{{ product.get_absolute_url }}" class="material-card" data-product-id="{{ product.id }}">
-                    <div class="material-image">
-                        {% if product.base_image_url %}
-                        <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="product-main-image" data-original="{% static product.base_image_url %}">
-                        {% else %}
-                        <div class="w-full h-full flex flex-col items-center justify-center text-gray-400">
-                            <i class="fas fa-image text-4xl mb-2"></i>
-                            <span class="text-sm">Sin imagen</span>
+            
+            <!-- Pre-Designed Products Section -->
+            {% regroup products by is_pre_designed as products_by_type %}
+            
+            {% for product_type in products_by_type %}
+            {% if product_type.grouper == True %}
+            {# Pre-designed products (is_pre_designed=True) #}
+            <div class="mb-16">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-purple-200">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                            <i class="fas fa-star text-yellow-300 text-lg"></i>
                         </div>
-                        {% endif %}
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Diseños Exclusivos</h2>
+                            <p class="text-sm text-gray-600">Listos para comprar - No necesitas diseñar</p>
+                        </div>
                     </div>
-                    
-                    <div class="material-content">
-                        <h3>{{ product.name }}</h3>
-                        
-                        {% if product.description %}
-                        <p>{{ product.description|truncatewords:12 }}</p>
-                        {% endif %}
-                        
-                        {% with price_range=product.get_price_range %}
-                        <div class="material-price">
-                            {% if price_range.0 == price_range.1 %}
-                            <span class="price-value">S/ {{ price_range.0 }}</span>
+                    <div class="flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full">
+                        <i class="fas fa-shopping-bag text-purple-600 text-sm"></i>
+                        <span class="text-purple-700 font-semibold">
+                            {{ product_type.list|length }} producto{{ product_type.list|length|pluralize }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {% for product in product_type.list %}
+                    <a href="{{ product.get_absolute_url }}" class="material-card group relative overflow-hidden transition-all duration-300 rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 ring-2 ring-purple-300 hover:ring-purple-500 hover:shadow-2xl hover:shadow-purple-200" 
+                       data-product-id="{{ product.id }}">
+                        <div class="material-image relative aspect-[4/5] overflow-hidden rounded-t-2xl">
+                            {% if product.base_image_url %}
+                            <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="product-main-image w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" data-original="{% static product.base_image_url %}">
                             {% else %}
-                            <span class="price-from">Desde</span>
-                            <span class="price-value">S/ {{ price_range.0 }}</span>
+                            <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gray-100">
+                                <i class="fas fa-image text-4xl mb-2"></i>
+                                <span class="text-sm">Sin imagen</span>
+                            </div>
                             {% endif %}
+                            
+                            <!-- Enhanced Badge Pre-diseñado -->
+                            <div class="absolute top-0 right-0 bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-bl-2xl shadow-xl z-10 flex items-center gap-1.5">
+                                <i class="fas fa-star text-yellow-300 animate-pulse"></i>
+                                <span>Exclusivo</span>
+                            </div>
+                            
+                            <!-- Corner Ribbon -->
+                            <div class="absolute top-0 left-0 w-0 h-0 border-l-[50px] border-l-transparent border-t-[50px] border-t-purple-600 opacity-20"></div>
                         </div>
-                        {% endwith %}
                         
-                        {% comment %} Color Swatches for Clothing Products {% endcomment %}
-                        {% if category.slug == 'ropa-bolsos' %}
-                        <div class="product-color-swatches flex flex-wrap gap-1.5 my-2">
-                            {% for variant_option in product.variant_options.all %}
-                                {% if variant_option.option.key == 'color' %}
-                                    {% for color in variant_option.available_values.all|slice:":8" %}
-                                    <span class="color-swatch-mini w-5 h-5 rounded-full border-2 border-gray-200 hover:border-blue-500 hover:scale-110 transition-all cursor-pointer shadow-sm"
-                                          style="background-color: {{ color.hex_code|default:'#CCCCCC' }};"
-                                          title="{{ color.label|default:color.value|title }}"
-                                          data-color="{{ color.value }}"
-                                          data-image-url="{{ product|get_image_by_color:color.value }}"
-                                          onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this);"></span>
-                                    {% endfor %}
-                                    {% if variant_option.available_values.count > 8 %}
-                                    <span class="w-5 h-5 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center text-xs text-gray-500 font-medium">
-                                        +{{ variant_option.available_values.count|add:"-8" }}
-                                    </span>
-                                    {% endif %}
+                        <div class="material-content p-4">
+                            <h3 class="font-bold text-gray-900 text-lg mb-1 leading-tight group-hover:text-purple-600 transition-colors">{{ product.name }}</h3>
+                            
+                            {% if product.description %}
+                            <p class="text-xs text-gray-600 mb-3 line-clamp-2">{{ product.description }}</p>
+                            {% endif %}
+                            
+                            <!-- Precio Destacado -->
+                            {% with price_range=product.get_price_range %}
+                            <div class="material-price mb-3 flex items-baseline gap-1">
+                                {% if price_range.0 == price_range.1 %}
+                                    <span class="text-2xl font-extrabold text-purple-700">S/ {{ price_range.0 }}</span>
+                                {% else %}
+                                    <span class="text-xs text-purple-600 font-medium">Desde</span>
+                                    <span class="text-2xl font-extrabold text-purple-700">S/ {{ price_range.0 }}</span>
                                 {% endif %}
-                            {% endfor %}
+                            </div>
+                            {% endwith %}
+                            
+                            {% comment %} Color Swatches for Clothing Products {% endcomment %}
+                            {% if category.slug == 'ropa-bolsos' %}
+                            <div class="product-color-swatches flex flex-wrap gap-1.5 mb-4">
+                                {% for variant_option in product.variant_options.all %}
+                                    {% if variant_option.option.key == 'color' %}
+                                        {% for color in variant_option.available_values.all|slice:":8" %}
+                                        <span class="color-swatch-mini w-5 h-5 rounded-full border-2 border-purple-300 hover:border-purple-500 hover:scale-110 transition-all cursor-pointer shadow-md relative"
+                                              style="background-color: {{ color.hex_code|default:'#CCCCCC' }};"
+                                              title="{{ color.label|default:color.value|title }}"
+                                              data-color="{{ color.value }}"
+                                              data-image-url="{{ product|get_image_by_color:color.value }}"
+                                              onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this);">
+                                        </span>
+                                        {% endfor %}
+                                        {% if variant_option.available_values.count > 8 %}
+                                        <span class="w-5 h-5 rounded-full bg-purple-100 border-2 border-purple-300 flex items-center justify-center text-[10px] text-purple-700 font-bold">
+                                            +{{ variant_option.available_values.count|add:"-8" }}
+                                        </span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Actions -->
+                            <div class="flex items-center justify-between mt-auto pt-3 border-t-2 border-purple-200">
+                                 <p class="text-[10px] text-gray-500 font-mono">{{ product.sku }}</p>
+                                 <span class="text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 rounded-lg group-hover:from-purple-700 group-hover:to-indigo-700 transition-all shadow-md group-hover:shadow-lg flex items-center gap-2">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Comprar</span>
+                                 </span>
+                            </div>
                         </div>
-                        {% endif %}
-                        
-                        <p class="text-xs text-gray-400 mb-3">SKU: {{ product.sku }}</p>
-                        
-                        <span class="material-cta">Ver Detalles</span>
-                    </div>
-                </a>
-                {% endfor %}
+                    </a>
+                    {% endfor %}
+                </div>
             </div>
+            {% elif product_type.grouper == False %}
+            {# Customizable products (is_pre_designed=False) #}
+            <div>
+                <div class="flex items-center justify-between mb-6 pb-4 border-b-2 border-blue-200">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
+                            <i class="fas fa-palette text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Crea Tu Diseño</h2>
+                            <p class="text-sm text-gray-600">Productos personalizables a tu medida</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full">
+                        <i class="fas fa-paint-brush text-blue-600 text-sm"></i>
+                        <span class="text-blue-700 font-semibold">
+                            {{ product_type.list|length }} producto{{ product_type.list|length|pluralize }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {% for product in product_type.list %}
+                    <a href="{{ product.get_absolute_url }}" class="material-card group relative overflow-hidden transition-all duration-300 hover:shadow-xl rounded-2xl bg-white hover:bg-gray-50 border-2 border-transparent hover:border-blue-400" 
+                       data-product-id="{{ product.id }}">
+                        <div class="material-image relative aspect-[4/5] overflow-hidden rounded-t-2xl">
+                            {% if product.base_image_url %}
+                            <img src="{% static product.base_image_url %}" alt="{{ product.name }}" class="product-main-image w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" data-original="{% static product.base_image_url %}">
+                            {% else %}
+                            <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gray-100">
+                                <i class="fas fa-image text-4xl mb-2"></i>
+                                <span class="text-sm">Sin imagen</span>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Customizable Badge (subtle) -->
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-blue-600 text-xs font-semibold px-3 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+                                <i class="fas fa-magic text-[10px]"></i>
+                                Personalizable
+                            </div>
+                        </div>
+                        
+                        <div class="material-content p-4">
+                            <h3 class="font-bold text-gray-900 text-lg mb-1 leading-tight group-hover:text-blue-600 transition-colors">{{ product.name }}</h3>
+                            
+                            {% if product.description %}
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-2">{{ product.description }}</p>
+                            {% endif %}
+                            
+                            <!-- Precio Destacado -->
+                            {% with price_range=product.get_price_range %}
+                            <div class="material-price mb-3 flex items-baseline gap-1">
+                                {% if price_range.0 == price_range.1 %}
+                                    <span class="text-xl font-bold text-gray-900">S/ {{ price_range.0 }}</span>
+                                {% else %}
+                                    <span class="text-xs text-gray-500">Desde</span>
+                                    <span class="text-xl font-bold text-gray-900">S/ {{ price_range.0 }}</span>
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+                            
+                            {% comment %} Color Swatches for Clothing Products {% endcomment %}
+                            {% if category.slug == 'ropa-bolsos' %}
+                            <div class="product-color-swatches flex flex-wrap gap-1.5 mb-4">
+                                {% for variant_option in product.variant_options.all %}
+                                    {% if variant_option.option.key == 'color' %}
+                                        {% for color in variant_option.available_values.all|slice:":8" %}
+                                        <span class="color-swatch-mini w-5 h-5 rounded-full border border-gray-300 hover:border-blue-500 hover:scale-110 transition-all cursor-pointer shadow-sm relative"
+                                              style="background-color: {{ color.hex_code|default:'#CCCCCC' }};"
+                                              title="{{ color.label|default:color.value|title }}"
+                                              data-color="{{ color.value }}"
+                                              data-image-url="{{ product|get_image_by_color:color.value }}"
+                                              onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this);">
+                                        </span>
+                                        {% endfor %}
+                                        {% if variant_option.available_values.count > 8 %}
+                                        <span class="w-5 h-5 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-[10px] text-gray-500 font-bold">
+                                            +{{ variant_option.available_values.count|add:"-8" }}
+                                        </span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Actions -->
+                            <div class="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
+                                 <p class="text-[10px] text-gray-400 font-mono">SKU: {{ product.sku }}</p>
+                                 <span class="text-sm font-medium text-blue-600 group-hover:text-blue-700 transition-colors flex items-center gap-1">
+                                    <i class="fas fa-pencil-ruler"></i>
+                                    Personalizar
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                 </span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            
             {% else %}
             <div class="text-center py-20 bg-white rounded-2xl">
                 <i class="fas fa-box-open text-6xl text-gray-300 mb-6"></i>

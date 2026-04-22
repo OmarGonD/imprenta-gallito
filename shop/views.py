@@ -244,7 +244,8 @@ def subcategory_view(request, category_slug, subcategory_slug):
     elif sort_by == 'name':
         products = products.order_by('name')
     else:
-        products = products.order_by('-is_featured', '-is_bestseller', 'name')
+        # Ordenar por is_pre_designed primero para que el regroup del template funcione correctamente
+        products = products.order_by('-is_pre_designed', '-is_featured', '-is_bestseller', 'name')
     
     # ACTUALIZADO: Obtener colores y tallas disponibles con nuevo sistema
     all_colors = ProductOptionValue.objects.filter(

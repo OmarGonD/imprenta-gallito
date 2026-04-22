@@ -546,6 +546,37 @@
                 </div>
                 {% endif %}
 
+                {% if product.is_pre_designed %}
+                <!-- 🔥 SECTION: PRE-DESIGNED PRODUCT INFO -->
+                <div id="pre-designed-info" class="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                    <div class="flex items-start gap-4">
+                        {% if product.design_image %}
+                        <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border border-purple-100 shadow-sm bg-white">
+                            <img src="{{ product.design_image.url }}" alt="Diseño" class="w-full h-full object-cover">
+                        </div>
+                        {% endif %}
+                        <div class="flex-1">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mb-2">
+                                ✨ Diseño Listo
+                            </span>
+                            <h4 class="text-lg font-bold text-gray-900 leading-tight mb-1">
+                                "{{ product.design_text }}"
+                            </h4>
+                            {% if product.design_reference %}
+                            <p class="text-sm text-gray-500 font-medium italic">
+                                — {{ product.design_reference }}
+                            </p>
+                            {% endif %}
+                            <p class="text-xs text-gray-400 mt-2">
+                                Este producto ya incluye el diseño. Solo selecciona tu talla y color.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Flag para JS -->
+                <input type="hidden" id="is-pre-designed-flag" value="true">
+                {% else %}
+                
                 <!-- Uploaded Design Preview (shown when returning from template gallery) -->
                 <div id="uploaded-design-preview" class="mb-6 hidden">
                     <label class="block text-sm font-medium text-gray-700 mb-3">
@@ -633,6 +664,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <!-- Botón agregar al carrito -->
                 <button 
@@ -645,12 +677,14 @@
                 </button>
 
                 <!-- Mensaje de validación -->
+                {% if not product.is_pre_designed %}
                 <p id="validation-message" class="text-sm text-orange-600 mt-2 flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                     </svg>
                     Debes subir tu diseño para continuar
                 </p>
+                {% endif %}
             </form>
 
             <!-- Modal: Producto agregado -->

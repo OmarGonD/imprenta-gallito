@@ -864,6 +864,22 @@ class Command(BaseCommand):
                         'base_image_url': str(row['base_image_url']) if pd.notna(row['base_image_url']) else '',
                         'status': str(row.get('status')) if pd.notna(row.get('status')) else 'active',
                     }
+
+                    # ACTUALIZADO: Campos para productos pre-diseñados (Ready to Buy)
+                    # Columna 'skip_customization' en Excel se asume implícita si 'is_pre_designed' es True,
+                    # o se puede mapear directamente. Aquí priorizamos 'is_pre_designed'.
+                    is_pre_designed = str(row.get('is_pre_designed', 'False')).lower() in ('true', '1', 'yes', 'sí')
+                    # Soporte explícito para columna skip_customization si viene en excel
+                    skip_customization = str(row.get('skip_customization', 'False')).lower() in ('true', '1', 'yes', 'sí')
+                    
+                    if is_pre_designed or skip_customization:
+                         defaults['is_pre_designed'] = True
+                    else:
+                         defaults['is_pre_designed'] = False
+
+                    defaults['design_text'] = str(row.get('design_text', '')) if pd.notna(row.get('design_text')) else ''
+                    defaults['design_reference'] = str(row.get('design_reference', '')) if pd.notna(row.get('design_reference')) else ''
+                    defaults['design_image'] = str(row.get('design_image', '')) if pd.notna(row.get('design_image')) else ''
                     
                     # Guardar marca en material
                     if 'marca' in row and pd.notna(row['marca']):
@@ -1231,8 +1247,7 @@ class Command(BaseCommand):
         
         # Llamada al nuevo método safe_read_excel
         df = self.safe_read_excel(filename)
-        self.stdout.write(f'    Leyendo {len(df)} filas...')
-
+        
         created = 0
         updated = 0
         errors = 0
